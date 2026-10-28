@@ -1,0 +1,8 @@
+{
+	"checks": 57,
+	"facts": {
+		"timing_max_error": 0.0146199544459581
+	},
+	"failures": [],
+	"scope": "Native audio timing, real movement, camera/world, loadout ownership, six real weapon impacts, rewards, pause/edit, overload and death/retry; explicit isolated weapon fixtures and invulnerability, not human difficulty or a full run."
+}

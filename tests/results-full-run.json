@@ -1,0 +1,48 @@
+{
+	"checks": 19,
+	"chosen_rewards": 5,
+	"elapsed_wall_seconds": 153.004,
+	"failures": [],
+	"kills": 181,
+	"late_timing_max_error": 0.0276130579169944,
+	"music_seconds": 152.882286028819,
+	"peak_bullets": 60,
+	"peak_enemies": 21,
+	"peak_hostile_bullets": 58,
+	"scope": "One complete six-wave run on real native audio and production durations, native spawns/hits/boss phase/victory, real reward buttons. Invulnerability, assisted steering and automatic overload; no injected kills, HP reduction, music seeking or wave/time skips. Not human difficulty or listening acceptance.",
+	"score": 291,
+	"waves": {
+		"1": {
+			"modules": 5,
+			"start": 0.0054559887791276
+		},
+		"2": {
+			"modules": 6,
+			"start": 18.0268067854996
+		},
+		"3": {
+			"modules": 7,
+			"start": 40.0184814847982
+		},
+		"4": {
+			"modules": 7,
+			"start": 64.0217185922488
+		},
+		"5": {
+			"modules": 8,
+			"start": 90.0278258105953
+		},
+		"6": {
+			"modules": 9,
+			"start": 118.033176104573
+		}
+	},
+	"weapon_damage": {
+		"beam": 1546.25,
+		"chain": 323.0,
+		"nova": 1979.75,
+		"overload": 268.0,
+		"pulse": 2142.0,
+		"scatter": 1665.75
+	}
+}
