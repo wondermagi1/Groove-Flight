@@ -5,7 +5,8 @@ signal step_fired(index: int,serial: int,deadline: float)
 const RATE=22050
 const BPM=120.
 const STEP=.25
-const LENGTH=2.
+## 64 bars lets even an eight-bar weapon complete its eight-note motif.
+const LENGTH=128.
 var samples: Dictionary={}
 var base: PackedFloat32Array
 var timeline: float=0
@@ -16,6 +17,8 @@ var last_step: int=-1
 var _previous_raw: float=0
 var _running: bool=false
 var compile_count: int=0
+var score_events: Array=[]
+var compile_msec: float=0.
 func _ready() -> void:
 	process_priority=-100
 	base=decode(load("res://audio/backing.wav"))
@@ -27,31 +30,34 @@ func decode(recording: AudioStreamWAV) -> PackedFloat32Array:
 	return result
 func voice(kind: String,index: int) -> PackedFloat32Array:
 	var key=kind+"_"+str(index)
-	if not samples.has(key): samples[key]=decode(load("res://audio/notes/"+key+".wav"))
+	if not samples.has(key): samples[key]=decode(load("res://audio/arsenal/notes/"+key+".wav"))
 	return samples[key]
 func compose(loadout) -> AudioStreamWAV:
-	var mixed=base.duplicate()
-	for index in range(loadout.slots.size()):
-		var module=loadout.find(loadout.slots[index])
-		if module.is_empty(): continue
-		var sample=voice(module.kind,index%8); var offset=int(round((index%8)*STEP*RATE))
-		var gain=.36+.025*(int(module.level)-1)
-		for n in sample.size(): mixed[(offset+n)%mixed.size()]+=sample[n]*gain
-	# The pilot's extra attack is an audible part of the score, using the same
-	# final-step clock as its combat trigger. It is never a silent timer bonus.
-	if loadout.echo_repeat:
-		for uid in loadout.slots:
-			var first=loadout.find(uid)
-			if first.is_empty(): continue
-			var echo=voice(first.kind,7); var offset=int(round(7*STEP*RATE))
-			for n in echo.size(): mixed[(offset+n)%mixed.size()]+=echo[n]*.19
-			break
+	var started=Time.get_ticks_usec()
+	var mixed=PackedFloat32Array(); mixed.resize(int(RATE*LENGTH))
+	for n in mixed.size(): mixed[n]=base[n%base.size()]*.80
+	score_events.clear()
+	for serial in range(int(LENGTH/STEP)):
+		# The exact same pure schedule drives combat. Charge rests, conditions,
+		# repeats, pilot echoes and support percussion cannot diverge from it.
+		for event in loadout.schedule(serial):
+			var support=str(event.family)=="support"
+			var instrument="support_"+str(event.category) if support else str(event.voice)
+			var pitch=posmod(int(event.get("pitch",serial%8)),8)
+			var sample=voice(instrument,pitch); var offset=int(round(serial*STEP*RATE))
+			var gain=(.18 if support else .33)+.018*(int(event.level)-1)
+			if event.get("pilot","")=="echo": gain*=.55
+			if int(event.get("repeat_index",0))>0: gain*=.75
+			for n in sample.size(): mixed[(offset+n)%mixed.size()]+=sample[n]*gain
+			score_events.append({"serial":serial,"uid":event.uid,"kind":event.kind,"voice":instrument,"pitch":pitch,"repeat_index":event.get("repeat_index",0),"pilot":event.get("pilot","")})
 	var bytes=PackedByteArray(); bytes.resize(mixed.size()*2)
-	for n in mixed.size(): bytes.encode_s16(n*2,int(clampf(mixed[n],-.94,.94)*32767))
+	# Soft limiting is applied once to the compiled score, not to individual
+	# instruments; dense chords retain a little headroom instead of clipping.
+	for n in mixed.size(): bytes.encode_s16(n*2,int(tanh(mixed[n])*31000))
 	var recording=AudioStreamWAV.new(); recording.format=AudioStreamWAV.FORMAT_16_BITS
 	recording.mix_rate=RATE; recording.stereo=false; recording.data=bytes
 	recording.loop_mode=AudioStreamWAV.LOOP_FORWARD; recording.loop_begin=0; recording.loop_end=mixed.size()
-	compile_count+=1; return recording
+	compile_count+=1; compile_msec=(Time.get_ticks_usec()-started)/1000.; return recording
 func begin(loadout) -> void:
 	stop(); timeline=0; source_time=0; loop_count=0; _previous_raw=0; last_step=-1; skipped_steps=0
 	stream=compose(loadout); _running=true; stream_paused=false; play()

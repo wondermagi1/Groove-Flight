@@ -1,0 +1,9 @@
+{
+  "weapons": 32,
+  "pitched_weapon_samples": 256,
+  "percussion_samples": 32,
+  "rate": 22050,
+  "format": "mono PCM16",
+  "unique_first_pitch_hashes": 32,
+  "origin": "Original procedural synthesis"
+}

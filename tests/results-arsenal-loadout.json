@@ -1,0 +1,503 @@
+{
+	"checks": 1454,
+	"facts": {
+		"catalog": {
+			"core": 16,
+			"defense": 40,
+			"mod": 72,
+			"rhythm": 80,
+			"weapon": 32
+		},
+		"guaranteed_weapon_shops": 240,
+		"luck_sample": {
+			"luck100_rarity_sum": 4186,
+			"offers_each": 2400,
+			"ordinary_rarity_sum": 3166
+		},
+		"randomized_operations": 1600,
+		"weapons": {
+			"beam": {
+				"charge": 1,
+				"events": 64,
+				"first_serial": 0,
+				"motif": [
+					0,
+					2,
+					4,
+					7,
+					6,
+					4,
+					2,
+					0
+				]
+			},
+			"beam_lance": {
+				"charge": 8,
+				"events": 8,
+				"first_serial": 56,
+				"motif": [
+					0,
+					3,
+					7,
+					6,
+					4,
+					3,
+					2,
+					0
+				]
+			},
+			"beam_split": {
+				"charge": 1,
+				"events": 64,
+				"first_serial": 0,
+				"motif": [
+					0,
+					4,
+					7,
+					4,
+					2,
+					6,
+					7,
+					6
+				]
+			},
+			"boomerang": {
+				"charge": 1,
+				"events": 64,
+				"first_serial": 0,
+				"motif": [
+					0,
+					2,
+					5,
+					7,
+					5,
+					2,
+					1,
+					0
+				]
+			},
+			"boomerang_crescent": {
+				"charge": 2,
+				"events": 32,
+				"first_serial": 8,
+				"motif": [
+					0,
+					3,
+					5,
+					7,
+					6,
+					4,
+					2,
+					1
+				]
+			},
+			"boomerang_ricochet": {
+				"charge": 2,
+				"events": 32,
+				"first_serial": 8,
+				"motif": [
+					0,
+					5,
+					2,
+					7,
+					4,
+					1,
+					6,
+					3
+				]
+			},
+			"chain": {
+				"charge": 1,
+				"events": 64,
+				"first_serial": 0,
+				"motif": [
+					0,
+					4,
+					1,
+					5,
+					2,
+					6,
+					3,
+					7
+				]
+			},
+			"chain_fork": {
+				"charge": 4,
+				"events": 16,
+				"first_serial": 24,
+				"motif": [
+					0,
+					7,
+					2,
+					5,
+					1,
+					6,
+					3,
+					4
+				]
+			},
+			"drone": {
+				"charge": 2,
+				"events": 32,
+				"first_serial": 8,
+				"motif": [
+					0,
+					2,
+					1,
+					3,
+					2,
+					4,
+					3,
+					5
+				]
+			},
+			"drone_sentry": {
+				"charge": 4,
+				"events": 16,
+				"first_serial": 24,
+				"motif": [
+					0,
+					3,
+					1,
+					4,
+					2,
+					5,
+					3,
+					6
+				]
+			},
+			"flame": {
+				"charge": 1,
+				"events": 64,
+				"first_serial": 0,
+				"motif": [
+					0,
+					1,
+					3,
+					2,
+					5,
+					4,
+					7,
+					6
+				]
+			},
+			"flame_cone": {
+				"charge": 2,
+				"events": 32,
+				"first_serial": 8,
+				"motif": [
+					0,
+					2,
+					3,
+					5,
+					4,
+					6,
+					5,
+					7
+				]
+			},
+			"flame_spark": {
+				"charge": 1,
+				"events": 64,
+				"first_serial": 0,
+				"motif": [
+					0,
+					7,
+					1,
+					6,
+					2,
+					5,
+					3,
+					4
+				]
+			},
+			"mine": {
+				"charge": 2,
+				"events": 32,
+				"first_serial": 8,
+				"motif": [
+					0,
+					1,
+					0,
+					4,
+					0,
+					1,
+					0,
+					6
+				]
+			},
+			"mine_anchor": {
+				"charge": 4,
+				"events": 16,
+				"first_serial": 24,
+				"motif": [
+					0,
+					0,
+					2,
+					0,
+					0,
+					5,
+					0,
+					7
+				]
+			},
+			"mine_cluster": {
+				"charge": 4,
+				"events": 16,
+				"first_serial": 24,
+				"motif": [
+					0,
+					1,
+					3,
+					6,
+					0,
+					2,
+					4,
+					7
+				]
+			},
+			"missile": {
+				"charge": 1,
+				"events": 64,
+				"first_serial": 0,
+				"motif": [
+					0,
+					1,
+					2,
+					4,
+					3,
+					2,
+					1,
+					5
+				]
+			},
+			"missile_siege": {
+				"charge": 8,
+				"events": 8,
+				"first_serial": 56,
+				"motif": [
+					0,
+					0,
+					0,
+					3,
+					0,
+					0,
+					0,
+					7
+				]
+			},
+			"missile_swarm": {
+				"charge": 2,
+				"events": 32,
+				"first_serial": 8,
+				"motif": [
+					0,
+					1,
+					4,
+					2,
+					5,
+					3,
+					6,
+					4
+				]
+			},
+			"nova": {
+				"charge": 1,
+				"events": 64,
+				"first_serial": 0,
+				"motif": [
+					0,
+					2,
+					4,
+					6,
+					7,
+					5,
+					3,
+					1
+				]
+			},
+			"nova_spiral": {
+				"charge": 2,
+				"events": 32,
+				"first_serial": 8,
+				"motif": [
+					0,
+					3,
+					6,
+					2,
+					5,
+					1,
+					4,
+					7
+				]
+			},
+			"orbit": {
+				"charge": 2,
+				"events": 32,
+				"first_serial": 8,
+				"motif": [
+					0,
+					3,
+					5,
+					3,
+					1,
+					4,
+					6,
+					4
+				]
+			},
+			"orbit_binary": {
+				"charge": 2,
+				"events": 32,
+				"first_serial": 8,
+				"motif": [
+					0,
+					4,
+					0,
+					5,
+					1,
+					6,
+					1,
+					7
+				]
+			},
+			"orbit_lattice": {
+				"charge": 4,
+				"events": 16,
+				"first_serial": 24,
+				"motif": [
+					0,
+					2,
+					5,
+					0,
+					3,
+					6,
+					1,
+					4
+				]
+			},
+			"pulse": {
+				"charge": 1,
+				"events": 64,
+				"first_serial": 0,
+				"motif": [
+					0,
+					0,
+					2,
+					4,
+					2,
+					0,
+					5,
+					2
+				]
+			},
+			"pulse_needle": {
+				"charge": 1,
+				"events": 64,
+				"first_serial": 0,
+				"motif": [
+					7,
+					4,
+					2,
+					0,
+					1,
+					3,
+					5,
+					7
+				]
+			},
+			"pulse_ribbon": {
+				"charge": 1,
+				"events": 64,
+				"first_serial": 0,
+				"motif": [
+					0,
+					2,
+					0,
+					4,
+					1,
+					3,
+					1,
+					5
+				]
+			},
+			"rail": {
+				"charge": 2,
+				"events": 32,
+				"first_serial": 8,
+				"motif": [
+					0,
+					0,
+					4,
+					3,
+					0,
+					0,
+					7,
+					4
+				]
+			},
+			"rail_horizon": {
+				"charge": 8,
+				"events": 8,
+				"first_serial": 56,
+				"motif": [
+					0,
+					2,
+					0,
+					3,
+					0,
+					5,
+					0,
+					7
+				]
+			},
+			"scatter": {
+				"charge": 1,
+				"events": 64,
+				"first_serial": 0,
+				"motif": [
+					0,
+					3,
+					1,
+					5,
+					2,
+					6,
+					3,
+					1
+				]
+			},
+			"scatter_heavy": {
+				"charge": 2,
+				"events": 32,
+				"first_serial": 8,
+				"motif": [
+					0,
+					0,
+					3,
+					0,
+					4,
+					0,
+					7,
+					3
+				]
+			},
+			"scatter_prism": {
+				"charge": 2,
+				"events": 32,
+				"first_serial": 8,
+				"motif": [
+					0,
+					4,
+					2,
+					6,
+					1,
+					5,
+					3,
+					7
+				]
+			}
+		}
+	},
+	"failures": [],
+	"scope": "Pure model fixtures: catalog schema, atomic placement/merge/shop, equipped-only bonuses, conditional scopes, charge/repeat/echo/motif schedule and512-step repeat. Does not certify production damage/audio/UI or human balance."
+}

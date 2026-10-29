@@ -1,0 +1,5 @@
+{
+	"checks": 49,
+	"failures": [],
+	"scope": "Production ArsenalScreen/loadout transaction fixture: six-offer buy/reroll, merge/salvage, track-C drop/unequip, read-only combat, five toggles, source inspector and720p/1080p layout. Additional actual Main.tscn checks default clean combat, independent combat/editor visibility, pause/move/merge/recompile and shop-buy-continue callbacks. Shop entry is an explicit state fixture, not a complete wave/flight or human balance test."
+}

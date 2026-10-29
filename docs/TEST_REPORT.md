@@ -1,4 +1,8 @@
-# v2 neon harbor / fleet verification
+# 验证报告入口
+
+当前V3装备与旋律版本请查看[最新测试报告](TEST_REPORT_V3.md)。以下保留V2城市与舰队版本记录，独立副本为`TEST_REPORT_V2.md`。
+
+## v2 neon harbor / fleet verification
 
 2026-10-29, Windows, Godot4.7.2, NVIDIA RTX4060 Laptop GPU. Automated runs use an isolated profile and `--beatdrift-test`, without writing player settings or older-game saves. V1 history is in `TEST_REPORT_V1.md`.
 
