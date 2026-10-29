@@ -1,6 +1,9 @@
 extends CanvasLayer
 const C=preload("res://scripts/catalog.gd")
 const SLOT=preload("res://scripts/slot.gd")
+const FLEET=preload("res://scripts/fleet_catalog.gd")
+const TITLE=preload("res://scripts/interactive_title.gd")
+const PICKER=preload("res://scripts/fleet_picker.gd")
 var game
 var root_control: Control
 var font: SystemFont
@@ -13,6 +16,7 @@ var overload_label: Label
 var boss_bar: ProgressBar
 var overload_bar: ProgressBar
 var slots: Array=[]
+var title_flight: Node2D
 func _ready() -> void:
 	layer=30
 	font=SystemFont.new(); font.font_names=PackedStringArray(["Microsoft YaHei UI","Noto Sans CJK SC","Arial"])
@@ -42,9 +46,11 @@ func refresh() -> void:
 	# Buttons can request a new screen from inside their own pressed signal.
 	# Hide immediately, release after signal dispatch instead of freeing a lock.
 	for child in root_control.get_children(): child.hide(); child.queue_free()
-	slots.clear(); wave_label=null; timer_label=null; health_label=null; score_label=null; notice_label=null; overload_label=null; boss_bar=null; overload_bar=null
+	slots.clear(); wave_label=null; timer_label=null; health_label=null; score_label=null; notice_label=null; overload_label=null; boss_bar=null; overload_bar=null; title_flight=null
 	match game.state:
 		"title": title_screen()
+		"hub": hub_screen()
+		"hangar": hangar_screen()
 		"combat": hud()
 		"reward": hud(); reward_screen()
 		"editor": hud(); editor_screen()
@@ -60,17 +66,58 @@ func panel(width: float,height: float) -> VBoxContainer:
 	var content=VBoxContainer.new(); content.add_theme_constant_override("separation",18); panel_node.add_child(content); return content
 func title_screen() -> void:
 	var view=get_viewport().get_visible_rect().size
-	var content=VBoxContainer.new(); content.position=view*Vector2(.13,.28); content.add_theme_constant_override("separation",20); root_control.add_child(content)
-	content.add_child(label("S E Q U E N C E  /  S U R V I V E",17,Color("75b0bb")))
-	content.add_child(label("BEATDRIFT",68))
-	content.add_child(label("律 航",32,Color("94a8c3")))
-	content.add_child(label("把武器排进节拍，把深空打成合奏。",21,Color("8e9db5")))
-	var spacer=Control.new(); spacer.custom_minimum_size.y=16; content.add_child(spacer)
-	content.add_child(button("开始飞行",func(): game.start_run()))
-	content.add_child(button("设置",game.show_settings,Color("9caac2")))
-	content.add_child(button("退出",func(): game.get_tree().quit(),Color("748299")))
-	var footer=label("WASD 移动   /   空格 冲刺   /   E 超载   /   武器自动随拍发射",18,Color("7e8ea6"))
-	footer.position=Vector2(view.x*.13,view.y-75); root_control.add_child(footer)
+	var compact=view.x<1500 or view.y<850
+	title_flight=TITLE.new(); title_flight.game=game; title_flight.name="InteractiveTitle"; root_control.add_child(title_flight)
+	var content=VBoxContainer.new(); content.position=view*Vector2(.10,.17 if compact else .22)
+	content.custom_minimum_size.x=minf(424,view.x*.35); content.add_theme_constant_override("separation",9 if compact else 13); root_control.add_child(content)
+	content.add_child(label("S E Q U E N C E   /   S U R V I V E",14 if compact else 17,Color("6c9dab")))
+	content.add_child(label("BEATDRIFT",55 if compact else 80))
+	content.add_child(label("律 航",25 if compact else 32,Color("b4c4db")))
+	content.add_child(label("把武器排进节拍，把深空打成合奏。",17 if compact else 21,Color("8598b4")))
+	var spacer=Control.new(); spacer.custom_minimum_size.y=15 if compact else 27; content.add_child(spacer)
+	var entries=[
+		["hub","进入霓光港","01",Color("71e8dc")],
+		["hangar","机库与驾驶员","02",Color("b1b9fa")],
+		["settings","设置","03",Color("8fa9c1")],
+		["quit","退出","04",Color("71839a")]]
+	for entry in entries:
+		var id: String=entry[0]
+		var row=Button.new(); row.name="TitleEntry"+id.capitalize(); row.text=entry[1]
+		row.alignment=HORIZONTAL_ALIGNMENT_LEFT; row.focus_mode=Control.FOCUS_NONE
+		row.custom_minimum_size=Vector2(0,52 if compact else 62); row.mouse_default_cursor_shape=Control.CURSOR_POINTING_HAND
+		row.add_theme_font_size_override("font_size",21 if compact else 24)
+		for state_name in ["normal","hover","pressed"]:
+			var style=StyleBoxFlat.new(); style.bg_color=Color(entry[3],.065 if state_name=="hover" else (.14 if state_name=="pressed" else .008))
+			style.content_margin_left=48; style.content_margin_right=16; style.content_margin_top=8; style.content_margin_bottom=8
+			style.border_width_bottom=1; style.border_color=Color(entry[3],.57 if state_name=="hover" else .18)
+			row.add_theme_stylebox_override(state_name,style)
+		row.add_theme_color_override("font_color",entry[3]); row.add_theme_color_override("font_hover_color",Color.WHITE)
+		var index=label(entry[2],13,Color(entry[3],.5)); index.position=Vector2(7,19 if compact else 24); row.add_child(index)
+		var arrow=label("↗",22,Color(entry[3],.75)); arrow.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+		arrow.offset_left=-31; arrow.offset_top=13 if compact else 19; arrow.offset_right=-12; row.add_child(arrow)
+		row.pressed.connect(title_flight.shoot_target.bind(id)); content.add_child(row); title_flight.register_target(id,row)
+	var footer=label("WASD 驾驶  ·  鼠标瞄准 / 射击菜单  ·  ENTER 进入都市",15 if compact else 18,Color("6e819d"))
+	footer.position=Vector2(view.x*.10,view.y-62); root_control.add_child(footer)
+	var selected=label(FLEET.ship(game.selected_ship).name+"  /  "+FLEET.pilot(game.selected_pilot).name,15,Color("7fa5b9"))
+	selected.position=Vector2(view.x*.60,view.y*.80); selected.size=Vector2(view.x*.27,30); selected.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER; root_control.add_child(selected)
+func hub_screen() -> void:
+	var view=get_viewport().get_visible_rect().size
+	var compact=view.x<1500
+	var title=label("霓光港",28 if compact else 34); title.position=Vector2(38,28); root_control.add_child(title)
+	var subtitle=label("N E O N   H A R B O R",12 if compact else 14,Color("8fbed0")); subtitle.position=Vector2(40,73 if compact else 82); root_control.add_child(subtitle)
+	var navigation=HBoxContainer.new(); navigation.position=Vector2(view.x-(620 if compact else 675),30); navigation.add_theme_constant_override("separation",10); root_control.add_child(navigation)
+	var hangar=button("机库与驾驶员",game.open_hangar,Color("9de7ec"),44); hangar.custom_minimum_size.x=205 if compact else 220; navigation.add_child(hangar)
+	var settings=button("设置",game.show_settings,Color("9baac9"),44); settings.custom_minimum_size.x=140; navigation.add_child(settings)
+	var home=button("返回标题",game.return_title,Color("9baac9"),44); home.custom_minimum_size.x=170; navigation.add_child(home)
+	# The city supplies a single context-sensitive control hint at bottom center.
+	# Keep the configuration with the header so bright floor lights cannot wash it out.
+	var selection=label("%s / %s"%[FLEET.ship(game.selected_ship).name,FLEET.pilot(game.selected_pilot).name],16 if compact else 18,Color("c3deed"))
+	selection.position=Vector2(40,103 if compact else 114)
+	selection.add_theme_color_override("font_shadow_color",Color(0,0,0,.8))
+	selection.add_theme_constant_override("shadow_offset_x",2); selection.add_theme_constant_override("shadow_offset_y",2)
+	root_control.add_child(selection)
+func hangar_screen() -> void:
+	var picker=PICKER.new(); picker.game=game; picker.name="FleetPicker"; root_control.add_child(picker)
 func thin_bar(width: float,color: Color) -> ProgressBar:
 	var bar=ProgressBar.new(); bar.custom_minimum_size=Vector2(width,5); bar.show_percentage=false; bar.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	bar.add_theme_stylebox_override("background",box(Color("253042"),Color.TRANSPARENT,2)); bar.add_theme_stylebox_override("fill",box(color,Color.TRANSPARENT,2))
@@ -95,9 +142,9 @@ func hud() -> void:
 	var help=label("SPACE 冲刺  ·  ESC 暂停",16,Color("7889a2")); help.position=Vector2(view.x-265,view.y-62); root_control.add_child(help)
 func update_hud() -> void:
 	if not is_instance_valid(wave_label): return
-	wave_label.text="WAVE %02d / 06"%game.wave
-	var remaining=maxf(0,float(C.WAVES[maxi(0,game.wave-1)].seconds)-(game.music.timeline-game.wave_start))
-	timer_label.text="BOSS" if game.wave==6 else ("清场" if remaining<=0 else str(int(ceil(remaining))))
+	wave_label.text="WAVE %02d / %02d"%[game.wave,game.wave_count()]
+	var remaining=maxf(0,float(game.wave_profile().seconds)-(game.music.timeline-game.wave_start))
+	timer_label.text="BOSS" if game.wave==game.wave_count() else ("清场" if remaining<=0 else str(int(ceil(remaining))))
 	health_label.text="生命  %d / %d"%[game.health,game.loadout.max_health]
 	score_label.text="✦ %d   /   击破 %d"%[game.dust,game.kills]
 	notice_label.text=game.notice if game.music.timeline<game.notice_until else ""
@@ -176,7 +223,7 @@ func pause_screen() -> void:
 	content.add_child(button("继续飞行",game.pause_game)); content.add_child(button("设置",game.show_settings,Color("9badc4")))
 	content.add_child(button("返回主菜单",game.return_title,Color("e1a2a9")))
 func settings_screen() -> void:
-	var content=panel(650,520); section_title(content,"设置","F11 可切换全屏。设置与存档独立于《折界》。")
+	var content=panel(650,520); section_title(content,"设置","调整音量、显示与粒子密度。F11 可切换全屏。")
 	for item in [["master","总音量"],["music","音乐 / 武器音符"],["sfx","拾取 / 命中音效"]]:
 		var heading=label(item[1]+"  %d%%"%int(float(game.settings[item[0]])*100),19); content.add_child(heading)
 		var slider=HSlider.new(); slider.min_value=0; slider.max_value=1; slider.step=.01; slider.value=game.settings[item[0]]
@@ -197,5 +244,6 @@ func results_screen() -> void:
 	for kind in kinds.slice(0,4):
 		var name=C.weapon(kind).name if kind in ["pulse","scatter","beam","missile","nova","chain"] else ("超载爆发" if kind=="overload" else "异色和弦")
 		content.add_child(label("%s    %d 伤害"%[name,int(game.weapon_damage[kind])],19,Color("aebed1")))
-	content.add_child(button("再来一局  /  R",func():game.start_run()))
-	content.add_child(button("返回主菜单",game.return_title,Color("9aaec6")))
+	content.add_child(button("返回霓光港",game.enter_hub))
+	content.add_child(button("再次出发  /  R",func():game.start_run(),Color("aab9e1"),48))
+	content.add_child(button("返回标题",game.return_title,Color("7789a1"),40))

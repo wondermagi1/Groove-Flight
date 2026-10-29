@@ -1,0 +1,21 @@
+{
+  "author": "BeatDrift original procedural Blender architecture",
+  "blender": "4.5.9 LTS",
+  "editable_meshes": 1133,
+  "export_meshes": 10,
+  "vertices": 76196,
+  "triangles": 147941,
+  "portal_world": [
+    0,
+    4.55,
+    0
+  ],
+  "hangar_terminal_world": [
+    10.2,
+    0,
+    10.0
+  ],
+  "generator": "tools/build_neon_city.py",
+  "external_assets": [],
+  "seed": 4219
+}

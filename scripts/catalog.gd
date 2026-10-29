@@ -19,14 +19,6 @@ const PERKS=[
 	{"id":"magnet","name":"引力收集","detail":"拾取范围 +100%，每拾取12颗星屑恢复1生命。","tag":"续航"},
 	{"id":"charge","name":"过载回路","detail":"超载充能加快50%，超载持续时间 +2秒。","tag":"爆发增强"}
 ]
-const WAVES=[
-	{"name":"初次接触","seconds":18.,"budget":25,"elite":false},
-	{"name":"穿越星群","seconds":22.,"budget":36,"elite":false},
-	{"name":"拦截信号","seconds":24.,"budget":44,"elite":true},
-	{"name":"光潮迫近","seconds":26.,"budget":58,"elite":false},
-	{"name":"深空合奏","seconds":28.,"budget":70,"elite":true},
-	{"name":"节律主宰","seconds":0.,"budget":0,"elite":false}
-]
 static func weapon(id: String) -> Dictionary:
 	for row in WEAPONS:
 		if row.id==id: return row

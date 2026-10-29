@@ -1,0 +1,253 @@
+{
+	"checks": 98,
+	"density": {
+		"display_driver": "Windows",
+		"fixture": {
+			"bullet_damage": 1,
+			"enemies": 480,
+			"enemy_hp": 10000000,
+			"fixed_update_delta": 0.0166666666666667,
+			"friendly": 800,
+			"hostile": 450
+		},
+		"frame_interval_ms_max": 18.891,
+		"frame_interval_ms_median": 14.463,
+		"frame_interval_ms_p95": 16.169,
+		"gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+		"note": "Controlled fixture with frozen native audio, stationary high-HP enemies and positive one-damage bullets. Frame intervals include graphics/OS scheduling; this is a short sample rather than stable FPS or human gameplay.",
+		"peak_enemies": 480,
+		"peak_friendly": 800,
+		"peak_hostile": 450,
+		"phase_ms": {
+			"collision": {
+				"max": 7.764,
+				"median": 5.756,
+				"p95": 6.815
+			},
+			"enemy": {
+				"max": 0.799,
+				"median": 0.621,
+				"p95": 0.693
+			},
+			"hostile": {
+				"max": 0.335,
+				"median": 0.26,
+				"p95": 0.293
+			},
+			"spatial": {
+				"max": 0.836,
+				"median": 0.629,
+				"p95": 0.692
+			}
+		},
+		"render_driver": "opengl3",
+		"rendering": {
+			"draw_calls": {
+				"max": 85.0,
+				"median": 85.0,
+				"p95": 85.0
+			},
+			"objects": {
+				"max": 47913.0,
+				"median": 47913.0,
+				"p95": 47913.0
+			},
+			"primitives": {
+				"max": 65242.0,
+				"median": 65242.0,
+				"p95": 65242.0
+			}
+		},
+		"samples": 90,
+		"sampling_elapsed_ms": 1315,
+		"sampling_started_utc": "2026-10-29T01:40:03",
+		"update_ms_max": 9.684,
+		"update_ms_median": 7.272,
+		"update_ms_p95": 8.643,
+		"window": "(1600, 898)"
+	},
+	"facts": {
+		"enemy_stats": {
+			"armor": {
+				"hp": 62.0,
+				"radius": 18.0,
+				"speed": 85.0
+			},
+			"boss": {
+				"hp": 6800.0,
+				"radius": 82.0,
+				"speed": 0.0
+			},
+			"dart": {
+				"hp": 10.0,
+				"radius": 9.0,
+				"speed": 238.0
+			},
+			"elite": {
+				"hp": 610.0,
+				"radius": 42.0,
+				"speed": 96.0
+			},
+			"mote": {
+				"hp": 12.0,
+				"radius": 11.0,
+				"speed": 142.0
+			},
+			"sentinel": {
+				"hp": 80.0,
+				"radius": 19.0,
+				"speed": 85.0
+			},
+			"shooter": {
+				"hp": 30.0,
+				"radius": 15.0,
+				"speed": 100.0
+			},
+			"splitter": {
+				"hp": 42.0,
+				"radius": 17.0,
+				"speed": 124.0
+			}
+		},
+		"fleet_combinations": [
+			{
+				"damage": 1.0,
+				"dash": 1.6,
+				"health": 10,
+				"pilot": "echo",
+				"ship": "hex",
+				"speed": 470.0,
+				"starter": [
+					"pulse",
+					"scatter",
+					"beam",
+					"pulse",
+					"nova"
+				]
+			},
+			{
+				"damage": 1.0,
+				"dash": 1.6,
+				"health": 10,
+				"pilot": "volt",
+				"ship": "hex",
+				"speed": 470.0,
+				"starter": [
+					"pulse",
+					"scatter",
+					"beam",
+					"pulse",
+					"nova"
+				]
+			},
+			{
+				"damage": 1.0,
+				"dash": 1.6,
+				"health": 10,
+				"pilot": "mender",
+				"ship": "hex",
+				"speed": 470.0,
+				"starter": [
+					"pulse",
+					"scatter",
+					"beam",
+					"pulse",
+					"nova"
+				]
+			},
+			{
+				"damage": 0.92,
+				"dash": 1.15,
+				"health": 8,
+				"pilot": "echo",
+				"ship": "swift",
+				"speed": 560.0,
+				"starter": [
+					"pulse",
+					"chain",
+					"scatter",
+					"pulse",
+					"nova"
+				]
+			},
+			{
+				"damage": 0.92,
+				"dash": 1.15,
+				"health": 8,
+				"pilot": "volt",
+				"ship": "swift",
+				"speed": 560.0,
+				"starter": [
+					"pulse",
+					"chain",
+					"scatter",
+					"pulse",
+					"nova"
+				]
+			},
+			{
+				"damage": 0.92,
+				"dash": 1.15,
+				"health": 8,
+				"pilot": "mender",
+				"ship": "swift",
+				"speed": 560.0,
+				"starter": [
+					"pulse",
+					"chain",
+					"scatter",
+					"pulse",
+					"nova"
+				]
+			},
+			{
+				"damage": 1.18,
+				"dash": 2.0,
+				"health": 14,
+				"pilot": "echo",
+				"ship": "bastion",
+				"speed": 385.0,
+				"starter": [
+					"beam",
+					"missile",
+					"scatter",
+					"pulse",
+					"nova"
+				]
+			},
+			{
+				"damage": 1.18,
+				"dash": 2.0,
+				"health": 14,
+				"pilot": "volt",
+				"ship": "bastion",
+				"speed": 385.0,
+				"starter": [
+					"beam",
+					"missile",
+					"scatter",
+					"pulse",
+					"nova"
+				]
+			},
+			{
+				"damage": 1.18,
+				"dash": 2.0,
+				"health": 14,
+				"pilot": "mender",
+				"ship": "bastion",
+				"speed": 385.0,
+				"starter": [
+					"beam",
+					"missile",
+					"scatter",
+					"pulse",
+					"nova"
+				]
+			}
+		],
+		"normal_spawn_budget": 3130
+	},
+	"failures": [],
+	"scope": "Nine real ship/pilot start configurations; retry/reset isolation; PCM echo difference and actual beam-repeat damage; native dash-end pilot buff; collected-quantity healing; seeded offscreen formation fixtures; eight enemy roles; controlled dense update/render sampling. Time, position and high-HP stress fixtures are explicitly injected. Not a full run, listening acceptance, human balance or a stable-FPS certification."
+}

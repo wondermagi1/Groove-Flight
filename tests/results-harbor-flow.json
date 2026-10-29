@@ -1,0 +1,6 @@
+{
+	"checks": 15,
+	"failures": [],
+	"renderer": "forward_plus",
+	"scope": "Real main-scene title shot, 3D HUD, walking, fleet choices, settings freeze, actual F input and native combat departure. Portal position and results screen are explicit assisted fixtures; no completed run or stable-FPS claim."
+}

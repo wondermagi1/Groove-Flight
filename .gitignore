@@ -2,3 +2,9 @@
 *.tmp
 *.log
 tests/results*.json
+tests/runtime-profile/
+tests/profile*/
+work/
+__pycache__/
+*.pyc
+docs/screenshots/*.import

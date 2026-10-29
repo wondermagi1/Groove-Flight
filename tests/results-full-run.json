@@ -1,48 +1,66 @@
 {
-	"checks": 19,
-	"chosen_rewards": 5,
-	"elapsed_wall_seconds": 153.004,
+	"checks": 27,
+	"chosen_rewards": 9,
+	"elapsed_wall_seconds": 356.779,
 	"failures": [],
-	"kills": 181,
-	"late_timing_max_error": 0.0276130579169944,
-	"music_seconds": 152.882286028819,
-	"peak_bullets": 60,
-	"peak_enemies": 21,
-	"peak_hostile_bullets": 58,
-	"scope": "One complete six-wave run on real native audio and production durations, native spawns/hits/boss phase/victory, real reward buttons. Invulnerability, assisted steering and automatic overload; no injected kills, HP reduction, music seeking or wave/time skips. Not human difficulty or listening acceptance.",
-	"score": 291,
+	"kills": 3938,
+	"late_timing_max_error": 0.005929516268111,
+	"music_seconds": 356.552530470866,
+	"peak_bullets": 68,
+	"peak_enemies": 124,
+	"peak_hostile_bullets": 123,
+	"scope": "One complete ten-wave run on real native audio and production durations, native spawns/hits/boss phase/victory, real reward buttons. Invulnerability, assisted steering and automatic overload; no injected kills, HP reduction, music seeking or wave/time skips. Not human difficulty or listening acceptance.",
+	"score": 4059,
+	"total_spawned": 3948,
 	"waves": {
 		"1": {
 			"modules": 5,
-			"start": 0.0054559887791276
+			"start": 0.00825397733473778
+		},
+		"10": {
+			"modules": 11,
+			"start": 306.029208159625
 		},
 		"2": {
 			"modules": 6,
-			"start": 18.0268067854996
+			"start": 26.0196248105953
 		},
 		"3": {
 			"modules": 7,
-			"start": 40.0184814847982
+			"start": 54.0253577634021
 		},
 		"4": {
-			"modules": 7,
-			"start": 64.0217185922488
+			"modules": 8,
+			"start": 84.0192431825142
 		},
 		"5": {
-			"modules": 8,
-			"start": 90.0278258105953
+			"modules": 9,
+			"start": 116.022917336087
 		},
 		"6": {
-			"modules": 9,
-			"start": 118.033176104573
+			"modules": 10,
+			"start": 150.03183155664
+		},
+		"7": {
+			"modules": 10,
+			"start": 186.030928888089
+		},
+		"8": {
+			"modules": 11,
+			"start": 224.031852682119
+		},
+		"9": {
+			"modules": 11,
+			"start": 264.029990189582
 		}
 	},
 	"weapon_damage": {
-		"beam": 1546.25,
-		"chain": 323.0,
-		"nova": 1979.75,
-		"overload": 268.0,
-		"pulse": 2142.0,
-		"scatter": 1665.75
+		"beam": 16426.6375,
+		"chain": 8959.68749999998,
+		"missile": 8225.01250000001,
+		"nova": 25501.5625,
+		"overload": 18533.9375,
+		"pulse": 19869.675,
+		"scatter": 5029.575
 	}
 }

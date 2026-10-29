@@ -1,0 +1,17 @@
+{
+	"checks": [
+		"City has its own active 3D viewport",
+		"Pilot begins on the front plaza",
+		"Blender humanoid imports actual Idle and Walk skeleton animation",
+		"WASD moves the humanoid through the city",
+		"Movement plays the imported walk cycle",
+		"Hangar overlays freeze walking while preserving the visible city",
+		"Reactivation preserves avatar position",
+		"F near the central vortex starts the flight",
+		"F near the hangar opens the fleet picker",
+		"Leaving the city stops 3D rendering"
+	],
+	"failures": [],
+	"renderer": "forward_plus",
+	"scope": "Native Blender GLB, skeletal animation, actual input motion, modal freeze and F portal/terminal. Does not claim full gameplay or stable frame rate."
+}

@@ -13,7 +13,15 @@ func frames(count: int=4) -> void:
 	for i in range(count): await process_frame
 func shot(name: String) -> void:
 	if DisplayServer.get_name()=="headless": return
-	await RenderingServer.frame_post_draw; root.get_texture().get_image().save_png("res://docs/screenshots/"+name+".png")
+	await RenderingServer.frame_post_draw
+	var capture=root.get_texture().get_image()
+	var path="res://docs/screenshots/"+name+".png"
+	# PNG compression is test tooling. Doing it synchronously artificially stalls
+	# the game and falsely inflates the measured native audio/visual latency.
+	var writer=Thread.new()
+	writer.start(func(): return capture.save_png(path))
+	while writer.is_alive(): await process_frame
+	writer.wait_to_finish()
 func isolated() -> void:
 	game.enemies.clear(); game.by_id.clear(); game.bullets.clear(); game.enemy_bullets.clear(); game.pickups.clear(); game.warnings.clear()
 func run() -> void:
@@ -54,7 +62,7 @@ func run() -> void:
 		check(not seen.has(key),"each track fires once per audible step / "+key); seen[key]=true
 	check(max_error<.06,"automatic weapon events remain within 60ms of sample clock")
 	facts.timing_max_error=max_error
-	check(game.field().size==Vector2(8192,8192) and game.camera.enabled,"world is a real 8192-square field with a following camera")
+	check(game.field().size==Vector2(12288,12288) and game.camera.enabled,"world is a real 12288-square field with a following camera")
 	Input.action_press("right"); await create_timer(.35).timeout; Input.action_release("right")
 	check(game.player.x>120 and game.camera.position.x>120,"real movement input travels through the large world and moves camera")
 	var here=game.player; check(game.dash(Vector2.RIGHT),"dash begins during combat")
@@ -95,7 +103,7 @@ func run() -> void:
 	isolated(); game.music.hold(false)
 	game.player=Vector2(2800,2200); game.camera.position=game.player; game.camera.reset_smoothing(); await frames(6)
 	var spawned=game.spawn_enemy("mote")
-	check(game.visible_world().grow(60).has_point(spawned.at) and game.field().has_point(spawned.at),"enemy spawns relative to distant camera instead of the original screen")
+	check(not game.visible_world().grow(80).has_point(spawned.at) and game.field().has_point(spawned.at) and spawned.at.distance_to(game.player)<2200,"enemy spawns safely outside the distant camera instead of the original screen")
 	await shot("03-distant-world")
 	game.state="reward"; game.music.hold(true); game.rewards=game.loadout.reward_choices(game.rng); game.reward_taken=false; game.ui.refresh()
 	check(game.rewards.size()==3,"wave reward provides three actual choices")

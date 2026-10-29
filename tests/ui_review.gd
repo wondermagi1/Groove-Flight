@@ -2,9 +2,16 @@ extends "res://tests/prototype_review.gd"
 func run() -> void:
 	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_NO_FOCUS,true)
 	root.size=Vector2i(1280,720); game=load("res://scenes/Main.tscn").instantiate(); root.add_child(game); current_scene=game; await frames(5)
-	var start=game.ui.root_control.find_children("*","Button",true,false).filter(func(node):return node.text=="开始飞行")[0]
-	start.pressed.emit(); await frames(5)
-	check(game.state=="combat" and game.music.playing,"actual title button launches native music combat")
+	var entry=game.ui.title_flight.targets.settings
+	entry.pressed.emit()
+	check(game.state=="title" and not game.ui.title_flight.shots.is_empty(),"actual title settings entry launches a projectile before switching screens")
+	await create_timer(1.).timeout
+	check(game.state=="settings","projectile impact opens actual title settings")
+	game.close_settings(); await frames(4)
+	check(game.state=="title","title settings return to the interactive title")
+	# A separate combat-settings fixture follows. The title now correctly enters
+	# the 3D harbor; this direct start is not claimed as a menu-to-flight test.
+	game.start_run(441); await frames(5)
 	game.show_settings(); await frames(3)
 	check(game.state=="settings" and game.music.stream_paused,"settings freeze current combat and actual music")
 	var button=game.ui.root_control.find_children("*","Button",true,false).filter(func(node):return node.text.begins_with("粒子密度"))[0]
@@ -19,6 +26,10 @@ func run() -> void:
 	var back=game.ui.root_control.find_children("*","Button",true,false).filter(func(node):return node.text=="保存并返回")[0]
 	back.pressed.emit(); await frames(4)
 	check(game.state=="combat" and not game.music.stream_paused,"actual save/back button safely resumes current run")
-	var result={"checks":checks,"failures":failures,"scope":"Actual title/settings buttons, particle toggles and master slider;720p; isolated profile, not a full run."}
+	var result={"checks":checks,"failures":failures,"scope":"Actual interactive-title settings projectile, title return, separate direct-start combat settings fixture, particle toggles and master slider;720p; isolated profile, not a harbor departure or full run."}
 	FileAccess.open("res://tests/results-ui.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("BEATDRIFT_UI_REVIEW ",JSON.stringify(result))
-	game.music.stop(); current_scene=null; game.queue_free(); await frames(5); quit(0 if failures.is_empty() else 1)
+	game.music.stop(); current_scene=null; game.queue_free(); await frames(5)
+	# Audio playback disposal runs on the audio thread. Headless frame loops can
+	# finish five frames before its next mix; allow that retirement before exit.
+	await create_timer(.15,true).timeout
+	quit(0 if failures.is_empty() else 1)

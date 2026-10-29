@@ -37,6 +37,15 @@ func compose(loadout) -> AudioStreamWAV:
 		var sample=voice(module.kind,index%8); var offset=int(round((index%8)*STEP*RATE))
 		var gain=.36+.025*(int(module.level)-1)
 		for n in sample.size(): mixed[(offset+n)%mixed.size()]+=sample[n]*gain
+	# The pilot's extra attack is an audible part of the score, using the same
+	# final-step clock as its combat trigger. It is never a silent timer bonus.
+	if loadout.echo_repeat:
+		for uid in loadout.slots:
+			var first=loadout.find(uid)
+			if first.is_empty(): continue
+			var echo=voice(first.kind,7); var offset=int(round(7*STEP*RATE))
+			for n in echo.size(): mixed[(offset+n)%mixed.size()]+=echo[n]*.19
+			break
 	var bytes=PackedByteArray(); bytes.resize(mixed.size()*2)
 	for n in mixed.size(): bytes.encode_s16(n*2,int(clampf(mixed[n],-.94,.94)*32767))
 	var recording=AudioStreamWAV.new(); recording.format=AudioStreamWAV.FORMAT_16_BITS

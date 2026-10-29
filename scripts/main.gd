@@ -2,19 +2,41 @@ extends Node2D
 ## A standalone rhythm shooter. This project never loads a Foldbound save or scene.
 const C=preload("res://scripts/catalog.gd")
 const LOADOUT=preload("res://scripts/loadout.gd")
+const FLEET=preload("res://scripts/fleet_catalog.gd")
+const ART=preload("res://scripts/fleet_art.gd")
+const PLAN=preload("res://scripts/wave_plan.gd")
+const MAX_ENEMIES=640
+const MAX_BULLETS=1200
+const MAX_ENEMY_BULLETS=700
+const GRID=96.
+var wave_rows: Array[Dictionary]=PLAN.rows()
 var loadout=LOADOUT.new()
 var music
 var fx
+var fleet_batch
 var ui
 var background: ShaderMaterial
+var background_layer: CanvasLayer
 var post: ColorRect
+var hub
+var selected_ship: String="hex"
+var selected_pilot: String="echo"
+var move_speed: float=470.
+var dash_recharge: float=1.6
+var pilot_amp_until: float=-1.
+var pilot_heal_progress: int=0
+var movement_facing: Vector2=Vector2.UP
+var pending_splits: Array[Vector2]=[]
+var boss_down: bool=false
+var spawn_log: Array=[]
+var total_spawned: int=0
 var state: String="title"
 var previous_state: String="combat"
 var rng=RandomNumberGenerator.new()
 var player: Vector2
 var camera: Camera2D
 var boss_anchor: Vector2
-const WORLD=Rect2(Vector2(-4096,-4096),Vector2(8192,8192))
+const WORLD=Rect2(Vector2(-6144,-6144),Vector2(12288,12288))
 var facing: Vector2=Vector2.UP
 var health: int=10
 var invulnerable: float=0
@@ -61,12 +83,13 @@ var test_mode: bool=false
 func _ready() -> void:
 	test_mode="--beatdrift-test" in OS.get_cmdline_user_args()
 	bind_input(); loadout.reset(); load_settings()
-	var back_layer=CanvasLayer.new(); back_layer.layer=-20; add_child(back_layer)
+	background_layer=CanvasLayer.new(); background_layer.layer=-20; add_child(background_layer)
 	var back=ColorRect.new(); back.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	background=ShaderMaterial.new(); background.shader=load("res://shaders/space.gdshader"); back.material=background
-	back.mouse_filter=Control.MOUSE_FILTER_IGNORE; back_layer.add_child(back)
+	back.mouse_filter=Control.MOUSE_FILTER_IGNORE; background_layer.add_child(back)
 	music=load("res://scripts/music.gd").new(); add_child(music); music.step_fired.connect(on_step)
 	fx=load("res://scripts/fx.gd").new(); fx.z_index=8; add_child(fx)
+	fleet_batch=load("res://scripts/fleet_batch.gd").new(); fleet_batch.z_index=-1; add_child(fleet_batch)
 	for i in range(16):
 		var voice=AudioStreamPlayer.new(); add_child(voice); voices.append(voice)
 	var finish=CanvasLayer.new(); finish.layer=20; add_child(finish)
@@ -81,7 +104,7 @@ func _ready() -> void:
 	apply_audio(); ui.refresh()
 
 func bind_input() -> void:
-	for row in [["left",KEY_A,KEY_LEFT],["right",KEY_D,KEY_RIGHT],["up",KEY_W,KEY_UP],["down",KEY_S,KEY_DOWN],["dash",KEY_SPACE],["overload",KEY_E],["editor",KEY_TAB],["pause",KEY_ESCAPE],["fullscreen",KEY_F11]]:
+	for row in [["left",KEY_A,KEY_LEFT],["right",KEY_D,KEY_RIGHT],["up",KEY_W,KEY_UP],["down",KEY_S,KEY_DOWN],["dash",KEY_SPACE],["overload",KEY_E],["editor",KEY_TAB],["pause",KEY_ESCAPE],["fullscreen",KEY_F11],["interact",KEY_F]]:
 		if not InputMap.has_action(row[0]): InputMap.add_action(row[0])
 		for index in range(1,row.size()):
 			var key=InputEventKey.new(); key.physical_keycode=row[index]; InputMap.action_add_event(row[0],key)
@@ -90,17 +113,23 @@ func field() -> Rect2:
 func visible_world() -> Rect2:
 	var size_value=get_viewport_rect().size/camera.zoom
 	return Rect2(camera.get_screen_center_position()-size_value*.5,size_value)
+func wave_count() -> int: return wave_rows.size()
+func wave_profile() -> Dictionary: return wave_rows[clampi(wave-1,0,wave_rows.size()-1)]
 func load_settings() -> void:
 	if test_mode: return
 	var config=ConfigFile.new()
 	if config.load("user://settings.cfg")!=OK: return
 	for key in settings: settings[key]=config.get_value("settings",key,settings[key])
 	best=int(config.get_value("score","best",0))
+	selected_ship=str(FLEET.ship(str(config.get_value("fleet","ship","hex"))).id)
+	selected_pilot=str(FLEET.pilot(str(config.get_value("fleet","pilot","echo"))).id)
 func save_settings() -> void:
 	if test_mode: return
 	var config=ConfigFile.new()
 	for key in settings: config.set_value("settings",key,settings[key])
-	config.set_value("score","best",best); config.save("user://settings.cfg")
+	config.set_value("score","best",best)
+	config.set_value("fleet","ship",selected_ship); config.set_value("fleet","pilot",selected_pilot)
+	config.save("user://settings.cfg")
 func apply_audio() -> void:
 	music.volume_db=linear_to_db(maxf(.0001,float(settings.master)*float(settings.music)))-2.
 	fx.reduced=bool(settings.reduced_fx)
@@ -115,20 +144,54 @@ func sound(id: String,volume: float=-10.,pitch: float=1.) -> void:
 	voice.volume_db=volume+linear_to_db(maxf(.0001,float(settings.master)*float(settings.sfx))); voice.play()
 
 func start_run(seed_value: int=0) -> void:
+	leave_hub()
 	if seed_value==0: rng.randomize()
 	else: rng.seed=seed_value
 	loadout.reset(); enemies.clear(); by_id.clear(); spatial.clear(); bullets.clear(); enemy_bullets.clear(); pickups.clear(); warnings.clear()
+	var craft=FLEET.ship(selected_ship); selected_ship=str(craft.id)
+	selected_pilot=str(FLEET.pilot(selected_pilot).id)
+	loadout.modules.clear(); loadout.slots.fill(-1); loadout.next_uid=1
+	for i in range(craft.start_modules.size()): loadout.add_module(str(craft.start_modules[i]),[0,2,6,8,12][i])
+	loadout.max_health=int(craft.health); loadout.damage_scale=float(craft.damage_scale)
+	loadout.echo_repeat=selected_pilot=="echo"
+	move_speed=float(craft.speed); dash_recharge=float(craft.dash_cooldown)
 	fx.particles.clear(); fx.marks.clear(); fire_log.clear(); weapon_damage.clear()
-	health=10; invulnerable=1.; dash_left=0; dash_cooldown=0; charge=0; overload_until=-1
+	health=loadout.max_health; invulnerable=1.; dash_left=0; dash_cooldown=0; charge=0; overload_until=-1
+	pilot_amp_until=-1; pilot_heal_progress=0; pending_splits.clear(); boss_down=false; spawn_log.clear(); total_spawned=0
 	wave=0; kills=0; score=0; dust=0; picked=0; next_enemy=1; actual_steps=0
-	player=Vector2.ZERO; facing=Vector2.UP; camera.enabled=true; camera.position=player; camera.reset_smoothing()
+	player=Vector2.ZERO; facing=Vector2.UP; movement_facing=facing; camera.enabled=true; camera.position=player; camera.reset_smoothing()
 	state="combat"; music.begin(loadout); begin_wave(); apply_audio(); ui.refresh()
 func begin_wave() -> void:
 	wave+=1; wave_start=music.timeline; spawned=0; elite_spawned=false; reward_taken=false
 	enemy_bullets.clear(); warnings.clear()
-	if wave==6:
-		boss_anchor=player+Vector2(0,-310); spawn_enemy("boss",boss_anchor)
-	notice=("WAVE %02d / "%wave)+str(C.WAVES[wave-1].name); notice_until=music.timeline+2.
+	if wave==wave_count():
+		boss_anchor=player+Vector2(0,-350); spawn_enemy("boss",boss_anchor)
+	notice=("WAVE %02d / "%wave)+str(wave_profile().name); notice_until=music.timeline+2.
+
+func leave_hub() -> void:
+	if is_instance_valid(hub): hub.deactivate()
+	background_layer.visible=true; post.visible=true; fx.visible=true
+
+func enter_hub() -> void:
+	music.stop(); music._running=false; camera.enabled=false
+	for voice in voices: voice.stop()
+	enemies.clear(); by_id.clear(); spatial.clear(); bullets.clear(); enemy_bullets.clear(); pickups.clear(); warnings.clear()
+	fx.particles.clear(); fx.marks.clear(); pending_splits.clear()
+	state="hub"; background_layer.visible=false; post.visible=false; fx.visible=false
+	if not is_instance_valid(hub):
+		var hub_script=load("res://scripts/neon_hub.gd")
+		if hub_script==null:
+			state="title"; leave_hub(); ui.refresh(); return
+		hub=hub_script.new(); hub.game=self; add_child(hub)
+	hub.activate(); ui.refresh()
+func open_hangar() -> void:
+	if not is_instance_valid(hub) or state not in ["hub","hangar"]: enter_hub()
+	state="hangar"; ui.refresh()
+func close_hangar() -> void:
+	state="hub"
+	if is_instance_valid(hub): hub.activate()
+	ui.refresh()
+func open_settings() -> void: show_settings()
 func can_edit() -> bool: return state=="editor" or state=="reward"
 func open_editor() -> void:
 	if state not in ["combat","reward"]: return
@@ -165,7 +228,11 @@ func show_settings() -> void:
 func close_settings() -> void:
 	save_settings(); state=previous_state; music.hold(state in ["paused","reward","editor"]); ui.refresh()
 func return_title() -> void:
-	music.stop(); music._running=false; camera.enabled=false; state="title"; enemies.clear(); bullets.clear(); enemy_bullets.clear(); warnings.clear(); pickups.clear(); ui.refresh()
+	leave_hub()
+	music.stop(); music._running=false; camera.enabled=false; state="title"
+	for voice in voices: voice.stop()
+	enemies.clear(); by_id.clear(); spatial.clear(); pending_splits.clear(); bullets.clear(); enemy_bullets.clear(); warnings.clear(); pickups.clear()
+	fx.particles.clear(); fx.marks.clear(); ui.refresh()
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.echo: return
 	if event.is_action_pressed("fullscreen"):
@@ -177,6 +244,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("pause"):
 		if state=="editor": close_editor()
 		elif state=="settings": close_settings()
+		elif state=="hangar": close_hangar()
 		else: pause_game()
 	elif event is InputEventKey and event.pressed and event.physical_keycode==KEY_R and state in ["defeat","victory"]: start_run()
 
@@ -184,18 +252,21 @@ func _physics_process(delta: float) -> void:
 	if state!="combat": return
 	invulnerable=maxf(0,invulnerable-delta); dash_cooldown=maxf(0,dash_cooldown-delta)
 	var input=Input.get_vector("left","right","up","down")
+	if input.length_squared()>.01: movement_facing=input.normalized()
 	if Input.is_action_just_pressed("dash"): dash(input)
 	if Input.is_action_just_pressed("overload"): overload()
 	if dash_left>0:
 		dash_left-=delta; player+=dash_dir*1450*delta
 		fx.burst(player,Color("d5f9ff"),2,30)
-	else: player+=input*470*delta
+		if dash_left<=0 and selected_pilot=="volt":
+			pilot_amp_until=music.timeline+2.; fx.ring(player,Color("ffc173"),85,.25)
+	else: player+=input*move_speed*delta
 	player=player.clamp(field().position+Vector2.ONE*18,field().end-Vector2.ONE*18)
 	camera.position=player
 func dash(direction: Vector2=Vector2.ZERO) -> bool:
 	if state!="combat" or dash_cooldown>0: return false
 	dash_dir=direction.normalized() if direction.length()>.1 else facing
-	dash_left=.17; dash_cooldown=1.6; invulnerable=maxf(invulnerable,.23)
+	dash_left=.17; dash_cooldown=dash_recharge; invulnerable=maxf(invulnerable,.23)
 	fx.ring(player,Color("b8faff"),60,.22); sound("dash",-12); return true
 func overload() -> bool:
 	if state!="combat" or charge<100 or music.timeline<overload_until: return false
@@ -214,6 +285,12 @@ func _process(delta: float) -> void:
 		update_enemies(dt); rebuild_spatial(); update_bullets(dt); update_enemy_bullets(dt); update_warnings(); update_pickups(dt)
 		for i in range(enemies.size()-1,-1,-1):
 			if enemies[i].hp<=0: by_id.erase(enemies[i].uid); enemies.remove_at(i)
+		# Resolve births after all damage loops; a splitter cannot mutate a spatial
+		# query or the same enemy iteration which killed it.
+		for at in pending_splits:
+			for i in range(3):
+				if enemies.size()<MAX_ENEMIES: spawn_enemy("mote",at+Vector2.from_angle(i*TAU/3)*26)
+		pending_splits.clear()
 		check_wave()
 		fx.set_process(true)
 	else: fx.set_process(state in ["title","victory","defeat"])
@@ -224,7 +301,7 @@ func on_step(index: int,serial: int,deadline: float) -> void:
 	spawn_for_step(serial)
 	for enemy in enemies:
 		if enemy.hp<=0: continue
-		if enemy.kind in ["shooter","elite"] and posmod(serial+int(enemy.uid)*2,8)==0: enemy_fire(enemy)
+		if enemy.kind in ["shooter","elite","sentinel"] and posmod(serial+int(enemy.uid)*2,16)==0: enemy_fire(enemy)
 		if enemy.kind=="boss": boss_step(enemy,serial)
 	for track in range(C.TRACKS):
 		var trigger=loadout.trigger(index+track*8)
@@ -232,30 +309,64 @@ func on_step(index: int,serial: int,deadline: float) -> void:
 		fire_log.append({"step":index,"track":track,"serial":serial,"deadline":deadline,"actual":music.timeline,"kind":trigger.kind})
 		if fire_log.size()>160: fire_log.pop_front()
 		fire_weapon(trigger)
+	if loadout.echo_repeat and index==7:
+		for at in range(loadout.slots.size()):
+			var trigger=loadout.trigger(at)
+			if trigger.is_empty(): continue
+			trigger.damage=float(trigger.damage)*.5
+			fire_log.append({"step":index,"track":-1,"serial":serial,"deadline":deadline,"actual":music.timeline,"kind":trigger.kind,"pilot":"echo"})
+			if fire_log.size()>160: fire_log.pop_front()
+			fire_weapon(trigger); break
 
 func spawn_for_step(serial: int) -> void:
-	if wave>=6 or serial%2!=0: return
-	var config=C.WAVES[wave-1]; var elapsed=music.timeline-wave_start
-	var desired=mini(int(config.budget),1+int(elapsed/float(config.seconds)*int(config.budget)))
-	var amount=mini(5,desired-spawned)
+	if serial%4!=0: return
+	if wave==wave_count():
+		if not boss_down and serial%16==0:
+			for i in range(5):
+				if enemies.size()<MAX_ENEMIES: spawn_enemy("dart" if i%3==0 else "mote")
+		return
+	var config=wave_profile(); var elapsed=music.timeline-wave_start
+	var opening=30+wave*6
+	var desired=mini(int(config.budget),opening+int((elapsed+1.)/float(config.seconds)*int(config.budget)))
+	var amount=mini(48,desired-spawned)
+	if amount<6 and desired<int(config.budget): return
+	var outward=movement_facing.rotated(rng.randf_range(-.8,.8)) if rng.randf()<.72 else Vector2.from_angle(rng.randf()*TAU)
+	var origin=spawn_origin(outward)
 	for i in range(amount):
-		if enemies.size()>=110: break
-		var kind="mote"
-		if wave>=2 and spawned%6==3: kind="armor"
-		elif wave>=2 and spawned%7==5: kind="shooter"
-		elif wave>=4 and spawned%3==1: kind="dart"
-		spawn_enemy(kind); spawned+=1
-	if config.elite and not elite_spawned and elapsed>float(config.seconds)*.40:
+		if enemies.size()>=MAX_ENEMIES: break
+		var point=PLAN.formation(origin,outward,i,amount,str(config.formation))
+		spawn_enemy(PLAN.kind(wave-1,spawned),safe_spawn_position(point,outward)); spawned+=1
+	if config.elite and not elite_spawned and elapsed>float(config.seconds)*.40 and enemies.size()<MAX_ENEMIES:
 		elite_spawned=true; spawn_enemy("elite")
+
+func spawn_origin(outward: Vector2) -> Vector2:
+	var rect=visible_world(); var half=rect.size*.5
+	var edge=1./maxf(absf(outward.x)/half.x,absf(outward.y)/half.y)
+	return rect.get_center()+outward*(edge+105.)
+func safe_spawn_position(point: Vector2,outward: Vector2) -> Vector2:
+	var safe=visible_world().grow(90.)
+	var bounds=field().grow(-45.)
+	var candidate=point.clamp(bounds.position,bounds.end)
+	if not safe.has_point(candidate): return candidate
+	# At the world edge, clipping a formation would spawn it on the player.
+	# Rotate the approach instead and retain the outside-screen safety margin.
+	for i in range(12):
+		candidate=spawn_origin(outward.rotated(float(i+1)*TAU/12.)).clamp(bounds.position,bounds.end)
+		if not safe.has_point(candidate): return candidate
+	return bounds.position if bounds.position.distance_squared_to(player)>bounds.end.distance_squared_to(player) else bounds.end
 func spawn_enemy(kind: String,position: Vector2=Vector2.INF) -> Dictionary:
+	if enemies.size()>=MAX_ENEMIES: return {}
 	if position==Vector2.INF:
-		var rect=visible_world(); var side=rng.randi_range(0,3)
-		position=Vector2(rng.randf_range(rect.position.x,rect.end.x),rect.position.y-45 if side==0 else rect.end.y+45) if side<2 else Vector2(rect.position.x-45 if side==2 else rect.end.x+45,rng.randf_range(rect.position.y,rect.end.y))
-		position=position.clamp(field().position+Vector2.ONE*25,field().end-Vector2.ONE*25)
-	var hp={"mote":15.,"armor":64.,"shooter":35.,"dart":11.,"elite":300.+wave*20,"boss":3400.}[kind]
-	var enemy={"uid":next_enemy,"kind":kind,"at":position,"hp":hp,"max_hp":hp,"radius":{"mote":17.,"armor":25.,"shooter":21.,"dart":12.,"elite":43.,"boss":76.}[kind],"speed":{"mote":100.,"armor":62.,"shooter":74.,"dart":175.,"elite":72.,"boss":0.}[kind],"flash":0.,"phase":1,"angle":0.,"born":music.timeline}
+		var outward=movement_facing.rotated(rng.randf_range(-1.,1.)) if rng.randf()<.72 else Vector2.from_angle(rng.randf()*TAU)
+		position=safe_spawn_position(spawn_origin(outward),outward)
+	var hp={"mote":12.,"armor":62.,"shooter":30.,"dart":10.,"splitter":42.,"sentinel":80.,"elite":330.+wave*28,"boss":6800.}[kind]
+	var enemy={"uid":next_enemy,"kind":kind,"at":position,"hp":hp,"max_hp":hp,"radius":{"mote":11.,"armor":18.,"shooter":15.,"dart":9.,"splitter":17.,"sentinel":19.,"elite":42.,"boss":82.}[kind],"speed":{"mote":142.,"armor":85.,"shooter":100.,"dart":238.,"splitter":124.,"sentinel":85.,"elite":96.,"boss":0.}[kind],"flash":0.,"phase":1,"angle":0.,"born":music.timeline}
 	next_enemy+=1; enemies.append(enemy); by_id[enemy.uid]=enemy
-	fx.ring(position,Color("e68cad"),55,.35); return enemy
+	total_spawned+=1
+	spawn_log.append({"wave":wave,"kind":kind,"at":position,"time":music.timeline})
+	if spawn_log.size()>1500: spawn_log.pop_front()
+	if kind in ["elite","boss"]: fx.ring(position,Color("e68cad"),85,.5)
+	return enemy
 func update_enemies(delta: float) -> void:
 	for enemy in enemies:
 		if enemy.hp<=0: continue
@@ -267,15 +378,20 @@ func update_enemies(delta: float) -> void:
 			enemy.phase=2 if enemy.hp<enemy.max_hp*.5 else 1
 		else:
 			var move=1.
-			if enemy.kind=="shooter" and to_player.length()<370: move=-.15
-			enemy.at+=to_player.normalized()*float(enemy.speed)*move*delta
+			if enemy.kind=="shooter" and to_player.length()<440: move=-.15
+			if enemy.kind=="sentinel" and to_player.length()<540: move=.12
+			var direction=to_player.normalized()
+			if enemy.kind=="dart": direction=direction.rotated(sin(music.timeline*2.+enemy.uid)*.3)
+			if enemy.kind=="sentinel": direction=(direction+direction.orthogonal()*.75).normalized()
+			enemy.at+=direction*float(enemy.speed)*move*delta
 		if to_player.length()<float(enemy.radius)+13: hurt_player(1)
 func enemy_fire(enemy: Dictionary) -> void:
+	if enemy.at.distance_to(player)>1500: return
 	var direction=(player-enemy.at).normalized()
-	var count=3 if enemy.kind=="elite" else 1
+	var count=5 if enemy.kind=="sentinel" else (3 if enemy.kind=="elite" else 1)
 	for i in range(count): enemy_shot(enemy.at,direction.rotated((i-(count-1)*.5)*.22),205 if enemy.kind=="shooter" else 230)
 func enemy_shot(at: Vector2,direction: Vector2,speed: float) -> void:
-	if enemy_bullets.size()<350: enemy_bullets.append({"at":at,"v":direction*speed,"life":9.,"radius":7.})
+	if enemy_bullets.size()<MAX_ENEMY_BULLETS: enemy_bullets.append({"at":at,"v":direction*speed,"life":9.,"radius":7.})
 func boss_step(enemy: Dictionary,serial: int) -> void:
 	if serial%8==0:
 		var count=16 if enemy.phase==2 else 11
@@ -290,9 +406,16 @@ func rebuild_spatial() -> void:
 	spatial.clear()
 	for enemy in enemies:
 		if enemy.hp<=0: continue
-		var cell=Vector2i(floor(enemy.at.x/160),floor(enemy.at.y/160))
-		if not spatial.has(cell): spatial[cell]=[]
-		spatial[cell].append(enemy)
+		# Occupied AABBs include projectile radius. Swept bullets only query cells
+		# which their actual segment crosses, rather than nine large neighbour cells.
+		var radius=float(enemy.radius)+6.
+		var low=Vector2i(floor((enemy.at.x-radius)/GRID),floor((enemy.at.y-radius)/GRID))
+		var high=Vector2i(floor((enemy.at.x+radius)/GRID),floor((enemy.at.y+radius)/GRID))
+		for x in range(low.x,high.x+1):
+			for y in range(low.y,high.y+1):
+				var cell=Vector2i(x,y)
+				if not spatial.has(cell): spatial[cell]=[]
+				spatial[cell].append(enemy)
 func nearest(at: Vector2,exclude: Array=[]) -> Dictionary:
 	var selected: Dictionary={}; var distance=INF
 	for enemy in enemies:
@@ -308,11 +431,12 @@ func fire_weapon(trigger: Dictionary) -> void:
 	facing=direction
 	var color=C.color(trigger.kind); var damage=float(trigger.damage)
 	var extra=int(trigger.extra)
+	if selected_pilot=="volt" and music.timeline<pilot_amp_until: damage*=1.25; extra+=1
 	if music.timeline<overload_until: damage*=1.75; extra+=2
 	fx.burst(player+direction*24,color,4,125)
 	match str(trigger.kind):
 		"pulse":
-			for i in range(3+extra): shot(player+direction*24,direction.rotated((i-(2+extra)*.5)*.06),990,damage,color,"pulse",2.1,1 if trigger.chord else 0)
+			for i in range(3+extra): shot(player+direction*24,direction.rotated((i-(2+extra)*.5)*.06),990,damage,color,"pulse",2.1,int(trigger.level))
 		"scatter":
 			for i in range(5+extra): shot(player+direction*24,direction.rotated((i-(4+extra)*.5)*.105),760,damage,color,"scatter",.95,1 if trigger.chord else 0)
 		"beam":
@@ -323,7 +447,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 			var bullet=shot(player+direction*25,direction,430,damage,color,"missile",4.,0)
 			if not bullet.is_empty(): bullet.target=int(target.get("uid",-1)); bullet.explosion=120+trigger.level*10
 		"nova":
-			for i in range(10+extra): shot(player,Vector2.from_angle(direction.angle()+i*TAU/(10+extra)),540,damage,color,"nova",1.8,1 if trigger.chord else 0)
+			for i in range(12+extra): shot(player,Vector2.from_angle(direction.angle()+i*TAU/(12+extra)),540,damage,color,"nova",1.8,int(trigger.level))
 		"chain":
 			var start=player; var hit: Array=[]
 			for i in range(3+int(trigger.level)):
@@ -335,7 +459,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 			if enemy.hp>0 and enemy.at.distance_to(target.at)<105: hurt_enemy(enemy,damage*.22,"chord")
 		fx.ring(target.at,color,105,.22)
 func shot(at: Vector2,direction: Vector2,speed: float,damage: float,color: Color,kind: String,life: float,pierce: int) -> Dictionary:
-	if bullets.size()>=600: return {}
+	if bullets.size()>=MAX_BULLETS: return {}
 	var bullet={"at":at,"v":direction*speed,"damage":damage,"color":color,"kind":kind,"life":life,"pierce":pierce,"hit":{},"radius":5.,"target":-1,"explosion":0.}
 	bullets.append(bullet); return bullet
 func update_bullets(delta: float) -> void:
@@ -348,11 +472,13 @@ func update_bullets(delta: float) -> void:
 			if target.is_empty() or target.hp<=0: target=nearest(bullet.at); bullet.target=target.get("uid",-1)
 			if not target.is_empty(): bullet.v=(bullet.v.normalized().lerp((target.at-bullet.at).normalized(),minf(1,delta*6))).normalized()*620
 		var previous: Vector2=bullet.at; bullet.at+=bullet.v*delta
-		var cell=Vector2i(floor(bullet.at.x/160),floor(bullet.at.y/160)); var dead=false
-		for x in range(-1,2):
-			for y in range(-1,2):
+		var low=Vector2i(floor(minf(previous.x,bullet.at.x)/GRID),floor(minf(previous.y,bullet.at.y)/GRID))
+		var high=Vector2i(floor(maxf(previous.x,bullet.at.x)/GRID),floor(maxf(previous.y,bullet.at.y)/GRID))
+		var dead=false
+		for x in range(low.x,high.x+1):
+			for y in range(low.y,high.y+1):
 				if dead: break
-				for enemy in spatial.get(cell+Vector2i(x,y),[]):
+				for enemy in spatial.get(Vector2i(x,y),[]):
 					if enemy.hp<=0 or bullet.hit.has(enemy.uid): continue
 					if Geometry2D.get_closest_point_to_segment(enemy.at,previous,bullet.at).distance_to(enemy.at)>float(enemy.radius)+float(bullet.radius): continue
 					bullet.hit[enemy.uid]=true; hurt_enemy(enemy,bullet.damage,bullet.kind)
@@ -365,9 +491,9 @@ func update_bullets(delta: float) -> void:
 					bullet.pierce-=1
 		if dead: bullets.remove_at(i)
 func hurt_enemy(enemy: Dictionary,damage: float,kind: String) -> void:
-	if enemy.hp<=0 or state!="combat": return
+	if damage<=0 or enemy.hp<=0 or state!="combat": return
 	var actual=minf(enemy.hp,damage); enemy.hp-=damage; enemy.flash=.09
-	fx.number(enemy.at,actual,Color("e1ebff"))
+	if visible_world().has_point(enemy.at): fx.number(enemy.at,actual,Color("e1ebff"))
 	weapon_damage[kind]=float(weapon_damage.get(kind,0))+actual
 	if enemy.hp>0: sound("metal",-28); return
 	kills+=1; score+=100 if enemy.kind=="boss" else (12 if enemy.kind=="elite" else 1)
@@ -376,11 +502,23 @@ func hurt_enemy(enemy: Dictionary,damage: float,kind: String) -> void:
 	fx.burst(enemy.at,color,30 if enemy.kind in ["boss","elite"] else 10,380)
 	fx.ring(enemy.at,color,150 if enemy.kind in ["boss","elite"] else 50,.3)
 	sound("kill",-14)
-	if pickups.size()<160: pickups.append({"at":enemy.at,"amount":12 if enemy.kind=="boss" else (5 if enemy.kind=="elite" else 1),"heal":rng.randf()<.07,"life":30.})
+	if enemy.kind=="boss": boss_down=true
+	if enemy.kind=="splitter": pending_splits.append(enemy.at)
+	var item={"at":enemy.at,"amount":12 if enemy.kind=="boss" else (5 if enemy.kind=="elite" else 1),"heal":rng.randf()<.055,"life":36.}
+	if pickups.size()<300: pickups.append(item)
+	else:
+		# Bounded visuals, preserved earned currency. The pile nearest the kill
+		# receives the new quantity rather than silently deleting a drop.
+		var closest=0; var distance=INF
+		for i in range(pickups.size()):
+			var d=pickups[i].at.distance_squared_to(enemy.at)
+			if d<distance: closest=i; distance=d
+		pickups[closest].amount+=item.amount; pickups[closest].heal=pickups[closest].heal or item.heal; pickups[closest].life=36.
 func update_enemy_bullets(delta: float) -> void:
+	var bounds=visible_world().grow(350)
 	for i in range(enemy_bullets.size()-1,-1,-1):
 		var bullet=enemy_bullets[i]; bullet.at+=bullet.v*delta; bullet.life-=delta
-		if bullet.life<=0 or not visible_world().grow(350).has_point(bullet.at): enemy_bullets.remove_at(i); continue
+		if bullet.life<=0 or not bounds.has_point(bullet.at): enemy_bullets.remove_at(i); continue
 		if bullet.at.distance_to(player)<19:
 			hurt_player(1); enemy_bullets.remove_at(i)
 func update_warnings() -> void:
@@ -398,9 +536,20 @@ func update_pickups(delta: float) -> void:
 		var distance=item.at.distance_to(player)
 		if distance<reach: item.at=item.at.move_toward(player,(280+distance*3)*delta)
 		if distance<24:
-			dust+=int(item.amount); picked+=1
-			if item.heal or (loadout.perks.has("magnet") and picked%12==0): health=mini(health+1,loadout.max_health)
-			sound("pickup",-24,1.+(picked%5)*.08); pickups.remove_at(i)
+			collect_pickup(item); pickups.remove_at(i)
+func collect_pickup(item: Dictionary,with_sound: bool=true) -> void:
+	var amount=int(item.get("amount",1)); dust+=amount
+	var magnet_repairs=int((picked+amount)/12)-int(picked/12); picked+=amount
+	if item.get("heal",false): health=mini(health+1,loadout.max_health)
+	if loadout.perks.has("magnet"): health=mini(health+magnet_repairs,loadout.max_health)
+	if selected_pilot=="mender":
+		pilot_heal_progress+=amount
+		var repairs=int(pilot_heal_progress/16)
+		pilot_heal_progress=posmod(pilot_heal_progress,16)
+		if repairs>0:
+			health=mini(health+repairs,loadout.max_health)
+			if with_sound: fx.ring(player,Color("b6a5fa"),62,.35)
+	if with_sound: sound("pickup",-24,1.+(picked%5)*.08)
 func hurt_player(amount: int) -> void:
 	if state!="combat" or invulnerable>0 or dash_left>0: return
 	health=maxi(0,health-amount); invulnerable=.8
@@ -408,10 +557,10 @@ func hurt_player(amount: int) -> void:
 	if health<=0: finish_run(false)
 func check_wave() -> void:
 	if state!="combat": return
-	if wave==6:
-		if enemies.is_empty(): finish_run(true)
+	if wave==wave_count():
+		if boss_down: finish_run(true)
 		return
-	var config=C.WAVES[wave-1]
+	var config=wave_profile()
 	if music.timeline-wave_start<float(config.seconds): return
 	# Ordinary waves are survival passages. Remaining enemies withdraw without
 	# fake kills or loot, rather than making a large arena a tedious cleanup hunt.
@@ -419,13 +568,15 @@ func check_wave() -> void:
 		if enemy.hp>0: fx.ring(enemy.at,Color("7585ac"),55,.22)
 	enemies.clear(); by_id.clear(); spatial.clear()
 	# Collect earned drops on transition so the shop never strands rewards.
-	for item in pickups: dust+=int(item.amount)
+	for item in pickups: collect_pickup(item,false)
+	pending_splits.clear()
 	pickups.clear(); enemy_bullets.clear(); bullets.clear(); warnings.clear()
 	rewards=loadout.reward_choices(rng); reward_taken=false; state="reward"; music.hold(true); sound("reward",-9); ui.refresh()
 func finish_run(won: bool) -> void:
 	if state!="combat": return
 	state="victory" if won else "defeat"; best=maxi(best,score)
 	enemy_bullets.clear(); warnings.clear(); music.hold(false); save_settings(); ui.refresh()
+	if won: enemies.clear(); by_id.clear(); spatial.clear(); pending_splits.clear()
 	if won: fx.burst(player,Color("bafaff"),70,500); sound("reward",-4)
 
 static func polygon(at: Vector2,radius: float,sides: int,angle: float=0.) -> PackedVector2Array:
@@ -433,15 +584,13 @@ static func polygon(at: Vector2,radius: float,sides: int,angle: float=0.) -> Pac
 	for i in range(sides): points.append(at+Vector2.from_angle(angle+i*TAU/sides)*radius)
 	return points
 func _draw() -> void:
-	var view=get_viewport_rect().size
-	if state=="title":
-		var center=view*Vector2(.71,.48); var t=Time.get_ticks_msec()*.001
-		for i in range(6):
-			var at=center+Vector2.from_angle(t*.2+i*TAU/6)*140
-			draw_colored_polygon(polygon(at,12,4,t),C.COLORS[i]); draw_line(at,center,Color(C.COLORS[i],.10),1,true)
-		draw_colored_polygon(polygon(center,62,6,-PI*.5),Color("f4f8ff"))
-		draw_colored_polygon(polygon(center,34,6,-PI*.5),Color("142438"))
-		draw_colored_polygon(polygon(center,13,6,-PI*.5),Color("59e9df")); return
+	if state=="title" or not background_layer.visible:
+		fleet_batch.visible=false; return
+	var visible_rect=visible_world().grow(140.)
+	var pulse=music.pulse()
+	var batch=enemies.size()>64
+	fleet_batch.visible=batch
+	if batch: fleet_batch.update_fleet(enemies,visible_rect)
 	draw_rect(field(),Color(.10,.29,.49,.40),false,5.)
 	for item in pickups:
 		var color=Color("80efb1") if item.heal else Color("f4d88b")
@@ -451,37 +600,42 @@ func _draw() -> void:
 		var color=Color(1.,.42,.57,.18+.35*(1.-remaining))
 		draw_line(warning.at,warning.to,Color(color,.08),50,true); draw_dashed_line(warning.at,warning.to,color,2,12,true)
 	for enemy in enemies:
-		if enemy.hp<=0: continue
-		var color=Color("e78ba8") if enemy.kind in ["shooter","elite","boss"] else Color("a2aac2")
-		var fill=Color("1c2335") if enemy.flash<=0 else Color("f4f8ff")
-		var sides=3 if enemy.kind in ["mote","dart"] else (4 if enemy.kind in ["armor","shooter"] else 6)
-		var shape=polygon(enemy.at,enemy.radius,sides,enemy.angle)
-		draw_colored_polygon(shape,fill); shape.append(shape[0]); draw_polyline(shape,color,2,true)
-		if enemy.kind=="shooter": draw_circle(enemy.at,5,Color("ff9ba7"))
-		elif enemy.kind=="elite":
-			draw_arc(enemy.at,enemy.radius+8,0,TAU*enemy.hp/enemy.max_hp,36,color,3,true)
-		elif enemy.kind=="boss":
-			var pulse=music.pulse()
-			for i in range(6):
-				var at: Vector2=enemy.at+Vector2.from_angle(i*TAU/6+music.timeline*.06)*(106+4*pulse)
-				draw_colored_polygon(polygon(at,15,4,PI*.25),color)
-			draw_colored_polygon(polygon(enemy.at,29,6,enemy.angle),Color("faf5ff"))
-	for bullet in bullets:
-		var direction: Vector2=bullet.v.normalized(); var color: Color=bullet.color
-		draw_line(bullet.at-direction*(20 if bullet.kind=="missile" else 13),bullet.at,Color(color,.18),11,true)
-		draw_line(bullet.at-direction*9,bullet.at,color,4 if bullet.kind!="missile" else 7,true)
-		draw_circle(bullet.at,2.2,Color("f8ffff"))
+		if enemy.hp<=0 or not visible_rect.has_point(enemy.at): continue
+		if batch and enemy.kind not in ["elite","boss"]: continue
+		ART.draw_enemy(self,enemy.at,enemy.radius,enemy.angle,enemy.kind,enemy.flash,pulse)
+		if enemy.kind in ["elite","boss"]:
+			draw_arc(enemy.at,enemy.radius*1.5,0,TAU*enemy.hp/enemy.max_hp,48,Color("ff9ab2"),3,true)
+	# Group each timbre's trails into a few canvas commands. Dense fire no longer
+	# creates three separate draw calls for every bullet.
+	var tips=PackedVector2Array()
+	for weapon in C.WEAPONS:
+		var trails=PackedVector2Array(); var cores=PackedVector2Array()
+		for bullet in bullets:
+			if bullet.kind!=weapon.id: continue
+			var direction: Vector2=bullet.v.normalized()
+			trails.append(bullet.at-direction*(20 if bullet.kind=="missile" else 13)); trails.append(bullet.at)
+			cores.append(bullet.at-direction*9); cores.append(bullet.at)
+			tips.append(bullet.at-direction*2.); tips.append(bullet.at)
+		if trails.is_empty(): continue
+		var color=C.color(weapon.id)
+		draw_multiline(trails,Color(color,.18),11.,false)
+		draw_multiline(cores,color,7. if weapon.id=="missile" else 4.,true)
+	if not tips.is_empty(): draw_multiline(tips,Color("f8ffff"),2.2,true)
+	var hostile=PackedVector2Array(); var hostile_core=PackedVector2Array()
 	for bullet in enemy_bullets:
-		draw_circle(bullet.at,9,Color(.8,.13,.24,.13)); draw_circle(bullet.at,5.5,Color("ff7694")); draw_circle(bullet.at,2,Color("ffdfae"))
+		var direction: Vector2=bullet.v.normalized()
+		hostile.append(bullet.at-direction*5); hostile.append(bullet.at+direction*2)
+		hostile_core.append(bullet.at-direction*2); hostile_core.append(bullet.at+direction)
+	if not hostile.is_empty():
+		draw_multiline(hostile,Color(.8,.13,.24,.13),15.,false)
+		draw_multiline(hostile,Color("ff7694"),7.,true)
+		draw_multiline(hostile_core,Color("ffdfae"),2.3,true)
 	var opacity=.45 if invulnerable>0 and invulnerable<=.8 and int(invulnerable*20)%2==0 else 1.
-	var ship=polygon(player,22,6,-PI*.5)
-	draw_colored_polygon(ship,Color(0.95,.97,1.,opacity))
-	draw_colored_polygon(polygon(player,10,6,-PI*.5),Color("142438"))
-	draw_colored_polygon(polygon(player+facing*29,6,3,facing.angle()),Color("65eee1"))
+	ART.draw_ship(self,player,18.,facing.angle(),selected_ship,pulse,opacity)
 	if music.timeline<overload_until:
 		draw_arc(player,40+music.pulse()*6,0,TAU,36,Color("ffd68b"),3,true)
 	for i in range(loadout.slots.size()):
 		var module=loadout.find(loadout.slots[i])
 		if module.is_empty(): continue
-		var at=player+Vector2.from_angle(-PI*.5+i*TAU/loadout.slots.size())*34
+		var at=player+Vector2.from_angle(-PI*.5+i*TAU/loadout.slots.size())*55
 		draw_circle(at,4 if active_slot!=i%8 or slot_flash<=0 else 7,C.color(module.kind))

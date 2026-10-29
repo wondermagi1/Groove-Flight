@@ -7,9 +7,10 @@ var next_uid: int=1
 var damage_scale: float=1.
 var extra_bullets: int=0
 var max_health: int=10
+var echo_repeat: bool=false
 func reset() -> void:
 	modules.clear(); slots.resize(C.TRACKS*C.STEPS); slots.fill(-1); perks.clear()
-	next_uid=1; damage_scale=1.; extra_bullets=0; max_health=10
+	next_uid=1; damage_scale=1.; extra_bullets=0; max_health=10; echo_repeat=false
 	add_module("pulse",0); add_module("scatter",2); add_module("beam",6); add_module("pulse",8); add_module("nova",12)
 func find(uid: int) -> Dictionary:
 	for module in modules:

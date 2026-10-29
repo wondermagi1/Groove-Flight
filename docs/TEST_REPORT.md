@@ -1,37 +1,41 @@
-# First playable verification
+# v2 neon harbor / fleet verification
 
-2026-10-28, Windows, Godot4.7.2, OpenGL Compatibility, NVIDIA RTX4060 Laptop GPU. Test data uses isolated APPDATA with `--beatdrift-test`; formal player settings and older games are untouched.
+2026-10-29, Windows, Godot4.7.2, NVIDIA RTX4060 Laptop GPU. Automated runs use an isolated profile and `--beatdrift-test`, without writing player settings or older-game saves. V1 history is in `TEST_REPORT_V1.md`.
 
-## Native full run
+## Focused and integrated checks
 
-`tests/full_run.gd`: 19 checks, no failures. One complete six-wave run took153.004 wall seconds /152.882 music seconds. Five real reward buttons were selected. Actual native weapon damage defeated181 enemies including the half-health, second-phaseBoss, for291 score. No wave/time jumps, soundtrack seeking, injected kills or direct enemy HP reduction.
+| Suite | Checks | Result / scope |
+| --- | --- | --- |
+| prototype_review.gd |58|Passed: native audio, six actual weapon impacts, ownership, real input,12288-square world, editing, pause, rewards, death/retry |
+| ui_review.gd |9|Passed: title projectile opens settings, volume/particle controls and safe return |
+| title_hub_review.gd |10|Passed: title flight, selection/result-layout fixtures and resize |
+| neon_hub_review.gd |10|Passed: Blender GLB, skeleton animation, motion, portal/terminal callbacks with a mock game |
+| harbor_flow_review.gd |15|Passed: actual title impact→city→fleet/settings→F departure→native combat; results return is an explicit fixture |
+| fleet_density_review.gd |110|Passed:9 configurations, actual movement/damage/cooldowns, pilot passives, seeded spawns/edge safety, collision seams/tunneling, split births, boss win, drop merges/caps |
 
-Assistance: invulnerability, direct steering and automatic activation of the normal overload action. Movement input was separately exercised by the focused prototype test. This run proves the loop can complete; it does not prove human difficulty, unassisted survival or final listening quality.
+The main-city integration uses the actual scene and Vulkan Forward+. It verifies the city render target/child animations stop in2D combat, and reopening preserves avatar position. It does not claim the45m plaza is a fully explorable metropolis; towers/bridges currently provide scenery.
 
-Native wave starts were approximately0.005,18.027,40.018,64.022,90.028,118.033 music seconds. Module counts progressed5→6→7→7→8→9. Sampled peaks:21 enemies,60 friendly bullets,58 hostile bullets; production caps are110/600/350. Late-run weapon-event versus audio-clock maximum error was27.7ms in the sampled final160 firings, including render capture overhead. These are observations, not a general frame-rate or latency guarantee.
+## Native ten-wave run
 
-Actual weapon damage: pulse2142, scatter1665.75, beam1546.25, nova1979.75, chain323, overload268. Missile damage was checked separately in a controlled actual-impact fixture; it was not selected in this seeded full run.
+The runner uses production durations/native soundtrack and actual reward buttons, defeating enemies/Boss through normal damage. Assistance: invulnerability, steering and automatic overload. No seeking, wave skips, injected kills or enemy HP reductions.
 
-## Focused review
+Final rerun passed27/27 checks:3938kills,3948spawns,124peak enemies,68peak friendly/123hostile bullets,356.55music seconds (356.78wall seconds),9real reward selections. Maximum late native-audio timing error was5.93ms. All ten waves and the final Boss completed through production damage. The prior screenshot fixture stalled frames while synchronously compressing PNGs; compression now runs on a worker while gameplay continues. This is an assisted automated completion, not human balance or listening acceptance.
 
-`tests/prototype_review.gd` checks loadout ownership, swap and cross-track movement, level-four cap, actual duet/chord effects, changed native PCM after reordering, real looping audio and firing timestamps, real movement, camera,8192-square world, dash cooldown, player damage grace, paused editing and phase-preserving resume, all six actual weapon impacts, overload charge, reward refresh costs, reward idempotence and death/retry.
+## Dense controlled sample
 
-Final focused review:57 checks, no failures. Additional UI verification covers actual slot-button callbacks, zero-weapon resume protection, safe reward-screen replacement during button signals, and720p editor/settings. Native weapon/audio-clock maximum error was14.7ms in this short sample. Machine-readable totals are in`tests/results-prototype.json`.
+The fixture holds480 stationary high-HP aircraft,800 friendly/450 hostile bullets with positive1damage. It injects positions and pauses audio to retain a stable workload. Ninety samples are a short measurement, not a stable-FPS certification or human difficulty test.
 
-Final settings-only review:7 checks, no failures, after replacing low-contrast checkboxes with readable state buttons. Actual start/back signals, both particle settings and audible master gain changes passed. In total,57 focused +19 full-run +7 settings assertions passed.
+After96px occupied-grid/swept collision, six shared MultiMesh hulls and batched bullet trails:
 
-An initial test exposed default QOA audio compression and a signal-locked button being freed synchronously. Authored stem imports now explicitly usePCM16; UI replacement hides old controls and queues their release. Full native reward selection was repeated after the UI fix and passed.
+| Renderer | Update median / P95 | Frame interval median / P95 | Draw calls |
+| --- | --- | --- | --- |
+| OpenGL Compatibility |7.27 /8.64ms|14.46 /16.17ms|85|
+| Vulkan Forward+ |9.05 /9.74ms|16.10 /17.10ms|85|
 
-## Visual records
+RTX4060 Laptop, approximately1600×900 window. Full details: `tests/results-fleet-density-opengl3.json` and `results-fleet-density-vulkan.json`. Before batching the same controlled fixture took approximately82ms per frame; this does not promise performance on other PCs.
 
-- `01-title.png`: actual menu and program-generated starfield/planet.
-- `02-sequencer.png`: actual two-track editor.
-- `04-rewards.png`: controlled reward-layout fixture, not a claim of human progression.
-- `run-wave-2/4/5.png`: actual ongoing complete-run combat.
-- `run-boss.png`: actual half-healthBoss phase in complete run.
-- `run-victory.png`: earned native results from the complete assisted run.
-- `06-sequencer-720p.png`, `07-settings-720p.png`: final size checks.
+## Visual records / limits
 
-No assets were extracted from`E:/SteamLibrary/steamapps/common/Groove Core Demo`. That folder is an Unreal shipping installation with executable and cooked archives, not an editable source project. Reference screenshots were inspected separately outside the new game directory. The prototype is independently implemented.
+`docs/screenshots`:08/09 title;10 selection fixture;11 results-layout fixture;12/13 standalone city;14 actual integrated city;v2-fleet-enemies role gallery;v2-dense-fixture instanced aircraft/bullets. `run-wave-*`, `run-boss`, `run-victory` are actual full assisted-run captures. Images were visually inspected; glare, invisible vortex shading and duplicated help text were corrected.
 
-Current limits: a single six-wave route, one mainBoss, two short musical tracks, six weapons, six unique perks; no long-form composition, long-term talent tree, shop-economy campaign, controller mapping or multiple characters. The old《折界》remains a separate game.
+No commercial Demo assets were extracted. Editable `.blend` files and authored GLBs are included. Blender MCP was unavailable; modeling used independent background Blender. Runtime requires Godot, not Blender. Ten waves form one route; music remains a short procedural prototype score. No long campaign, commercial soundtrack, human balance acceptance, controller mapping or sustained low-end benchmark is claimed.
