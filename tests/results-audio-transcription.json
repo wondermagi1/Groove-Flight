@@ -1,0 +1,22 @@
+{
+  "checks": 14,
+  "failures": [],
+  "facts": {
+    "melody_pitches": [
+      60,
+      60,
+      64,
+      67,
+      72,
+      67,
+      64,
+      62,
+      60,
+      60
+    ],
+    "recognition_seconds": 0.3330130999997891,
+    "score_notes": 10,
+    "chord_notes": 48
+  },
+  "scope": "Original synthesized melodies/chords encoded to real MP3; actual CPU ONNX inference, excerpt bounds, quantization and corrupt/invalid/silent audio. No commercial-song accuracy claim."
+}

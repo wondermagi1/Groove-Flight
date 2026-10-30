@@ -42,6 +42,10 @@ var building: bool=false
 var _refresh_queued: bool=false
 var _tick: float=0.
 var local_status: String=""
+var recognition_dialog: ConfirmationDialog
+var recognition_progress: AcceptDialog
+var recognition_progress_label: Label
+var recognition_bar: ProgressBar
 
 class PianoRoll:
 	extends Control
@@ -180,7 +184,9 @@ func _button(value: String,callback: Callable,name_value: String="",color: Color
 	for state_name in ["normal","hover","pressed"]: n.add_theme_stylebox_override(state_name,_box(Color("112132") if state_name=="normal" else Color("253e51"),Color(color,.35 if state_name=="normal" else .8),9))
 	n.add_theme_color_override("font_color",color); n.pressed.connect(callback); return n
 func _spin(value: float,minimum: float,maximum: float,step: float,callback: Callable,name_value: String="") -> SpinBox:
-	var n=SpinBox.new(); n.name=name_value; n.min_value=minimum; n.max_value=maximum; n.step=.001 if step<1. else step; n.custom_arrow_step=step; n.value=value; n.custom_minimum_size=Vector2(92,38); n.value_changed.connect(callback); return n
+	var n=SpinBox.new()
+	if not name_value.is_empty(): n.name=name_value
+	n.min_value=minimum; n.max_value=maximum; n.step=.001 if step<1. else step; n.custom_arrow_step=step; n.value=value; n.custom_minimum_size=Vector2(92,38); n.value_changed.connect(callback); return n
 func _panel(rect: Rect2) -> PanelContainer:
 	var p=PanelContainer.new(); p.position=rect.position; p.size=rect.size; p.add_theme_stylebox_override("panel",_box(Color("0b1421"))); content.add_child(p); return p
 func _queue_refresh() -> void:
@@ -203,7 +209,7 @@ func refresh() -> void:
 	toolbar=HFlowContainer.new(); toolbar.position=Vector2(25,78); toolbar.size=Vector2(view.x-50,42); toolbar.add_theme_constant_override("h_separation",7); toolbar.add_theme_constant_override("v_separation",6); content.add_child(toolbar)
 	toolbar.add_child(_button("空白乐谱",request_replace.bind("empty"),"ComposerNew"))
 	toolbar.add_child(_button("原创示例",request_replace.bind("demo"),"ComposerDemo"))
-	for row in [["保存","save","ComposerSave"],["打开","load","ComposerLoad"],["导入 MIDI","import_midi","ComposerImportMidi"],["导出 MIDI","export_midi","ComposerExportMidi"],["导出 WAV","export_wav","ComposerExportWav"]]: toolbar.add_child(_button(row[0],open_file_dialog.bind(row[1]),row[2],Color("96b6d2")))
+	for row in [["保存","save","ComposerSave"],["打开","load","ComposerLoad"],["导入 MIDI","import_midi","ComposerImportMidi"],["识别 MP3","import_audio","ComposerImportAudio"],["导出 MIDI","export_midi","ComposerExportMidi"],["导出 WAV","export_wav","ComposerExportWav"]]: toolbar.add_child(_button(row[0],open_file_dialog.bind(row[1]),row[2],Color("96b6d2")))
 	play_button=_button("▶ 试听",game.composer_play,"ComposerPlay"); toolbar.add_child(play_button)
 	toolbar.add_child(_button("■ 停止",game.composer_stop,"ComposerStop",Color("e3ac9e")))
 	var launch=_button("带入战斗 →",game.composer_battle,"ComposerLaunch",Color("f2ce92")); launch.tooltip_text="用这首乐曲驱动武器，进入不计成绩的试奏战斗。"; toolbar.add_child(launch)
@@ -349,8 +355,9 @@ func open_file_dialog(action: String) -> void:
 	file_dialog.file_mode=FileDialog.FILE_MODE_SAVE_FILE if save else FileDialog.FILE_MODE_OPEN_FILE
 	if action in ["save","load"]: file_dialog.filters=PackedStringArray(["*.beat.json ; 律航乐谱"]); file_dialog.current_file="我的乐曲.beat.json" if save else ""
 	elif action in ["import_midi","export_midi"]: file_dialog.filters=PackedStringArray(["*.mid,*.midi ; MIDI 乐曲"]); file_dialog.current_file="我的乐曲.mid" if save else ""
+	elif action=="import_audio": file_dialog.filters=PackedStringArray(["*.mp3,*.wav,*.flac,*.ogg ; 可识谱音频"])
 	else: file_dialog.filters=PackedStringArray(["*.wav ; WAV 音频"]); file_dialog.current_file="我的乐曲.wav"
-	file_dialog.title={"save":"保存曲谱","load":"打开曲谱","import_midi":"导入 MIDI 乐曲","export_midi":"导出 MIDI 乐曲","export_wav":"导出 WAV 音频"}[action]
+	file_dialog.title={"save":"保存曲谱","load":"打开曲谱","import_midi":"导入 MIDI 乐曲","import_audio":"选择音频进行本地识谱","export_midi":"导出 MIDI 乐曲","export_wav":"导出 WAV 音频"}[action]
 	file_dialog.file_selected.connect(file_selected); add_child(file_dialog); file_dialog.popup_centered_ratio(.75)
 func file_selected(path: String) -> void:
 	if pending_file in ["load","import_midi"] and score().note_count()>0:
@@ -361,12 +368,62 @@ func apply_file(path: String) -> void:
 		"save": game.composer_save(path)
 		"load": game.composer_load(path); selected_note=-1; track_index=0; page_start_bar=0
 		"import_midi": game.composer_import_midi(path); selected_note=-1; track_index=0; page_start_bar=0
+		"import_audio": show_audio_options(path)
 		"export_midi": game.composer_export_midi(path)
 		"export_wav": game.composer_export_wav(path)
 	_queue_refresh()
 func set_status(message: String) -> void:
 	# File, transport and edit errors share one visible status channel.
 	local_status=message; game.composer_status=message; _update_live()
+func _audio_dialog_theme() -> Theme:
+	var result=theme.duplicate()
+	result.set_stylebox("panel","AcceptDialog",_box(Color("0b1421"),Color("3b536c"),16))
+	for state_name in ["normal","hover","pressed"]:
+		result.set_stylebox(state_name,"Button",_box(Color("112132") if state_name=="normal" else Color("253e51"),Color("526f87"),10))
+	result.set_color("font_color","Label",Color("cfdeec")); result.set_color("font_color","Button",Color("ade3df"))
+	return result
+func show_audio_options(path: String) -> void:
+	var dialog=ConfirmationDialog.new(); dialog.name="AudioRecognitionOptions"; dialog.title="本地音频识谱"; dialog.ok_button_text="开始识别"; dialog.cancel_button_text="取消"
+	dialog.theme=_audio_dialog_theme()
+	var box=VBoxContainer.new(); box.custom_minimum_size=Vector2(510,420); box.add_theme_constant_override("separation",10); dialog.add_child(box)
+	var explanation=_label(path.get_file()+"\n生成可编辑草稿，完成后先试听再导入。\n人声和多乐器混音可能误识别；纯音乐、独奏更适合。",16); explanation.custom_minimum_size.x=500; explanation.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; box.add_child(explanation)
+	box.add_child(_label("识别方式",16)); var mode=OptionButton.new(); mode.add_item("旋律优先（估计主要音线）"); mode.add_item("多音识别（保留和弦、按音域分轨）"); box.add_child(mode)
+	var auto_tempo=CheckButton.new(); auto_tempo.name="AudioAutoTempo"; auto_tempo.text="自动估计速度（可在导入后校准）"; auto_tempo.button_pressed=true; box.add_child(auto_tempo)
+	var bpm=_spin(score().bpm,40,240,1,func(_value):pass,"AudioBpm"); bpm.editable=false; box.add_child(bpm)
+	auto_tempo.toggled.connect(func(value):bpm.editable=not value)
+	box.add_child(_label("起点 / 秒",16)); var start=_spin(0,0,86400,1,func(_value):pass); box.add_child(start)
+	box.add_child(_label("识别长度 / 秒（0 = 剩余整首，最多10分钟）",16)); var length=_spin(0,0,600,1,func(_value):pass); box.add_child(length)
+	box.add_child(_label("灵敏度：提高可保留更多音符，也可能增加误音",15)); var sensitivity=HSlider.new(); sensitivity.min_value=0.; sensitivity.max_value=1.; sensitivity.step=.05; sensitivity.value=.5; box.add_child(sensitivity)
+	dialog.confirmed.connect(func():
+		dialog.hide()
+		var options={"bpm":0. if auto_tempo.button_pressed else bpm.value,"start":start.value,"length":length.value,"mode":"melody" if mode.selected==0 else "poly","sensitivity":sensitivity.value}
+		if game.composer_recognize_audio(path,options): show_audio_progress()
+		dialog.queue_free())
+	dialog.canceled.connect(dialog.queue_free); add_child(dialog); dialog.popup_centered(Vector2i(560,620))
+func show_audio_progress() -> void:
+	if is_instance_valid(recognition_progress): recognition_progress.queue_free()
+	recognition_progress=AcceptDialog.new(); recognition_progress.title="正在本地识谱"; recognition_progress.ok_button_text="取消识别"
+	recognition_progress.theme=_audio_dialog_theme()
+	var box=VBoxContainer.new(); box.custom_minimum_size=Vector2(490,100); box.add_theme_constant_override("separation",15); recognition_progress.add_child(box)
+	recognition_progress_label=_label("正在启动识谱组件……",17); box.add_child(recognition_progress_label)
+	recognition_bar=ProgressBar.new(); recognition_bar.custom_minimum_size.y=12; box.add_child(recognition_bar)
+	var cancel=func():game.audio_transcriber.cancel(); game.composer_status="已取消识别，原曲谱保留。"
+	recognition_progress.confirmed.connect(cancel); recognition_progress.canceled.connect(cancel)
+	add_child(recognition_progress); recognition_progress.popup_centered()
+func show_recognition_result() -> void:
+	if is_instance_valid(recognition_progress): recognition_progress.hide()
+	if is_instance_valid(recognition_dialog): recognition_dialog.queue_free()
+	var result: Dictionary=game.composer_recognition; var facts: Dictionary=result.get("facts",{})
+	recognition_dialog=ConfirmationDialog.new(); recognition_dialog.title="音频识谱草稿"; recognition_dialog.ok_button_text="导入并编辑"; recognition_dialog.cancel_button_text="保留原曲谱"
+	recognition_dialog.theme=_audio_dialog_theme()
+	recognition_dialog.dialog_text="识别出 %d 个音符 · %.1f BPM · %.1f 秒\n\n%s\n\n导入后替换当前作品；需要保留原作时请先保存。"%[int(facts.get("notes",0)),float(facts.get("bpm",120.)),float(facts.get("seconds",0.)),"\n".join(result.get("warnings",[]))]
+	recognition_dialog.get_label().autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	recognition_dialog.add_button("试听草稿",true,"preview")
+	recognition_dialog.custom_action.connect(func(action):
+		if action=="preview": game.composer_preview_recognition())
+	recognition_dialog.confirmed.connect(game.composer_apply_recognition)
+	recognition_dialog.canceled.connect(game.composer_stop)
+	add_child(recognition_dialog); recognition_dialog.popup_centered(Vector2i(640,360))
 func playhead_beat() -> float:
 	if game==null or game.composer_player==null: return 0.
 	return song_position()*float(score().bpm)/60.
@@ -389,6 +446,10 @@ func _update_live() -> void:
 func _process(delta: float) -> void:
 	_tick+=delta
 	if _tick>.04: _tick=0.; _update_live(); if is_instance_valid(roll): roll.queue_redraw()
+	if is_instance_valid(recognition_progress) and recognition_progress.visible:
+		if game.audio_transcriber.running:
+			recognition_progress_label.text=game.audio_transcriber.message+" · %.0f 秒"%game.audio_transcriber.elapsed; recognition_bar.value=game.audio_transcriber.progress*100.
+		else: recognition_progress.hide()
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo: return
 	if game==null or game.state not in ["composer","composer_loading"]: return

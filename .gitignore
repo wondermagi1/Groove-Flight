@@ -5,6 +5,8 @@ tests/results*.json
 tests/runtime-profile/
 tests/profile*/
 work/
+build/
+dist/
 __pycache__/
 *.pyc
 docs/screenshots/*.import

@@ -1,0 +1,14 @@
+{
+	"checks": 19,
+	"facts": {
+		"auto_bpm": false,
+		"bpm": 120.0,
+		"elapsed": 0.315113900000142,
+		"engine": "Basic Pitch ONNX CPU",
+		"notes": 10.0,
+		"seconds": 6.03428571428571,
+		"tempo_confidence": 0.71256212112636
+	},
+	"failures": [],
+	"scope": "Actual composer options -> separate frozen MP3 decoder/neural model -> staged result -> native audition -> editable score/MIDI export; cancellation and corrupt-file preservation. Original MP3 fixture, no commercial-song listening claim."
+}

@@ -29,6 +29,9 @@ var composer_return_state: String="title"
 var composer_pending_battle: bool=false
 var free_music_run: bool=false
 var composer_autosave: Timer
+var audio_transcriber
+var composer_recognition: Dictionary={}
+var composer_preview_name: String=""
 var fx
 var fleet_batch
 var ui
@@ -119,6 +122,8 @@ func _ready() -> void:
 	composer_player.event_fired.connect(on_composer_note)
 	composer_player.playback_started.connect(_composer_started)
 	composer_player.failed.connect(_composer_failed)
+	audio_transcriber=load("res://scripts/audio_transcriber.gd").new(); add_child(audio_transcriber)
+	audio_transcriber.completed.connect(_composer_recognized)
 	if composer_player.has_signal("exported"): composer_player.exported.connect(_composer_exported)
 	composer_autosave=Timer.new(); composer_autosave.one_shot=true; composer_autosave.wait_time=2.; add_child(composer_autosave)
 	composer_autosave.timeout.connect(_save_composer_draft)
@@ -269,6 +274,7 @@ func _restore_standard_music() -> void:
 	standard_music.stop(); standard_music._running=false; music=standard_music; free_music_run=false
 func close_composer() -> void:
 	if state not in ["composer","composer_loading"]: return
+	audio_transcriber.cancel(); composer_recognition.clear()
 	_save_composer_draft(); _restore_standard_music()
 	if composer_return_state=="title": return_title()
 	else: enter_hub()
@@ -278,6 +284,7 @@ func return_to_composer() -> void:
 	fx.particles.clear(); fx.marks.clear(); camera.enabled=false; background_layer.visible=false; post.visible=false; fx.visible=false
 	state="composer"; composer_status="试飞已结束，乐谱仍保留。"; ui.refresh()
 func composer_changed() -> void:
+	composer_preview_name=""
 	composer_player.stop_song()
 	if composer_pending_battle:
 		composer_pending_battle=false; free_music_run=false; music=standard_music; state="composer"
@@ -290,6 +297,7 @@ func _save_composer_draft() -> void:
 	if not result.ok: composer_status="草稿自动保存失败，请使用“保存”另选位置："+str(result.get("error","写入失败"))
 func composer_play() -> bool:
 	if state!="composer": return false
+	composer_preview_name=""
 	var validation=composer_score.validate()
 	if not validation.ok: composer_status="无法试听："+str(validation.errors[0]); return false
 	if composer_score.all_events().is_empty(): composer_status="当前没有可播放的音符，请写入音符或检查声部静音。"; return false
@@ -298,6 +306,7 @@ func composer_play() -> bool:
 	if not ok: _composer_failed(str(composer_player.last_error))
 	return ok
 func composer_stop() -> void:
+	composer_preview_name=""
 	composer_player.stop_song()
 	if composer_pending_battle:
 		composer_pending_battle=false; free_music_run=false; music=standard_music; state="composer"; ui.refresh()
@@ -305,7 +314,7 @@ func composer_stop() -> void:
 func _composer_started() -> void:
 	if composer_pending_battle and state=="composer_loading":
 		composer_pending_battle=false; state="combat"; begin_wave(); ui.refresh()
-	else: composer_status="正在播放："+composer_score.title
+	else: composer_status="正在播放："+(composer_preview_name if not composer_preview_name.is_empty() else composer_score.title)
 func _composer_failed(reason: String) -> void:
 	composer_status="音频准备失败："+reason
 	if composer_pending_battle:
@@ -332,6 +341,31 @@ func composer_import_midi(path: String) -> bool:
 	var ok=_composer_file_result(result,"已导入 MIDI："+path.get_file())
 	if ok: _save_composer_draft(); ui.refresh()
 	return ok
+func composer_recognize_audio(path: String,options: Dictionary={}) -> bool:
+	if state!="composer": return false
+	composer_stop(); composer_recognition.clear()
+	composer_status="正在分析音频，原曲谱保留。"
+	return audio_transcriber.begin(path,options,test_mode)
+func _composer_recognized(result: Dictionary) -> void:
+	if state!="composer": return
+	if not result.get("ok",false): composer_status="音频识别失败："+str(result.get("error","未知错误")); return
+	var candidate=SCORE.new(); var validated=candidate.from_dict(result.get("score",{}))
+	if not validated.ok: composer_status="识谱结果超出编辑器范围："+str(validated.error); return
+	composer_recognition=result.duplicate(true); composer_status="音频识别完成，可试听草稿后选择导入。"
+	if is_instance_valid(ui.composer): ui.composer.show_recognition_result()
+func composer_preview_recognition() -> bool:
+	if composer_recognition.is_empty() or audio_transcriber.running: return false
+	var candidate=SCORE.new()
+	if not candidate.from_dict(composer_recognition.get("score",{})).ok: return false
+	composer_stop(); composer_preview_name=candidate.title; apply_audio()
+	return composer_player.begin(candidate,true)
+func composer_apply_recognition() -> bool:
+	if composer_recognition.is_empty(): return false
+	composer_stop()
+	var result=composer_score.from_dict(composer_recognition.get("score",{}))
+	if not result.ok: composer_status="无法导入识谱草稿："+str(result.error); return false
+	composer_recognition.clear(); composer_changed(); _save_composer_draft()
+	composer_status="音频识谱草稿已导入；请试听并修正误音、节奏和速度。"; ui.refresh(); return true
 func composer_export_midi(path: String) -> bool:
 	return _composer_file_result(composer_score.export_midi(path),"已导出 MIDI："+path.get_file())
 func composer_export_wav(path: String) -> bool:
