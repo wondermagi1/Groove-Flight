@@ -6,6 +6,7 @@ const FLEET=preload("res://scripts/fleet_catalog.gd")
 const ART=preload("res://scripts/fleet_art.gd")
 const PLAN=preload("res://scripts/wave_plan.gd")
 const PLANETS=preload("res://scripts/planet_catalog.gd")
+const SCORE=preload("res://scripts/composer_score.gd")
 const MAX_ENEMIES=640
 const MAX_BULLETS=1200
 const MAX_ENEMY_BULLETS=700
@@ -20,6 +21,14 @@ var drop_fraction: float=0.
 var solar_return_state: String="hub"
 var loadout=LOADOUT.new()
 var music
+var standard_music
+var composer_player
+var composer_score=SCORE.new()
+var composer_status: String="原创示例已载入；也可以新建空白乐谱或导入 MIDI。"
+var composer_return_state: String="title"
+var composer_pending_battle: bool=false
+var free_music_run: bool=false
+var composer_autosave: Timer
 var fx
 var fleet_batch
 var ui
@@ -104,6 +113,18 @@ func _ready() -> void:
 	background=ShaderMaterial.new(); background.shader=load("res://shaders/space.gdshader"); back.material=background
 	back.mouse_filter=Control.MOUSE_FILTER_IGNORE; background_layer.add_child(back)
 	music=load("res://scripts/music.gd").new(); add_child(music); music.step_fired.connect(on_step)
+	standard_music=music
+	composer_player=load("res://scripts/composer_player.gd").new(); add_child(composer_player)
+	composer_player.step_fired.connect(on_step)
+	composer_player.event_fired.connect(on_composer_note)
+	composer_player.playback_started.connect(_composer_started)
+	composer_player.failed.connect(_composer_failed)
+	if composer_player.has_signal("exported"): composer_player.exported.connect(_composer_exported)
+	composer_autosave=Timer.new(); composer_autosave.one_shot=true; composer_autosave.wait_time=2.; add_child(composer_autosave)
+	composer_autosave.timeout.connect(_save_composer_draft)
+	if not test_mode and FileAccess.file_exists("user://scores/draft.beat.json"):
+		var restored=composer_score.load_json("user://scores/draft.beat.json")
+		if restored.ok: composer_status="已恢复上次的作曲草稿。"
 	fx=load("res://scripts/fx.gd").new(); fx.z_index=8; add_child(fx)
 	fleet_batch=load("res://scripts/fleet_batch.gd").new(); fleet_batch.z_index=-1; add_child(fleet_batch)
 	for i in range(16):
@@ -180,7 +201,10 @@ func save_settings() -> void:
 	store_planet_progress(config)
 	config.save("user://settings.cfg")
 func apply_audio() -> void:
-	music.volume_db=linear_to_db(maxf(.0001,float(settings.master)*float(settings.music)))-2.
+	var level=linear_to_db(maxf(.0001,float(settings.master)*float(settings.music)))-2.
+	music.volume_db=level
+	if is_instance_valid(standard_music): standard_music.volume_db=level
+	if is_instance_valid(composer_player): composer_player.volume_db=level
 	fx.reduced=bool(settings.reduced_fx)
 func sound(id: String,volume: float=-10.,pitch: float=1.) -> void:
 	if voices.is_empty(): return
@@ -192,7 +216,9 @@ func sound(id: String,volume: float=-10.,pitch: float=1.) -> void:
 	voice.stream=load("res://audio/"+str(sources.get(id,id+".wav"))); voice.pitch_scale=pitch
 	voice.volume_db=volume+linear_to_db(maxf(.0001,float(settings.master)*float(settings.sfx))); voice.play()
 
-func start_run(seed_value: int=0,planet_id: String="") -> void:
+func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=false) -> void:
+	composer_player.stop_song(); standard_music.stop(); standard_music._running=false
+	free_music_run=use_composition; music=composer_player if use_composition else standard_music
 	if not planet_id.is_empty():
 		if not is_planet_unlocked(planet_id): return
 		selected_planet=planet_id
@@ -216,19 +242,137 @@ func start_run(seed_value: int=0,planet_id: String="") -> void:
 	shield_points=0; shield_until=-1; pending_dash_missiles=0; proc_queue.clear(); shop_offers.clear(); shop_reroll_cost=8
 	wave=0; kills=0; score=0; dust=0; picked=0; next_enemy=1; actual_steps=0; selected_uid=-1; drop_fraction=0.
 	player=Vector2.ZERO; facing=Vector2.UP; movement_facing=facing; camera.enabled=true; camera.position=player; camera.reset_smoothing()
-	state="combat"; music.begin(loadout); begin_wave(); apply_audio(); ui.refresh()
+	apply_audio()
+	if free_music_run:
+		state="composer_loading"; composer_pending_battle=true; composer_status="正在准备乐谱试飞……"
+		if not composer_player.begin(composer_score,true): _composer_failed(str(composer_player.last_error))
+		ui.refresh()
+	else:
+		state="combat"; music.begin(loadout); begin_wave(); ui.refresh()
 func begin_wave() -> void:
 	wave+=1; wave_start=music.timeline; spawned=0; elite_spawned=false; reward_taken=false
 	enemy_bullets.clear(); warnings.clear()
-	if wave==wave_count():
+	if wave==wave_count() and not free_music_run:
 		boss_anchor=player+Vector2(0,-350); spawn_enemy("boss",boss_anchor)
 	notice=PLANETS.planet(active_planet).name+" / "+str(wave_profile().name); notice_until=music.timeline+2.
+	if free_music_run: notice="乐谱试飞 · 无敌练习 · 不计航线战绩"; notice_until=INF
+
+func open_composer() -> void:
+	if state not in ["title","hub","hangar","solar","victory","defeat"]: return
+	composer_return_state="title" if state=="title" else "hub"
+	_restore_standard_music()
+	if is_instance_valid(hub): hub.deactivate()
+	camera.enabled=false; background_layer.visible=false; post.visible=false; fx.visible=false
+	state="composer"; apply_audio(); ui.refresh()
+func _restore_standard_music() -> void:
+	composer_pending_battle=false; composer_player.stop_song()
+	standard_music.stop(); standard_music._running=false; music=standard_music; free_music_run=false
+func close_composer() -> void:
+	if state not in ["composer","composer_loading"]: return
+	_save_composer_draft(); _restore_standard_music()
+	if composer_return_state=="title": return_title()
+	else: enter_hub()
+func return_to_composer() -> void:
+	if not free_music_run: return
+	_restore_standard_music(); enemies.clear(); by_id.clear(); spatial.clear(); bullets.clear(); enemy_bullets.clear(); pickups.clear(); warnings.clear()
+	fx.particles.clear(); fx.marks.clear(); camera.enabled=false; background_layer.visible=false; post.visible=false; fx.visible=false
+	state="composer"; composer_status="试飞已结束，乐谱仍保留。"; ui.refresh()
+func composer_changed() -> void:
+	composer_player.stop_song()
+	if composer_pending_battle:
+		composer_pending_battle=false; free_music_run=false; music=standard_music; state="composer"
+	composer_status="已修改 · 可试听或保存。"
+	if not test_mode: composer_autosave.start()
+func _save_composer_draft() -> void:
+	if test_mode: return
+	DirAccess.make_dir_recursive_absolute("user://scores")
+	var result=composer_score.save_json("user://scores/draft.beat.json")
+	if not result.ok: composer_status="草稿自动保存失败，请使用“保存”另选位置："+str(result.get("error","写入失败"))
+func composer_play() -> bool:
+	if state!="composer": return false
+	var validation=composer_score.validate()
+	if not validation.ok: composer_status="无法试听："+str(validation.errors[0]); return false
+	if composer_score.all_events().is_empty(): composer_status="当前没有可播放的音符，请写入音符或检查声部静音。"; return false
+	apply_audio(); composer_pending_battle=false; composer_status="正在准备音频……"
+	var ok=composer_player.begin(composer_score,true)
+	if not ok: _composer_failed(str(composer_player.last_error))
+	return ok
+func composer_stop() -> void:
+	composer_player.stop_song()
+	if composer_pending_battle:
+		composer_pending_battle=false; free_music_run=false; music=standard_music; state="composer"; ui.refresh()
+	composer_status="已停止播放。"
+func _composer_started() -> void:
+	if composer_pending_battle and state=="composer_loading":
+		composer_pending_battle=false; state="combat"; begin_wave(); ui.refresh()
+	else: composer_status="正在播放："+composer_score.title
+func _composer_failed(reason: String) -> void:
+	composer_status="音频准备失败："+reason
+	if composer_pending_battle:
+		composer_pending_battle=false; free_music_run=false; music=standard_music; state="composer"; ui.refresh()
+func composer_seek(beat: float) -> void:
+	if composer_player.has_method("seek_beat"): composer_player.seek_beat(beat)
+func composer_audition(weapon: String,pitch: int,velocity: int=100) -> void:
+	if composer_player.has_method("audition"): composer_player.audition(weapon,pitch,velocity)
+func _composer_file_result(result: Dictionary,message: String) -> bool:
+	composer_status=message if result.get("ok",false) else "操作失败："+str(result.get("error","文件内容无法读取"))
+	if result.get("ok",false) and not result.get("warnings",[]).is_empty(): composer_status+=" · "+"；".join(result.warnings)
+	return bool(result.get("ok",false))
+func composer_save(path: String) -> bool:
+	return _composer_file_result(composer_score.save_json(path),"已保存："+path.get_file())
+func composer_load(path: String) -> bool:
+	composer_stop()
+	var result=composer_score.load_json(path)
+	var ok=_composer_file_result(result,"已打开："+path.get_file())
+	if ok: _save_composer_draft(); ui.refresh()
+	return ok
+func composer_import_midi(path: String) -> bool:
+	composer_stop()
+	var result=composer_score.import_midi(path)
+	var ok=_composer_file_result(result,"已导入 MIDI："+path.get_file())
+	if ok: _save_composer_draft(); ui.refresh()
+	return ok
+func composer_export_midi(path: String) -> bool:
+	return _composer_file_result(composer_score.export_midi(path),"已导出 MIDI："+path.get_file())
+func composer_export_wav(path: String) -> bool:
+	composer_stop(); composer_status="正在导出音频……"
+	if composer_player.has_method("export_wav_async"):
+		var ok=composer_player.export_wav_async(path,composer_score)
+		if not ok: _composer_failed(str(composer_player.last_error))
+		return ok
+	return _composer_file_result(composer_player.export_wav(path,composer_score),"已导出 WAV："+path.get_file())
+func _composer_exported(result: Dictionary) -> void:
+	_composer_file_result(result,"已导出 WAV："+str(result.get("path","")).get_file())
+func composer_battle() -> bool:
+	if state!="composer" or composer_player.compiling: return false
+	var validation=composer_score.validate()
+	if not validation.ok: composer_status="无法试飞："+str(validation.errors[0]); return false
+	var counts: Dictionary={}; var notes=composer_score.all_events()
+	for note in notes:
+		var step=int(note.serial); counts[step]=int(counts.get(step,0))+1
+		if counts[step]>16: composer_status="这一拍超过16个音符。请精简后试飞，或继续试听与导出。"; return false
+	if notes.is_empty(): composer_status="先写入一些音符，再开始乐谱试飞。"; return false
+	start_run(0,selected_planet,true); return state in ["composer_loading","combat"]
+
+func on_composer_note(note: Dictionary,deadline: float) -> void:
+	if not free_music_run or state!="combat": return
+	var kind=str(note.get("weapon",note.get("kind",note.get("voice","pulse"))))
+	var row=C.item(kind)
+	if row.is_empty() or str(row.category)!="weapon": return
+	var trigger=row.duplicate(true); trigger.kind=kind; trigger.extra=0; trigger.angle=0.; trigger.chord=false; trigger.events={}
+	trigger.chain_count=maxi(1,int(row.get("bounces",3)))
+	trigger.damage=float(row.damage)*(.25+.75*float(note.get("velocity",100))/127.)
+	trigger.crit_chance=0.; trigger.crit_damage=1.; trigger.uid=int(note.get("note_id",note.get("id",-1)))
+	fire_weapon(trigger)
+	fire_log.append({"serial":int(note.get("serial",0)),"deadline":deadline,"actual":music.timeline,"kind":kind,"pitch":int(note.get("pitch",60)),"note_id":trigger.uid})
+	if fire_log.size()>480: fire_log.pop_front()
 
 func select_planet(id: String) -> bool:
 	if not is_planet_unlocked(id) or state not in ["solar","hub","title","victory","defeat"]: return false
 	selected_planet=id; save_settings(); return true
 func open_solar_map() -> void:
 	if state not in ["title","hub","hangar","victory","defeat"]: return
+	_restore_standard_music()
 	solar_return_state="title" if state=="title" else "hub"
 	music.stop(); music._running=false; camera.enabled=false
 	for voice in voices: voice.stop()
@@ -253,6 +397,7 @@ func leave_hub() -> void:
 	background_layer.visible=true; post.visible=true; fx.visible=true
 
 func enter_hub() -> void:
+	_restore_standard_music()
 	music.stop(); music._running=false; camera.enabled=false
 	for voice in voices: voice.stop()
 	enemies.clear(); by_id.clear(); spatial.clear(); bullets.clear(); enemy_bullets.clear(); pickups.clear(); warnings.clear()
@@ -291,6 +436,7 @@ func toggle_all_panels() -> void:
 	for key in keys: settings[prefix+key]=show
 	save_settings(); ui.refresh()
 func open_editor() -> void:
+	if free_music_run: pause_game(); return
 	if state not in ["combat","reward"]: return
 	editor_return=state; state="editor"; editing_changed=false; selected_uid=-1; music.hold(true); ui.refresh()
 func close_editor() -> void:
@@ -362,6 +508,8 @@ func show_settings() -> void:
 func close_settings() -> void:
 	save_settings(); state=previous_state; music.hold(state in ["paused","reward","editor"]); ui.refresh()
 func return_title() -> void:
+	if state in ["composer","composer_loading"]: _save_composer_draft()
+	_restore_standard_music()
 	leave_hub()
 	music.stop(); music._running=false; camera.enabled=false; state="title"
 	for voice in voices: voice.stop()
@@ -376,7 +524,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		if state=="editor": close_editor()
 		elif state in ["combat","reward"]: open_editor()
 	elif event.is_action_pressed("pause"):
-		if state=="solar": close_solar_map()
+		if state in ["composer","composer_loading"]: close_composer()
+		elif state=="solar": close_solar_map()
 		elif state=="editor": close_editor()
 		elif state=="settings": close_settings()
 		elif state=="hangar": close_hangar()
@@ -450,6 +599,7 @@ func on_step(index: int,serial: int,deadline: float) -> void:
 		if enemy.hp<=0: continue
 		if enemy.kind in ["shooter","elite","sentinel"] and posmod(serial+int(enemy.uid)*2,16)==0: enemy_fire(enemy)
 		if enemy.kind=="boss": boss_step(enemy,serial)
+	if free_music_run: return
 	if index==0: health=minf(float(stats_snapshot.max_health),health+float(event_snapshot.get("heal_bar",0)))
 	for trigger in loadout.advance_step(index,serial):
 		if str(trigger.family)=="support": continue
@@ -469,6 +619,13 @@ func play_note(voice_id: String,pitch: int,volume: float=-18.) -> void:
 	voice.volume_db=volume+linear_to_db(maxf(.0001,float(settings.master)*float(settings.sfx))); voice.play()
 
 func spawn_for_step(serial: int) -> void:
+	if free_music_run:
+		if serial%8!=0 or enemies.size()>=120: return
+		var outward=movement_facing.rotated(rng.randf_range(-1.2,1.2)); var origin=spawn_origin(outward)
+		for i in range(6):
+			var point=PLAN.formation(origin,outward,i,6,"crescent")
+			spawn_enemy(PLANETS.kind(active_planet,mini(8,int(serial/64)),i+serial),safe_spawn_position(point,outward))
+		return
 	if serial%4!=0: return
 	if wave==wave_count():
 		if not boss_down and serial%16==0:
@@ -758,6 +915,7 @@ func collect_pickup(item: Dictionary,with_sound: bool=true) -> void:
 			if with_sound: fx.ring(player,Color("b6a5fa"),62,.35)
 	if with_sound: sound("pickup",-24,1.+(picked%5)*.08)
 func hurt_player(amount: float) -> void:
+	if free_music_run: return
 	if state!="combat" or invulnerable>0 or dash_left>0: return
 	if shield_points>0 and music.timeline<shield_until:
 		shield_points=maxf(0,shield_points-1); invulnerable=.25; fx.ring(player,Color("a3e9ff"),70,.3); sound("metal",-16); return
@@ -766,6 +924,7 @@ func hurt_player(amount: float) -> void:
 	fx.burst(player,Color("ff779d"),16,220); sound("hit",-6)
 	if health<=0: finish_run(false)
 func check_wave() -> void:
+	if free_music_run: return
 	if state!="combat": return
 	if wave==wave_count():
 		if boss_down: finish_run(true)
@@ -785,6 +944,7 @@ func check_wave() -> void:
 	rewards.clear(); reward_taken=false; state="reward"; music.hold(true); sound("reward",-9); ui.refresh()
 func finish_run(won: bool) -> void:
 	if state!="combat": return
+	if free_music_run: return_to_composer(); return
 	state="victory" if won else "defeat"; best=maxi(best,score)
 	var record=planet_record(active_planet); record.attempts+=1
 	record.best_score=maxi(int(record.best_score),score); record.last_result="clear" if won else "failed"

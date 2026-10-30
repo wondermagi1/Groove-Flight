@@ -1,0 +1,19 @@
+{
+	"checks": 78,
+	"facts": {
+		"compile_msec": 40.02,
+		"native_max_error": 0.0026589887791276,
+		"pitch_results": {
+			"missile60": 60,
+			"missile69": 69,
+			"orbit60": 60,
+			"orbit69": 69,
+			"pulse60": 60,
+			"pulse69": 69,
+			"pulse_needle60": 60,
+			"pulse_needle69": 69
+		}
+	},
+	"failures": [],
+	"scope": "Original score fixtures: stereoPCM/BPM/gates/pan/velocity/mute/solo,32distinct weapon synths with absoluteMIDI pitch, pure schedule manifest, worker cancellation, real native loop/pause/seek/one-shot, asynchronous WAV file/header/overwrite. No copied song, human listening or complete battle claim."
+}

@@ -6,6 +6,7 @@ const TITLE=preload("res://scripts/interactive_title.gd")
 const PICKER=preload("res://scripts/fleet_picker.gd")
 const SOLAR=preload("res://scripts/solar_map.gd")
 const PLANETS=preload("res://scripts/planet_catalog.gd")
+const COMPOSER=preload("res://scripts/composer_screen.gd")
 var game
 var root_control: Control
 var font: SystemFont
@@ -21,6 +22,7 @@ var slots: Array=[]
 var title_flight: Node2D
 var arsenal: Control
 var solar: Control
+var composer: Control
 func _ready() -> void:
 	layer=30
 	font=SystemFont.new(); font.font_names=PackedStringArray(["Microsoft YaHei UI","Noto Sans CJK SC","Arial"])
@@ -50,12 +52,13 @@ func refresh() -> void:
 	# Buttons can request a new screen from inside their own pressed signal.
 	# Hide immediately, release after signal dispatch instead of freeing a lock.
 	for child in root_control.get_children(): child.hide(); child.queue_free()
-	slots.clear(); wave_label=null; timer_label=null; health_label=null; score_label=null; notice_label=null; overload_label=null; boss_bar=null; overload_bar=null; title_flight=null; arsenal=null; solar=null
+	slots.clear(); wave_label=null; timer_label=null; health_label=null; score_label=null; notice_label=null; overload_label=null; overload_bar=null; boss_bar=null; title_flight=null; arsenal=null; solar=null; composer=null
 	match game.state:
 		"title": title_screen()
 		"hub": hub_screen()
 		"hangar": hangar_screen()
 		"solar": solar_screen()
+		"composer","composer_loading": composer_screen()
 		"combat": hud()
 		"reward": reward_screen()
 		"editor": editor_screen()
@@ -73,7 +76,7 @@ func title_screen() -> void:
 	var view=get_viewport().get_visible_rect().size
 	var compact=view.x<1500 or view.y<850
 	title_flight=TITLE.new(); title_flight.game=game; title_flight.name="InteractiveTitle"; root_control.add_child(title_flight)
-	var content=VBoxContainer.new(); content.position=view*Vector2(.10,.17 if compact else .22)
+	var content=VBoxContainer.new(); content.position=view*Vector2(.10,.09 if compact else .12)
 	content.custom_minimum_size.x=minf(424,view.x*.35); content.add_theme_constant_override("separation",9 if compact else 13); root_control.add_child(content)
 	content.add_child(label("S E Q U E N C E   /   S U R V I V E",14 if compact else 17,Color("6c9dab")))
 	content.add_child(label("BEATDRIFT",55 if compact else 80))
@@ -83,14 +86,15 @@ func title_screen() -> void:
 	var entries=[
 		["hub","进入霓光港","01",Color("71e8dc")],
 		["solar","星球航图","02",Color("83cafa")],
-		["hangar","机库与驾驶员","03",Color("b1b9fa")],
-		["settings","设置","04",Color("8fa9c1")],
-		["quit","退出","05",Color("71839a")]]
+		["composer","自由作曲","03",Color("ac9cf5")],
+		["hangar","机库与驾驶员","04",Color("b1b9fa")],
+		["settings","设置","05",Color("8fa9c1")],
+		["quit","退出","06",Color("71839a")]]
 	for entry in entries:
 		var id: String=entry[0]
 		var row=Button.new(); row.name="TitleEntry"+id.capitalize(); row.text=entry[1]
 		row.alignment=HORIZONTAL_ALIGNMENT_LEFT; row.focus_mode=Control.FOCUS_NONE
-		row.custom_minimum_size=Vector2(0,52 if compact else 62); row.mouse_default_cursor_shape=Control.CURSOR_POINTING_HAND
+		row.custom_minimum_size=Vector2(0,48 if compact else 54); row.mouse_default_cursor_shape=Control.CURSOR_POINTING_HAND
 		row.add_theme_font_size_override("font_size",21 if compact else 24)
 		for state_name in ["normal","hover","pressed"]:
 			var style=StyleBoxFlat.new(); style.bg_color=Color(entry[3],.065 if state_name=="hover" else (.14 if state_name=="pressed" else .008))
@@ -127,6 +131,8 @@ func hangar_screen() -> void:
 	var picker=PICKER.new(); picker.game=game; picker.name="FleetPicker"; root_control.add_child(picker)
 func solar_screen() -> void:
 	solar=SOLAR.new(); solar.game=game; solar.name="SolarMap"; root_control.add_child(solar)
+func composer_screen() -> void:
+	composer=COMPOSER.new(); composer.game=game; composer.name="ComposerScreen"; root_control.add_child(composer)
 func thin_bar(width: float,color: Color) -> ProgressBar:
 	var bar=ProgressBar.new(); bar.custom_minimum_size=Vector2(width,5); bar.show_percentage=false; bar.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	var background_style=StyleBoxFlat.new(); background_style.bg_color=Color("253042"); background_style.set_corner_radius_all(2)
@@ -143,18 +149,18 @@ func hud(include_arsenal: bool=true) -> void:
 	health_label=label("",20); health_label.position=Vector2(370,26); root_control.add_child(health_label)
 	score_label=label("",21); score_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT; score_label.position=Vector2(view.x-650,27); score_label.size=Vector2(295,32); root_control.add_child(score_label)
 	var pause=button("Ⅱ",game.pause_game,Color("8597af"),38); pause.custom_minimum_size=Vector2(44,38); pause.position=Vector2(view.x-75,23); root_control.add_child(pause)
-	var edit=button("TAB  音序工坊",game.open_editor,Color("9db4c8"),38); edit.position=Vector2(view.x-285,23); root_control.add_child(edit)
+	var edit=button("返回作曲工坊" if game.free_music_run else "TAB  音序工坊",game.return_to_composer if game.free_music_run else game.open_editor,Color("9db4c8"),38); edit.position=Vector2(view.x-285,23); root_control.add_child(edit)
 	notice_label=label("",20); notice_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER; notice_label.position=Vector2(view.x*.42,26); notice_label.size=Vector2(view.x*.22,36); root_control.add_child(notice_label)
 	boss_bar=thin_bar(view.x*.34,Color("ee8faf")); boss_bar.position=Vector2(view.x*.33,112); root_control.add_child(boss_bar)
 	overload_label=label("",16,Color("e4c18c")); overload_label.position=Vector2(590,22); root_control.add_child(overload_label)
 	overload_bar=thin_bar(160,Color("f3d091")); overload_bar.position=Vector2(590,51); root_control.add_child(overload_bar)
-	if include_arsenal: arsenal_screen("combat")
+	if include_arsenal and not game.free_music_run: arsenal_screen("combat")
 func update_hud() -> void:
 	if not is_instance_valid(wave_label): return
-	wave_label.text="%s %02d/%02d"%[PLANETS.planet(game.active_planet).name,game.wave,game.wave_count()]
+	wave_label.text="乐谱试飞" if game.free_music_run else "%s %02d/%02d"%[PLANETS.planet(game.active_planet).name,game.wave,game.wave_count()]
 	var remaining=maxf(0,float(game.wave_profile().seconds)-(game.music.timeline-game.wave_start))
-	timer_label.text="BOSS" if game.wave==game.wave_count() else ("清场" if remaining<=0 else str(int(ceil(remaining))))
-	health_label.text="生命  %.1f / %d"%[game.health,game.loadout.max_health]
+	timer_label.text=("%02d:%02d"%[int(game.music.timeline)/60,int(game.music.timeline)%60]) if game.free_music_run else ("BOSS" if game.wave==game.wave_count() else ("清场" if remaining<=0 else str(int(ceil(remaining)))))
+	health_label.text="无敌练习 · 不计战绩" if game.free_music_run else "生命  %.1f / %d"%[game.health,game.loadout.max_health]
 	score_label.text="✦ %d   /   击破 %d"%[game.dust,game.kills]
 	notice_label.text=game.notice if game.music.timeline<game.notice_until else ""
 	overload_label.text="E  超载就绪" if game.charge>=100 else "E  超载  %d%%"%int(game.charge)
@@ -174,7 +180,7 @@ func editor_screen() -> void:
 func pause_screen() -> void:
 	var content=panel(590,365); section_title(content,"暂停 / 音乐与战斗一起停下")
 	content.add_child(button("继续飞行",game.pause_game)); content.add_child(button("设置",game.show_settings,Color("9badc4")))
-	content.add_child(button("返回主菜单",game.return_title,Color("e1a2a9")))
+	content.add_child(button("返回作曲工坊" if game.free_music_run else "返回主菜单",game.return_to_composer if game.free_music_run else game.return_title,Color("e1a2a9")))
 func settings_screen() -> void:
 	var content=panel(650,520); section_title(content,"设置","调整音量、显示与粒子密度。F11 可切换全屏。")
 	for item in [["master","总音量"],["music","音乐 / 武器音符"],["sfx","拾取 / 命中音效"]]:

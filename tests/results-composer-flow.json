@@ -1,0 +1,10 @@
+{
+	"checks": 29,
+	"facts": {
+		"max_note_error": 0.003635706201911,
+		"trial_events": 6,
+		"wav_bytes": 470444
+	},
+	"failures": [],
+	"scope": "Actual title projectile to piano roll, authored chromatic chords, worker native playback, JSON/MIDI/WAV callbacks, unranked note-driven invulnerable trial, pause/return and ordinary-mode regression. File fixtures are original notes, not a commercial-song transcription; no human listening acceptance."
+}
