@@ -1,0 +1,63 @@
+{
+	"checks": 75,
+	"facts": {
+		"earth": {
+			"boss": "地球机器",
+			"hp": 6800.0,
+			"machine_type": "轨道仲裁站",
+			"radius": 172.0,
+			"warning_lanes": 1
+		},
+		"jupiter": {
+			"boss": "木星机器",
+			"hp": 11200.0,
+			"machine_type": "巨斑涡轮",
+			"radius": 205.0,
+			"warning_lanes": 2
+		},
+		"mars": {
+			"boss": "火星机器",
+			"hp": 8700.0,
+			"machine_type": "赤砂攻城堡",
+			"radius": 178.0,
+			"warning_lanes": 2
+		},
+		"mercury": {
+			"boss": "水星机器",
+			"hp": 4000.0,
+			"machine_type": "日冕采掘体",
+			"radius": 158.0,
+			"warning_lanes": 1
+		},
+		"neptune": {
+			"boss": "海王星机器",
+			"hp": 24000.0,
+			"machine_type": "深潮终奏舰",
+			"radius": 214.0,
+			"warning_lanes": 3
+		},
+		"saturn": {
+			"boss": "土星机器",
+			"hp": 14400.0,
+			"machine_type": "星环歼灭器",
+			"radius": 200.0,
+			"warning_lanes": 2
+		},
+		"uranus": {
+			"boss": "天王星机器",
+			"hp": 18500.0,
+			"machine_type": "极轴观测体",
+			"radius": 192.0,
+			"warning_lanes": 3
+		},
+		"venus": {
+			"boss": "金星机器",
+			"hp": 5200.0,
+			"machine_type": "硫云熔炉",
+			"radius": 166.0,
+			"warning_lanes": 1
+		}
+	},
+	"failures": [],
+	"scope": "Actual Main launch for eight planets, rendered surface/boss captures, names and hit radii, unchanged HP, protected entry, real attack/telegraph/phase/victory methods. Timelines and waves are explicit fixtures; no full-route or human difficulty claim."
+}

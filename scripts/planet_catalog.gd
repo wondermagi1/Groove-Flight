@@ -6,6 +6,8 @@ const THEMES=["rocky","volcanic","ocean","desert","gas","ringed","ice","storm"]
 const WAVE_COUNTS=[6,7,8,8,9,9,10,10]
 const HP_SCALES=[1.0,1.18,1.40,1.68,2.05,2.45,2.90,3.40]
 const BOSS_HP=[4000.,5200.,6800.,8700.,11200.,14400.,18500.,24000.]
+const BOSS_RADII=[158.,166.,172.,178.,205.,200.,192.,214.]
+const MACHINE_TYPES=["日冕采掘体","硫云熔炉","轨道仲裁站","赤砂攻城堡","巨斑涡轮","星环歼灭器","极轴观测体","深潮终奏舰"]
 const SPEEDS=[1.0,1.04,1.08,1.12,1.17,1.21,1.25,1.30]
 const BULLET_SPEEDS=[1.0,1.04,1.08,1.12,1.17,1.23,1.29,1.35]
 const DAMAGES=[1.0,1.15,1.35,1.60,1.95,2.35,2.85,3.40]
@@ -79,7 +81,7 @@ static func rows() -> Array[Dictionary]:
 		"先清理分裂源，留一点续航与护盾应对密集双流。",
 		"让伤害、清群、追踪和防御相互补位；敌人的攻击已显著强化。"
 	]
-	var bosses=["日冕侦猎者","硫云聚能舰","蔚蓝仲裁者","赤砂重装舰","巨斑主宰","光环指挥舰","冰轴观测者","深潮终奏核"]
+	var bosses=["水星机器","金星机器","地球机器","火星机器","木星机器","土星机器","天王星机器","海王星机器"]
 	var clears=[
 		"水星采矿航道恢复通行，第一次试航完成。",
 		"云层外缘的干扰源被解除，硫云航路重新亮起。",
@@ -94,7 +96,7 @@ static func rows() -> Array[Dictionary]:
 	var orbits=[3.0,4.5,6.0,7.5,9.3,11.1,12.9,14.7]
 	var angles=[.15,1.1,2.25,3.2,4.0,5.1,.7,2.8]
 	for i in range(IDS.size()):
-		result.append({"id":IDS[i],"name":names[i],"subtitle":subtitles[i],"description":descriptions[i],"index":i,"color":COLORS[i],"radius":radii[i],"orbit":orbits[i],"seedangle":angles[i],"theme":THEMES[i],"threat":i+1,"bossname":bosses[i],"hint":hints[i],"cleartext":clears[i]})
+		result.append({"id":IDS[i],"name":names[i],"subtitle":subtitles[i],"description":descriptions[i],"index":i,"color":COLORS[i],"radius":radii[i],"orbit":orbits[i],"seedangle":angles[i],"theme":THEMES[i],"threat":i+1,"bossname":bosses[i],"machine_type":MACHINE_TYPES[i],"boss_radius":BOSS_RADII[i],"hint":hints[i],"cleartext":clears[i]})
 	return result
 
 static func _index(id: String) -> int:

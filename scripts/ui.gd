@@ -17,6 +17,9 @@ var score_label: Label
 var notice_label: Label
 var overload_label: Label
 var boss_bar: ProgressBar
+var boss_title: Label
+var boss_caption: Label
+var boss_panel: Panel
 var overload_bar: ProgressBar
 var slots: Array=[]
 var title_flight: Node2D
@@ -52,7 +55,7 @@ func refresh() -> void:
 	# Buttons can request a new screen from inside their own pressed signal.
 	# Hide immediately, release after signal dispatch instead of freeing a lock.
 	for child in root_control.get_children(): child.hide(); child.queue_free()
-	slots.clear(); wave_label=null; timer_label=null; health_label=null; score_label=null; notice_label=null; overload_label=null; overload_bar=null; boss_bar=null; title_flight=null; arsenal=null; solar=null; composer=null
+	slots.clear(); wave_label=null; timer_label=null; health_label=null; score_label=null; notice_label=null; overload_label=null; overload_bar=null; boss_bar=null; boss_title=null; boss_caption=null; boss_panel=null; title_flight=null; arsenal=null; solar=null; composer=null
 	match game.state:
 		"title": title_screen()
 		"hub": hub_screen()
@@ -151,7 +154,12 @@ func hud(include_arsenal: bool=true) -> void:
 	var pause=button("Ⅱ",game.pause_game,Color("8597af"),38); pause.custom_minimum_size=Vector2(44,38); pause.position=Vector2(view.x-75,23); root_control.add_child(pause)
 	var edit=button("返回作曲工坊" if game.free_music_run else "TAB  音序工坊",game.return_to_composer if game.free_music_run else game.open_editor,Color("9db4c8"),38); edit.position=Vector2(view.x-285,23); root_control.add_child(edit)
 	notice_label=label("",20); notice_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER; notice_label.position=Vector2(view.x*.42,26); notice_label.size=Vector2(view.x*.22,36); root_control.add_child(notice_label)
-	boss_bar=thin_bar(view.x*.34,Color("ee8faf")); boss_bar.position=Vector2(view.x*.33,112); root_control.add_child(boss_bar)
+	var boss_x=maxf(620.,view.x*.28); var boss_width=minf(view.x*.44,view.x-boss_x-25.)
+	boss_panel=Panel.new(); boss_panel.position=Vector2(boss_x,70); boss_panel.size=Vector2(boss_width,76); boss_panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	var boss_style=StyleBoxFlat.new(); boss_style.bg_color=Color(.018,.032,.052,.88); boss_style.set_corner_radius_all(5); boss_panel.add_theme_stylebox_override("panel",boss_style); root_control.add_child(boss_panel)
+	boss_bar=thin_bar(boss_width-20,Color("ee8faf")); boss_bar.position=Vector2(boss_x+10,110); root_control.add_child(boss_bar)
+	boss_title=label("",22,Color("e5eaf0")); boss_title.position=Vector2(boss_x+10,77); boss_title.size=Vector2(boss_width-20,28); boss_title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER; root_control.add_child(boss_title)
+	boss_caption=label("",14,Color("a9b9c8")); boss_caption.position=Vector2(boss_x+10,121); boss_caption.size=Vector2(boss_width-20,22); boss_caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER; root_control.add_child(boss_caption)
 	overload_label=label("",16,Color("e4c18c")); overload_label.position=Vector2(590,22); root_control.add_child(overload_label)
 	overload_bar=thin_bar(160,Color("f3d091")); overload_bar.position=Vector2(590,51); root_control.add_child(overload_bar)
 	if include_arsenal and not game.free_music_run: arsenal_screen("combat")
@@ -168,8 +176,12 @@ func update_hud() -> void:
 	var boss: Dictionary={}
 	for enemy in game.enemies:
 		if enemy.kind=="boss" and enemy.hp>0: boss=enemy; break
-	boss_bar.visible=not boss.is_empty()
-	if not boss.is_empty(): boss_bar.max_value=boss.max_hp; boss_bar.value=boss.hp
+	boss_bar.visible=not boss.is_empty(); boss_panel.visible=not boss.is_empty()
+	boss_title.visible=not boss.is_empty(); boss_caption.visible=not boss.is_empty()
+	if not boss.is_empty():
+		boss_bar.max_value=boss.max_hp; boss_bar.value=boss.hp
+		boss_title.text=str(PLANETS.planet(game.active_planet).bossname)+"  /  "+str(PLANETS.planet(game.active_planet).machine_type)
+		boss_caption.text="巨型机械接近 · 武器启动中" if game.music.timeline<float(boss.get("entry_until",-1.)) else ("核心过载  /  PHASE II" if boss.phase==2 else "装甲核心  /  PHASE I")
 func section_title(content: VBoxContainer,text_value: String,subtitle: String="") -> void:
 	content.add_child(label(text_value,30))
 	if not subtitle.is_empty(): content.add_child(label(subtitle,17,Color("8c9db5")))

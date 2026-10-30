@@ -4,6 +4,7 @@ const C=preload("res://scripts/arsenal_catalog.gd")
 const LOADOUT=preload("res://scripts/arsenal_loadout.gd")
 const FLEET=preload("res://scripts/fleet_catalog.gd")
 const ART=preload("res://scripts/fleet_art.gd")
+const MACHINE_ART=preload("res://scripts/planet_machine_art.gd")
 const PLAN=preload("res://scripts/wave_plan.gd")
 const PLANETS=preload("res://scripts/planet_catalog.gd")
 const SCORE=preload("res://scripts/composer_score.gd")
@@ -113,7 +114,7 @@ func _ready() -> void:
 	bind_input(); loadout.reset(); load_settings()
 	background_layer=CanvasLayer.new(); background_layer.layer=-20; add_child(background_layer)
 	var back=ColorRect.new(); back.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	background=ShaderMaterial.new(); background.shader=load("res://shaders/space.gdshader"); back.material=background
+	background=ShaderMaterial.new(); background.shader=load("res://shaders/planet_backdrop.gdshader"); back.material=background
 	back.mouse_filter=Control.MOUSE_FILTER_IGNORE; background_layer.add_child(back)
 	music=load("res://scripts/music.gd").new(); add_child(music); music.step_fired.connect(on_step)
 	standard_music=music
@@ -258,7 +259,8 @@ func begin_wave() -> void:
 	wave+=1; wave_start=music.timeline; spawned=0; elite_spawned=false; reward_taken=false
 	enemy_bullets.clear(); warnings.clear()
 	if wave==wave_count() and not free_music_run:
-		boss_anchor=player+Vector2(0,-350); spawn_enemy("boss",boss_anchor)
+		boss_anchor=(player+Vector2(0,-390)).clamp(field().position+Vector2.ONE*340,field().end-Vector2.ONE*340)
+		spawn_enemy("boss",boss_anchor); sound("metal",-13,.55)
 	notice=PLANETS.planet(active_planet).name+" / "+str(wave_profile().name); notice_until=music.timeline+2.
 	if free_music_run: notice="乐谱试飞 · 无敌练习 · 不计航线战绩"; notice_until=INF
 
@@ -703,6 +705,9 @@ func spawn_enemy(kind: String,position: Vector2=Vector2.INF) -> Dictionary:
 	var hp={"mote":12.,"armor":62.,"shooter":30.,"dart":10.,"splitter":42.,"sentinel":80.,"elite":330.+wave*28,"boss":6800.}[kind]
 	hp=float(planet_rules.boss_hp) if kind=="boss" else hp*float(planet_rules.hp_scale)
 	var enemy={"uid":next_enemy,"kind":kind,"at":position,"hp":hp,"max_hp":hp,"radius":{"mote":11.,"armor":18.,"shooter":15.,"dart":9.,"splitter":17.,"sentinel":19.,"elite":42.,"boss":82.}[kind],"speed":{"mote":142.,"armor":85.,"shooter":100.,"dart":238.,"splitter":124.,"sentinel":85.,"elite":96.,"boss":0.}[kind],"flash":0.,"phase":1,"angle":0.,"born":music.timeline}
+	if kind=="boss":
+		enemy.radius=float(PLANETS.planet(active_planet).boss_radius); enemy.machine_style=int(PLANETS.planet(active_planet).index)
+		enemy.entry_until=music.timeline+2.4; enemy.machine_name=PLANETS.planet(active_planet).bossname
 	enemy.speed=float(enemy.speed)*float(planet_rules.enemy_speed); enemy.damage=float(planet_rules.damage)
 	next_enemy+=1; enemies.append(enemy); by_id[enemy.uid]=enemy
 	total_spawned+=1
@@ -717,8 +722,14 @@ func update_enemies(delta: float) -> void:
 		var to_player: Vector2=player-enemy.at
 		enemy.angle=to_player.angle()
 		if enemy.kind=="boss":
-			enemy.at=boss_anchor+Vector2(sin((music.timeline-wave_start)*.35)*240,0)
-			enemy.phase=2 if enemy.hp<enemy.max_hp*.5 else 1
+			var age=maxf(0.,music.timeline-float(enemy.born))
+			var approach=pow(1.-clampf(age/2.4,0.,1.),2.)
+			enemy.at=(boss_anchor+Vector2(sin(age*.21)*130,-approach*260)).clamp(field().position+Vector2.ONE*220,field().end-Vector2.ONE*220)
+			var next_phase=2 if enemy.hp<enemy.max_hp*.5 else 1
+			if next_phase!=enemy.phase:
+				fx.burst(enemy.at,planet_rules.accent,56,480); fx.ring(enemy.at,planet_rules.accent,float(enemy.radius)*1.6,.7)
+				sound("metal",-12,.66); notice=PLANETS.planet(active_planet).bossname+" · 核心过载"; notice_until=music.timeline+2.
+			enemy.phase=next_phase
 		else:
 			var move=1.
 			if enemy.kind=="shooter" and to_player.length()<440: move=-.15
@@ -733,17 +744,26 @@ func enemy_fire(enemy: Dictionary) -> void:
 	var direction=(player-enemy.at).normalized()
 	var count=5 if enemy.kind=="sentinel" else (3 if enemy.kind=="elite" else 1)
 	count+=floori(float(PLANETS.planet(active_planet).index)/3.)
-	for i in range(count): enemy_shot(enemy.at,direction.rotated((i-(count-1)*.5)*.22),205 if enemy.kind=="shooter" else 230)
+	for i in range(count):
+		var axis=direction.rotated((i-(count-1)*.5)*.22)
+		if enemy.kind=="boss": boss_shot(enemy,axis,230.)
+		else: enemy_shot(enemy.at,axis,205 if enemy.kind=="shooter" else 230)
 func enemy_shot(at: Vector2,direction: Vector2,speed: float) -> void:
 	if enemy_bullets.size()<MAX_ENEMY_BULLETS: enemy_bullets.append({"at":at,"v":direction*speed*float(planet_rules.bullet_speed),"life":9.,"radius":7.,"damage":float(planet_rules.damage)})
+func boss_shot(enemy: Dictionary,direction: Vector2,speed: float) -> void:
+	# Fire at the armor's perimeter so giant hulls cannot hide bullets for a
+	# full second after their musical onset.
+	enemy_shot(enemy.at+direction*(float(enemy.radius)+10.),direction,speed)
 func boss_step(enemy: Dictionary,serial: int) -> void:
+	if music.timeline<float(enemy.get("entry_until",-1.)): return
 	var tier=int(PLANETS.planet(active_planet).index)
 	if serial%8==0:
 		var count=(14 if enemy.phase==2 else 10)+tier
 		var angle=(player-enemy.at).angle()+music.timeline*(.12+.025*tier)
 		if tier%2==1: angle+=sin(serial*.17)*.28
-		for i in range(count): enemy_shot(enemy.at,Vector2.from_angle(angle+i*TAU/count),185 if enemy.phase==1 else 220)
-		fx.ring(enemy.at,planet_rules.accent,125,.30)
+		for i in range(count): boss_shot(enemy,Vector2.from_angle(angle+i*TAU/count),185 if enemy.phase==1 else 220)
+		fx.ring(enemy.at,planet_rules.accent,float(enemy.radius)*1.12,.30)
+		for i in range(4): fx.burst(enemy.at+Vector2.from_angle(PI*.25+i*TAU/4.)*float(enemy.radius)*.85,planet_rules.accent,3,110)
 	if serial%16==4:
 		var direction=(player-enemy.at).normalized()
 		var lanes=1 if tier<3 else (2 if tier<6 else 3)
@@ -753,7 +773,7 @@ func boss_step(enemy: Dictionary,serial: int) -> void:
 	if enemy.phase==2 and serial%8==4: enemy_fire(enemy)
 	if tier>=4 and enemy.phase==2 and serial%16==12:
 		var toward=(player-enemy.at).normalized()
-		for i in range(3+tier): enemy_shot(enemy.at,toward.rotated((i-(2+tier)*.5)*.14),260.)
+		for i in range(3+tier): boss_shot(enemy,toward.rotated((i-(2+tier)*.5)*.14),260.)
 func rebuild_spatial() -> void:
 	spatial.clear()
 	for enemy in enemies:
@@ -1011,10 +1031,13 @@ func _draw() -> void:
 		var color=Color(1.,.42,.57,.18+.35*(1.-remaining))
 		draw_line(warning.at,warning.to,Color(color,.08),50,true); draw_dashed_line(warning.at,warning.to,color,2,12,true)
 	for enemy in enemies:
-		if enemy.hp<=0 or not visible_rect.has_point(enemy.at): continue
+		if enemy.hp<=0: continue
+		var draw_bounds=visible_rect.grow(maxf(0.,float(enemy.radius)*1.8-140.)) if enemy.kind=="boss" else visible_rect
+		if not draw_bounds.has_point(enemy.at): continue
 		if batch and enemy.kind not in ["elite","boss"]: continue
-		ART.draw_enemy(self,enemy.at,enemy.radius,enemy.angle,enemy.kind,enemy.flash,pulse)
-		if enemy.kind in ["elite","boss"]:
+		if enemy.kind=="boss": MACHINE_ART.draw(self,enemy,int(enemy.get("machine_style",0)),music.timeline,pulse)
+		else: ART.draw_enemy(self,enemy.at,enemy.radius,enemy.angle,enemy.kind,enemy.flash,pulse)
+		if enemy.kind=="elite":
 			draw_arc(enemy.at,enemy.radius*1.5,0,TAU*enemy.hp/enemy.max_hp,48,Color("ff9ab2"),3,true)
 	# Group each timbre's trails into a few canvas commands. Dense fire no longer
 	# creates three separate draw calls for every bullet.

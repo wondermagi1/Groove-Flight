@@ -78,6 +78,8 @@ func damage_fixture(id: String) -> Dictionary:
 	check(is_equal_approx(observed.actual_contact_loss,float(PLANETS.combat(id).damage)),"planet contact damage reaches actual hull health / "+id)
 	game.enemies.clear(); game.by_id.clear(); game.enemy_bullets.clear(); game.invulnerable=0.; game.health=10.
 	var boss=game.spawn_enemy("boss",Vector2(0,-300))
+	# This controlled damage fixture starts after the new protected entrance.
+	boss.born=game.music.timeline-3.; boss.entry_until=game.music.timeline-1.
 	observed.boss_hp=float(boss.hp)
 	check(is_equal_approx(boss.hp,float(PLANETS.combat(id).boss_hp)),"planet Boss uses its own production health / "+id)
 	game.boss_step(boss,0)
