@@ -1,7 +1,7 @@
 {
 	"checks": 29,
 	"facts": {
-		"max_note_error": 0.003635706201911,
+		"max_note_error": 0.00130738105237471,
 		"trial_events": 6,
 		"wav_bytes": 470444
 	},

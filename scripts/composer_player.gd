@@ -71,7 +71,8 @@ func _snapshot(score) -> Dictionary:
 	if aggregate>MAX_NOTE_SECONDS:
 		return {"ok":false,"error":"长音重叠总量过高；请缩短延音或减少重叠声部后再播放。"}
 	var recipes: Dictionary={}
-	for row in DATA.weapons(): recipes[str(row.id)]=row.timbre.duplicate(true)
+	for row in DATA.weapons():
+		recipes[str(row.id)]=row.timbre.duplicate(true); recipes[str(row.id)].family=str(row.family)
 	return {"ok":true,"events":events,"recipes":recipes,"duration":float(score.duration_seconds()),"step_duration":float(score.step_seconds()),"step_count":int(score.step_count()),"bpm":float(score.bpm),"drums":drums_enabled,"backing":_drums}
 
 func _set_cancelled(value: bool) -> void:
@@ -213,33 +214,70 @@ func _native_finished() -> void:
 	if _running and not _looped:
 		timeline=duration_seconds; _running=false; finished_song.emit()
 
-func _tone(weapon: String,pitch: int,frames: int,recipe: Dictionary,cancel_checks: bool=true) -> PackedFloat32Array:
+func _tone(weapon: String,pitch: int,frames: int,recipe: Dictionary,cancel_checks: bool=true,role: String="auto") -> PackedFloat32Array:
 	var result=PackedFloat32Array(); result.resize(frames)
-	# Absolute MIDI pitch is intentional: a C4 remains C4 for every weapon.
-	# The normal combat catalog's octave preset never silently transposes it.
+	# Pitched instruments keep absolute MIDI tuning; percussion is explicitly
+	# tagged and never inferred from an ordinary melody's MIDI number.
 	var frequency=440.*pow(2.,float(pitch-69)/12.)
 	var detune=pow(2.,float(recipe.get("detune",0))/1200.)
 	var fm=float(recipe.get("fm",0)); var decay=maxf(.035,float(recipe.get("decay",.18)))
 	var wave=str(recipe.get("wave","sine")); var duration=float(frames)/RATE
+	var family=str(recipe.get("family",DATA.item(weapon).get("family","pulse")))
 	var random=RandomNumberGenerator.new(); random.seed=absi(hash(weapon))+pitch*97+frames
-	var filtered=0.; var harmonics=clampi(floori(float(RATE)*.45/frequency),1,5)
+	var filtered=0.; var previous_noise=0.
+	var harmonics=clampi(floori(float(RATE)*.45/frequency),1,5)
 	for n in frames:
 		if cancel_checks and n%8192==0 and _is_cancelled(): return PackedFloat32Array()
 		var time=float(n)/RATE; var phase=TAU*frequency*time
-		phase+=fm*.45*sin(phase*2.)*exp(-time*8.)
-		var value=sin(phase)*.78+sin(phase*detune+.07)*.22
-		if wave=="square" or wave=="triangle" or wave=="saw":
-			for harmonic in range(2,harmonics+1):
-				if wave in ["square","triangle"] and harmonic%2==0: continue
-				var gain=1./float(harmonic)
-				if wave=="triangle": gain=pow(-1.,float((harmonic-1)/2))*gain*gain
-				elif wave=="saw": gain*=1. if harmonic%2 else -1.
-				value+=sin(phase*harmonic)*gain*.42
-		elif wave=="noise":
-			filtered=lerpf(filtered,random.randf_range(-1.,1.),.38)
-			value=value*.90+filtered*.15
-		var envelope=minf(1.,time/.004)*(.48+.52*exp(-time/decay))
-		envelope*=clampf((duration-time)/minf(.055,duration*.35),0.,1.)
+		var value=0.; var envelope=1.
+		if role in ["kick","snare","hat"]:
+			var noise=random.randf_range(-1.,1.)
+			filtered=lerpf(filtered,noise,.18)
+			match role:
+				"kick":
+					var kick_phase=TAU*(48.*time+105.*.027*(1.-exp(-time/.027)))
+					value=sin(kick_phase)*exp(-time/ .12)+noise*.1*exp(-time/.006)
+				"snare": value=(noise-filtered)*.72*exp(-time/.065)+sin(TAU*185.*time)*.3*exp(-time/.045)
+				"hat": value=(noise-previous_noise)*.38*exp(-time/.026)+sin(TAU*7300.*time)*.12*exp(-time/.015)
+			previous_noise=noise
+		else:
+			phase+=fm*.12*sin(phase*2.)*exp(-time*10.)
+			value=sin(phase)*.8+sin(phase*detune+.03)*.2
+			var sustain=.35
+			match family:
+				"pulse":
+					if harmonics>=2: value+=sin(phase*2.)*.28*exp(-time/.14)
+					if harmonics>=3: value+=sin(phase*3.)*.1*exp(-time/.08)
+					sustain=.14
+				"boomerang":
+					for h in range(2,harmonics+1): value+=sin(phase*h)*.36/float(h)*exp(-time*h*.9)
+					sustain=.12
+				"rail":
+					if harmonics>=2: value+=sin(phase*2.)*.28
+					sustain=.30
+				"chain":
+					if frequency*2.76<RATE*.45: value+=sin(phase*2.76)*.36*exp(-time/.16)
+					if frequency*4.05<RATE*.45: value+=sin(phase*4.05)*.12*exp(-time/.08)
+					sustain=.06
+				"orbit","nova":
+					value=sin(phase)*.62+sin(phase*detune)*.24+sin(phase/detune)*.14
+					if harmonics>=2: value+=sin(phase*2.)*.12
+					sustain=.75
+				"beam":
+					if harmonics>=2: value+=sin(phase*2.)*.3
+					if harmonics>=3: value+=sin(phase*3.)*.14
+					sustain=.68
+				"drone":
+					filtered=lerpf(filtered,random.randf_range(-1.,1.),.08)
+					value+=filtered*.05; sustain=.7
+				_:
+					for h in range(2,harmonics+1):
+						if wave in ["square","triangle"] and h%2==0: continue
+						value+=sin(phase*h)*(.20/float(h) if wave!="triangle" else .32/float(h*h))
+			var attack=.035 if family in ["orbit","nova"] or role=="pad" else (.012 if family=="drone" else .004)
+			if role=="bass": sustain=.25
+			envelope=minf(1.,time/attack)*(sustain+(1.-sustain)*exp(-time/maxf(.08,decay*2.)))
+		envelope*=clampf((duration-time)/minf(.045,duration*.3),0.,1.)
 		result[n]=value*envelope*.48
 	return result
 
@@ -254,11 +292,11 @@ func _render_job(data: Dictionary,kind: String,path: String) -> Dictionary:
 		var event: Dictionary=events[index]; var offset=roundi(float(event.beat)*60./float(data.bpm)*RATE)
 		var length=mini(maxi(1,roundi(float(event.duration)*RATE)),frames-offset)
 		if length<=0: continue
-		var weapon=str(event.voice); var key=weapon+":"+str(event.pitch)+":"+str(length)
+		var weapon=str(event.voice); var role=str(event.get("role","auto")); var key=weapon+":"+role+":"+str(event.pitch)+":"+str(length)
 		var tone: PackedFloat32Array
 		if cache.has(key): tone=cache[key]
 		else:
-			tone=_tone(weapon,int(event.pitch),length,recipes.get(weapon,{}))
+			tone=_tone(weapon,int(event.pitch),length,recipes.get(weapon,{}),true,role)
 			if tone.is_empty(): return {"ok":false,"cancelled":true}
 			while cached_frames+length>MAX_CACHE_FRAMES and not cache_order.is_empty():
 				var oldest=cache_order.pop_front(); cached_frames-=cache[oldest].size(); cache.erase(oldest)
@@ -318,13 +356,14 @@ func _write_wav(path: String,bytes: PackedByteArray) -> Dictionary:
 		DirAccess.remove_absolute(temporary); return {"ok":false,"error":"无法完成WAV保存："+error_string(error)}
 	return {"ok":true,"path":path}
 
-func audition(weapon: String,pitch: int,velocity: int=100) -> bool:
+func audition(weapon: String,pitch: int,velocity: int=100,role: String="auto") -> bool:
 	var row=DATA.item(weapon)
 	if row.is_empty() or row.get("category","")!="weapon" or pitch<24 or pitch>108 or _audition_players.is_empty(): return false
 	# A short audition uses the same synthesis and absolute pitch as rendering.
 	# Its tiny tone is generated on the main thread without interrupting a job's
 	# cancel flag, so previewing a key never changes an in-flight composition.
-	var tone=_tone(weapon,pitch,roundi(RATE*.22),row.timbre,false)
+	var recipe=row.timbre.duplicate(true); recipe.family=str(row.family)
+	var tone=_tone(weapon,pitch,roundi(RATE*.22),recipe,false,role)
 	if tone.is_empty(): return false
 	var bytes=PackedByteArray(); bytes.resize(tone.size()*2)
 	var gain=clampf(float(velocity)/127.,0.,1.)*.55

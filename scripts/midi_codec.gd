@@ -5,6 +5,7 @@ const MAX_BYTES=8*1024*1024
 const MAX_NOTES=8192
 const PPQN=480
 const DATA=preload("res://scripts/arsenal_catalog.gd")
+const ROLES=preload("res://scripts/music_roles.gd")
 
 class Reader:
 	extends RefCounted
@@ -32,17 +33,20 @@ class Reader:
 static func _failure(message: String,warnings: Array=[]) -> Dictionary: return {"ok":false,"error":message,"warnings":warnings}
 static func _weapon(program: int) -> String:
 	if program<8: return "pulse"
-	if program<16: return "beam"
-	if program<24: return "orbit"
+	if program<16: return "chain"
+	if program<24: return "beam"
 	if program<32: return "boomerang"
-	if program<40: return "nova"
-	if program<56: return "beam"
-	if program<64: return "rail"
-	if program<80: return "chain"
-	if program<96: return "pulse"
-	if program<104: return "orbit"
-	if program<113: return "scatter"
-	return "drone"
+	if program<40: return "rail"
+	if program<48: return "orbit"
+	if program<56: return "nova"
+	if program<64: return "scatter"
+	if program<72: return "pulse_needle"
+	if program<80: return "drone"
+	if program<88: return "pulse_needle"
+	if program<96: return "orbit"
+	if program<104: return "chain"
+	if program<112: return "boomerang"
+	return "mine"
 static func _text(bytes: PackedByteArray) -> String:
 	# Common UTF8 names are accepted; invalid legacy encodings fall back to
 	# their MIDI channel name rather than changing any musical data.
@@ -71,7 +75,7 @@ static func read_bytes(bytes: PackedByteArray) -> Dictionary:
 	if track_count<1 or track_count>64 or (format==0 and track_count!=1): return _failure("MIDI音轨数量无效或超过64轨。")
 	if division==0 or (division&0x8000)!=0: return _failure("仅支持按拍计时的MIDI，暂不支持SMPTE时间码。")
 	var groups: Array=[]; var tempos: Array=[]; var warnings: Array[String]=[]
-	var skipped_drums=0; var skipped_range=0; var discarded_tracks=0; var total_events=0; var started_notes=0
+	var skipped_range=0; var total_events=0; var started_notes=0
 	var quantized=false; var last_tick=0
 	for track_index in range(track_count):
 		if reader.take(4).get_string_from_ascii()!="MTrk": return _failure("MIDI音轨区块缺失。")
@@ -119,8 +123,9 @@ static func read_bytes(bytes: PackedByteArray) -> Dictionary:
 			if a>=128 or b>=128: return _failure("MIDI通道数据字节无效。")
 			if type==0xc:
 				programs[channel]=a
-				if group_by_channel.has(channel) and int(group_by_channel[channel])>=0 and custom.is_empty() and str(groups[group_by_channel[channel]].weapon)!=_weapon(a) and not warnings.has("部分音轨中途换乐器；每个声部保留其首次乐器映射，可在编辑器里重新选择武器。"):
-					warnings.append("部分音轨中途换乐器；每个声部保留其首次乐器映射，可在编辑器里重新选择武器。")
+				for group_key in group_by_channel:
+					if str(group_key).begins_with(str(channel)+":") and custom.is_empty() and str(groups[group_by_channel[group_key]].weapon)!=_weapon(a) and not warnings.has("音轨中途换乐器；保留各声部首次音色，可手动重新选择武器。"):
+						warnings.append("音轨中途换乐器；保留各声部首次音色，可手动重新选择武器。")
 				continue
 			if type==0xb and a==64:
 				sustain[channel]=b>=64
@@ -134,26 +139,25 @@ static func read_bytes(bytes: PackedByteArray) -> Dictionary:
 						else: active[key]=remaining
 				continue
 			if type not in [0x8,0x9]: continue
-			if channel==9:
-				if type==0x9 and b>0: skipped_drums+=1
-				continue
 			if a<24 or a>108:
 				if type==0x9 and b>0: skipped_range+=1
 				continue
 			var key="%d:%d"%[channel,a]
 			if type==0x9 and b>0:
-				if not group_by_channel.has(channel):
-					if groups.size()>=8: discarded_tracks+=1; group_by_channel[channel]=-1
-					else:
-						group_by_channel[channel]=groups.size()
-						var weapon=_weapon(int(programs.get(channel,0))); var custom_weapon=DATA.item(str(custom.get("weapon","")))
-						if not custom_weapon.is_empty() and str(custom_weapon.category)=="weapon": weapon=str(custom_weapon.id)
-						groups.append({"name":track_name if not track_name.is_empty() else "MIDI声部 %d"%(groups.size()+1),"weapon":weapon,"notes":[],"volume":clampf(float(custom.get("volume",.8)),0.,1.) if custom.get("volume",.8) is float or custom.get("volume",.8) is int else .8,"pan":clampf(float(custom.get("pan",0.)),-1.,1.) if custom.get("pan",0.) is float or custom.get("pan",0.) is int else 0.,"mute":bool(custom.get("mute",false)),"solo":bool(custom.get("solo",false))})
-				if int(group_by_channel[channel])<0: continue
+				var role=str(custom.get("role",ROLES.program_role(int(programs.get(channel,0)))))
+				if not ROLES.IDS.has(role): role="auto"
+				if channel==9 and role not in ["kick","snare","hat"]: role=ROLES.drum_role(a)
+				var group_key=str(channel)+":"+role
+				if not group_by_channel.has(group_key):
+					group_by_channel[group_key]=groups.size()
+					var weapon=ROLES.WEAPONS[role] if ROLES.is_drum(role) else _weapon(int(programs.get(channel,0)))
+					var custom_weapon=DATA.item(str(custom.get("weapon","")))
+					if not custom_weapon.is_empty() and str(custom_weapon.category)=="weapon": weapon=str(custom_weapon.id)
+					groups.append({"name":(track_name if not track_name.is_empty() else "MIDI声部 %d"%(groups.size()+1))+(" · "+str(ROLES.NAMES[role]) if channel==9 else ""),"weapon":weapon,"role":role,"notes":[],"volume":clampf(float(custom.get("volume",.8)),0.,1.) if custom.get("volume",.8) is float or custom.get("volume",.8) is int else .8,"pan":clampf(float(custom.get("pan",0.)),-1.,1.) if custom.get("pan",0.) is float or custom.get("pan",0.) is int else 0.,"mute":bool(custom.get("mute",false)),"solo":bool(custom.get("solo",false))})
 				started_notes+=1
 				if started_notes>MAX_NOTES: return _failure("旋律音符超过8192个，请先精简MIDI声部。")
 				if not active.has(key): active[key]=[]
-				active[key].append({"start":tick,"pitch":a,"velocity":b,"channel":channel,"group":group_by_channel[channel],"released":false})
+				active[key].append({"start":tick,"pitch":a,"velocity":b,"channel":channel,"group":group_by_channel[group_key],"released":false})
 			else:
 				if not active.has(key): continue
 				for entry in active[key]:
@@ -186,14 +190,16 @@ static func read_bytes(bytes: PackedByteArray) -> Dictionary:
 			var rounded=roundf(beat*4.)/4.; var rounded_duration=maxf(.25,roundf(duration*4.)/4.)
 			if absf(beat-rounded)>.000001 or absf(duration-rounded_duration)>.000001: quantized=true
 			notes.append({"id":id,"beat":rounded,"duration":rounded_duration,"pitch":raw.pitch,"velocity":raw.velocity}); id+=1; last_beat=maxf(last_beat,rounded+rounded_duration)
-		tracks.append({"id":tracks.size()+1,"name":group.name,"weapon":group.weapon,"volume":group.volume,"pan":group.pan,"mute":group.mute,"solo":group.solo,"notes":notes})
-	if tracks.is_empty(): return _failure("MIDI中没有C1—C8范围内可导入的旋律音符。",warnings)
+		tracks.append({"id":tracks.size()+1,"name":group.name,"weapon":group.weapon,"role":group.role,"volume":group.volume,"pan":group.pan,"mute":group.mute,"solo":group.solo,"notes":notes})
+	if tracks.is_empty(): return _failure("MIDI中没有C1—C8范围内可导入的音符。",warnings)
 	var bars=maxi(1,ceili(last_beat/4.))
 	if bars>256 or bars*4.*60./bpm>600.: return _failure("导入后超过256小节或10分钟，请先裁剪MIDI。",warnings)
 	if quantized: warnings.append("音符已量化到十六分音符网格；三连音、微小时差和细碎装饰音可能改变。")
-	if skipped_drums>0: warnings.append("跳过了%d个第10通道打击乐音符；本版导入旋律声部。"%skipped_drums)
 	if skipped_range>0: warnings.append("跳过了%d个C1—C8以外的音符。"%skipped_range)
-	if discarded_tracks>0: warnings.append("超过8个旋律声部，后续声部已跳过；建议先在MIDI工具中选择主旋律和伴奏。")
+	if tracks.size()>8:
+		tracks=ROLES.collapse(tracks)
+		if tracks.size()>8: return _failure("声部的静音/独奏组合超过8轨，请先合并MIDI音轨。",warnings)
+		warnings.append("超过8个声部，按音乐职责合并；保留全部音符，音量与声像重新平衡。")
 	return {"ok":true,"error":"","warnings":warnings,"score":{"format":"beatdrift-score","version":1,"title":"导入的MIDI","bpm":bpm,"bars":bars,"tracks":tracks}}
 
 static func _u16(value: int) -> PackedByteArray: return PackedByteArray([(value>>8)&255,value&255])
@@ -213,7 +219,7 @@ static func write_bytes(score: Dictionary) -> Dictionary:
 	tempo_track.append_array(_meta(int(score.get("bars",1))*4*PPQN,0x2f,PackedByteArray()))
 	var result=_chunk("MThd",_u16(1)+_u16(score.tracks.size()+1)+_u16(PPQN))+_chunk("MTrk",tempo_track)
 	for index in range(score.tracks.size()):
-		var track: Dictionary=score.tracks[index]; var channel=index if index<9 else index+1
+		var track: Dictionary=score.tracks[index]; var channel=9 if ROLES.is_drum(str(track.get("role","auto"))) else index
 		var events: Array=[]
 		for note in track.notes:
 			var start=roundi(float(note.beat)*PPQN); var ending=roundi((float(note.beat)+float(note.duration))*PPQN)
@@ -224,7 +230,7 @@ static func write_bytes(score: Dictionary) -> Dictionary:
 			if bool(a.off)!=bool(b.off): return bool(a.off)
 			return int(a.pitch)<int(b.pitch))
 		var body=_meta(0,0x03,str(track.name).to_utf8_buffer())
-		body.append_array(_meta(0,0x7f,("BEATDRIFT1:"+JSON.stringify({"weapon":track.get("weapon","pulse"),"volume":track.get("volume",.8),"pan":track.get("pan",0.),"mute":track.get("mute",false),"solo":track.get("solo",false)})).to_utf8_buffer()))
+		body.append_array(_meta(0,0x7f,("BEATDRIFT1:"+JSON.stringify({"weapon":track.get("weapon","pulse"),"role":track.get("role","auto"),"volume":track.get("volume",.8),"pan":track.get("pan",0.),"mute":track.get("mute",false),"solo":track.get("solo",false)})).to_utf8_buffer()))
 		body.append_array(PackedByteArray([0,0xc0|channel,0]))
 		var previous=0
 		for event in events:

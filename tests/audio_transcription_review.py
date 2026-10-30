@@ -82,6 +82,28 @@ check(not run_helper(dict(request,path=str(WORK/'broken.mp3')), 'broken')['ok'],
 with wave.open(str(WORK/'silence.wav'),'wb') as file:
     file.setnchannels(1); file.setsampwidth(2); file.setframerate(22050); file.writeframes(bytes(44100))
 check(not run_helper(dict(request,path=str(WORK/'silence.wav')), 'silence')['ok'], 'silence produces a readable no-sound failure')
+# Original fixtures exercise the new default end-to-end, without song copying.
+arranged = run_helper(dict(request,path=str(WORK/'chords.mp3'),mode='arrange'), 'arranged')
+check(arranged['ok'], 'full arrangement mode completes actual MP3/model conversion')
+if arranged['ok']:
+    tracks = arranged['score']['tracks']
+    roles = {t['role'] for t in tracks}
+    check(3 <= len(tracks) <= 8 and len({t['weapon'] for t in tracks}) == len(tracks), 'arrangement maps multiple duties to distinct real weapons')
+    check('bass' in roles and bool(roles & {'kick','snare','hat'}), 'recognized bass and source transient percussion both reach the score')
+    check({48,55,60,64}.issubset({n['pitch'] for t in tracks if t['role'] not in ('kick','snare','hat') for n in t['notes']}), 'orchestration retains recovered source pitches')
+    ids = [n['id'] for t in tracks for n in t['notes']]
+    check(len(ids) == len(set(ids)) and len(ids) <= 8192, 'percussion and melody IDs stay unique and bounded')
+    facts['arranged_roles'] = sorted(roles)
+    facts['arranged_notes'] = len(ids)
+    (WORK/'arranged-fixture.beat.json').write_text(json.dumps(arranged['score'],ensure_ascii=False),encoding='utf-8')
+steady = np.sin(2*np.pi*440*np.arange(module.RATE*4)/module.RATE).astype(np.float32)*.4
+check(len(module.detect_percussion(steady)) < 3, 'a stable tone does not fabricate a periodic drum loop')
+transients = np.zeros(module.RATE*4,dtype=np.float32)
+for when in [.5,1.5,2.5]:
+    t = np.arange(round(.18*module.RATE))/module.RATE
+    transients[round(when*module.RATE):round(when*module.RATE)+len(t)] += np.sin(2*np.pi*80*t)*np.exp(-t*35)
+detected = module.detect_percussion(transients)
+check(all(any(r=='kick' and abs(s-when)<.08 for s,r,v in detected) for when in [.5,1.5,2.5]), 'low-band source transients are detected near their actual times')
 report = {'checks':len(checks),'failures':failures,'facts':facts,'scope':'Original synthesized melodies/chords encoded to real MP3; actual CPU ONNX inference, excerpt bounds, quantization and corrupt/invalid/silent audio. No commercial-song accuracy claim.'}
 (ROOT/'tests/results-audio-transcription.json').write_text(json.dumps(report,indent=2,ensure_ascii=False),encoding='utf-8')
 print(json.dumps(report,ensure_ascii=False),flush=True)

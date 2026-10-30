@@ -3,6 +3,7 @@ extends RefCounted
 ## quarter notes; one bar has four beats and one schedule step is a sixteenth.
 const DATA=preload("res://scripts/arsenal_catalog.gd")
 const MIDI=preload("res://scripts/midi_codec.gd")
+const ROLES=preload("res://scripts/music_roles.gd")
 const VERSION=1
 const MAX_TRACKS=8
 const MAX_BARS=256
@@ -117,6 +118,7 @@ func validate() -> Dictionary:
 		else: track_ids[int(track.id)]=true
 		if not track.get("name","") is String or str(track.get("name","")).strip_edges().is_empty() or str(track.get("name","")).length()>80: errors.append("声部名称需为1—80个字符。")
 		if not _valid_weapon(str(track.get("weapon",""))): errors.append("声部使用了未知武器。")
+		if not ROLES.IDS.has(str(track.get("role","auto"))): errors.append("音乐声部类型无效。")
 		for key in ["mute","solo"]:
 			if not track.get(key,null) is bool: errors.append("静音/独奏标记无效。")
 		if not _numeric(track.get("volume",null)) or float(track.get("volume",-1))<0 or float(track.get("volume",2))>1: errors.append("声部音量需为0—1。")
@@ -134,7 +136,7 @@ func to_dict() -> Dictionary:
 	for track in tracks:
 		var notes: Array=[]
 		for note in track.notes: notes.append({"id":int(note.id),"beat":float(note.beat),"duration":float(note.duration),"pitch":int(note.pitch),"velocity":int(note.velocity)})
-		channels.append({"id":int(track.id),"name":str(track.name),"weapon":str(track.weapon),"volume":float(track.volume),"pan":float(track.pan),"mute":bool(track.mute),"solo":bool(track.solo),"notes":notes})
+		channels.append({"id":int(track.id),"name":str(track.name),"weapon":str(track.weapon),"role":str(track.get("role","auto")),"volume":float(track.volume),"pan":float(track.pan),"mute":bool(track.mute),"solo":bool(track.solo),"notes":notes})
 	return {"format":"beatdrift-score","version":VERSION,"title":title,"bpm":bpm,"bars":bars,"tracks":channels}
 func from_dict(data: Variant) -> Dictionary:
 	if not data is Dictionary: return {"ok":false,"error":"乐谱根数据需为对象。"}
@@ -168,7 +170,7 @@ func schedule(serial: int) -> Array[Dictionary]:
 	return result
 func _event(index: int,track: Dictionary,note: Dictionary,serial: int) -> Dictionary:
 	var weapon=str(track.weapon)
-	return {"uid":int(note.id),"note_id":int(note.id),"kind":weapon,"voice":weapon,"pitch":int(note.pitch),"midi":int(note.pitch),"velocity":int(note.velocity),"duration":float(note.duration)*60./bpm,"duration_beats":float(note.duration),"track":index,"pan":float(track.pan),"volume":float(track.volume),"beat":float(note.beat),"serial":serial,"step":posmod(serial,step_count())}
+	return {"uid":int(note.id),"note_id":int(note.id),"kind":weapon,"voice":weapon,"role":str(track.get("role","auto")),"pitch":int(note.pitch),"midi":int(note.pitch),"velocity":int(note.velocity),"duration":float(note.duration)*60./bpm,"duration_beats":float(note.duration),"track":index,"pan":float(track.pan),"volume":float(track.volume),"beat":float(note.beat),"serial":serial,"step":posmod(serial,step_count())}
 func all_events() -> Array[Dictionary]:
 	var result: Array[Dictionary]=[]; var solo=false
 	for track in tracks:
@@ -204,3 +206,11 @@ func export_midi(path: String) -> Dictionary:
 	var status=validate()
 	if not status.ok: return {"ok":false,"error":"\n".join(status.errors)}
 	return MIDI.write_path(path,to_dict())
+func arrange(accompany: bool=false) -> Dictionary:
+	var validation=validate()
+	if not validation.ok: return {"ok":false,"error":"\n".join(validation.errors)}
+	var proposal=ROLES.arrange(to_dict(),accompany)
+	if not proposal.ok: return proposal
+	var applied=from_dict(proposal.score)
+	if not applied.ok: return applied
+	return proposal

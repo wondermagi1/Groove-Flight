@@ -1,0 +1,22 @@
+{
+	"checks": 33,
+	"facts": {
+		"demo_seconds": 8.0,
+		"existing_draft": {
+			"arranged_parts": 5,
+			"original_notes": 1109,
+			"source_file_unchanged": true
+		},
+		"max_onset_error": 0.00464147870671749,
+		"roles_seen": [
+			"lead",
+			"bass",
+			"harmony",
+			"kick",
+			"hat",
+			"snare"
+		]
+	},
+	"failures": [],
+	"scope": "Source preservation, optional accompaniment labels, GM percussion roundtrip, read-only legacy draft audit, actual composer UI and musical-duty controls, distinct drum PCM, original stereo fixture export, real native trial/held-beam note-off. No human listening or exact commercial-source-separation claim."
+}

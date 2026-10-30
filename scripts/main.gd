@@ -29,6 +29,7 @@ var composer_score=SCORE.new()
 var composer_status: String="原创示例已载入；也可以新建空白乐谱或导入 MIDI。"
 var composer_return_state: String="title"
 var composer_pending_battle: bool=false
+var composer_holds: Array=[]
 var free_music_run: bool=false
 var composer_autosave: Timer
 var audio_transcriber
@@ -233,10 +234,13 @@ func sound(id: String,volume: float=-10.,pitch: float=1.) -> void:
 	var voice=voices[voice_index%voices.size()]; voice_index+=1
 	var sources={"kill":"legacy/paper-kill.wav","dash":"legacy/paper-dash.wav","metal":"legacy/metal-hit.wav","explosion":"legacy/low-explosion.ogg"}
 	voice.stream=load("res://audio/"+str(sources.get(id,id+".wav"))); voice.pitch_scale=pitch
+	# In free-score flight the instruments carry the rhythm. Automatic impact
+	# thumps sit behind them instead of drowning out every musical voice.
+	if free_music_run: volume-=16. if id in ["kill","metal","explosion","pickup"] else 6.
 	voice.volume_db=volume+linear_to_db(maxf(.0001,float(settings.master)*float(settings.sfx))); voice.play()
 
 func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=false) -> void:
-	composer_player.stop_song(); standard_music.stop(); standard_music._running=false
+	composer_holds.clear(); composer_player.stop_song(); standard_music.stop(); standard_music._running=false
 	free_music_run=use_composition; music=composer_player if use_composition else standard_music
 	if not planet_id.is_empty():
 		if not is_planet_unlocked(planet_id): return
@@ -285,8 +289,11 @@ func open_composer() -> void:
 	if is_instance_valid(hub): hub.deactivate()
 	camera.enabled=false; background_layer.visible=false; post.visible=false; fx.visible=false
 	state="composer"; apply_audio(); ui.refresh()
+	# Legacy drafts commonly have every note routed to one synth. Revoice only
+	# untouched legacy mappings; the original file is backed up before saving.
+	if composer_needs_arrangement(): composer_arrange(false)
 func _restore_standard_music() -> void:
-	composer_pending_battle=false; composer_player.stop_song()
+	composer_holds.clear(); composer_pending_battle=false; composer_player.stop_song()
 	standard_music.stop(); standard_music._running=false; music=standard_music; free_music_run=false
 func close_composer() -> void:
 	if state not in ["composer","composer_loading"]: return
@@ -337,8 +344,28 @@ func _composer_failed(reason: String) -> void:
 		composer_pending_battle=false; free_music_run=false; music=standard_music; state="composer"; ui.refresh()
 func composer_seek(beat: float) -> void:
 	if composer_player.has_method("seek_beat"): composer_player.seek_beat(beat)
-func composer_audition(weapon: String,pitch: int,velocity: int=100) -> void:
-	if composer_player.has_method("audition"): composer_player.audition(weapon,pitch,velocity)
+func composer_audition(weapon: String,pitch: int,velocity: int=100,role: String="auto") -> void:
+	if composer_player.has_method("audition"): composer_player.audition(weapon,pitch,velocity,role)
+func composer_needs_arrangement() -> bool:
+	if composer_score.note_count()<8 or composer_score.tracks.size()>2: return false
+	var weapon=str(composer_score.tracks[0].weapon)
+	for track in composer_score.tracks:
+		if str(track.weapon)!=weapon or str(track.get("role","auto"))!="auto": return false
+	return true
+func composer_arrange(accompany: bool=false) -> bool:
+	composer_stop()
+	var candidate=SCORE.new(); candidate.from_dict(composer_score.to_dict())
+	var result=candidate.arrange(accompany)
+	if not result.ok: composer_status="编配失败："+str(result.error); return false
+	if not test_mode:
+		DirAccess.make_dir_recursive_absolute("user://scores")
+		var backup=composer_score.save_json("user://scores/before-arrange-%d-%d.beat.json"%[Time.get_unix_time_from_system(),Time.get_ticks_usec()])
+		if not backup.ok: composer_status="原稿备份失败，未改动乐谱："+str(backup.error); return false
+	composer_score.from_dict(candidate.to_dict()); composer_changed(); _save_composer_draft()
+	composer_status="已编配为 %d 个声部，原有 %d 个音符保留。"%[result.parts,result.original_notes]
+	if result.added_notes>0: composer_status+="另加 %d 个伴奏音符（标为新增伴奏）。"%result.added_notes
+	if not test_mode: composer_status+="原稿已备份到 scores。"
+	ui.refresh(); return true
 func _composer_file_result(result: Dictionary,message: String) -> bool:
 	composer_status=message if result.get("ok",false) else "操作失败："+str(result.get("error","文件内容无法读取"))
 	if result.get("ok",false) and not result.get("warnings",[]).is_empty(): composer_status+=" · "+"；".join(result.warnings)
@@ -412,10 +439,25 @@ func on_composer_note(note: Dictionary,deadline: float) -> void:
 	var trigger=row.duplicate(true); trigger.kind=kind; trigger.extra=0; trigger.angle=0.; trigger.chord=false; trigger.events={}
 	trigger.chain_count=maxi(1,int(row.get("bounces",3)))
 	trigger.damage=float(row.damage)*(.25+.75*float(note.get("velocity",100))/127.)
+	trigger.count=mini(int(trigger.get("count",1)),3 if str(note.get("role",""))=="snare" else 6)
+	if str(note.get("role","")) in ["kick","hat"]: trigger.count=1
+	if str(trigger.get("family",""))=="orbit": trigger.life=clampf(float(note.get("duration",1.)),.15,12.)
 	trigger.crit_chance=0.; trigger.crit_damage=1.; trigger.uid=int(note.get("note_id",note.get("id",-1)))
 	fire_weapon(trigger)
-	fire_log.append({"serial":int(note.get("serial",0)),"deadline":deadline,"actual":music.timeline,"kind":kind,"pitch":int(note.get("pitch",60)),"note_id":trigger.uid})
+	if str(trigger.get("family",""))=="beam" and float(note.get("duration",0.))>.3:
+		composer_holds.append({"trigger":trigger.duplicate(true),"next":deadline+.125,"end":deadline+float(note.duration)})
+	fire_log.append({"role":str(note.get("role","auto")),"duration":float(note.get("duration",0.)),"serial":int(note.get("serial",0)),"deadline":deadline,"actual":music.timeline,"kind":kind,"pitch":int(note.get("pitch",60)),"note_id":trigger.uid})
 	if fire_log.size()>480: fire_log.pop_front()
+
+func update_composer_holds() -> void:
+	if not free_music_run: return
+	for i in range(composer_holds.size()-1,-1,-1):
+		var held=composer_holds[i]
+		if music.timeline>=float(held.end): composer_holds.remove_at(i); continue
+		if music.timeline>=float(held.next):
+			var tick=held.trigger.duplicate(true); tick.damage*=.18; fire_weapon(tick)
+			# No backlog burst after a dropped frame or seek.
+			held.next=music.timeline+.125
 
 func select_planet(id: String) -> bool:
 	if not is_planet_unlocked(id) or state not in ["solar","hub","title","victory","defeat"]: return false
@@ -620,7 +662,7 @@ func _process(delta: float) -> void:
 		var dt=minf(delta,.06)
 		health=minf(float(stats_snapshot.max_health),health+float(stats_snapshot.regen)*dt)
 		if music.timeline>=shield_until: shield_points=0
-		update_enemies(dt); rebuild_spatial(); update_bullets(dt); update_enemy_bullets(dt); update_warnings(); update_pickups(dt)
+		update_composer_holds(); update_enemies(dt); rebuild_spatial(); update_bullets(dt); update_enemy_bullets(dt); update_warnings(); update_pickups(dt)
 		# Kill explosions are queued so large chains never recurse through a
 		# partially iterated enemy list. Secondary explosions cannot self-proc.
 		var proc_budget=0

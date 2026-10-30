@@ -1,8 +1,8 @@
 {
 	"checks": 78,
 	"facts": {
-		"compile_msec": 40.02,
-		"native_max_error": 0.0026589887791276,
+		"compile_msec": 53.854,
+		"native_max_error": 0.0024540777175428,
 		"pitch_results": {
 			"missile60": 60,
 			"missile69": 69,

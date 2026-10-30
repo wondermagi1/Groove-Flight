@@ -1,5 +1,5 @@
 {
-  "checks": 14,
+  "checks": 21,
   "failures": [],
   "facts": {
     "melody_pitches": [
@@ -14,9 +14,18 @@
       60,
       60
     ],
-    "recognition_seconds": 0.3330130999997891,
+    "recognition_seconds": 0.3740461999987019,
     "score_notes": 10,
-    "chord_notes": 48
+    "chord_notes": 48,
+    "arranged_roles": [
+      "accent",
+      "bass",
+      "harmony",
+      "kick",
+      "lead",
+      "snare"
+    ],
+    "arranged_notes": 64
   },
   "scope": "Original synthesized melodies/chords encoded to real MP3; actual CPU ONNX inference, excerpt bounds, quantization and corrupt/invalid/silent audio. No commercial-song accuracy claim."
 }

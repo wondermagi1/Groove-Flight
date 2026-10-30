@@ -3,9 +3,11 @@
 	"facts": {
 		"auto_bpm": false,
 		"bpm": 120.0,
-		"elapsed": 0.315113900000142,
+		"elapsed": 0.40942090000317,
 		"engine": "Basic Pitch ONNX CPU",
-		"notes": 10.0,
+		"mode": "arrange",
+		"notes": 29.0,
+		"parts": 4.0,
 		"seconds": 6.03428571428571,
 		"tempo_confidence": 0.71256212112636
 	},

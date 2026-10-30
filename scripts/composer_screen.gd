@@ -2,6 +2,7 @@ extends Control
 ## Piano-roll editor. All audible playback and file operations use game callbacks;
 ## the drawing never advances the score or emits a combat attack.
 const DATA=preload("res://scripts/arsenal_catalog.gd")
+const ROLES=preload("res://scripts/music_roles.gd")
 const PITCH_NAMES=["C","C♯","D","D♯","E","F","F♯","G","G♯","A","A♯","B"]
 var game
 var content: Control
@@ -86,7 +87,7 @@ class PianoRoll:
 				accept_event(); return
 			if event.position.x<key_width:
 				if event.pressed and event.button_index==MOUSE_BUTTON_LEFT:
-					if screen.game.has_method("composer_audition"): screen.game.composer_audition(str(screen.current_track().get("weapon","pulse")),pitch_at(event.position),screen.note_velocity)
+					if screen.game.has_method("composer_audition"): screen.game.composer_audition(str(screen.current_track().get("weapon","pulse")),pitch_at(event.position),screen.note_velocity,str(screen.current_track().get("role","auto")))
 				accept_event(); return
 			if event.position.y<ruler_height:
 				if event.pressed and event.button_index==MOUSE_BUTTON_LEFT and screen.game.has_method("composer_seek"):
@@ -238,6 +239,7 @@ func refresh() -> void:
 
 func _build_tracks() -> void:
 	track_list.add_child(_label("武器声部  %d / 8"%score().tracks.size(),21,Color("e0edf7")))
+	track_list.add_child(_button("智能编配",show_arrange_dialog,"ComposerArrange",Color("f2ce92")))
 	for index in range(score().tracks.size()):
 		var track: Dictionary=score().tracks[index]; var color=DATA.color(str(track.weapon))
 		var box=VBoxContainer.new(); box.add_theme_constant_override("separation",4); track_list.add_child(box)
@@ -249,7 +251,7 @@ func _build_tracks() -> void:
 		var mute=CheckButton.new(); mute.name="ComposerMute_%d"%index; mute.text="静音"; mute.button_pressed=bool(track.mute); mute.add_theme_font_size_override("font_size",13); mute.toggled.connect(_track_flag.bind(index,"mute")); row.add_child(mute)
 		var solo=CheckButton.new(); solo.name="ComposerSolo_%d"%index; solo.text="独奏"; solo.button_pressed=bool(track.solo); solo.add_theme_font_size_override("font_size",13); solo.toggled.connect(_track_flag.bind(index,"solo")); row.add_child(solo)
 	var add=_button("＋ 添加声部",add_track,"ComposerAddTrack"); add.disabled=score().tracks.size()>=8; track_list.add_child(add)
-	var explanation=_label("每轨可自由写旋律与和弦。\n灰色音符是其他声部。\n\n支持 .mid / .midi 文件，\n导入后可继续修改。",15,Color("6d8aa4")); explanation.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; track_list.add_child(explanation)
+	var explanation=_label("每轨可自由写旋律与和弦。\n灰色音符是其他声部。\n\n智能编配可分配多种武器；\n鼓组也能单独编辑与静音。",15,Color("6d8aa4")); explanation.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; track_list.add_child(explanation)
 func _build_inspector() -> void:
 	inspector.add_child(_label("当前声部",21,Color("dfedf7")))
 	var track=current_track()
@@ -260,6 +262,12 @@ func _build_inspector() -> void:
 		instrument_picker.add_item(str(weapons[i].name)); instrument_picker.set_item_metadata(i,str(weapons[i].id))
 		if str(weapons[i].id)==str(track.weapon): selected=i
 	instrument_picker.select(selected); instrument_picker.item_selected.connect(func(index):current_track().weapon=str(instrument_picker.get_item_metadata(index)); _changed()); inspector.add_child(instrument_picker)
+	inspector.add_child(_label("音乐职责 / 鼓组",15))
+	var role_picker=OptionButton.new(); role_picker.name="ComposerRole"; role_picker.fit_to_longest_item=false
+	for role in ROLES.IDS: role_picker.add_item(str(ROLES.NAMES[role]))
+	role_picker.select(maxi(0,ROLES.IDS.find(str(track.get("role","auto")))))
+	role_picker.item_selected.connect(func(index):current_track().role=ROLES.IDS[index]; _changed())
+	inspector.add_child(role_picker)
 	inspector.add_child(_label("音量",15)); var volume=HSlider.new(); volume.name="ComposerVolume"; volume.min_value=0; volume.max_value=1; volume.step=.01; volume.value=float(track.volume); volume.value_changed.connect(func(value):current_track().volume=value; _changed(false)); inspector.add_child(volume)
 	inspector.add_child(_label("声像  左 ← → 右",15)); var pan=HSlider.new(); pan.name="ComposerPan"; pan.min_value=-1; pan.max_value=1; pan.step=.05; pan.value=float(track.pan); pan.value_changed.connect(func(value):current_track().pan=value; _changed(false)); inspector.add_child(pan)
 	var remove=_button("移除声部",remove_track,"ComposerRemoveTrack",Color("c9a0a4")); remove.disabled=score().tracks.size()<=1; inspector.add_child(remove)
@@ -273,6 +281,18 @@ func _build_inspector() -> void:
 	inspector.add_child(_label("力度 1—127",14)); velocity_edit=_spin(int(note.get("velocity",note_velocity)),1,127,1,_set_velocity,"ComposerVelocity"); inspector.add_child(velocity_edit)
 	if not note.is_empty(): inspector.add_child(_button("删除音符",delete_note.bind(selected_note),"ComposerDeleteNote",Color("e5aaa2")))
 	var hint=_label("所有半音都可使用。\n滚轮可浏览高低音区；\n横向翻页可写完整乐曲。",14,Color("647f99")); hint.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; inspector.add_child(hint)
+
+func show_arrange_dialog() -> void:
+	var dialog=ConfirmationDialog.new(); dialog.title="智能编配"; dialog.theme=_audio_dialog_theme(); dialog.min_size=Vector2i(540,260)
+	var box=VBoxContainer.new(); box.add_theme_constant_override("separation",15); dialog.add_child(box)
+	var info=_label("保留原有音高、时值和力度，按音域与和声分配不同武器。\n原稿会另存备份；已有静音 / 独奏设置会保留。",17)
+	info.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; info.custom_minimum_size.x=500; box.add_child(info)
+	var supplement=CheckBox.new(); supplement.name="ComposerAccompany"; supplement.text="补充缺少的低音与节奏伴奏（会新增音符）"; supplement.button_pressed=false; box.add_child(supplement)
+	dialog.get_ok_button().text="开始编配"; dialog.get_cancel_button().text="取消"
+	dialog.confirmed.connect(func():
+		if game.has_method("composer_arrange"): game.composer_arrange(supplement.button_pressed)
+		dialog.queue_free())
+	dialog.canceled.connect(dialog.queue_free); add_child(dialog); dialog.popup_centered()
 
 func select_track(index: int) -> void:
 	track_index=clampi(index,0,score().tracks.size()-1); selected_note=-1; refresh()
@@ -387,7 +407,7 @@ func show_audio_options(path: String) -> void:
 	dialog.theme=_audio_dialog_theme()
 	var box=VBoxContainer.new(); box.custom_minimum_size=Vector2(510,420); box.add_theme_constant_override("separation",10); dialog.add_child(box)
 	var explanation=_label(path.get_file()+"\n生成可编辑草稿，完成后先试听再导入。\n人声和多乐器混音可能误识别；纯音乐、独奏更适合。",16); explanation.custom_minimum_size.x=500; explanation.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; box.add_child(explanation)
-	box.add_child(_label("识别方式",16)); var mode=OptionButton.new(); mode.add_item("旋律优先（估计主要音线）"); mode.add_item("多音识别（保留和弦、按音域分轨）"); box.add_child(mode)
+	box.add_child(_label("识别方式",16)); var mode=OptionButton.new(); mode.add_item("完整编配（旋律＋低音＋和弦＋鼓组）"); mode.add_item("仅主旋律（方便手动改谱）"); mode.add_item("仅多音识别（按音域分轨）"); box.add_child(mode)
 	var auto_tempo=CheckButton.new(); auto_tempo.name="AudioAutoTempo"; auto_tempo.text="自动估计速度（可在导入后校准）"; auto_tempo.button_pressed=true; box.add_child(auto_tempo)
 	var bpm=_spin(score().bpm,40,240,1,func(_value):pass,"AudioBpm"); bpm.editable=false; box.add_child(bpm)
 	auto_tempo.toggled.connect(func(value):bpm.editable=not value)
@@ -396,7 +416,7 @@ func show_audio_options(path: String) -> void:
 	box.add_child(_label("灵敏度：提高可保留更多音符，也可能增加误音",15)); var sensitivity=HSlider.new(); sensitivity.min_value=0.; sensitivity.max_value=1.; sensitivity.step=.05; sensitivity.value=.5; box.add_child(sensitivity)
 	dialog.confirmed.connect(func():
 		dialog.hide()
-		var options={"bpm":0. if auto_tempo.button_pressed else bpm.value,"start":start.value,"length":length.value,"mode":"melody" if mode.selected==0 else "poly","sensitivity":sensitivity.value}
+		var options={"bpm":0. if auto_tempo.button_pressed else bpm.value,"start":start.value,"length":length.value,"mode":["arrange","melody","poly"][mode.selected],"sensitivity":sensitivity.value}
 		if game.composer_recognize_audio(path,options): show_audio_progress()
 		dialog.queue_free())
 	dialog.canceled.connect(dialog.queue_free); add_child(dialog); dialog.popup_centered(Vector2i(560,620))

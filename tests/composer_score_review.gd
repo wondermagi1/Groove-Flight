@@ -100,7 +100,7 @@ func midi_checks() -> void:
 	var track=PackedByteArray([0,0xff,0x51,3,7,0xa1,0x20,0,0xc0,8,0,0x90,60,80,0,64,100,96,60,0,0,64,0,0,0xff,0x2f,0])
 	var parsed=MIDI.read_bytes(smf(track))
 	check(parsed.ok and parsed.score.bpm==120. and parsed.score.tracks.size()==1,"real format0 header/program/running-status fixture parses")
-	check(parsed.score.tracks[0].weapon=="beam" and parsed.score.tracks[0].notes.size()==2,"General MIDI program maps to a usable weapon voice")
+	check(parsed.score.tracks[0].weapon=="chain" and parsed.score.tracks[0].notes.size()==2,"General MIDI program maps to a usable weapon voice")
 	var notes=parsed.score.tracks[0].notes
 	check(notes[0].pitch==60 and notes[1].pitch==64 and notes[0].duration==1. and notes[0].velocity==80 and notes[1].velocity==100,"polyphonic note lengths/velocities survive real note-on-zero terminations")
 	var tempo90=PackedByteArray([0,0xff,0x51,3,0x0a,0x2c,0x2b,0,0xff,0x2f,0])
@@ -112,7 +112,7 @@ func midi_checks() -> void:
 	var many: Array=[tempo90]
 	for i in range(9): many.append(lead)
 	var clipped=MIDI.read_bytes(smf1(many))
-	check(clipped.ok and clipped.score.tracks.size()==8 and clipped.warnings.any(func(value): return str(value).contains("超过8")),"more than eight melodic parts is disclosed and safely bounded")
+	check(clipped.ok and clipped.score.tracks.size()<=8 and clipped.score.tracks[0].notes.size()==18 and clipped.warnings.any(func(value): return str(value).contains("超过8")),"more than eight melodic parts merges without dropping any of18notes")
 	# Sustain makes the first key-release remain audible until CC64 release.
 	var pedal=PackedByteArray([0,0xb0,64,127,0,0x90,60,90,96,0x80,60,0,96,0xb0,64,0,0,0xff,0x2f,0])
 	var sustained=MIDI.read_bytes(smf(pedal)); check(sustained.ok and sustained.score.tracks[0].notes[0].duration==2.,"sustain pedal extends note until the actual pedal release")
@@ -123,7 +123,7 @@ func midi_checks() -> void:
 	var changing=MIDI.read_bytes(smf(tempo))
 	check(changing.ok and changing.score.bpm==120. and changing.warnings.any(func(value): return str(value).contains("变速")),"tempo changes are disclosed rather than silently claimed as preserved")
 	var drums=PackedByteArray([0,0x99,36,100,96,0x89,36,0,0,0x90,60,80,96,0x80,60,0,0,0xff,0x2f,0])
-	var filtered=MIDI.read_bytes(smf(drums)); check(filtered.ok and filtered.score.tracks[0].notes.size()==1 and filtered.warnings.any(func(value): return str(value).contains("打击乐")),"drum channel is skipped with a warning while melody remains")
+	var filtered=MIDI.read_bytes(smf(drums)); check(filtered.ok and filtered.score.tracks.size()==2 and filtered.score.tracks[0].role=="kick" and filtered.score.tracks[0].notes.size()==1 and filtered.score.tracks[1].notes.size()==1,"drum channel is retained as a kick part alongside the melody")
 	for corrupt in [PackedByteArray(),PackedByteArray([1,2,3]),smf(PackedByteArray([0,60,90])),smf(PackedByteArray([0x81,0x81,0x81,0x81,0])),smf(PackedByteArray([0,0xff,0x51,4,1])),smf(PackedByteArray([0,0x90,128,90]))]:
 		check(not MIDI.read_bytes(corrupt).ok,"malformed/truncated/running-status/varint MIDI returns a failure")
 	check(not MIDI.read_bytes(smf(track,0)).ok and not MIDI.read_bytes(smf(track,0xe728)).ok,"invalid PPQN and unsupported SMPTE clocks do not produce misleading timing")

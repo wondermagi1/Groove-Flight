@@ -197,17 +197,108 @@ def to_score(events, bpm, duration, title, mode):
     return {'format': 'beatdrift-score', 'version': 1, 'title': title[:150], 'bpm': bpm,
             'bars': bars, 'tracks': tracks}
 
+ROLE_SETUP = {
+    'lead': ('主旋律估计', 'boomerang', .78, 0.),
+    'bass': ('低音估计', 'rail', .65, 0.),
+    'harmony': ('和弦估计', 'nova', .48, -.28),
+    'pad': ('长音铺底估计', 'orbit', .36, .25),
+    'accent': ('装饰音估计', 'chain', .60, .20),
+    'kick': ('低频鼓点估计', 'missile', .63, 0.),
+    'snare': ('中频鼓点估计', 'scatter', .38, -.08),
+    'hat': ('高频鼓点估计', 'pulse_needle', .22, .28),
+}
+
+def detect_percussion(audio, sensitivity=.5):
+    """Band-limited transient estimates, not isolated original drum stems.
+
+    FFT batches bound memory for ten-minute files. Stable sustained tones produce
+    no repeated triggers. Detection stays on source transients, not a fake loop.
+    """
+    width, hop = 1024, 256
+    if len(audio) < width * 2:
+        return []
+    windows = np.lib.stride_tricks.sliding_window_view(audio, width)[::hop]
+    freqs = np.fft.rfftfreq(width, 1/RATE)
+    bands = [(45, 200, 'kick'), (220, 2400, 'snare'), (4000, 10000, 'hat')]
+    envelopes = np.empty((len(windows), 3))
+    for offset in range(0, len(windows), 1024):
+        spectrum = np.abs(np.fft.rfft(windows[offset:offset+1024] * np.hanning(width), axis=1))
+        for band, (lo, hi, _) in enumerate(bands):
+            envelopes[offset:offset+len(spectrum), band] = np.log1p(spectrum[:, (freqs >= lo) & (freqs < hi)].mean(axis=1)*20)
+    flux = np.maximum(np.diff(envelopes, axis=0, prepend=envelopes[:1]), 0.)
+    events = []
+    for band, (_, _, role) in enumerate(bands):
+        values = flux[:, band]
+        threshold = max(.045, float(np.percentile(values, 75)) * (2.5-sensitivity), float(values.max()) * .13)
+        last = -1000
+        for index in range(1, len(values)-1):
+            if (values[index] < threshold or values[index] < values[index-1] or values[index] <= values[index+1]
+                or (index-last)*hop/RATE < (.14 if role == 'kick' else .09)):
+                continue
+            # Nearby FFT windows see one source onset; quantization merges them.
+            when = max(0., (index*hop+width*.5)/RATE-.018)
+            strength = min(1., float(values[index]/max(threshold*3, 1e-9)))
+            events.append((when, role, round(55+55*strength)))
+            last = index
+    return sorted(events)
+
+def orchestrate(score, percussion=()):
+    """Revoice recognized notes, preserving pitches/gates/velocities and IDs."""
+    result = dict(score)
+    source = [dict(n) for t in score['tracks'] for n in t['notes']]
+    onsets = {}
+    for note in source:
+        onsets.setdefault(note['beat'], []).append(note['pitch'])
+    buckets = {role: [] for role in ROLE_SETUP}
+    for note in source:
+        pitches = onsets[note['beat']]
+        if note['pitch'] < 55:
+            role = 'bass'
+        elif note['duration'] >= 3:
+            role = 'pad'
+        elif len(pitches) >= 3 and note['pitch'] < max(pitches):
+            role = 'harmony'
+        elif note['duration'] <= .5 and note['pitch'] >= 77:
+            role = 'accent'
+        else:
+            role = 'lead'
+        buckets[role].append(note)
+    if len(buckets['lead']) >= 8 and not buckets['accent']:
+        pitches = sorted(n['pitch'] for n in buckets['lead'])
+        split = pitches[len(pitches)//2]
+        colors = [n for n in buckets['lead'] if n['pitch'] > split]
+        if 0 < len(colors) < len(buckets['lead']):
+            buckets['lead'] = [n for n in buckets['lead'] if n['pitch'] <= split]
+            buckets['accent'] = colors
+    seen = set()
+    next_id = max((n['id'] for n in source), default=0)+1
+    for seconds, role, velocity in percussion:
+        beat = round(seconds*score['bpm']/60*4)/4
+        if beat >= score['bars']*4 or (beat, role) in seen or next_id > 8192:
+            continue
+        seen.add((beat, role))
+        buckets[role].append({'id': next_id, 'beat': beat, 'duration': .25,
+                             'pitch': {'kick':36, 'snare':38, 'hat':42}[role], 'velocity': velocity})
+        next_id += 1
+    result['tracks'] = []
+    for role, (name, weapon, gain, pan) in ROLE_SETUP.items():
+        if buckets[role]:
+            result['tracks'].append({'id': len(result['tracks'])+1, 'name': name, 'weapon': weapon,
+                                     'role': role, 'volume': gain, 'pan': pan, 'mute': False, 'solo': False,
+                                     'notes': buckets[role]})
+    return result
+
 def run(request, output, status):
     started = time.monotonic()
     data = json.loads(Path(request).read_text(encoding='utf-8-sig'))
     path = Path(data['path'])
     start, length = float(data.get('start', 0)), float(data.get('length', 0))
     bpm = float(data.get('bpm', 0))
-    mode = data.get('mode', 'melody')
+    mode = data.get('mode', 'arrange')
     sensitivity = float(data.get('sensitivity', .5))
     if (not all(math.isfinite(x) for x in (start,length,bpm,sensitivity)) or
         start < 0 or length < 0 or length > 600 or not (bpm == 0 or 40 <= bpm <= 240) or
-        mode not in ('melody','poly') or not 0 <= sensitivity <= 1):
+        mode not in ('melody','poly','arrange') or not 0 <= sensitivity <= 1):
         raise ValueError('识别参数超出有效范围。')
     progress(status, .02, '解码音频片段')
     audio = decode(path, start, length)
@@ -222,15 +313,20 @@ def run(request, output, status):
     frames, onsets = infer(audio, model, status)
     progress(status, .87, '整理音符与量化')
     events = extract_notes(frames, onsets, mode, sensitivity)
-    score = to_score(events, bpm, len(audio)/RATE, path.stem+' · 音频识谱', mode)
+    score = to_score(events, bpm, len(audio)/RATE, path.stem+' · 音频识谱', 'poly' if mode == 'arrange' else mode)
+    if mode == 'arrange':
+        progress(status, .93, '分配旋律、低音、和弦与鼓组')
+        score = orchestrate(score, detect_percussion(audio, sensitivity))
     count = sum(len(track['notes']) for track in score['tracks'])
     warnings = ['这是机器估计的草稿；成品歌曲的人声、鼓点和伴奏可能产生误音、漏音及八度偏差。',
-                '已量化到十六分网格；声部分配依据音域，不代表分离出原曲乐器。']
+                '已量化到十六分网格；声部依据音域、时值与同时起音编配，不代表原曲乐器分离。']
+    if mode == 'arrange':
+        warnings.append('低/中/高频瞬态估计为鼓组，可能将钢琴、拨弦误识为打击声，可逐轨静音调整。')
     if automatic:
         warnings.append(f'自动速度约{bpm:g} BPM，可能存在半速/倍速误差；请试听并校准。')
     atomic_json(output, {'ok': True, 'score': score, 'warnings': warnings,
                          'facts': {'notes': count, 'seconds': len(audio)/RATE, 'bpm': bpm,
-                                   'auto_bpm': automatic, 'tempo_confidence': confidence,
+                                   'parts': len(score['tracks']), 'mode': mode, 'auto_bpm': automatic, 'tempo_confidence': confidence,
                                    'elapsed': time.monotonic()-started, 'engine': 'Basic Pitch ONNX CPU'}})
     progress(status, 1., f'识别完成：{count}个音符，{bpm:g} BPM')
 
