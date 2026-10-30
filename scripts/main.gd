@@ -5,12 +5,19 @@ const LOADOUT=preload("res://scripts/arsenal_loadout.gd")
 const FLEET=preload("res://scripts/fleet_catalog.gd")
 const ART=preload("res://scripts/fleet_art.gd")
 const PLAN=preload("res://scripts/wave_plan.gd")
+const PLANETS=preload("res://scripts/planet_catalog.gd")
 const MAX_ENEMIES=640
 const MAX_BULLETS=1200
 const MAX_ENEMY_BULLETS=700
 const GRID=96.
 const MAX_PROJECTILE_RADIUS=13.
-var wave_rows: Array[Dictionary]=PLAN.rows()
+var wave_rows: Array[Dictionary]=PLANETS.route("mercury")
+var selected_planet: String="mercury"
+var active_planet: String="mercury"
+var planet_rules: Dictionary=PLANETS.combat("mercury")
+var planet_records: Dictionary={}
+var drop_fraction: float=0.
+var solar_return_state: String="hub"
 var loadout=LOADOUT.new()
 var music
 var fx
@@ -132,12 +139,45 @@ func load_settings() -> void:
 	best=int(config.get_value("score","best",0))
 	selected_ship=str(FLEET.ship(str(config.get_value("fleet","ship","hex"))).id)
 	selected_pilot=str(FLEET.pilot(str(config.get_value("fleet","pilot","echo"))).id)
+	restore_planet_progress(config)
+
+func planet_record(id: String) -> Dictionary:
+	return planet_records.get(id,{"attempts":0,"clears":0,"best_score":0,"best_time":0.,"last_result":""}).duplicate(true)
+func is_planet_unlocked(id: String) -> bool:
+	# All destinations are selectable; their threat labels guide progression.
+	for row in PLANETS.rows():
+		if str(row.id)==id: return true
+	return false
+func restore_planet_progress(config: ConfigFile) -> void:
+	selected_planet=str(config.get_value("planets","selected","mercury"))
+	if not is_planet_unlocked(selected_planet): selected_planet="mercury"
+	planet_records.clear()
+	var stored=config.get_value("planets","records",{})
+	if not stored is Dictionary: return
+	for row in PLANETS.rows():
+		var value=stored.get(str(row.id),{})
+		if not value is Dictionary: continue
+		var clean={"attempts":0,"clears":0,"best_score":0,"best_time":0.,"last_result":""}
+		for key in ["attempts","clears","best_score"]:
+			var number=value.get(key,0)
+			if number is int or number is float: clean[key]=clampi(int(number),0,999999999)
+		clean.clears=mini(int(clean.clears),int(clean.attempts))
+		var best_time=value.get("best_time",0.)
+		if (best_time is int or best_time is float) and is_finite(float(best_time)): clean.best_time=clampf(float(best_time),0.,86400.)
+		var last=str(value.get("last_result",""))
+		clean.last_result=last if last in ["clear","failed"] else ""
+		planet_records[str(row.id)]=clean
+func store_planet_progress(config: ConfigFile) -> void:
+	config.set_value("planets","selected",selected_planet)
+	config.set_value("planets","records",planet_records.duplicate(true))
+
 func save_settings() -> void:
 	if test_mode: return
 	var config=ConfigFile.new()
 	for key in settings: config.set_value("settings",key,settings[key])
 	config.set_value("score","best",best)
 	config.set_value("fleet","ship",selected_ship); config.set_value("fleet","pilot",selected_pilot)
+	store_planet_progress(config)
 	config.save("user://settings.cfg")
 func apply_audio() -> void:
 	music.volume_db=linear_to_db(maxf(.0001,float(settings.master)*float(settings.music)))-2.
@@ -152,7 +192,15 @@ func sound(id: String,volume: float=-10.,pitch: float=1.) -> void:
 	voice.stream=load("res://audio/"+str(sources.get(id,id+".wav"))); voice.pitch_scale=pitch
 	voice.volume_db=volume+linear_to_db(maxf(.0001,float(settings.master)*float(settings.sfx))); voice.play()
 
-func start_run(seed_value: int=0) -> void:
+func start_run(seed_value: int=0,planet_id: String="") -> void:
+	if not planet_id.is_empty():
+		if not is_planet_unlocked(planet_id): return
+		selected_planet=planet_id
+	active_planet=selected_planet if is_planet_unlocked(selected_planet) else "mercury"
+	planet_rules=PLANETS.combat(active_planet); wave_rows=PLANETS.route(active_planet)
+	background.set_shader_parameter("planet_style",int(planet_rules.planet_style))
+	background.set_shader_parameter("planet_color",planet_rules.accent)
+	background.set_shader_parameter("sky_tint",planet_rules.sky_tint)
 	leave_hub()
 	if seed_value==0: rng.randomize()
 	else: rng.seed=seed_value
@@ -166,7 +214,7 @@ func start_run(seed_value: int=0) -> void:
 	health=loadout.max_health; invulnerable=1.; dash_left=0; dash_cooldown=0; charge=0; overload_until=-1
 	pilot_amp_until=-1; pilot_heal_progress=0; pending_splits.clear(); boss_down=false; spawn_log.clear(); total_spawned=0
 	shield_points=0; shield_until=-1; pending_dash_missiles=0; proc_queue.clear(); shop_offers.clear(); shop_reroll_cost=8
-	wave=0; kills=0; score=0; dust=0; picked=0; next_enemy=1; actual_steps=0; selected_uid=-1
+	wave=0; kills=0; score=0; dust=0; picked=0; next_enemy=1; actual_steps=0; selected_uid=-1; drop_fraction=0.
 	player=Vector2.ZERO; facing=Vector2.UP; movement_facing=facing; camera.enabled=true; camera.position=player; camera.reset_smoothing()
 	state="combat"; music.begin(loadout); begin_wave(); apply_audio(); ui.refresh()
 func begin_wave() -> void:
@@ -174,7 +222,31 @@ func begin_wave() -> void:
 	enemy_bullets.clear(); warnings.clear()
 	if wave==wave_count():
 		boss_anchor=player+Vector2(0,-350); spawn_enemy("boss",boss_anchor)
-	notice=("WAVE %02d / "%wave)+str(wave_profile().name); notice_until=music.timeline+2.
+	notice=PLANETS.planet(active_planet).name+" / "+str(wave_profile().name); notice_until=music.timeline+2.
+
+func select_planet(id: String) -> bool:
+	if not is_planet_unlocked(id) or state not in ["solar","hub","title","victory","defeat"]: return false
+	selected_planet=id; save_settings(); return true
+func open_solar_map() -> void:
+	if state not in ["title","hub","hangar","victory","defeat"]: return
+	solar_return_state="title" if state=="title" else "hub"
+	music.stop(); music._running=false; camera.enabled=false
+	for voice in voices: voice.stop()
+	if is_instance_valid(hub): hub.deactivate()
+	state="solar"; background_layer.visible=false; post.visible=false; fx.visible=false; ui.refresh()
+func close_solar_map() -> void:
+	if state!="solar": return
+	if solar_return_state=="title": return_title()
+	else: enter_hub()
+func launch_selected_planet() -> bool:
+	if state!="solar" or not is_planet_unlocked(selected_planet): return false
+	start_run(0,selected_planet); return true
+func next_planet() -> String:
+	var index=int(PLANETS.planet(active_planet).index)
+	return str(PLANETS.rows()[mini(index+1,PLANETS.rows().size()-1)].id)
+func open_next_planet() -> void:
+	if state!="victory": return
+	selected_planet=next_planet(); open_solar_map(); save_settings()
 
 func leave_hub() -> void:
 	if is_instance_valid(hub): hub.deactivate()
@@ -304,11 +376,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		if state=="editor": close_editor()
 		elif state in ["combat","reward"]: open_editor()
 	elif event.is_action_pressed("pause"):
-		if state=="editor": close_editor()
+		if state=="solar": close_solar_map()
+		elif state=="editor": close_editor()
 		elif state=="settings": close_settings()
 		elif state=="hangar": close_hangar()
 		else: pause_game()
-	elif event is InputEventKey and event.pressed and event.physical_keycode==KEY_R and state in ["defeat","victory"]: start_run()
+	elif event is InputEventKey and event.pressed and event.physical_keycode==KEY_R and state in ["defeat","victory"]: start_run(0,active_planet)
 
 func _physics_process(delta: float) -> void:
 	if state!="combat": return
@@ -399,7 +472,7 @@ func spawn_for_step(serial: int) -> void:
 	if serial%4!=0: return
 	if wave==wave_count():
 		if not boss_down and serial%16==0:
-			for i in range(5):
+			for i in range(3+int(PLANETS.planet(active_planet).index)):
 				if enemies.size()<MAX_ENEMIES: spawn_enemy("dart" if i%3==0 else "mote")
 		return
 	var config=wave_profile(); var elapsed=music.timeline-wave_start
@@ -412,7 +485,7 @@ func spawn_for_step(serial: int) -> void:
 	for i in range(amount):
 		if enemies.size()>=MAX_ENEMIES: break
 		var point=PLAN.formation(origin,outward,i,amount,str(config.formation))
-		spawn_enemy(PLAN.kind(wave-1,spawned),safe_spawn_position(point,outward)); spawned+=1
+		spawn_enemy(PLANETS.kind(active_planet,wave-1,spawned),safe_spawn_position(point,outward)); spawned+=1
 	if config.elite and not elite_spawned and elapsed>float(config.seconds)*.40 and enemies.size()<MAX_ENEMIES:
 		elite_spawned=true; spawn_enemy("elite")
 
@@ -437,7 +510,9 @@ func spawn_enemy(kind: String,position: Vector2=Vector2.INF) -> Dictionary:
 		var outward=movement_facing.rotated(rng.randf_range(-1.,1.)) if rng.randf()<.72 else Vector2.from_angle(rng.randf()*TAU)
 		position=safe_spawn_position(spawn_origin(outward),outward)
 	var hp={"mote":12.,"armor":62.,"shooter":30.,"dart":10.,"splitter":42.,"sentinel":80.,"elite":330.+wave*28,"boss":6800.}[kind]
+	hp=float(planet_rules.boss_hp) if kind=="boss" else hp*float(planet_rules.hp_scale)
 	var enemy={"uid":next_enemy,"kind":kind,"at":position,"hp":hp,"max_hp":hp,"radius":{"mote":11.,"armor":18.,"shooter":15.,"dart":9.,"splitter":17.,"sentinel":19.,"elite":42.,"boss":82.}[kind],"speed":{"mote":142.,"armor":85.,"shooter":100.,"dart":238.,"splitter":124.,"sentinel":85.,"elite":96.,"boss":0.}[kind],"flash":0.,"phase":1,"angle":0.,"born":music.timeline}
+	enemy.speed=float(enemy.speed)*float(planet_rules.enemy_speed); enemy.damage=float(planet_rules.damage)
 	next_enemy+=1; enemies.append(enemy); by_id[enemy.uid]=enemy
 	total_spawned+=1
 	spawn_log.append({"wave":wave,"kind":kind,"at":position,"time":music.timeline})
@@ -461,24 +536,33 @@ func update_enemies(delta: float) -> void:
 			if enemy.kind=="dart": direction=direction.rotated(sin(music.timeline*2.+enemy.uid)*.3)
 			if enemy.kind=="sentinel": direction=(direction+direction.orthogonal()*.75).normalized()
 			enemy.at+=direction*float(enemy.speed)*move*delta
-		if to_player.length()<float(enemy.radius)+13: hurt_player(1)
+		if to_player.length()<float(enemy.radius)+13: hurt_player(float(enemy.damage))
 func enemy_fire(enemy: Dictionary) -> void:
 	if enemy.at.distance_to(player)>1500: return
 	var direction=(player-enemy.at).normalized()
 	var count=5 if enemy.kind=="sentinel" else (3 if enemy.kind=="elite" else 1)
+	count+=floori(float(PLANETS.planet(active_planet).index)/3.)
 	for i in range(count): enemy_shot(enemy.at,direction.rotated((i-(count-1)*.5)*.22),205 if enemy.kind=="shooter" else 230)
 func enemy_shot(at: Vector2,direction: Vector2,speed: float) -> void:
-	if enemy_bullets.size()<MAX_ENEMY_BULLETS: enemy_bullets.append({"at":at,"v":direction*speed,"life":9.,"radius":7.})
+	if enemy_bullets.size()<MAX_ENEMY_BULLETS: enemy_bullets.append({"at":at,"v":direction*speed*float(planet_rules.bullet_speed),"life":9.,"radius":7.,"damage":float(planet_rules.damage)})
 func boss_step(enemy: Dictionary,serial: int) -> void:
+	var tier=int(PLANETS.planet(active_planet).index)
 	if serial%8==0:
-		var count=16 if enemy.phase==2 else 11
-		var angle=(player-enemy.at).angle()+music.timeline*.12
+		var count=(14 if enemy.phase==2 else 10)+tier
+		var angle=(player-enemy.at).angle()+music.timeline*(.12+.025*tier)
+		if tier%2==1: angle+=sin(serial*.17)*.28
 		for i in range(count): enemy_shot(enemy.at,Vector2.from_angle(angle+i*TAU/count),185 if enemy.phase==1 else 220)
-		fx.ring(enemy.at,Color("ff8cab"),125,.30)
+		fx.ring(enemy.at,planet_rules.accent,125,.30)
 	if serial%16==4:
 		var direction=(player-enemy.at).normalized()
-		warnings.append({"at":enemy.at,"to":enemy.at+direction*1800,"target":(serial+4)*.25,"born":music.timeline,"done":false})
+		var lanes=1 if tier<3 else (2 if tier<6 else 3)
+		for lane in range(lanes):
+			var axis=direction.rotated((lane-(lanes-1)*.5)*.25)
+			warnings.append({"at":enemy.at,"to":enemy.at+axis*1800,"target":(serial+4)*.25,"born":music.timeline,"done":false,"damage":float(planet_rules.damage)*2.})
 	if enemy.phase==2 and serial%8==4: enemy_fire(enemy)
+	if tier>=4 and enemy.phase==2 and serial%16==12:
+		var toward=(player-enemy.at).normalized()
+		for i in range(3+tier): enemy_shot(enemy.at,toward.rotated((i-(2+tier)*.5)*.14),260.)
 func rebuild_spatial() -> void:
 	spatial.clear()
 	for enemy in enemies:
@@ -621,7 +705,13 @@ func hurt_enemy(enemy: Dictionary,damage: float,kind: String,context: Dictionary
 	sound("kill",-14)
 	if enemy.kind=="boss": boss_down=true
 	if enemy.kind=="splitter": pending_splits.append(enemy.at)
-	var item={"at":enemy.at,"amount":12 if enemy.kind=="boss" else (5 if enemy.kind=="elite" else 1),"heal":rng.randf()<minf(.3,.055+float(stats_snapshot.get("luck",0))*.001),"life":36.}
+	# Preserve the small early-planet bonuses:1.08x yields an occasional extra
+	# star rather than rounding every normal enemy back down to1 forever.
+	drop_fraction+=(12 if enemy.kind=="boss" else (5 if enemy.kind=="elite" else 1))*float(planet_rules.drop_scale)
+	# Binary float sums such as100*1.18 may land just below118. The tiny
+	# tolerance prevents losing a whole earned star at an integer boundary.
+	var amount=maxi(1,floori(drop_fraction+.00000001)); drop_fraction=maxf(0.,drop_fraction-float(amount))
+	var item={"at":enemy.at,"amount":amount,"heal":rng.randf()<minf(.3,.055+float(stats_snapshot.get("luck",0))*.001),"life":36.}
 	if pickups.size()<300: pickups.append(item)
 	else:
 		# Bounded visuals, preserved earned currency. The pile nearest the kill
@@ -637,13 +727,13 @@ func update_enemy_bullets(delta: float) -> void:
 		var bullet=enemy_bullets[i]; bullet.at+=bullet.v*delta; bullet.life-=delta
 		if bullet.life<=0 or not bounds.has_point(bullet.at): enemy_bullets.remove_at(i); continue
 		if bullet.at.distance_to(player)<19:
-			hurt_player(1); enemy_bullets.remove_at(i)
+			hurt_player(float(bullet.get("damage",1.))); enemy_bullets.remove_at(i)
 func update_warnings() -> void:
 	for i in range(warnings.size()-1,-1,-1):
 		var warning=warnings[i]
 		if music.timeline<float(warning.target): continue
 		fx.beam(warning.at,warning.to,Color("ff7c9c"),34)
-		if Geometry2D.get_closest_point_to_segment(player,warning.at,warning.to).distance_to(player)<27: hurt_player(2)
+		if Geometry2D.get_closest_point_to_segment(player,warning.at,warning.to).distance_to(player)<27: hurt_player(float(warning.get("damage",2.)))
 		warnings.remove_at(i)
 func update_pickups(delta: float) -> void:
 	var reach=175.*float(stats_snapshot.get("magnet",1.))
@@ -667,7 +757,7 @@ func collect_pickup(item: Dictionary,with_sound: bool=true) -> void:
 			health=minf(health+repairs,loadout.max_health)
 			if with_sound: fx.ring(player,Color("b6a5fa"),62,.35)
 	if with_sound: sound("pickup",-24,1.+(picked%5)*.08)
-func hurt_player(amount: int) -> void:
+func hurt_player(amount: float) -> void:
 	if state!="combat" or invulnerable>0 or dash_left>0: return
 	if shield_points>0 and music.timeline<shield_until:
 		shield_points=maxf(0,shield_points-1); invulnerable=.25; fx.ring(player,Color("a3e9ff"),70,.3); sound("metal",-16); return
@@ -696,6 +786,12 @@ func check_wave() -> void:
 func finish_run(won: bool) -> void:
 	if state!="combat": return
 	state="victory" if won else "defeat"; best=maxi(best,score)
+	var record=planet_record(active_planet); record.attempts+=1
+	record.best_score=maxi(int(record.best_score),score); record.last_result="clear" if won else "failed"
+	if won:
+		record.clears+=1
+		if float(record.best_time)<=0 or music.timeline<float(record.best_time): record.best_time=music.timeline
+	planet_records[active_planet]=record
 	enemy_bullets.clear(); warnings.clear(); music.hold(false); save_settings(); ui.refresh()
 	if won: enemies.clear(); by_id.clear(); spatial.clear(); pending_splits.clear()
 	if won: fx.burst(player,Color("bafaff"),70,500); sound("reward",-4)

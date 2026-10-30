@@ -1,0 +1,151 @@
+{
+	"checks": 3071,
+	"failures": [],
+	"routes": [
+		{
+			"combat": {
+				"accent": "(0.8471, 0.7098, 0.5804, 1.0)",
+				"boss_hp": 4000.0,
+				"bullet_speed": 1.0,
+				"damage": 1.0,
+				"drop_scale": 1.0,
+				"enemy_speed": 1.0,
+				"hp_scale": 1.0,
+				"planet_style": 0,
+				"sky_tint": "(0.4, 0.3255, 0.298, 1.0)"
+			},
+			"elites": 1,
+			"id": "mercury",
+			"planned_normal_units": 740,
+			"survival_seconds": 120.0,
+			"waves": 6
+		},
+		{
+			"combat": {
+				"accent": "(1.0, 0.651, 0.4039, 1.0)",
+				"boss_hp": 5200.0,
+				"bullet_speed": 1.04,
+				"damage": 1.15,
+				"drop_scale": 1.08,
+				"enemy_speed": 1.04,
+				"hp_scale": 1.18,
+				"planet_style": 1,
+				"sky_tint": "(0.5216, 0.2824, 0.1804, 1.0)"
+			},
+			"elites": 1,
+			"id": "venus",
+			"planned_normal_units": 1280,
+			"survival_seconds": 162.0,
+			"waves": 7
+		},
+		{
+			"combat": {
+				"accent": "(0.4, 0.8431, 0.9608, 1.0)",
+				"boss_hp": 6800.0,
+				"bullet_speed": 1.08,
+				"damage": 1.35,
+				"drop_scale": 1.18,
+				"enemy_speed": 1.08,
+				"hp_scale": 1.4,
+				"planet_style": 2,
+				"sky_tint": "(0.1569, 0.3725, 0.5333, 1.0)"
+			},
+			"elites": 1,
+			"id": "earth",
+			"planned_normal_units": 1995,
+			"survival_seconds": 210.0,
+			"waves": 8
+		},
+		{
+			"combat": {
+				"accent": "(0.9333, 0.5294, 0.4235, 1.0)",
+				"boss_hp": 8700.0,
+				"bullet_speed": 1.12,
+				"damage": 1.6,
+				"drop_scale": 1.3,
+				"enemy_speed": 1.12,
+				"hp_scale": 1.68,
+				"planet_style": 3,
+				"sky_tint": "(0.4667, 0.2431, 0.251, 1.0)"
+			},
+			"elites": 2,
+			"id": "mars",
+			"planned_normal_units": 2350,
+			"survival_seconds": 217.0,
+			"waves": 8
+		},
+		{
+			"combat": {
+				"accent": "(0.8863, 0.6902, 0.5216, 1.0)",
+				"boss_hp": 11200.0,
+				"bullet_speed": 1.17,
+				"damage": 1.95,
+				"drop_scale": 1.43,
+				"enemy_speed": 1.17,
+				"hp_scale": 2.05,
+				"planet_style": 4,
+				"sky_tint": "(0.451, 0.3216, 0.2706, 1.0)"
+			},
+			"elites": 2,
+			"id": "jupiter",
+			"planned_normal_units": 3470,
+			"survival_seconds": 264.0,
+			"waves": 9
+		},
+		{
+			"combat": {
+				"accent": "(0.9098, 0.8314, 0.6039, 1.0)",
+				"boss_hp": 14400.0,
+				"bullet_speed": 1.23,
+				"damage": 2.35,
+				"drop_scale": 1.58,
+				"enemy_speed": 1.21,
+				"hp_scale": 2.45,
+				"planet_style": 5,
+				"sky_tint": "(0.3922, 0.3804, 0.2627, 1.0)"
+			},
+			"elites": 2,
+			"id": "saturn",
+			"planned_normal_units": 4055,
+			"survival_seconds": 272.0,
+			"waves": 9
+		},
+		{
+			"combat": {
+				"accent": "(0.5608, 0.902, 0.9098, 1.0)",
+				"boss_hp": 18500.0,
+				"bullet_speed": 1.29,
+				"damage": 2.85,
+				"drop_scale": 1.75,
+				"enemy_speed": 1.25,
+				"hp_scale": 2.9,
+				"planet_style": 6,
+				"sky_tint": "(0.2078, 0.4275, 0.4627, 1.0)"
+			},
+			"elites": 2,
+			"id": "uranus",
+			"planned_normal_units": 5625,
+			"survival_seconds": 324.0,
+			"waves": 10
+		},
+		{
+			"combat": {
+				"accent": "(0.5294, 0.6118, 1.0, 1.0)",
+				"boss_hp": 24000.0,
+				"bullet_speed": 1.35,
+				"damage": 3.4,
+				"drop_scale": 1.95,
+				"enemy_speed": 1.3,
+				"hp_scale": 3.4,
+				"planet_style": 7,
+				"sky_tint": "(0.2078, 0.2275, 0.502, 1.0)"
+			},
+			"elites": 2,
+			"id": "neptune",
+			"planned_normal_units": 6375,
+			"survival_seconds": 333.0,
+			"waves": 10
+		}
+	],
+	"scope": "Eight authored planet catalogs/routes/role mixes and monotonic combat scalars, deterministic pure data and48unit spawn geometry. Does not certify actual planet selection, eight full native clears, difficulty or artistic quality."
+}

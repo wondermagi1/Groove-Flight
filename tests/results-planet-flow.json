@@ -1,0 +1,140 @@
+{
+	"checks": 143,
+	"facts": {
+		"all_planets": {
+			"earth": {
+				"actual_beam_loss": 2.7,
+				"actual_contact_loss": 1.35,
+				"boss_bullets": 12,
+				"boss_hp": 6800.0,
+				"bullet_damage": 1.35,
+				"bullet_speed": 216.000015258789,
+				"contact_damage": 1.35,
+				"dust_from_100_normal_enemies": 118,
+				"health_lost": 1.35,
+				"hp": 16.8,
+				"speed": 153.36
+			},
+			"jupiter": {
+				"actual_beam_loss": 3.9,
+				"actual_contact_loss": 1.95,
+				"boss_bullets": 14,
+				"boss_hp": 11200.0,
+				"bullet_damage": 1.95,
+				"bullet_speed": 233.999984741211,
+				"contact_damage": 1.95,
+				"dust_from_100_normal_enemies": 143,
+				"health_lost": 1.95,
+				"hp": 24.6,
+				"speed": 166.14
+			},
+			"mars": {
+				"actual_beam_loss": 3.2,
+				"actual_contact_loss": 1.6,
+				"boss_bullets": 13,
+				"boss_hp": 8700.0,
+				"bullet_damage": 1.6,
+				"bullet_speed": 224.0,
+				"contact_damage": 1.6,
+				"dust_from_100_normal_enemies": 130,
+				"health_lost": 1.6,
+				"hp": 20.16,
+				"speed": 159.04
+			},
+			"mercury": {
+				"actual_beam_loss": 2.0,
+				"actual_contact_loss": 1.0,
+				"boss_bullets": 10,
+				"boss_hp": 4000.0,
+				"bullet_damage": 1.0,
+				"bullet_speed": 200.0,
+				"contact_damage": 1.0,
+				"dust_from_100_normal_enemies": 100,
+				"health_lost": 1.0,
+				"hp": 12.0,
+				"speed": 142.0
+			},
+			"neptune": {
+				"actual_beam_loss": 6.8,
+				"actual_contact_loss": 3.4,
+				"boss_bullets": 17,
+				"boss_hp": 24000.0,
+				"bullet_damage": 3.4,
+				"bullet_speed": 270.0,
+				"contact_damage": 3.4,
+				"dust_from_100_normal_enemies": 195,
+				"health_lost": 3.4,
+				"hp": 40.8,
+				"speed": 184.6
+			},
+			"saturn": {
+				"actual_beam_loss": 4.7,
+				"actual_contact_loss": 2.35,
+				"boss_bullets": 15,
+				"boss_hp": 14400.0,
+				"bullet_damage": 2.35,
+				"bullet_speed": 246.0,
+				"contact_damage": 2.35,
+				"dust_from_100_normal_enemies": 158,
+				"health_lost": 2.35,
+				"hp": 29.4,
+				"speed": 171.82
+			},
+			"uranus": {
+				"actual_beam_loss": 5.7,
+				"actual_contact_loss": 2.85,
+				"boss_bullets": 16,
+				"boss_hp": 18500.0,
+				"bullet_damage": 2.85,
+				"bullet_speed": 258.0,
+				"contact_damage": 2.85,
+				"dust_from_100_normal_enemies": 175,
+				"health_lost": 2.85,
+				"hp": 34.8,
+				"speed": 177.5
+			},
+			"venus": {
+				"actual_beam_loss": 2.3,
+				"actual_contact_loss": 1.15,
+				"boss_bullets": 11,
+				"boss_hp": 5200.0,
+				"bullet_damage": 1.15,
+				"bullet_speed": 208.0,
+				"contact_damage": 1.15,
+				"dust_from_100_normal_enemies": 108,
+				"health_lost": 1.15,
+				"hp": 14.16,
+				"speed": 147.68
+			}
+		},
+		"mercury": {
+			"actual_beam_loss": 2.0,
+			"actual_contact_loss": 1.0,
+			"boss_bullets": 10,
+			"boss_hp": 4000.0,
+			"bullet_damage": 1.0,
+			"bullet_speed": 200.0,
+			"contact_damage": 1.0,
+			"dust_from_100_normal_enemies": 100,
+			"health_lost": 1.0,
+			"hp": 12.0,
+			"speed": 142.0
+		},
+		"neptune": {
+			"actual_beam_loss": 6.8,
+			"actual_contact_loss": 3.4,
+			"boss_bullets": 17,
+			"boss_hp": 24000.0,
+			"bullet_damage": 3.4,
+			"bullet_speed": 270.0,
+			"contact_damage": 3.4,
+			"dust_from_100_normal_enemies": 195,
+			"health_lost": 3.4,
+			"hp": 40.8,
+			"speed": 184.6
+		},
+		"renderer": "gl_compatibility"
+	},
+	"failures": [],
+	"scope": "Actual title projectile and city F portal→3Dselector→flight/return, eight destinations,720p/1080p title/results/selector, Mercury/Neptune native2.1s flights and existing arsenal, next-planet/R retry; controlled all-eight contact/bullet/beam/drop, completion and serialized-profile fixtures. No complete planet clear or human difficulty claim."
+}

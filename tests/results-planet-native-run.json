@@ -1,0 +1,585 @@
+{
+	"after5s_max_error": 0.0147713049110223,
+	"arrangements": [
+		{
+			"dust": 26,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_drum_fuel",
+					"level": 1,
+					"uid": 7
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				-1,
+				3,
+				3,
+				4,
+				-1,
+				-1,
+				-1,
+				5,
+				5,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 1
+		},
+		{
+			"dust": 89,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_drum_fuel",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 9
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				8,
+				3,
+				3,
+				4,
+				9,
+				9,
+				-1,
+				5,
+				5,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 2
+		},
+		{
+			"dust": 187,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_drum_fuel",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "rail",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "mod_beam_1",
+					"level": 1,
+					"uid": 11
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				8,
+				3,
+				3,
+				4,
+				9,
+				9,
+				11,
+				5,
+				5,
+				10,
+				10,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 3
+		},
+		{
+			"dust": 337,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_drum_fuel",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "rail",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "mod_beam_1",
+					"level": 1,
+					"uid": 11
+				},
+				{
+					"kind": "drone",
+					"level": 1,
+					"uid": 12
+				},
+				{
+					"kind": "mod_pulse_4",
+					"level": 1,
+					"uid": 13
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				8,
+				3,
+				3,
+				4,
+				9,
+				9,
+				11,
+				5,
+				5,
+				10,
+				10,
+				12,
+				12,
+				13,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 4
+		},
+		{
+			"dust": 521,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_drum_fuel",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "rail",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "mod_beam_1",
+					"level": 1,
+					"uid": 11
+				},
+				{
+					"kind": "drone",
+					"level": 1,
+					"uid": 12
+				},
+				{
+					"kind": "mod_pulse_4",
+					"level": 1,
+					"uid": 13
+				},
+				{
+					"kind": "drone",
+					"level": 1,
+					"uid": 14
+				},
+				{
+					"kind": "r_return_finale",
+					"level": 1,
+					"uid": 15
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				8,
+				3,
+				3,
+				4,
+				9,
+				9,
+				11,
+				5,
+				5,
+				10,
+				10,
+				12,
+				12,
+				13,
+				14,
+				14,
+				15,
+				15,
+				-1
+			],
+			"wave": 5
+		}
+	],
+	"boss_max_hp": 4000.0,
+	"checks": 69,
+	"elapsed_wall_seconds": 163.193,
+	"failures": [],
+	"first5s_max_error": 0.0491968876422644,
+	"kills": 763,
+	"max_compile_msec": 1630.682,
+	"max_timing_error": 0.0491968876422644,
+	"music_seconds": 155.027353221171,
+	"observed_weapon_events": 693,
+	"peak_bullets": 59,
+	"peak_enemies": 86,
+	"peak_hostile_bullets": 50,
+	"planet": "mercury",
+	"purchases": [
+		{
+			"kind": "orbit",
+			"price": 24,
+			"slot": 3,
+			"uid": 6,
+			"wave": 1
+		},
+		{
+			"kind": "r_drum_fuel",
+			"price": 20,
+			"slot": 1,
+			"uid": 7,
+			"wave": 1
+		},
+		{
+			"kind": "pulse",
+			"price": 14,
+			"slot": 5,
+			"uid": 8,
+			"wave": 2
+		},
+		{
+			"kind": "nova",
+			"price": 23,
+			"slot": 9,
+			"uid": 9,
+			"wave": 2
+		},
+		{
+			"kind": "rail",
+			"price": 27,
+			"slot": 14,
+			"uid": 10,
+			"wave": 3
+		},
+		{
+			"kind": "mod_beam_1",
+			"price": 15,
+			"slot": 11,
+			"uid": 11,
+			"wave": 3
+		},
+		{
+			"kind": "drone",
+			"price": 27,
+			"slot": 16,
+			"uid": 12,
+			"wave": 4
+		},
+		{
+			"kind": "mod_pulse_4",
+			"price": 16,
+			"slot": 18,
+			"uid": 13,
+			"wave": 4
+		},
+		{
+			"kind": "drone",
+			"price": 28,
+			"slot": 19,
+			"uid": 14,
+			"wave": 5
+		},
+		{
+			"kind": "r_return_finale",
+			"price": 28,
+			"slot": 21,
+			"uid": 15,
+			"wave": 5
+		}
+	],
+	"record": {
+		"attempts": 1,
+		"best_score": 873,
+		"best_time": 154.961145003641,
+		"clears": 1,
+		"last_result": "clear"
+	},
+	"scope": "Complete Mercury six-wave route at production timings/native128-second music, five real shops/purchases/equipment drops/continue signals and actual4000HPBoss phase2/victory/progress record. Assistance: invulnerability, steering, automatic overload only. No enemy HP reduction, injected kills, music seeking or wave/time skips. No claim of eight full planet clears or human difficulty acceptance.",
+	"score": 873,
+	"shops": 5,
+	"total_spawned": 766,
+	"waves": {
+		"1": {
+			"dust": 0,
+			"equipped": 5,
+			"modules": 5,
+			"start": 0.0491968876422644
+		},
+		"2": {
+			"dust": 26,
+			"equipped": 7,
+			"modules": 7,
+			"start": 20.0521095528358
+		},
+		"3": {
+			"dust": 89,
+			"equipped": 9,
+			"modules": 9,
+			"start": 42.0448426740516
+		},
+		"4": {
+			"dust": 187,
+			"equipped": 11,
+			"modules": 11,
+			"start": 66.0656127370399
+		},
+		"5": {
+			"dust": 337,
+			"equipped": 13,
+			"modules": 13,
+			"start": 92.0610370842079
+		},
+		"6": {
+			"dust": 521,
+			"equipped": 15,
+			"modules": 15,
+			"start": 120.064257465067
+		}
+	},
+	"weapon_damage": {
+		"beam": 2269.745,
+		"drone": 753.625,
+		"nova": 2827.0,
+		"orbit": 170.125,
+		"overload": 7125.145,
+		"pulse": 5492.11,
+		"rail": 1494.5,
+		"scatter": 1627.75
+	}
+}

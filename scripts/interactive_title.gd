@@ -134,6 +134,7 @@ func _activate(id: String) -> void:
 	launched = true
 	match id:
 		"hub": game.enter_hub()
+		"solar": game.open_solar_map()
 		"hangar": game.open_hangar()
 		"settings": game.show_settings()
 		"quit": get_tree().quit()

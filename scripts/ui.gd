@@ -4,6 +4,8 @@ const ARSENAL=preload("res://scripts/arsenal_screen.gd")
 const FLEET=preload("res://scripts/fleet_catalog.gd")
 const TITLE=preload("res://scripts/interactive_title.gd")
 const PICKER=preload("res://scripts/fleet_picker.gd")
+const SOLAR=preload("res://scripts/solar_map.gd")
+const PLANETS=preload("res://scripts/planet_catalog.gd")
 var game
 var root_control: Control
 var font: SystemFont
@@ -18,6 +20,7 @@ var overload_bar: ProgressBar
 var slots: Array=[]
 var title_flight: Node2D
 var arsenal: Control
+var solar: Control
 func _ready() -> void:
 	layer=30
 	font=SystemFont.new(); font.font_names=PackedStringArray(["Microsoft YaHei UI","Noto Sans CJK SC","Arial"])
@@ -47,11 +50,12 @@ func refresh() -> void:
 	# Buttons can request a new screen from inside their own pressed signal.
 	# Hide immediately, release after signal dispatch instead of freeing a lock.
 	for child in root_control.get_children(): child.hide(); child.queue_free()
-	slots.clear(); wave_label=null; timer_label=null; health_label=null; score_label=null; notice_label=null; overload_label=null; boss_bar=null; overload_bar=null; title_flight=null; arsenal=null
+	slots.clear(); wave_label=null; timer_label=null; health_label=null; score_label=null; notice_label=null; overload_label=null; boss_bar=null; overload_bar=null; title_flight=null; arsenal=null; solar=null
 	match game.state:
 		"title": title_screen()
 		"hub": hub_screen()
 		"hangar": hangar_screen()
+		"solar": solar_screen()
 		"combat": hud()
 		"reward": reward_screen()
 		"editor": editor_screen()
@@ -78,9 +82,10 @@ func title_screen() -> void:
 	var spacer=Control.new(); spacer.custom_minimum_size.y=15 if compact else 27; content.add_child(spacer)
 	var entries=[
 		["hub","进入霓光港","01",Color("71e8dc")],
-		["hangar","机库与驾驶员","02",Color("b1b9fa")],
-		["settings","设置","03",Color("8fa9c1")],
-		["quit","退出","04",Color("71839a")]]
+		["solar","星球航图","02",Color("83cafa")],
+		["hangar","机库与驾驶员","03",Color("b1b9fa")],
+		["settings","设置","04",Color("8fa9c1")],
+		["quit","退出","05",Color("71839a")]]
 	for entry in entries:
 		var id: String=entry[0]
 		var row=Button.new(); row.name="TitleEntry"+id.capitalize(); row.text=entry[1]
@@ -106,10 +111,11 @@ func hub_screen() -> void:
 	var compact=view.x<1500
 	var title=label("霓光港",28 if compact else 34); title.position=Vector2(38,28); root_control.add_child(title)
 	var subtitle=label("N E O N   H A R B O R",12 if compact else 14,Color("8fbed0")); subtitle.position=Vector2(40,73 if compact else 82); root_control.add_child(subtitle)
-	var navigation=HBoxContainer.new(); navigation.position=Vector2(view.x-(620 if compact else 675),30); navigation.add_theme_constant_override("separation",10); root_control.add_child(navigation)
-	var hangar=button("机库与驾驶员",game.open_hangar,Color("9de7ec"),44); hangar.custom_minimum_size.x=205 if compact else 220; navigation.add_child(hangar)
-	var settings=button("设置",game.show_settings,Color("9baac9"),44); settings.custom_minimum_size.x=140; navigation.add_child(settings)
-	var home=button("返回标题",game.return_title,Color("9baac9"),44); home.custom_minimum_size.x=170; navigation.add_child(home)
+	var navigation=HBoxContainer.new(); navigation.position=Vector2(view.x-(625 if compact else 710),30); navigation.add_theme_constant_override("separation",10); root_control.add_child(navigation)
+	var routes=button("星球航图",game.open_solar_map,Color("83cafa"),44); routes.custom_minimum_size.x=160 if compact else 180; navigation.add_child(routes)
+	var hangar=button("机库与驾驶员",game.open_hangar,Color("9de7ec"),44); hangar.custom_minimum_size.x=185 if compact else 210; navigation.add_child(hangar)
+	var settings=button("设置",game.show_settings,Color("9baac9"),44); settings.custom_minimum_size.x=90 if compact else 110; navigation.add_child(settings)
+	var home=button("返回标题",game.return_title,Color("9baac9"),44); home.custom_minimum_size.x=130 if compact else 140; navigation.add_child(home)
 	# The city supplies a single context-sensitive control hint at bottom center.
 	# Keep the configuration with the header so bright floor lights cannot wash it out.
 	var selection=label("%s / %s"%[FLEET.ship(game.selected_ship).name,FLEET.pilot(game.selected_pilot).name],16 if compact else 18,Color("c3deed"))
@@ -119,6 +125,8 @@ func hub_screen() -> void:
 	root_control.add_child(selection)
 func hangar_screen() -> void:
 	var picker=PICKER.new(); picker.game=game; picker.name="FleetPicker"; root_control.add_child(picker)
+func solar_screen() -> void:
+	solar=SOLAR.new(); solar.game=game; solar.name="SolarMap"; root_control.add_child(solar)
 func thin_bar(width: float,color: Color) -> ProgressBar:
 	var bar=ProgressBar.new(); bar.custom_minimum_size=Vector2(width,5); bar.show_percentage=false; bar.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	var background_style=StyleBoxFlat.new(); background_style.bg_color=Color("253042"); background_style.set_corner_radius_all(2)
@@ -130,7 +138,7 @@ func arsenal_screen(mode_value: String) -> void:
 	arsenal.name="ArsenalScreen"; root_control.add_child(arsenal)
 func hud(include_arsenal: bool=true) -> void:
 	var view=get_viewport().get_visible_rect().size
-	wave_label=label("",18,Color("97a7bf")); wave_label.position=Vector2(24,26); root_control.add_child(wave_label)
+	wave_label=label("",17,Color("97a7bf")); wave_label.position=Vector2(24,26); root_control.add_child(wave_label)
 	timer_label=label("",35); timer_label.position=Vector2(192,13); root_control.add_child(timer_label)
 	health_label=label("",20); health_label.position=Vector2(370,26); root_control.add_child(health_label)
 	score_label=label("",21); score_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT; score_label.position=Vector2(view.x-650,27); score_label.size=Vector2(295,32); root_control.add_child(score_label)
@@ -143,7 +151,7 @@ func hud(include_arsenal: bool=true) -> void:
 	if include_arsenal: arsenal_screen("combat")
 func update_hud() -> void:
 	if not is_instance_valid(wave_label): return
-	wave_label.text="WAVE %02d / %02d"%[game.wave,game.wave_count()]
+	wave_label.text="%s %02d/%02d"%[PLANETS.planet(game.active_planet).name,game.wave,game.wave_count()]
 	var remaining=maxf(0,float(game.wave_profile().seconds)-(game.music.timeline-game.wave_start))
 	timer_label.text="BOSS" if game.wave==game.wave_count() else ("清场" if remaining<=0 else str(int(ceil(remaining))))
 	health_label.text="生命  %.1f / %d"%[game.health,game.loadout.max_health]
@@ -181,14 +189,19 @@ func settings_screen() -> void:
 	fullscreen.toggled.connect(func(value):game.settings.fullscreen=value; fullscreen.text="显示：全屏" if value else "显示：窗口"; DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if value else DisplayServer.WINDOW_MODE_WINDOWED)); content.add_child(fullscreen)
 	content.add_child(button("保存并返回",game.close_settings))
 func results_screen() -> void:
-	var content=panel(700,570)
-	section_title(content,"航线突破" if game.state=="victory" else "信号中断","每次编排，都会奏出不同的火力。")
+	var content=panel(700,620)
+	var destination=PLANETS.planet(game.active_planet)
+	section_title(content,destination.name+(" · 航线突破" if game.state=="victory" else " · 信号中断"),str(destination.cleartext) if game.state=="victory" else "重新编排后，可以再次挑战这条航线。")
 	content.add_child(label("击破 %d   /   得分 %d   /   最佳 %d"%[game.kills,game.score,game.best],24))
 	content.add_child(label("抵达第 %d 波  /  完成 %d 次节拍触发"%[game.wave,game.actual_steps],18,Color("95a8bf")))
 	var kinds=game.weapon_damage.keys(); kinds.sort_custom(func(a,b):return game.weapon_damage[a]>game.weapon_damage[b])
 	for kind in kinds.slice(0,4):
 		var name=DATA.item(str(kind)).get("name", "超载爆发" if kind=="overload" else "连锁效果")
 		content.add_child(label("%s    %d 伤害"%[name,int(game.weapon_damage[kind])],19,Color("aebed1")))
-	content.add_child(button("返回霓光港",game.enter_hub))
-	content.add_child(button("再次出发  /  R",func():game.start_run(),Color("aab9e1"),48))
-	content.add_child(button("返回标题",game.return_title,Color("7789a1"),40))
+	if game.state=="victory" and game.next_planet()!=game.active_planet:
+		content.add_child(button("下一航线 · "+PLANETS.planet(game.next_planet()).name,game.open_next_planet))
+	else: content.add_child(button("星球航图",game.open_solar_map))
+	var actions=HBoxContainer.new(); actions.add_theme_constant_override("separation",12); content.add_child(actions)
+	var again=button("重试本星球 / R",func():game.start_run(0,game.active_planet),Color("aab9e1"),48); again.size_flags_horizontal=Control.SIZE_EXPAND_FILL; actions.add_child(again)
+	var harbor=button("返回霓光港",game.enter_hub,Color("7789a1"),48); harbor.size_flags_horizontal=Control.SIZE_EXPAND_FILL; actions.add_child(harbor)
+	content.add_child(button("选择其他星球",game.open_solar_map,Color("83cafa"),40))

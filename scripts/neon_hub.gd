@@ -63,7 +63,8 @@ func build_world() -> void:
 	viewport.size = Vector2i(1600, 900)
 	viewport.own_world_3d = true
 	viewport.msaa_3d = Viewport.MSAA_2X
-	viewport.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
+	var advanced_renderer := RenderingServer.get_current_rendering_method() == "forward_plus"
+	if advanced_renderer: viewport.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA
 	viewport.gui_disable_input = true
 	container.add_child(viewport)
 	world_root = Node3D.new()
@@ -89,10 +90,10 @@ func build_world() -> void:
 	env.glow_enabled = true
 	env.glow_intensity = .6
 	env.glow_bloom = .06
-	env.ssao_enabled = true
+	env.ssao_enabled = advanced_renderer
 	env.ssao_radius = 1.8
 	env.ssao_intensity = 1.15
-	env.ssr_enabled = true
+	env.ssr_enabled = advanced_renderer
 	env.fog_enabled = true
 	env.fog_light_color = Color("284361")
 	env.fog_light_energy = .5
@@ -362,13 +363,13 @@ func _update_hint() -> void:
 	if not prompt or not avatar: return
 	var flat := Vector3(avatar.position.x,0,avatar.position.z)
 	if flat.distance_to(portal_position)<4.8:
-		prompt.text = "F  ·  驾机出击"
-		area_name.text = "折跃涡流  /  将当前飞船与音序配置带入战场"
+		prompt.text = "F  ·  展开星球航图"
+		area_name.text = "折跃涡流  /  选择目标星球，再驾驶当前飞船出击"
 	elif flat.distance_to(hangar_position)<3.0:
 		prompt.text = "F  ·  机库配置"
 		area_name.text = "更换飞船与驾驶员"
 	else:
-		prompt.text = "前往中央漩涡出击，或到右侧机库更换配置"
+		prompt.text = "前往中央漩涡选择星球，或到右侧机库更换配置"
 		area_name.text = "WASD 移动  ·  Shift 奔跑  ·  按住右键转动视角  ·  滚轮拉近 / 拉远"
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -382,7 +383,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		var flat := Vector3(avatar.position.x,0,avatar.position.z)
 		if flat.distance_to(portal_position)<4.8:
 			interact_cooldown=.4
-			game.start_run()
+			game.open_solar_map()
 			get_viewport().set_input_as_handled()
 		elif flat.distance_to(hangar_position)<3.0:
 			interact_cooldown=.4

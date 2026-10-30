@@ -1,0 +1,14 @@
+{
+	"checks": 37,
+	"failures": [],
+	"logical_view": [
+		1925.0,
+		1080.0
+	],
+	"physical_window": [
+		1280,
+		718
+	],
+	"renderer": "gl_compatibility",
+	"scope": "Real3D SolarMap with mock game: eight procedural bodies, projectedbodypicking, metadata selection, launch/back callbacks, right-drag recovery and720p/1080p layout in correct logical coordinates. Not flight balance or a complete planet run."
+}
