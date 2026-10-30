@@ -1,0 +1,55 @@
+{
+	"checks": 59,
+	"facts": {
+		"controlled_earth_4k": {
+			"frame_interval_median_ms": 4.161,
+			"frame_interval_p95_ms": 4.38,
+			"gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+			"note": "45 warmed offscreen background-only samples, no PNG compression during measurement; not dense-combat FPS.",
+			"texture_memory_mib": 359.834155082703
+		},
+		"earth": {
+			"capture": "3840x2160",
+			"texture_height": 4096,
+			"texture_width": 8192
+		},
+		"jupiter": {
+			"capture": "3840x2160",
+			"texture_height": 2048,
+			"texture_width": 4096
+		},
+		"mars": {
+			"capture": "3840x2160",
+			"texture_height": 4096,
+			"texture_width": 8192
+		},
+		"mercury": {
+			"capture": "3840x2160",
+			"texture_height": 4096,
+			"texture_width": 8192
+		},
+		"neptune": {
+			"capture": "3840x2160",
+			"texture_height": 1024,
+			"texture_width": 2048
+		},
+		"saturn": {
+			"capture": "3840x2160",
+			"texture_height": 2048,
+			"texture_width": 4096
+		},
+		"uranus": {
+			"capture": "3840x2160",
+			"texture_height": 1024,
+			"texture_width": 2048
+		},
+		"venus": {
+			"capture": "3840x2160",
+			"texture_height": 2048,
+			"texture_width": 4096
+		}
+	},
+	"failures": [],
+	"renderer": "gl_compatibility",
+	"scope": "Original-resolution external map imports, actual native4K GPU captures of eight planets, shared production bindings, Earth-layer lifetime and real720p quality/brightness settings. Offscreen4K is genuine rendering, not a claim that a1080p display became4K; no full-route performance claim."
+}

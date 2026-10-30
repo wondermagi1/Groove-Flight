@@ -13,6 +13,8 @@
 *.wav binary
 *.ogg binary
 *.png binary
+*.jpg binary
+*.tif binary
 *.onnx binary
 # Preserve upstream runtimes and license files byte-for-byte across checkouts.
 tools/audio_recognizer/** binary -whitespace

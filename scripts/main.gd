@@ -5,6 +5,7 @@ const LOADOUT=preload("res://scripts/arsenal_loadout.gd")
 const FLEET=preload("res://scripts/fleet_catalog.gd")
 const ART=preload("res://scripts/fleet_art.gd")
 const MACHINE_ART=preload("res://scripts/planet_machine_art.gd")
+const BACKDROP_ASSETS=preload("res://scripts/planet_backdrop_assets.gd")
 const PLAN=preload("res://scripts/wave_plan.gd")
 const PLANETS=preload("res://scripts/planet_catalog.gd")
 const SCORE=preload("res://scripts/composer_score.gd")
@@ -103,7 +104,7 @@ var shop_reroll_cost: int=8
 var editor_return: String="combat"
 var notice: String=""
 var notice_until: float=0
-var settings={"master":.75,"music":.75,"sfx":.55,"reduced_fx":false,"fullscreen":true,"panel_attributes":true,"panel_status":true,"panel_buffs":true,"panel_inventory":true,"panel_sequencer":true,"combat_panel_attributes":false,"combat_panel_status":false,"combat_panel_buffs":false,"combat_panel_inventory":false,"combat_panel_sequencer":true}
+var settings={"master":.75,"music":.75,"sfx":.55,"reduced_fx":false,"fullscreen":true,"background_quality":2,"background_exposure":.9,"panel_attributes":true,"panel_status":true,"panel_buffs":true,"panel_inventory":true,"panel_sequencer":true,"combat_panel_attributes":false,"combat_panel_status":false,"combat_panel_buffs":false,"combat_panel_inventory":false,"combat_panel_sequencer":true}
 var voices: Array[AudioStreamPlayer]=[]
 var voice_index: int=0
 var sound_times: Dictionary={}
@@ -114,7 +115,8 @@ func _ready() -> void:
 	bind_input(); loadout.reset(); load_settings()
 	background_layer=CanvasLayer.new(); background_layer.layer=-20; add_child(background_layer)
 	var back=ColorRect.new(); back.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	background=ShaderMaterial.new(); background.shader=load("res://shaders/planet_backdrop.gdshader"); back.material=background
+	background=ShaderMaterial.new(); background.shader=load("res://shaders/planet_uhd.gdshader"); back.material=background
+	BACKDROP_ASSETS.apply(background,active_planet,int(settings.background_quality),float(settings.background_exposure))
 	back.mouse_filter=Control.MOUSE_FILTER_IGNORE; background_layer.add_child(back)
 	music=load("res://scripts/music.gd").new(); add_child(music); music.step_fired.connect(on_step)
 	standard_music=music
@@ -144,7 +146,7 @@ func _ready() -> void:
 	camera.zoom=Vector2.ONE*.9; camera.enabled=false; add_child(camera)
 	if not test_mode:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if settings.fullscreen else DisplayServer.WINDOW_MODE_WINDOWED)
-	apply_audio(); ui.refresh()
+	apply_audio(); apply_background_quality(); ui.refresh()
 
 func bind_input() -> void:
 	for row in [["left",KEY_A,KEY_LEFT],["right",KEY_D,KEY_RIGHT],["up",KEY_W,KEY_UP],["down",KEY_S,KEY_DOWN],["dash",KEY_SPACE],["overload",KEY_E],["editor",KEY_TAB],["pause",KEY_ESCAPE],["fullscreen",KEY_F11],["interact",KEY_F]]:
@@ -212,6 +214,17 @@ func apply_audio() -> void:
 	if is_instance_valid(standard_music): standard_music.volume_db=level
 	if is_instance_valid(composer_player): composer_player.volume_db=level
 	fx.reduced=bool(settings.reduced_fx)
+func apply_background_quality() -> void:
+	settings.background_quality=clampi(int(settings.get("background_quality",2)),0,2)
+	settings.background_exposure=clampf(float(settings.get("background_exposure",.9)),.35,1.25)
+	background.set_shader_parameter("quality_level",int(settings.background_quality))
+	background.set_shader_parameter("background_exposure",float(settings.background_exposure))
+	if is_instance_valid(post) and post.material is ShaderMaterial:
+		post.material.set_shader_parameter("strength",.10 if int(settings.background_quality)==2 else .3)
+func set_background_quality(value: int) -> void:
+	settings.background_quality=value; apply_background_quality(); save_settings()
+func set_background_exposure(value: float) -> void:
+	settings.background_exposure=value; apply_background_quality(); save_settings()
 func sound(id: String,volume: float=-10.,pitch: float=1.) -> void:
 	if voices.is_empty(): return
 	var now=Time.get_ticks_msec()*.001
@@ -233,6 +246,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	background.set_shader_parameter("planet_style",int(planet_rules.planet_style))
 	background.set_shader_parameter("planet_color",planet_rules.accent)
 	background.set_shader_parameter("sky_tint",planet_rules.sky_tint)
+	BACKDROP_ASSETS.apply(background,active_planet,int(settings.background_quality),float(settings.background_exposure))
 	leave_hub()
 	if seed_value==0: rng.randomize()
 	else: rng.seed=seed_value

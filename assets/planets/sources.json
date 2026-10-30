@@ -1,0 +1,134 @@
+{
+  "source": "https://www.solarsystemscope.com/textures/",
+  "credit": "Solar System Scope / INOVE",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "assets": [
+    {
+      "id": "mercury",
+      "file": "res://assets/planets/8k_mercury.jpg",
+      "url": "https://www.solarsystemscope.com/textures/download/8k_mercury.jpg",
+      "width": 8192,
+      "height": 4096,
+      "bytes": 15035740,
+      "sha256": "5c8bd885ae3571c6ba2cd34b3446b9c6d767e314bf0ee8c1d5c147cadd388fc3"
+    },
+    {
+      "id": "venus",
+      "file": "res://assets/planets/4k_venus_atmosphere.jpg",
+      "url": "https://www.solarsystemscope.com/textures/download/4k_venus_atmosphere.jpg",
+      "width": 4096,
+      "height": 2048,
+      "bytes": 1546146,
+      "sha256": "a14aeba3c6ad7a56f989bb32008dec548077aeded420495b34df98f2dc14ba91"
+    },
+    {
+      "id": "earth",
+      "file": "res://assets/planets/8k_earth_daymap.jpg",
+      "url": "https://www.solarsystemscope.com/textures/download/8k_earth_daymap.jpg",
+      "width": 8192,
+      "height": 4096,
+      "bytes": 4565076,
+      "sha256": "88ab060b6e7d241cfc590c69f528fab2b3247b738d40124cb590999a6fe44abc"
+    },
+    {
+      "id": "earth_night",
+      "file": "res://assets/planets/8k_earth_nightmap.jpg",
+      "url": "https://www.solarsystemscope.com/textures/download/8k_earth_nightmap.jpg",
+      "width": 8192,
+      "height": 4096,
+      "bytes": 3144468,
+      "sha256": "9894e83a585a22c1c425e7ca4f987a9ba625bf08ecee45d3c9dcacae3c2ad5f7"
+    },
+    {
+      "id": "earth_clouds",
+      "file": "res://assets/planets/8k_earth_clouds.jpg",
+      "url": "https://www.solarsystemscope.com/textures/download/8k_earth_clouds.jpg",
+      "width": 8192,
+      "height": 4096,
+      "bytes": 11619184,
+      "sha256": "c792eca228989d36ebb45d3ea6ff1198be5e21a25d70d2fbcb2124ffd14ba7f5"
+    },
+    {
+      "id": "earth_normal",
+      "file": "res://assets/planets/8k_earth_normal_map.png",
+      "url": "https://www.solarsystemscope.com/textures/download/8k_earth_normal_map.tif",
+      "width": 8192,
+      "height": 4096,
+      "bytes": 9490024,
+      "sha256": "79d6dbbde340c653f435f5a012c026a9bed94bdcfd9714e77885f4cba046635a"
+    },
+    {
+      "id": "earth_specular",
+      "file": "res://assets/planets/8k_earth_specular_map.png",
+      "url": "https://www.solarsystemscope.com/textures/download/8k_earth_specular_map.tif",
+      "width": 8192,
+      "height": 4096,
+      "bytes": 1843592,
+      "sha256": "194e67ef7f14dd50b402a1a6f8c7ed55810e16515b95f7736091951efe8dc3fb"
+    },
+    {
+      "id": "mars",
+      "file": "res://assets/planets/8k_mars.jpg",
+      "url": "https://www.solarsystemscope.com/textures/download/8k_mars.jpg",
+      "width": 8192,
+      "height": 4096,
+      "bytes": 8396951,
+      "sha256": "4cc52149924abc6ae507d63032f994e1d42a55cb82c09e002d1a567ff66c23ee"
+    },
+    {
+      "id": "jupiter",
+      "file": "res://assets/planets/8k_jupiter.jpg",
+      "url": "https://www.solarsystemscope.com/textures/download/8k_jupiter.jpg",
+      "width": 4096,
+      "height": 2048,
+      "bytes": 3080980,
+      "sha256": "0bd844bf20822c4e3e80882b077859833c0dac44c7e4e1e0cd63d1b1b6d43085"
+    },
+    {
+      "id": "saturn",
+      "file": "res://assets/planets/8k_saturn.jpg",
+      "url": "https://www.solarsystemscope.com/textures/download/8k_saturn.jpg",
+      "width": 4096,
+      "height": 2048,
+      "bytes": 1098204,
+      "sha256": "0d39a4a490c87c3edabe00a3881a29bb3418364178c79c534fe0986e97e09853"
+    },
+    {
+      "id": "saturn_ring",
+      "file": "res://assets/planets/8k_saturn_ring_alpha.png",
+      "url": "https://www.solarsystemscope.com/textures/download/8k_saturn_ring_alpha.png",
+      "width": 8192,
+      "height": 500,
+      "bytes": 64790,
+      "sha256": "f1f826933c9ff87d64ecf0518d6256b8ed990b003722794f67e96e3d2b876ae4"
+    },
+    {
+      "id": "uranus",
+      "file": "res://assets/planets/2k_uranus.jpg",
+      "url": "https://www.solarsystemscope.com/textures/download/2k_uranus.jpg",
+      "width": 2048,
+      "height": 1024,
+      "bytes": 77751,
+      "sha256": "d15239d46f82d3ea13d2b260b5b29b2a382f42f2916dae0694d0387b1204a09d"
+    },
+    {
+      "id": "neptune",
+      "file": "res://assets/planets/2k_neptune.jpg",
+      "url": "https://www.solarsystemscope.com/textures/download/2k_neptune.jpg",
+      "width": 2048,
+      "height": 1024,
+      "bytes": 241580,
+      "sha256": "cb42ea82709741d28b0af44d8b283cbc6dbd0c521a7f0e1e1e010ade00977df6"
+    },
+    {
+      "id": "stars",
+      "file": "res://assets/planets/8k_stars_milky_way.jpg",
+      "url": "https://www.solarsystemscope.com/textures/download/8k_stars_milky_way.jpg",
+      "width": 8192,
+      "height": 4096,
+      "bytes": 1905513,
+      "sha256": "1fd005ddd6d53364cc5106e0121b83fd3bca236b1503f6b51f5501d9d51eafaf"
+    }
+  ]
+}

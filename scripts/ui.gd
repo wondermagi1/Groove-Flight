@@ -194,18 +194,30 @@ func pause_screen() -> void:
 	content.add_child(button("继续飞行",game.pause_game)); content.add_child(button("设置",game.show_settings,Color("9badc4")))
 	content.add_child(button("返回作曲工坊" if game.free_music_run else "返回主菜单",game.return_to_composer if game.free_music_run else game.return_title,Color("e1a2a9")))
 func settings_screen() -> void:
-	var content=panel(650,520); section_title(content,"设置","调整音量、显示与粒子密度。F11 可切换全屏。")
+	var view=get_viewport().get_visible_rect().size; var height=minf(680.,view.y-48.)
+	var shell=panel(700,height)
+	var scroll=ScrollContainer.new(); scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED; scroll.custom_minimum_size.y=height-104.; shell.add_child(scroll)
+	var content=VBoxContainer.new(); content.size_flags_horizontal=Control.SIZE_EXPAND_FILL; content.add_theme_constant_override("separation",12); scroll.add_child(content)
+	section_title(content,"设置","全屏跟随显示器原生分辨率。F11 可切换全屏。")
 	for item in [["master","总音量"],["music","音乐 / 武器音符"],["sfx","拾取 / 命中音效"]]:
 		var heading=label(item[1]+"  %d%%"%int(float(game.settings[item[0]])*100),19); content.add_child(heading)
 		var slider=HSlider.new(); slider.min_value=0; slider.max_value=1; slider.step=.01; slider.value=game.settings[item[0]]
 		slider.value_changed.connect(func(value):game.settings[item[0]]=value; heading.text=item[1]+"  %d%%"%int(value*100); game.apply_audio()); content.add_child(slider)
+	content.add_child(label("星球背景画质",19))
+	var quality=OptionButton.new(); quality.name="BackdropQuality"; quality.custom_minimum_size.y=42
+	for entry in ["标准 · 基础光照","高 · 云层与夜景","超清 · 最高8K贴图与完整光照"]: quality.add_item(entry)
+	quality.select(int(game.settings.get("background_quality",2))); quality.item_selected.connect(game.set_background_quality); content.add_child(quality)
+	var exposure_label=label("背景亮度  %d%%"%int(float(game.settings.get("background_exposure",.9))*100),19); content.add_child(exposure_label)
+	var exposure=HSlider.new(); exposure.name="BackdropExposure"; exposure.min_value=.35; exposure.max_value=1.25; exposure.step=.05; exposure.value=float(game.settings.get("background_exposure",.9))
+	exposure.value_changed.connect(func(value):game.set_background_exposure(value); exposure_label.text="背景亮度  %d%%"%int(value*100)); content.add_child(exposure)
 	var particles=button("粒子密度：精简" if game.settings.reduced_fx else "粒子密度：标准",func():pass,Color("91b3c2"),40)
 	particles.toggle_mode=true; particles.button_pressed=game.settings.reduced_fx
 	particles.toggled.connect(func(value):game.settings.reduced_fx=value; particles.text="粒子密度：精简" if value else "粒子密度：标准"; game.apply_audio()); content.add_child(particles)
 	var fullscreen=button("显示：全屏" if DisplayServer.window_get_mode()==DisplayServer.WINDOW_MODE_FULLSCREEN else "显示：窗口",func():pass,Color("91b3c2"),40)
 	fullscreen.toggle_mode=true; fullscreen.button_pressed=DisplayServer.window_get_mode()==DisplayServer.WINDOW_MODE_FULLSCREEN
 	fullscreen.toggled.connect(func(value):game.settings.fullscreen=value; fullscreen.text="显示：全屏" if value else "显示：窗口"; DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if value else DisplayServer.WINDOW_MODE_WINDOWED)); content.add_child(fullscreen)
-	content.add_child(button("保存并返回",game.close_settings))
+	content.add_child(label("背景素材：Solar System Scope / INOVE · CC BY4.0",14,Color("758da3")))
+	shell.add_child(button("保存并返回",game.close_settings))
 func results_screen() -> void:
 	var content=panel(700,620)
 	var destination=PLANETS.planet(game.active_planet)
