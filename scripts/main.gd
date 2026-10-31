@@ -37,6 +37,7 @@ var composer_recognition: Dictionary={}
 var composer_preview_name: String=""
 var fx
 var fleet_batch
+var weapon_renderer
 var ui
 var background: ShaderMaterial
 var background_layer: CanvasLayer
@@ -138,6 +139,7 @@ func _ready() -> void:
 	fleet_batch=load("res://scripts/fleet_batch.gd").new(); fleet_batch.z_index=-1; add_child(fleet_batch)
 	for i in range(16):
 		var voice=AudioStreamPlayer.new(); add_child(voice); voices.append(voice)
+	weapon_renderer=load("res://scripts/weapon_render.gd").new(); weapon_renderer.z_index=2; add_child(weapon_renderer)
 	var finish=CanvasLayer.new(); finish.layer=20; add_child(finish)
 	post=ColorRect.new(); post.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT); post.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	var material=ShaderMaterial.new(); material.shader=load("res://shaders/finish.gdshader"); post.material=material; finish.add_child(post)
@@ -869,14 +871,14 @@ func fire_weapon(trigger: Dictionary) -> void:
 	var speed=float(trigger.get("speed",700)); var lifetime=float(trigger.get("life",2))
 	var spread=float(trigger.get("spread",.1)); var pierce=int(trigger.get("pierce",0))
 	var reach=minf(2400.,maxf(120.,speed*lifetime))
-	fx.burst(player+direction*24,color,3,125)
+	fx.muzzle(player+direction*25,direction,color,1.25 if family in ["rail","beam","missile"] else 1.)
 	if family=="chain":
 		for branch in range(mini(count,8)):
 			var start=player; var hit: Array=[]
 			for bounce in range(int(trigger.get("chain_count",3))):
 				var enemy=nearest(start,hit)
 				if enemy.is_empty() or start.distance_to(enemy.at)>(reach if bounce==0 else reach*.55): break
-				fx.beam(start,enemy.at,color,7.); hit.append(enemy.uid); hurt_enemy(enemy,damage,kind,context)
+				fx.beam(start,enemy.at,color,7.,true); hit.append(enemy.uid); hurt_enemy(enemy,damage,kind,context)
 				if float(trigger.get("explosion",0))>0: explosion(enemy.at,float(trigger.explosion),damage*.5,color,kind,context,enemy.uid)
 				start=enemy.at
 	elif family=="beam":
@@ -908,7 +910,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 		explosion(target.at,105.,damage*strength,color,kind,context)
 
 func explosion(at: Vector2,radius: float,damage: float,color: Color,kind: String,context: Dictionary={},exclude_uid: int=-1) -> void:
-	fx.ring(at,color,radius,.28); fx.burst(at,color,12,280); sound("explosion",-20)
+	fx.blast(at,color,radius); sound("explosion",-20)
 	for other in enemies:
 		if other.hp>0 and int(other.uid)!=exclude_uid and other.at.distance_to(at)<radius: hurt_enemy(other,damage,kind,context)
 func shot(at: Vector2,direction: Vector2,speed: float,damage: float,color: Color,kind: String,life: float,pierce: int) -> Dictionary:
@@ -956,7 +958,12 @@ func update_bullets(delta: float) -> void:
 func hurt_enemy(enemy: Dictionary,damage: float,kind: String,context: Dictionary={},allow_procs: bool=true) -> void:
 	if damage<=0 or enemy.hp<=0 or state!="combat": return
 	var actual=minf(enemy.hp,damage); enemy.hp-=damage; enemy.flash=.09
-	if visible_world().has_point(enemy.at): fx.number(enemy.at,actual,Color("e1ebff"))
+	if visible_world().has_point(enemy.at):
+		fx.number(enemy.at,actual,Color("e1ebff"))
+		# Rate-limit repeated sustained damage on one target, purely visually.
+		if music.timeline>=float(enemy.get("impact_after",-1.)):
+			fx.impact(enemy.at,C.color(kind),damage>=40. or bool(context.get("critical",false)))
+			enemy.impact_after=music.timeline+.055
 	weapon_damage[kind]=float(weapon_damage.get(kind,0))+actual
 	if enemy.hp>0: sound("metal",-28); return
 	kills+=1; score+=100 if enemy.kind=="boss" else (12 if enemy.kind=="elite" else 1)
@@ -1072,7 +1079,7 @@ static func polygon(at: Vector2,radius: float,sides: int,angle: float=0.) -> Pac
 	return points
 func _draw() -> void:
 	if state=="title" or not background_layer.visible:
-		fleet_batch.visible=false; return
+		fleet_batch.visible=false; weapon_renderer.visible=false; return
 	var visible_rect=visible_world().grow(140.)
 	var pulse=music.pulse()
 	var batch=enemies.size()>64
@@ -1095,41 +1102,9 @@ func _draw() -> void:
 		else: ART.draw_enemy(self,enemy.at,enemy.radius,enemy.angle,enemy.kind,enemy.flash,pulse)
 		if enemy.kind=="elite":
 			draw_arc(enemy.at,enemy.radius*1.5,0,TAU*enemy.hp/enemy.max_hp,48,Color("ff9ab2"),3,true)
-	# Group each timbre's trails into a few canvas commands. Dense fire no longer
-	# creates three separate draw calls for every bullet.
-	var tips=PackedVector2Array(); var groups: Dictionary={}
-	for bullet in bullets:
-		if not visible_rect.has_point(bullet.at): continue
-		if not groups.has(bullet.kind): groups[bullet.kind]=[]
-		groups[bullet.kind].append(bullet)
-	for kind in groups:
-		var trails=PackedVector2Array(); var cores=PackedVector2Array()
-		var row=C.item(str(kind)); var family=str(row.get("family","pulse")); var color=C.color(str(kind))
-		for bullet in groups[kind]:
-			var direction: Vector2=bullet.v.normalized()
-			trails.append(bullet.at-direction*(23 if family=="missile" else 13)); trails.append(bullet.at)
-			cores.append(bullet.at-direction*9); cores.append(bullet.at)
-			tips.append(bullet.at-direction*2.); tips.append(bullet.at)
-			# Persistent entities have solid silhouettes as well as luminous trails.
-			if family in ["mine","orbit","drone","boomerang"]:
-				var angle=float(bullet.get("age",0))*5.+direction.angle()
-				var sides=3 if family=="drone" else (4 if family=="boomerang" else 6)
-				draw_colored_polygon(polygon(bullet.at,float(bullet.radius)*.75,sides,angle),Color(color,.82))
-				draw_circle(bullet.at,2.8,Color("f5ffff"))
-			elif family=="flame": draw_circle(bullet.at,6.,Color(color,.2))
-		if trails.is_empty(): continue
-		draw_multiline(trails,Color(color,.18),11.,false)
-		draw_multiline(cores,color,7. if family in ["missile","rail"] else 4.,true)
-	if not tips.is_empty(): draw_multiline(tips,Color("f8ffff"),2.2,true)
-	var hostile=PackedVector2Array(); var hostile_core=PackedVector2Array()
-	for bullet in enemy_bullets:
-		var direction: Vector2=bullet.v.normalized()
-		hostile.append(bullet.at-direction*5); hostile.append(bullet.at+direction*2)
-		hostile_core.append(bullet.at-direction*2); hostile_core.append(bullet.at+direction)
-	if not hostile.is_empty():
-		draw_multiline(hostile,Color(.8,.13,.24,.13),15.,false)
-		draw_multiline(hostile,Color("ff7694"),7.,true)
-		draw_multiline(hostile_core,Color("ffdfae"),2.3,true)
+	weapon_renderer.visible=true
+	weapon_renderer.update_projectiles(bullets,visible_rect,bool(settings.reduced_fx))
+	weapon_renderer.hazards.update_hazards(enemy_bullets,visible_rect)
 	var opacity=.45 if invulnerable>0 and invulnerable<=.8 and int(invulnerable*20)%2==0 else 1.
 	ART.draw_ship(self,player,18.,facing.angle(),selected_ship,pulse,opacity)
 	if music.timeline<overload_until:

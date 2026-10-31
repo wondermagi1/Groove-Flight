@@ -1,6 +1,6 @@
 # 验证报告入口
 
-当前V9多声部版本请查看[最新测试报告](TEST_REPORT_V9.md)。[V8超清背景](TEST_REPORT_V8.md)、[V7行星与机械巨构](TEST_REPORT_V7.md)、[V6本地MP3识谱](TEST_REPORT_V6.md)、[V5自由作曲](TEST_REPORT_V5.md)、[V4太阳系航线](TEST_REPORT_V4.md)、[V3装备与旋律记录](TEST_REPORT_V3.md)及以下V2城市舰队记录保留为历史验证，V2独立副本为`TEST_REPORT_V2.md`。
+当前V10武器渲染版本请查看[最新测试报告](TEST_REPORT_V10.md)。[V9多声部编配](TEST_REPORT_V9.md)、[V8超清背景](TEST_REPORT_V8.md)、[V7行星与机械巨构](TEST_REPORT_V7.md)、[V6本地MP3识谱](TEST_REPORT_V6.md)、[V5自由作曲](TEST_REPORT_V5.md)、[V4太阳系航线](TEST_REPORT_V4.md)、[V3装备与旋律记录](TEST_REPORT_V3.md)及以下V2城市舰队记录保留为历史验证，V2独立副本为`TEST_REPORT_V2.md`。
 
 ## v2 neon harbor / fleet verification
 
