@@ -15,6 +15,7 @@ var timer_label: Label
 var health_label: Label
 var score_label: Label
 var notice_label: Label
+var tutorial_skip: Button
 var overload_label: Label
 var boss_bar: ProgressBar
 var boss_title: Label
@@ -38,7 +39,7 @@ func box(color: Color,border: Color=Color.TRANSPARENT,radius: int=10) -> StyleBo
 	style.set_border_width_all(1); style.set_corner_radius_all(radius); style.content_margin_left=18; style.content_margin_right=18
 	style.content_margin_top=12; style.content_margin_bottom=12; return style
 func label(text_value: String,size: int=20,color: Color=Color("edf3ff")) -> Label:
-	var node=Label.new(); node.text=text_value; node.add_theme_font_size_override("font_size",size)
+	var node=Label.new(); node.text=text_value; node.add_theme_font_size_override("font_size",roundi(size*float(game.settings.get("text_scale",1.))))
 	node.add_theme_color_override("font_color",color); node.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	return node
 func button(text_value: String,callback: Callable,color: Color=Color("71e8dc"),height: float=54) -> Button:
@@ -51,6 +52,7 @@ func style_button(node: Button,color: Color) -> void:
 	node.add_theme_stylebox_override("disabled",box(Color("10151e"),Color("26313e"),7))
 	node.add_theme_color_override("font_color",Color("edf3ff")); node.add_theme_color_override("font_hover_color",Color.WHITE)
 func refresh() -> void:
+	if game.test_mode and game.simulation_only: return
 	if not is_instance_valid(root_control): return
 	# Buttons can request a new screen from inside their own pressed signal.
 	# Hide immediately, release after signal dispatch instead of freeing a lock.
@@ -152,8 +154,9 @@ func hud(include_arsenal: bool=true) -> void:
 	health_label=label("",20); health_label.position=Vector2(370,26); root_control.add_child(health_label)
 	score_label=label("",21); score_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT; score_label.position=Vector2(view.x-650,27); score_label.size=Vector2(295,32); root_control.add_child(score_label)
 	var pause=button("Ⅱ",game.pause_game,Color("8597af"),38); pause.custom_minimum_size=Vector2(44,38); pause.position=Vector2(view.x-75,23); root_control.add_child(pause)
-	var edit=button("返回作曲工坊" if game.free_music_run else "TAB  音序工坊",game.return_to_composer if game.free_music_run else game.open_editor,Color("9db4c8"),38); edit.position=Vector2(view.x-285,23); root_control.add_child(edit)
+	var edit=button("返回作曲工坊" if game.free_music_run else game.binding_name("editor")+"  音序工坊",game.return_to_composer if game.free_music_run else game.open_editor,Color("9db4c8"),38); edit.position=Vector2(view.x-285,23); root_control.add_child(edit)
 	notice_label=label("",20); notice_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER; notice_label.position=Vector2(view.x*.42,26); notice_label.size=Vector2(view.x*.22,36); root_control.add_child(notice_label)
+	tutorial_skip=button("跳过教学",game.skip_tutorial,Color("8296ab"),28); tutorial_skip.position=Vector2(view.x*.5-45.,142); root_control.add_child(tutorial_skip)
 	var boss_x=maxf(620.,view.x*.28); var boss_width=minf(view.x*.44,view.x-boss_x-25.)
 	boss_panel=Panel.new(); boss_panel.position=Vector2(boss_x,70); boss_panel.size=Vector2(boss_width,76); boss_panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	var boss_style=StyleBoxFlat.new(); boss_style.bg_color=Color(.018,.032,.052,.88); boss_style.set_corner_radius_all(5); boss_panel.add_theme_stylebox_override("panel",boss_style); root_control.add_child(boss_panel)
@@ -170,8 +173,13 @@ func update_hud() -> void:
 	timer_label.text=("%02d:%02d"%[int(game.music.timeline)/60,int(game.music.timeline)%60]) if game.free_music_run else ("BOSS" if game.wave==game.wave_count() else ("清场" if remaining<=0 else str(int(ceil(remaining)))))
 	health_label.text="无敌练习 · 不计战绩" if game.free_music_run else "生命  %.1f / %d"%[game.health,game.loadout.max_health]
 	score_label.text="✦ %d   /   击破 %d"%[game.dust,game.kills]
-	notice_label.text=game.notice if game.music.timeline<game.notice_until else ""
-	overload_label.text="E  超载就绪" if game.charge>=100 else "E  超载  %d%%"%int(game.charge)
+	notice_label.text="正在准备当前配装的音乐…" if game.music==game.standard_music and game.standard_music.compiling and not game.music.playing else (game.notice if game.music.timeline<game.notice_until else "")
+	var view=get_viewport().get_visible_rect().size
+	tutorial_skip.visible=game.tutorial_active
+	notice_label.position=Vector2(view.x*.25,76) if game.tutorial_active else Vector2(view.x*.42,26)
+	notice_label.size=Vector2(view.x*.5,58) if game.tutorial_active else Vector2(view.x*.22,36)
+	notice_label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART if game.tutorial_active else TextServer.AUTOWRAP_OFF
+	overload_label.text=game.binding_name("overload")+("  超载就绪" if game.charge>=100 else "  超载  %d%%"%int(game.charge))
 	overload_bar.value=game.charge
 	var boss: Dictionary={}
 	for enemy in game.enemies:
@@ -181,7 +189,7 @@ func update_hud() -> void:
 	if not boss.is_empty():
 		boss_bar.max_value=boss.max_hp; boss_bar.value=boss.hp
 		boss_title.text=str(PLANETS.planet(game.active_planet).bossname)+"  /  "+str(PLANETS.planet(game.active_planet).machine_type)
-		boss_caption.text="巨型机械接近 · 武器启动中" if game.music.timeline<float(boss.get("entry_until",-1.)) else ("核心过载  /  PHASE II" if boss.phase==2 else "装甲核心  /  PHASE I")
+		boss_caption.text="巨型机械接近 · 武器启动中" if game.music.timeline<float(boss.get("entry_until",-1.)) else ("核心暴露 ×1.5 / 炮塔剩余%d"%game.BOSS_SCORE.live_nodes(game,boss) if game.music.timeline<float(boss.get("core_until",-1.)) else str(boss.get("motif","装甲核心"))+" / 拆炮塔削减8%核心")
 func section_title(content: VBoxContainer,text_value: String,subtitle: String="") -> void:
 	content.add_child(label(text_value,30))
 	if not subtitle.is_empty(): content.add_child(label(subtitle,17,Color("8c9db5")))
@@ -199,10 +207,25 @@ func settings_screen() -> void:
 	var scroll=ScrollContainer.new(); scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED; scroll.custom_minimum_size.y=height-104.; shell.add_child(scroll)
 	var content=VBoxContainer.new(); content.size_flags_horizontal=Control.SIZE_EXPAND_FILL; content.add_theme_constant_override("separation",12); scroll.add_child(content)
 	section_title(content,"设置","全屏跟随显示器原生分辨率。F11 可切换全屏。")
-	for item in [["master","总音量"],["music","音乐 / 武器音符"],["sfx","拾取 / 命中音效"]]:
+	for item in [["master","总音量"],["music","乐曲总线"],["sfx","拾取 / 命中音效"],["backing","底层伴奏"],["weapons","武器声部"]]:
 		var heading=label(item[1]+"  %d%%"%int(float(game.settings[item[0]])*100),19); content.add_child(heading)
 		var slider=HSlider.new(); slider.min_value=0; slider.max_value=1; slider.step=.01; slider.value=game.settings[item[0]]
 		slider.value_changed.connect(func(value):game.settings[item[0]]=value; heading.text=item[1]+"  %d%%"%int(value*100); game.apply_audio()); content.add_child(slider)
+	var motion_label=label("背景节奏强度",19); content.add_child(motion_label)
+	var motion=HSlider.new(); motion.min_value=0.; motion.max_value=1.; motion.step=.05; motion.value=float(game.settings.background_motion)
+	motion.value_changed.connect(func(value): game.settings.background_motion=value); content.add_child(motion)
+	var scale_label=label("文字大小",19); content.add_child(scale_label)
+	var scale_slider=HSlider.new(); scale_slider.min_value=.85; scale_slider.max_value=1.20; scale_slider.step=.05; scale_slider.value=float(game.settings.text_scale)
+	scale_slider.value_changed.connect(func(value): game.settings.text_scale=value; scale_label.text="文字大小 %d%%"%int(value*100)); content.add_child(scale_slider)
+	var dynamic=CheckButton.new(); dynamic.text="低刺激混音"; dynamic.button_pressed=bool(game.settings.low_dynamic)
+	dynamic.toggled.connect(func(value): game.settings.low_dynamic=value; game.apply_audio()); content.add_child(dynamic)
+	var aiming=OptionButton.new(); aiming.add_item("自动瞄准 最近目标"); aiming.add_item("移动朝向"); aiming.add_item("固定前向")
+	aiming.select(int(game.settings.aim_mode)); aiming.item_selected.connect(func(index): game.settings.aim_mode=index); content.add_child(aiming)
+	content.add_child(label("操作映射 点击后按新按键 Esc取消",18))
+	for action in ["left","right","up","down","dash","overload","editor","pause"]:
+		var caption={"left":"左移","right":"右移","up":"上移","down":"下移","dash":"冲刺","overload":"超载","editor":"音序工坊","pause":"暂停"}[action]
+		content.add_child(button("等待按键…" if game.binding_capture==action else caption+"  "+game.binding_name(action),game.capture_binding.bind(action),Color("9abacf"),36))
+	content.add_child(button("补看操作教学",func():game.replay_tutorial(); game.close_settings(),Color("a9cdd8"),36))
 	content.add_child(label("星球背景画质",19))
 	var quality=OptionButton.new(); quality.name="BackdropQuality"; quality.custom_minimum_size.y=42
 	for entry in ["标准 · 基础光照","高 · 云层与夜景","超清 · 最高8K贴图与完整光照"]: quality.add_item(entry)
@@ -219,11 +242,17 @@ func settings_screen() -> void:
 	content.add_child(label("背景素材：Solar System Scope / INOVE · CC BY4.0",14,Color("758da3")))
 	shell.add_child(button("保存并返回",game.close_settings))
 func results_screen() -> void:
-	var content=panel(700,620)
+	var shell=panel(760,minf(850.,get_viewport().get_visible_rect().size.y-48.))
+	var scroll=ScrollContainer.new(); scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.custom_minimum_size.y=minf(770.,get_viewport().get_visible_rect().size.y-128.); shell.add_child(scroll)
+	var content=VBoxContainer.new(); content.add_theme_constant_override("separation",14); content.size_flags_horizontal=Control.SIZE_EXPAND_FILL; scroll.add_child(content)
 	var destination=PLANETS.planet(game.active_planet)
 	section_title(content,destination.name+(" · 航线突破" if game.state=="victory" else " · 信号中断"),str(destination.cleartext) if game.state=="victory" else "重新编排后，可以再次挑战这条航线。")
 	content.add_child(label("击破 %d   /   得分 %d   /   最佳 %d"%[game.kills,game.score,game.best],24))
 	content.add_child(label("抵达第 %d 波  /  完成 %d 次节拍触发"%[game.wave,game.actual_steps],18,Color("95a8bf")))
+	content.add_child(label("种子 %d / 承伤 %.1f / %s"%[game.run_seed,game.receipt.received,game.receipt.death_reason if game.state=="defeat" else "奖励已确认 音乐正在收尾"],17,Color("93abbc")))
+	for wave_record in game.receipt.waves:
+		content.add_child(label("第%d波 %.1f秒 / 生成%d / 撤退%d / 星屑%d"%[wave_record.wave,wave_record.seconds,wave_record.spawned,wave_record.retreated,wave_record.dust],16,Color("829bb2")))
 	var kinds=game.weapon_damage.keys(); kinds.sort_custom(func(a,b):return game.weapon_damage[a]>game.weapon_damage[b])
 	for kind in kinds.slice(0,4):
 		var name=DATA.item(str(kind)).get("name", "超载爆发" if kind=="overload" else "连锁效果")

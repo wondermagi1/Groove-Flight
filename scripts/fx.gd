@@ -87,3 +87,13 @@ func _draw() -> void:
 	if not vertices.is_empty():
 		var arrays=[]; arrays.resize(Mesh.ARRAY_MAX); arrays[Mesh.ARRAY_VERTEX]=vertices; arrays[Mesh.ARRAY_COLOR]=colors
 		fragments.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays); draw_mesh(fragments,null)
+
+func death(at: Vector2,color: Color,kind: String,axis: Vector2) -> void:
+	var heavy=kind in ["armor","elite","boss","sentinel"]
+	impact(at,Color.WHITE.lerp(color,.3),heavy)
+	var count=4 if reduced else (14 if heavy else 7)
+	for i in range(count):
+		if particles.size()>=(240 if reduced else 850): break
+		var direction=axis.rotated(randf_range(-1.1,1.1))
+		var duration=.28 if heavy else .16
+		particles.append({"at":at,"velocity":direction*randf_range(90.,330.),"life":duration,"max":duration,"color":Color("d4e6ed").lerp(color,.35),"size":randf_range(3.,7.) if heavy else randf_range(1.,3.)})

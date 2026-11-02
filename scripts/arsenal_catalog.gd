@@ -53,7 +53,7 @@ static func _support(id: String,name: String,category: String,rarity: int,cost: 
 	_add({"id":id,"name":name,"category":category,"detail":("" if flavor.is_empty() else flavor+"\n")+"；".join(descriptions)+"。","rarity":rarity,"cost":cost,"width":width,"color":color_value,"tags":[str(CATEGORY_NAMES[category]),{"ballistic":"弹道","energy":"能量","power":"动力","support":"支援"}[attr]],"voice":"","attr":attr,"rules":rules})
 
 static func _build() -> void:
-	_build_weapons(); _build_mods(); _build_rhythm(); _build_defense(); _build_cores()
+	_build_weapons(); _build_mods(); _build_rhythm(); _build_defense(); _build_cores(); _upgrade_trajectories()
 	assert(_records.size()==240,"Arsenal must contain exactly 240 independent items")
 
 static func _build_weapons() -> void:
@@ -310,6 +310,10 @@ static func _number(value: float) -> String:
 	while out.ends_with("0"): out=out.left(-1)
 	return out.left(-1) if out.ends_with(".") else out
 static func describe_rule(rule: Dictionary) -> String:
+	if str(rule.get("type",""))=="trajectory":
+		var labels={"count_per_attribute":"每点归属属性增加弹数 向下取整","chain_per_attribute":"每点归属属性增加传导次数 向下取整","split_count":"命中四向衍生 深度最多2 单发26%伤害","accel_forward":"前向加速度","accel_side":"侧向加速度","offset_forward":"出生点前移","offset_side":"出生点侧移","turn_after":"延时转向秒数","turn_deg":"转向角度","conduct":"能量标记3秒 电弧引爆倍率"}
+		return str(labels.get(str(rule.key),str(rule.key)))+("" if str(rule.key)=="split_count" else " "+_number(float(rule.value)))+" · "+str(rule.get("scope","all"))
+
 	var scope={"all":"全舰","row":"同轨","neighbor":"相邻物品"}.get(rule.scope,"全舰")
 	var condition={"always":"","even":"偶数拍·","odd":"奇数拍·","first":"第1拍·","final":"第8拍·"}.get(rule.condition,"")
 	var target=""
@@ -325,3 +329,23 @@ static func describe_rule(rule: Dictionary) -> String:
 	if key=="repeat": amount+="次（同拍）"
 	if key=="explosion": amount+="像素"
 	return str(scope)+"·"+str(condition)+str(target)+str(names.get(key,key))+amount
+
+static func _upgrade_trajectories() -> void:
+	# Original IDs, prices and ownership stay compatible.
+	var upgrades={
+		"r_cross":[_rule("trajectory","split_count",4,"row","ballistic"),_rule("trajectory","count_per_attribute",.50,"row","ballistic"),_rule("weapon","spread_percent",3.,"row","ballistic")],
+		"r_velocity":[_rule("trajectory","accel_forward",180,"row")],
+		"r_treble_flight":[_rule("trajectory","accel_side",160,"row","power")],
+		"r_zigzag":[_rule("trajectory","turn_after",.55,"row","power"),_rule("trajectory","turn_deg",65,"row","power")],
+		"r_mirror":[_rule("trajectory","offset_forward",70,"row","","final")],
+		"r_opposites":[_rule("trajectory","offset_side",-38,"row","","odd"),_rule("trajectory","offset_side",38,"row","","even")],
+		"r_arc_bridge":[_rule("trajectory","conduct",.28,"row","energy"),_rule("trajectory","count_per_attribute",.12,"row","energy"),_rule("trajectory","chain_per_attribute",.10,"row","energy")],
+		"r_slow_groove":[_rule("trajectory","accel_forward",260,"row","power"),_rule("trajectory","count_per_attribute",.12,"row","power")]
+	}
+	for id in upgrades:
+		var row: Dictionary=_lookup[id]
+		if id=="r_cross": row.rules=row.rules.filter(func(rule):return not (str(rule.type)=="beat" and str(rule.key)=="rotate"))
+		for rule in upgrades[id]: row.rules.append(rule)
+		var descriptions: Array[String]=[]
+		for rule in row.rules: descriptions.append(describe_rule(rule))
+		row.detail="；".join(descriptions)+"。"

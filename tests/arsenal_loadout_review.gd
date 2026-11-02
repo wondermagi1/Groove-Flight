@@ -28,7 +28,7 @@ func catalog_contracts() -> void:
 		check(not ids.has(row.id),"unique item ID / "+str(row.id)); ids[row.id]=true
 		check(int(row.width)>=1 and int(row.width)<=3 and int(row.cost)>0 and int(row.rarity)>=0 and int(row.rarity)<=3,"legal inventory/shop dimensions / "+str(row.id))
 		for rule in row.get("rules",[]):
-			var allowed: Array={"stat":L.STAT_KEYS,"weapon":L.WEAPON_KEYS,"beat":L.BEAT_KEYS,"event":L.EVENT_KEYS}.get(str(rule.type),[])
+			var allowed: Array={"stat":L.STAT_KEYS,"weapon":L.WEAPON_KEYS,"beat":L.BEAT_KEYS,"event":L.EVENT_KEYS,"trajectory":L.TRAJECTORY_KEYS}.get(str(rule.type),[])
 			check(str(rule.key) in allowed and str(rule.scope) in ["all","row","neighbor"] and str(rule.condition) in ["always","first","final","odd","even"],"runtime supports rule / "+str(row.id)+":"+str(rule.key))
 			used_keys[str(rule.type)+":"+str(rule.key)]=true
 		if row.category=="weapon":
@@ -163,7 +163,7 @@ func schedule_contracts() -> void:
 		for i in range(mini(8,emitted.size())): pitches.append(emitted[i].pitch)
 		check(pitches==row.melody,"weapon advances its independent motif only when it fires / "+str(row.id))
 		unique_melodies[str(pitches)]=true
-		check(snapshot(value)==before and value.schedule(0)==value.schedule(512),"schedule is pure and512-step-periodic / "+str(row.id))
+		check(snapshot(value)==before and musical_payload(value.schedule(0))==musical_payload(value.schedule(512)),"schedule is pure and512-step-periodic / "+str(row.id))
 		check(value.trigger(1).is_empty() if int(row.width)>1 else true,"wide item tail never emits duplicate event / "+str(row.id))
 		timings[row.id]={"charge":row.charge,"events":emitted.size(),"first_serial":emitted[0].serial,"motif":pitches}
 	check(unique_melodies.size()==32,"all32 weapons have different eight-note motifs")
@@ -199,3 +199,9 @@ func randomized_transactions() -> void:
 		if not value.valid() or value.modules.size()!=count_before: all_valid=false; break
 	check(all_valid and rejected_atomic,"1600 seeded mixed-width moves/unequips retain ownership and reject invalid drops atomically")
 	facts.randomized_operations=1600
+
+func musical_payload(events: Array) -> Array:
+	var values=events.duplicate(true)
+	for event in values:
+		for key in ["clock","event_id","root_event","serial","deadline"]: event.erase(key)
+	return values

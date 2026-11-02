@@ -114,7 +114,7 @@ func run() -> void:
 	check(error<.06,"all musical duties retain native-clock onset accuracy below60ms")
 	check(game.bullets.size()>1,"arranged note events create real projectiles rather than cosmetic sound changes")
 	game.sound_times.erase("kill"); game.sound("kill",-10.)
-	var trial_impact=game.voices[(game.voice_index-1)%game.voices.size()].volume_db
+	var trial_impact=game.mixer.last_player.volume_db
 	await RenderingServer.frame_post_draw
 	root.get_texture().get_image().save_png("res://docs/screenshots/v9-orchestration-trial.png")
 	await create_timer(.65).timeout
@@ -122,7 +122,7 @@ func run() -> void:
 	game.return_to_composer(); await frames()
 	check(game.composer_holds.is_empty() and not game.free_music_run,"leaving trial clears held attacks and restores ordinary audio lifecycle")
 	game.sound_times.erase("kill"); game.sound("kill",-10.)
-	var ordinary_impact=game.voices[(game.voice_index-1)%game.voices.size()].volume_db
+	var ordinary_impact=game.mixer.last_player.volume_db
 	check(is_equal_approx(ordinary_impact-trial_impact,16.),"real impact player sits16dB below ordinary combat during score flight")
 	facts.roles_seen=seen.keys(); facts.max_onset_error=error; facts.demo_seconds=duration
 	game.return_title(); player.stop_song(); game.standard_music.stop()

@@ -9,8 +9,13 @@ const BACKDROP_ASSETS=preload("res://scripts/planet_backdrop_assets.gd")
 const PLAN=preload("res://scripts/wave_plan.gd")
 const PLANETS=preload("res://scripts/planet_catalog.gd")
 const SCORE=preload("res://scripts/composer_score.gd")
+const CLOCK=preload("res://scripts/music_clock.gd")
+const FORMATION=preload("res://scripts/formation_motion.gd")
+const BOSS_SCORE=preload("res://scripts/boss_score.gd")
+const RECEIPT=preload("res://scripts/combat_receipt.gd")
+const PATHS=preload("res://scripts/build_paths.gd")
 const MAX_ENEMIES=640
-const MAX_BULLETS=1200
+const MAX_BULLETS=4096
 const MAX_ENEMY_BULLETS=700
 const GRID=96.
 const MAX_PROJECTILE_RADIUS=13.
@@ -76,6 +81,8 @@ var dash_dir: Vector2=Vector2.UP
 var charge: float=0
 var overload_until: float=-1
 var wave: int=0
+var wave_spawn_start: int=0
+var wave_picked_start: int=0
 var wave_start: float=0
 var spawned: int=0
 var elite_spawned: bool=false
@@ -106,15 +113,34 @@ var shop_reroll_cost: int=8
 var editor_return: String="combat"
 var notice: String=""
 var notice_until: float=0
-var settings={"master":.75,"music":.75,"sfx":.55,"reduced_fx":false,"fullscreen":true,"background_quality":2,"background_exposure":.9,"panel_attributes":true,"panel_status":true,"panel_buffs":true,"panel_inventory":true,"panel_sequencer":true,"combat_panel_attributes":false,"combat_panel_status":false,"combat_panel_buffs":false,"combat_panel_inventory":false,"combat_panel_sequencer":true}
+var settings={"backing":.45,"weapons":.34,"background_motion":.55,"text_scale":1.,"low_dynamic":false,"starting_path":0,"aim_mode":0,"input_bindings":{},"tutorial_done":false,"tutorial_skipped":false,"master":.75,"music":.75,"sfx":.55,"reduced_fx":false,"fullscreen":true,"background_quality":2,"background_exposure":.9,"panel_attributes":true,"panel_status":true,"panel_buffs":true,"panel_inventory":true,"panel_sequencer":true,"combat_panel_attributes":false,"combat_panel_status":false,"combat_panel_buffs":false,"combat_panel_inventory":false,"combat_panel_sequencer":true}
 var voices: Array[AudioStreamPlayer]=[]
 var voice_index: int=0
 var sound_times: Dictionary={}
 var test_mode: bool=false
+var is_preview: bool=false
+var simulation_only: bool=false
+var receipt=RECEIPT.new()
+var mixer
+var lab
+var pending_triggers: Array=[]
+var pending_projectiles: Array=[]
+var root_budgets: Dictionary={}
+var results_tail: float=-1.
+var run_seed: int=0
+var tutorial_stage: int=0
+var tutorial_active: bool=false
+var tutorial_origin=Vector2.ZERO
+var tutorial_retimed: bool=false
+var last_damage_reason: String=""
+var binding_capture: String=""
+var pending_resume: String=""
+
 
 func _ready() -> void:
-	test_mode="--beatdrift-test" in OS.get_cmdline_user_args()
-	bind_input(); loadout.reset(); load_settings()
+	test_mode=is_preview or "--beatdrift-test" in OS.get_cmdline_user_args()
+	if not is_preview: bind_input()
+	loadout.reset(); load_settings(); apply_input_bindings()
 	background_layer=CanvasLayer.new(); background_layer.layer=-20; add_child(background_layer)
 	var back=ColorRect.new(); back.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	background=ShaderMaterial.new(); background.shader=load("res://shaders/planet_uhd.gdshader"); back.material=background
@@ -122,6 +148,7 @@ func _ready() -> void:
 	back.mouse_filter=Control.MOUSE_FILTER_IGNORE; background_layer.add_child(back)
 	music=load("res://scripts/music.gd").new(); add_child(music); music.step_fired.connect(on_step)
 	standard_music=music
+	standard_music.prepared.connect(_prepared_resume)
 	composer_player=load("res://scripts/composer_player.gd").new(); add_child(composer_player)
 	composer_player.step_fired.connect(on_step)
 	composer_player.event_fired.connect(on_composer_note)
@@ -137,6 +164,7 @@ func _ready() -> void:
 		if restored.ok: composer_status="已恢复上次的作曲草稿。"
 	fx=load("res://scripts/fx.gd").new(); fx.z_index=8; add_child(fx)
 	fleet_batch=load("res://scripts/fleet_batch.gd").new(); fleet_batch.z_index=-1; add_child(fleet_batch)
+	mixer=load("res://scripts/event_mixer.gd").new(); add_child(mixer)
 	for i in range(16):
 		var voice=AudioStreamPlayer.new(); add_child(voice); voices.append(voice)
 	weapon_renderer=load("res://scripts/weapon_render.gd").new(); weapon_renderer.z_index=2; add_child(weapon_renderer)
@@ -147,6 +175,7 @@ func _ready() -> void:
 	player=get_viewport_rect().size*Vector2(.5,.58)
 	camera=Camera2D.new(); camera.position_smoothing_enabled=true; camera.position_smoothing_speed=9
 	camera.zoom=Vector2.ONE*.9; camera.enabled=false; add_child(camera)
+	if is_preview: ui.root_control.hide()
 	if not test_mode:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if settings.fullscreen else DisplayServer.WINDOW_MODE_WINDOWED)
 	apply_audio(); apply_background_quality(); ui.refresh()
@@ -217,6 +246,9 @@ func apply_audio() -> void:
 	if is_instance_valid(standard_music): standard_music.volume_db=level
 	if is_instance_valid(composer_player): composer_player.volume_db=level
 	fx.reduced=bool(settings.reduced_fx)
+	standard_music.backing_gain=float(settings.backing); standard_music.weapon_gain=float(settings.weapons)
+	if is_instance_valid(mixer): mixer.gain=float(settings.master)*float(settings.sfx); mixer.low_dynamic=bool(settings.low_dynamic)
+
 func apply_background_quality() -> void:
 	settings.background_quality=clampi(int(settings.get("background_quality",2)),0,2)
 	settings.background_exposure=clampf(float(settings.get("background_exposure",.9)),.35,1.25)
@@ -229,17 +261,14 @@ func set_background_quality(value: int) -> void:
 func set_background_exposure(value: float) -> void:
 	settings.background_exposure=value; apply_background_quality(); save_settings()
 func sound(id: String,volume: float=-10.,pitch: float=1.) -> void:
-	if voices.is_empty(): return
+	if not is_instance_valid(mixer): return
 	var now=Time.get_ticks_msec()*.001
-	if now-float(sound_times.get(id,-10))<(.1 if id in ["kill","metal","explosion"] else .035): return
+	if now-float(sound_times.get(id,-10))<(.075 if id in ["kill","metal","explosion"] else .035): mixer.counters.limited+=1; return
 	sound_times[id]=now
-	var voice=voices[voice_index%voices.size()]; voice_index+=1
+	if free_music_run: volume-=16. if id in ["kill","metal","explosion","pickup"] else 4.
 	var sources={"kill":"legacy/paper-kill.wav","dash":"legacy/paper-dash.wav","metal":"legacy/metal-hit.wav","explosion":"legacy/low-explosion.ogg"}
-	voice.stream=load("res://audio/"+str(sources.get(id,id+".wav"))); voice.pitch_scale=pitch
-	# In free-score flight the instruments carry the rhythm. Automatic impact
-	# thumps sit behind them instead of drowning out every musical voice.
-	if free_music_run: volume-=16. if id in ["kill","metal","explosion","pickup"] else 6.
-	voice.volume_db=volume+linear_to_db(maxf(.0001,float(settings.master)*float(settings.sfx))); voice.play()
+	var group="alert" if id in ["hit","reward"] else ("hit" if id in ["metal","explosion"] else ("kill" if id=="kill" else "ui"))
+	mixer.play(load("res://audio/"+str(sources.get(id,id+".wav"))),group,volume,pitch)
 
 func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=false) -> void:
 	composer_holds.clear(); composer_player.stop_song(); standard_music.stop(); standard_music._running=false
@@ -254,12 +283,18 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	background.set_shader_parameter("sky_tint",planet_rules.sky_tint)
 	BACKDROP_ASSETS.apply(background,active_planet,int(settings.background_quality),float(settings.background_exposure))
 	leave_hub()
+	receipt.reset(); pending_triggers.clear(); pending_projectiles.clear(); root_budgets.clear(); results_tail=-1.; pending_resume=""
+	if is_instance_valid(lab): lab.deactivate()
 	if seed_value==0: rng.randomize()
 	else: rng.seed=seed_value
+	run_seed=rng.seed
 	loadout.reset(); enemies.clear(); by_id.clear(); spatial.clear(); bullets.clear(); enemy_bullets.clear(); pickups.clear(); warnings.clear()
 	var craft=FLEET.ship(selected_ship); selected_ship=str(craft.id)
 	selected_pilot=str(FLEET.pilot(selected_pilot).id)
 	loadout.set_fleet(craft,FLEET.pilot(selected_pilot)); loadout.set_starters(craft.start_modules)
+	var path_index=clampi(int(settings.starting_path),0,3)
+	if path_index>0:
+		loadout.set_starters([["pulse","scatter","r_cross","c_ballistic"],["beam","chain","r_arc_bridge","c_energy"],["missile","mine","r_slow_groove","c_power"]][path_index-1])
 	refresh_loadout_stats()
 	move_speed=float(craft.speed); dash_recharge=float(craft.dash_cooldown)
 	fx.particles.clear(); fx.marks.clear(); fire_log.clear(); weapon_damage.clear()
@@ -274,13 +309,19 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 		if not composer_player.begin(composer_score,true): _composer_failed(str(composer_player.last_error))
 		ui.refresh()
 	else:
-		state="combat"; music.begin(loadout); begin_wave(); ui.refresh()
+		state="combat"
+		if not (test_mode and simulation_only): music.begin(loadout)
+		else: music.timeline=0.; music.loop_count=0; music.last_step=-1
+		begin_wave(); ui.refresh()
+		tutorial_active=not test_mode and not bool(settings.tutorial_done) and not bool(settings.tutorial_skipped) and active_planet=="mercury"; tutorial_stage=0; tutorial_origin=player; tutorial_retimed=false
 func begin_wave() -> void:
-	wave+=1; wave_start=music.timeline; spawned=0; elite_spawned=false; reward_taken=false
+	pending_triggers.clear(); pending_projectiles.clear()
+	wave+=1; wave_start=music.timeline; wave_spawn_start=total_spawned; wave_picked_start=picked; spawned=0;
+	planet_rules=PLANETS.wave_rules(active_planet,wave); elite_spawned=false; reward_taken=false
 	enemy_bullets.clear(); warnings.clear()
 	if wave==wave_count() and not free_music_run:
 		boss_anchor=(player+Vector2(0,-390)).clamp(field().position+Vector2.ONE*340,field().end-Vector2.ONE*340)
-		spawn_enemy("boss",boss_anchor); sound("metal",-13,.55)
+		var boss=spawn_enemy("boss",boss_anchor); BOSS_SCORE.install(self,boss); sound("metal",-13,.55)
 	notice=PLANETS.planet(active_planet).name+" / "+str(wave_profile().name); notice_until=music.timeline+2.
 	if free_music_run: notice="乐谱试飞 · 无敌练习 · 不计航线战绩"; notice_until=INF
 
@@ -295,6 +336,8 @@ func open_composer() -> void:
 	# untouched legacy mappings; the original file is backed up before saving.
 	if composer_needs_arrangement(): composer_arrange(false)
 func _restore_standard_music() -> void:
+	if is_instance_valid(lab): lab.deactivate()
+	pending_resume=""
 	composer_holds.clear(); composer_pending_battle=false; composer_player.stop_song()
 	standard_music.stop(); standard_music._running=false; music=standard_music; free_music_run=false
 func close_composer() -> void:
@@ -533,29 +576,52 @@ func open_editor() -> void:
 	if free_music_run: pause_game(); return
 	if state not in ["combat","reward"]: return
 	editor_return=state; state="editor"; editing_changed=false; selected_uid=-1; music.hold(true); ui.refresh()
+	standard_music.prepare(loadout)
 func close_editor() -> void:
 	if state!="editor" or loadout.equipped_weapons()==0: return
-	if editing_changed and editor_return=="combat": music.rebuild(loadout)
+	if editing_changed and editor_return=="combat":
+		if not standard_music.has_prepared(loadout):
+			pending_resume="editor"; standard_music.prepare(loadout)
+			if is_instance_valid(lab): lab.deactivate()
+			return
+		music.rebuild(loadout); resync_pending()
+	if is_instance_valid(lab): lab.deactivate()
 	state=editor_return; music.hold(state!="combat"); selected_uid=-1; ui.refresh()
 func move_module(uid: int,at: int) -> void:
 	if not can_edit(): return
-	if loadout.move_module(uid,at): editing_changed=true; selected_uid=-1; refresh_loadout_stats(); sound("pickup",-17); ui.refresh()
+	var previous=loadout.equipped_head(uid)
+	if loadout.move_module(uid,at):
+		if at>=0 and (previous<0 or previous%8!=at%8) and str(loadout.find(uid).get("kind","")) in C.weapons().map(func(row):return str(row.id)): tutorial_retimed=true
+		editing_changed=true; selected_uid=-1; refresh_loadout_stats(); prepare_loadout(); sound("pickup",-17); ui.refresh()
 func select_module(uid: int) -> void:
 	if loadout.find(uid).is_empty(): return
 	selected_uid=uid
 func unequip_module(uid: int) -> bool:
 	if not can_edit() or not loadout.unequip_uid(uid): return false
-	editing_changed=true; selected_uid=uid; refresh_loadout_stats(); sound("pickup",-18); ui.refresh(); return true
+	editing_changed=true; selected_uid=uid; refresh_loadout_stats(); prepare_loadout(); sound("pickup",-18); ui.refresh(); return true
 func buy_offer(index: int) -> bool:
 	if state!="reward" or index<0 or index>=shop_offers.size(): return false
 	var transaction=loadout.buy(shop_offers[index],dust)
 	if not transaction.ok: return false
 	dust-=int(transaction.cost); shop_offers[index].sold=true; selected_uid=int(transaction.uid)
-	editing_changed=true; refresh_loadout_stats(); sound("reward",-15); ui.refresh(); return true
+	editing_changed=true; refresh_loadout_stats(); prepare_loadout(); sound("reward",-15); ui.refresh(); return true
 func shop_reroll() -> bool:
 	if state!="reward" or dust<shop_reroll_cost: return false
-	dust-=shop_reroll_cost; shop_reroll_cost+=4; shop_offers=loadout.make_shop(rng,wave)
+	var locked: Array=[]
+	for offer in shop_offers:
+		if bool(offer.get("locked",false)) and not bool(offer.get("sold",false)): locked.append(offer.duplicate(true))
+	if locked.size()==shop_offers.size(): return false
+	var excluded: Array=[]
+	for offer in locked: excluded.append(str(offer.id))
+	var pool=loadout.make_shop(rng,wave,excluded)
+	var replacement: Array=[]; var next=0
+	for i in range(6):
+		var offer: Dictionary=shop_offers[i] if i<shop_offers.size() else {}
+		if bool(offer.get("locked",false)) and not bool(offer.get("sold",false)): replacement.append(offer)
+		else: replacement.append(pool[next]); next+=1
+	dust-=shop_reroll_cost; shop_reroll_cost+=4; shop_offers=replacement
 	sound("pickup",-15); ui.refresh(); return true
+
 func can_salvage(uid: int) -> bool:
 	var chosen=loadout.find(uid)
 	if not can_edit() or chosen.is_empty(): return false
@@ -570,12 +636,16 @@ func salvage_module(uid: int) -> bool:
 	if not can_salvage(uid): return false
 	var refund=loadout.salvage(uid)
 	if refund<=0: return false
-	dust+=refund; selected_uid=-1; editing_changed=true; refresh_loadout_stats(); sound("pickup",-15); ui.refresh(); return true
+	dust+=refund; selected_uid=-1; editing_changed=true; refresh_loadout_stats(); prepare_loadout(); sound("pickup",-15); ui.refresh(); return true
 func merge_module(uid: int) -> bool:
 	if not can_edit() or not loadout.merge(uid): return false
-	selected_uid=uid; editing_changed=true; refresh_loadout_stats(); sound("reward",-14); ui.refresh(); return true
+	selected_uid=uid; editing_changed=true; refresh_loadout_stats(); prepare_loadout(); sound("reward",-14); ui.refresh(); return true
 func continue_wave() -> bool:
 	if state!="reward" or loadout.equipped_weapons()==0: return false
+	if is_instance_valid(lab): lab.deactivate()
+	if test_mode and simulation_only:
+		refresh_loadout_stats(); editing_changed=false; selected_uid=-1; state="combat"; begin_wave(); return true
+	if not standard_music.has_prepared(loadout): pending_resume="wave"; standard_music.prepare(loadout); return true
 	refresh_loadout_stats(); music.rebuild(loadout); editing_changed=false
 	selected_uid=-1; state="combat"; music.hold(false); begin_wave(); ui.refresh(); return true
 func select_slot(at: int) -> void:
@@ -600,8 +670,13 @@ func show_settings() -> void:
 	if state=="combat": music.hold(true)
 	state="settings"; ui.refresh()
 func close_settings() -> void:
-	save_settings(); state=previous_state; music.hold(state in ["paused","reward","editor"]); ui.refresh()
+	save_settings(); state=previous_state
+	if music==standard_music and state in ["combat","paused"]:
+		music.rebuild(loadout); resync_pending()
+	music.hold(state in ["paused","reward","editor"]); ui.refresh()
 func return_title() -> void:
+	pending_resume=""
+	if is_instance_valid(lab): lab.deactivate()
 	if state in ["composer","composer_loading"]: _save_composer_draft()
 	_restore_standard_music()
 	leave_hub()
@@ -610,6 +685,11 @@ func return_title() -> void:
 	enemies.clear(); by_id.clear(); spatial.clear(); pending_splits.clear(); bullets.clear(); enemy_bullets.clear(); warnings.clear(); pickups.clear()
 	fx.particles.clear(); fx.marks.clear(); ui.refresh()
 func _unhandled_input(event: InputEvent) -> void:
+	if is_preview: return
+	if not binding_capture.is_empty() and event is InputEventKey and event.pressed and not event.echo:
+		if event.physical_keycode!=KEY_ESCAPE:
+			settings.input_bindings[binding_capture]=event.physical_keycode; apply_input_bindings(); save_settings()
+		binding_capture=""; ui.refresh(); get_viewport().set_input_as_handled(); return
 	if event is InputEventKey and event.echo: return
 	if event.is_action_pressed("fullscreen"):
 		settings.fullscreen=DisplayServer.window_get_mode()!=DisplayServer.WINDOW_MODE_FULLSCREEN
@@ -627,7 +707,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event is InputEventKey and event.pressed and event.physical_keycode==KEY_R and state in ["defeat","victory"]: start_run(0,active_planet)
 
 func _physics_process(delta: float) -> void:
-	if state!="combat": return
+	if is_preview or state!="combat": return
 	invulnerable=maxf(0,invulnerable-delta); dash_cooldown=maxf(0,dash_cooldown-delta)
 	var input=Input.get_vector("left","right","up","down")
 	if input.length_squared()>.01: movement_facing=input.normalized()
@@ -658,13 +738,25 @@ func overload() -> bool:
 	sound("reward",-5,.72); return true
 
 func _process(delta: float) -> void:
-	background.set_shader_parameter("travel",float(Time.get_ticks_msec())*.00015)
+	background.set_shader_parameter("travel",music.timeline*.15 if state in ["combat","editor","reward","paused"] else float(Time.get_ticks_msec())*.00015)
+	background.set_shader_parameter("music_pulse",music.pulse()*float(settings.background_motion) if state=="combat" else 0.)
+	if results_tail>0. and Time.get_ticks_msec()*.001>results_tail:
+		music.volume_db=move_toward(music.volume_db,-55.,delta*24.)
+		if music.volume_db<=-54.: music.stop(); music._running=false; results_tail=-1.
+	update_tutorial()
+
 	background.set_shader_parameter("world_position",camera.position if camera.enabled else Vector2.ZERO)
 	if state=="combat":
 		var dt=minf(delta,.06)
 		health=minf(float(stats_snapshot.max_health),health+float(stats_snapshot.regen)*dt)
 		if music.timeline>=shield_until: shield_points=0
-		update_composer_holds(); update_enemies(dt); rebuild_spatial(); update_bullets(dt); update_enemy_bullets(dt); update_warnings(); update_pickups(dt)
+		flush_triggers(); update_composer_holds(); update_enemies(dt)
+		if state!="combat": return
+		rebuild_spatial(); update_bullets(dt); update_enemy_bullets(dt)
+		if state!="combat": return
+		update_warnings()
+		if state!="combat": return
+		update_pickups(dt)
 		# Kill explosions are queued so large chains never recurse through a
 		# partially iterated enemy list. Secondary explosions cannot self-proc.
 		var proc_budget=0
@@ -697,9 +789,9 @@ func on_step(index: int,serial: int,deadline: float) -> void:
 	if index==0: health=minf(float(stats_snapshot.max_health),health+float(event_snapshot.get("heal_bar",0)))
 	for trigger in loadout.advance_step(index,serial):
 		if str(trigger.family)=="support": continue
-		fire_log.append({"step":index,"track":int(trigger.slot)/8,"uid":trigger.uid,"serial":serial,"deadline":deadline,"actual":music.timeline,"kind":trigger.kind,"voice":trigger.voice,"pitch":trigger.get("pitch",index),"pilot":trigger.get("pilot",""),"repeat_index":trigger.get("repeat_index",0)})
-		if fire_log.size()>480: fire_log.pop_front()
-		fire_weapon(trigger)
+		if float(trigger.get("offset_seconds",0.))<=0.: dispatch_trigger(trigger)
+		else: pending_triggers.append(trigger)
+
 	if pending_dash_missiles>0:
 		var missiles=mini(12,pending_dash_missiles); pending_dash_missiles=0
 		var event=C.item("missile").duplicate(true); event.kind="missile"; event.extra=0; event.count=missiles; event.angle=0.; event.chord=false; event.events=event_snapshot; event.uid=-1
@@ -713,6 +805,7 @@ func play_note(voice_id: String,pitch: int,volume: float=-18.) -> void:
 	voice.volume_db=volume+linear_to_db(maxf(.0001,float(settings.master)*float(settings.sfx))); voice.play()
 
 func spawn_for_step(serial: int) -> void:
+	if is_preview: return
 	if free_music_run:
 		if serial%8!=0 or enemies.size()>=120: return
 		var outward=movement_facing.rotated(rng.randf_range(-1.2,1.2)); var origin=spawn_origin(outward)
@@ -727,16 +820,21 @@ func spawn_for_step(serial: int) -> void:
 				if enemies.size()<MAX_ENEMIES: spawn_enemy("dart" if i%3==0 else "mote")
 		return
 	var config=wave_profile(); var elapsed=music.timeline-wave_start
+	receipt.count("spawn_checks")
 	var opening=30+wave*6
 	var desired=mini(int(config.budget),opening+int((elapsed+1.)/float(config.seconds)*int(config.budget)))
 	var amount=mini(48,desired-spawned)
 	if amount<6 and desired<int(config.budget): return
 	var outward=movement_facing.rotated(rng.randf_range(-.8,.8)) if rng.randf()<.72 else Vector2.from_angle(rng.randf()*TAU)
-	var origin=spawn_origin(outward)
+	var placement=formation_spawn_frame(outward,amount,str(config.formation))
+	outward=placement.axis
+	var origin: Vector2=placement.origin
 	for i in range(amount):
 		if enemies.size()>=MAX_ENEMIES: break
 		var point=PLAN.formation(origin,outward,i,amount,str(config.formation))
-		spawn_enemy(PLANETS.kind(active_planet,wave-1,spawned),safe_spawn_position(point,outward)); spawned+=1
+		var enemy=spawn_enemy(PLANETS.kind(active_planet,wave-1,spawned),safe_spawn_position(point,outward))
+		if not enemy.is_empty(): FORMATION.attach(enemy,origin,outward,str(config.formation),i,music.timeline,int(PLANETS.planet(active_planet).index))
+		spawned+=1
 	if config.elite and not elite_spawned and elapsed>float(config.seconds)*.40 and enemies.size()<MAX_ENEMIES:
 		elite_spawned=true; spawn_enemy("elite")
 
@@ -756,7 +854,7 @@ func safe_spawn_position(point: Vector2,outward: Vector2) -> Vector2:
 		if not safe.has_point(candidate): return candidate
 	return bounds.position if bounds.position.distance_squared_to(player)>bounds.end.distance_squared_to(player) else bounds.end
 func spawn_enemy(kind: String,position: Vector2=Vector2.INF) -> Dictionary:
-	if enemies.size()>=MAX_ENEMIES: return {}
+	if enemies.size()>=MAX_ENEMIES: receipt.count("spawn_deferred"); return {}
 	if position==Vector2.INF:
 		var outward=movement_facing.rotated(rng.randf_range(-1.,1.)) if rng.randf()<.72 else Vector2.from_angle(rng.randf()*TAU)
 		position=safe_spawn_position(spawn_origin(outward),outward)
@@ -779,16 +877,24 @@ func update_enemies(delta: float) -> void:
 		enemy.flash=maxf(0,enemy.flash-delta)
 		var to_player: Vector2=player-enemy.at
 		enemy.angle=to_player.angle()
-		if enemy.kind=="boss":
+		if enemy.has("boss_owner"):
+			var owner: Dictionary=by_id.get(int(enemy.boss_owner),{})
+			if owner.is_empty() or owner.hp<=0: enemy.hp=0.; continue
+			enemy.at=owner.at+Vector2.from_angle(float(enemy.node_angle)+music.timeline*.12)*(float(owner.radius)+48.)
+		elif enemy.kind=="boss":
 			var age=maxf(0.,music.timeline-float(enemy.born))
 			var approach=pow(1.-clampf(age/2.4,0.,1.),2.)
-			enemy.at=(boss_anchor+Vector2(sin(age*.21)*130,-approach*260)).clamp(field().position+Vector2.ONE*220,field().end-Vector2.ONE*220)
+			if music.timeline>=float(enemy.get("ram_start",INF)) and music.timeline<float(enemy.get("ram_end",-1.)):
+				enemy.at=enemy.ram_from.lerp(enemy.ram_to,clampf((music.timeline-float(enemy.ram_start))/maxf(.001,float(enemy.ram_end)-float(enemy.ram_start)),0.,1.))
+			elif music.timeline<float(enemy.get("ram_end",-10.))+2.:
+				enemy.at=enemy.ram_to.lerp(boss_anchor,smoothstep(float(enemy.ram_end),float(enemy.ram_end)+2.,music.timeline))
+			else: enemy.at=(boss_anchor+Vector2(sin(age*.21)*130,-approach*260)).clamp(field().position+Vector2.ONE*220,field().end-Vector2.ONE*220)
 			var next_phase=2 if enemy.hp<enemy.max_hp*.5 else 1
 			if next_phase!=enemy.phase:
 				fx.burst(enemy.at,planet_rules.accent,56,480); fx.ring(enemy.at,planet_rules.accent,float(enemy.radius)*1.6,.7)
 				sound("metal",-12,.66); notice=PLANETS.planet(active_planet).bossname+" · 核心过载"; notice_until=music.timeline+2.
 			enemy.phase=next_phase
-		else:
+		elif not FORMATION.update(enemy,music.timeline,delta,player):
 			var move=1.
 			if enemy.kind=="shooter" and to_player.length()<440: move=-.15
 			if enemy.kind=="sentinel" and to_player.length()<540: move=.12
@@ -796,7 +902,7 @@ func update_enemies(delta: float) -> void:
 			if enemy.kind=="dart": direction=direction.rotated(sin(music.timeline*2.+enemy.uid)*.3)
 			if enemy.kind=="sentinel": direction=(direction+direction.orthogonal()*.75).normalized()
 			enemy.at+=direction*float(enemy.speed)*move*delta
-		if to_player.length()<float(enemy.radius)+13: hurt_player(float(enemy.damage))
+		if to_player.length()<float(enemy.radius)+13 and music.timeline>=float(enemy.get("armed_after",0.)): last_damage_reason=str(enemy.kind)+"接触"; hurt_player(float(enemy.damage))
 func enemy_fire(enemy: Dictionary) -> void:
 	if enemy.at.distance_to(player)>1500: return
 	var direction=(player-enemy.at).normalized()
@@ -813,25 +919,8 @@ func boss_shot(enemy: Dictionary,direction: Vector2,speed: float) -> void:
 	# full second after their musical onset.
 	enemy_shot(enemy.at+direction*(float(enemy.radius)+10.),direction,speed)
 func boss_step(enemy: Dictionary,serial: int) -> void:
-	if music.timeline<float(enemy.get("entry_until",-1.)): return
-	var tier=int(PLANETS.planet(active_planet).index)
-	if serial%8==0:
-		var count=(14 if enemy.phase==2 else 10)+tier
-		var angle=(player-enemy.at).angle()+music.timeline*(.12+.025*tier)
-		if tier%2==1: angle+=sin(serial*.17)*.28
-		for i in range(count): boss_shot(enemy,Vector2.from_angle(angle+i*TAU/count),185 if enemy.phase==1 else 220)
-		fx.ring(enemy.at,planet_rules.accent,float(enemy.radius)*1.12,.30)
-		for i in range(4): fx.burst(enemy.at+Vector2.from_angle(PI*.25+i*TAU/4.)*float(enemy.radius)*.85,planet_rules.accent,3,110)
-	if serial%16==4:
-		var direction=(player-enemy.at).normalized()
-		var lanes=1 if tier<3 else (2 if tier<6 else 3)
-		for lane in range(lanes):
-			var axis=direction.rotated((lane-(lanes-1)*.5)*.25)
-			warnings.append({"at":enemy.at,"to":enemy.at+axis*1800,"target":(serial+4)*.25,"born":music.timeline,"done":false,"damage":float(planet_rules.damage)*2.})
-	if enemy.phase==2 and serial%8==4: enemy_fire(enemy)
-	if tier>=4 and enemy.phase==2 and serial%16==12:
-		var toward=(player-enemy.at).normalized()
-		for i in range(3+tier): boss_shot(enemy,toward.rotated((i-(2+tier)*.5)*.14),260.)
+	BOSS_SCORE.step(self,enemy,serial)
+
 func rebuild_spatial() -> void:
 	spatial.clear()
 	for enemy in enemies:
@@ -856,25 +945,40 @@ func nearest(at: Vector2,exclude: Array=[]) -> Dictionary:
 
 func fire_weapon(trigger: Dictionary) -> void:
 	var target=nearest(player)
+	# Exposed cores are an explicit auto-aim priority, not an accuracy penalty.
+	if int(settings.aim_mode)==0:
+		var reach_hint=minf(2400.,maxf(120.,float(trigger.get("speed",700))*float(trigger.get("life",2))))
+		for boss in enemies:
+			if boss.kind=="boss" and boss.hp>0. and music.timeline<float(boss.get("core_until",-1.)) and player.distance_to(boss.at)<reach_hint+float(boss.radius): target=boss; break
 	var direction=(target.at-player).normalized() if not target.is_empty() else facing
 	if direction.length_squared()<.1: direction=Vector2.UP
+	if int(settings.aim_mode)==1: direction=movement_facing
+	elif int(settings.aim_mode)==2: direction=Vector2.UP
 	facing=direction
 	direction=direction.rotated(float(trigger.get("angle",0)))
+	var motion: Dictionary=trigger.get("trajectory",{})
+	var track=clampi(int(trigger.get("track",floori(float(trigger.get("source_slot",trigger.get("slot",8)))/8.))),0,2)
+	var origin=player+direction.orthogonal()*([-17.,0.,17.][track]+float(motion.get("offset_side",0.)))+direction*float(motion.get("offset_forward",0.))
 	var color=C.color(str(trigger.kind)); var damage=float(trigger.damage)
 	var count=int(trigger.get("count",1)); var kind=str(trigger.kind); var family=str(trigger.get("family",kind))
 	if selected_pilot=="volt" and music.timeline<pilot_amp_until: damage*=1.25; count+=1
 	if music.timeline<overload_until: damage*=1.75; count+=2
 	count=clampi(count,1,8 if family=="chain" else (12 if family=="beam" else 96))
-	var context=trigger.duplicate(false)
+	var context=trigger.duplicate(true)
+	context.root_uid=int(context.get("root_uid",context.get("uid",-1)))
+	context.root_event=str(context.get("root_event",str(Time.get_ticks_usec())))
+	if not root_budgets.has(context.root_event): root_budgets[context.root_event]=128
+	while root_budgets.size()>2048: root_budgets.erase(root_budgets.keys()[0])
+	receipt.shot(context,count)
 	context.critical=rng.randf()<float(trigger.get("crit_chance",.05))
 	if context.critical: damage*=float(trigger.get("crit_damage",1.5))
 	var speed=float(trigger.get("speed",700)); var lifetime=float(trigger.get("life",2))
 	var spread=float(trigger.get("spread",.1)); var pierce=int(trigger.get("pierce",0))
 	var reach=minf(2400.,maxf(120.,speed*lifetime))
-	fx.muzzle(player+direction*25,direction,color,1.25 if family in ["rail","beam","missile"] else 1.)
+	fx.muzzle(origin+direction*25,direction,color,1.25 if family in ["rail","beam","missile"] else 1.)
 	if family=="chain":
 		for branch in range(mini(count,8)):
-			var start=player; var hit: Array=[]
+			var start=origin; var hit: Array=[]
 			for bounce in range(int(trigger.get("chain_count",3))):
 				var enemy=nearest(start,hit)
 				if enemy.is_empty() or start.distance_to(enemy.at)>(reach if bounce==0 else reach*.55): break
@@ -884,12 +988,12 @@ func fire_weapon(trigger: Dictionary) -> void:
 	elif family=="beam":
 		for i in range(mini(count,12)):
 			var axis=direction.rotated((float(i)/maxf(1,count-1)-.5)*spread if count>1 else 0.)
-			var end=player+axis*reach; fx.beam(player,end,color,12+float(trigger.get("level",1))*2)
+			var end=origin+axis*reach; fx.beam(origin,end,color,12+float(trigger.get("level",1))*2)
 			# Sort contacts so a finite penetration budget stops at the proper
 			# target, not whichever dictionary happened to be inserted first.
 			var contacts: Array=[]
 			for enemy in enemies:
-				if enemy.hp>0 and Geometry2D.get_closest_point_to_segment(enemy.at,player,end).distance_to(enemy.at)<float(enemy.radius)+12: contacts.append(enemy)
+				if enemy.hp>0 and Geometry2D.get_closest_point_to_segment(enemy.at,origin,end).distance_to(enemy.at)<float(enemy.radius)+12: contacts.append(enemy)
 			contacts.sort_custom(func(a,b): return player.distance_squared_to(a.at)<player.distance_squared_to(b.at))
 			for j in range(mini(contacts.size(),pierce+1)):
 				var enemy=contacts[j]; hurt_enemy(enemy,damage,kind,context)
@@ -899,8 +1003,10 @@ func fire_weapon(trigger: Dictionary) -> void:
 			var angle=(float(i)/maxf(1,count-1)-.5)*spread if count>1 else 0.
 			if family in ["nova","orbit"]: angle=i*TAU/count
 			var axis=direction.rotated(angle)
-			var bullet=shot(player+axis*(50 if family=="orbit" else 24),axis,speed,damage,color,kind,lifetime,pierce)
+			var bullet=shot(origin+axis*(50 if family=="orbit" else 24),axis,speed,damage,color,kind,lifetime,pierce)
 			if bullet.is_empty(): break
+			bullet.acceleration=axis*float(motion.get("accel_forward",0.))+axis.orthogonal()*float(motion.get("accel_side",0.))
+			bullet.turn_at=float(motion.get("turn_after",0.)); bullet.turn_deg=float(motion.get("turn_deg",0.)); bullet.turned=false
 			bullet.family=family; bullet.context=context; bullet.total_life=lifetime; bullet.age=0.
 			bullet.target=int(target.get("uid",-1)); bullet.explosion=float(trigger.get("explosion",0))
 			bullet.homing=float(trigger.get("homing",0)); bullet.bounces=int(trigger.get("bounces",0))
@@ -914,15 +1020,22 @@ func explosion(at: Vector2,radius: float,damage: float,color: Color,kind: String
 	for other in enemies:
 		if other.hp>0 and int(other.uid)!=exclude_uid and other.at.distance_to(at)<radius: hurt_enemy(other,damage,kind,context)
 func shot(at: Vector2,direction: Vector2,speed: float,damage: float,color: Color,kind: String,life: float,pierce: int) -> Dictionary:
-	if bullets.size()>=MAX_BULLETS: return {}
+	receipt.count("projectile_requested")
 	var bullet={"at":at,"v":direction*speed,"damage":damage,"color":color,"kind":kind,"life":life,"pierce":pierce,"hit":{},"radius":5.,"target":-1,"explosion":0.}
-	bullets.append(bullet); return bullet
+	if bullets.size()<MAX_BULLETS: bullets.append(bullet); receipt.count("projectile_spawned")
+	else: pending_projectiles.append(bullet); receipt.count("projectile_deferred")
+	return bullet
 func update_bullets(delta: float) -> void:
-	var bounds=visible_world().grow(350)
+	var bounds=visible_world().grow(500)
+	while not pending_projectiles.is_empty() and bullets.size()<MAX_BULLETS:
+		bullets.append(pending_projectiles.pop_front()); receipt.count("projectile_spawned")
 	for i in range(bullets.size()-1,-1,-1):
 		var bullet=bullets[i]; bullet.life-=delta
 		if bullet.life<=0 or not bounds.has_point(bullet.at): bullets.remove_at(i); continue
 		bullet.age=float(bullet.get("age",0))+delta
+		bullet.v+=bullet.get("acceleration",Vector2.ZERO)*delta
+		if not bool(bullet.get("turned",true)) and float(bullet.get("turn_at",0.))>0. and bullet.age>=float(bullet.turn_at):
+			bullet.v=bullet.v.rotated(deg_to_rad(float(bullet.turn_deg))); bullet.turned=true
 		var family=str(bullet.get("family",bullet.kind))
 		if family=="orbit":
 			bullet.orbit_angle+=delta*float(bullet.get("original_speed",245))*.012
@@ -934,7 +1047,7 @@ func update_bullets(delta: float) -> void:
 		if float(bullet.get("homing",0))>0:
 			var target: Dictionary=by_id.get(int(bullet.target),{})
 			if target.is_empty() or target.hp<=0: target=nearest(bullet.at); bullet.target=target.get("uid",-1)
-			if not target.is_empty(): bullet.v=(bullet.v.normalized().lerp((target.at-bullet.at).normalized(),minf(1,delta*float(bullet.homing)))).normalized()*float(bullet.get("original_speed",bullet.v.length()))
+			if not target.is_empty(): bullet.v=(bullet.v.normalized().lerp((target.at-bullet.at).normalized(),minf(1,delta*float(bullet.homing)))).normalized()*maxf(.01,bullet.v.length())
 		var previous: Vector2=bullet.at; bullet.at+=bullet.v*delta
 		var low=Vector2i(floor(minf(previous.x,bullet.at.x)/GRID),floor(minf(previous.y,bullet.at.y)/GRID))
 		var high=Vector2i(floor(maxf(previous.x,bullet.at.x)/GRID),floor(maxf(previous.y,bullet.at.y)/GRID))
@@ -945,6 +1058,7 @@ func update_bullets(delta: float) -> void:
 				for enemy in spatial.get(Vector2i(x,y),[]):
 					if enemy.hp<=0 or bullet.hit.has(enemy.uid): continue
 					if Geometry2D.get_closest_point_to_segment(enemy.at,previous,bullet.at).distance_to(enemy.at)>float(enemy.radius)+float(bullet.radius): continue
+					split_projectile(bullet,enemy)
 					bullet.hit[enemy.uid]=true; hurt_enemy(enemy,bullet.damage,bullet.kind,bullet.get("context",{}))
 					if bullet.explosion>0:
 						explosion(bullet.at,bullet.explosion,bullet.damage*.7,bullet.color,bullet.kind,bullet.get("context",{}),enemy.uid)
@@ -957,7 +1071,16 @@ func update_bullets(delta: float) -> void:
 		if dead: bullets.remove_at(i)
 func hurt_enemy(enemy: Dictionary,damage: float,kind: String,context: Dictionary={},allow_procs: bool=true) -> void:
 	if damage<=0 or enemy.hp<=0 or state!="combat": return
+	if enemy.kind=="boss" and not bool(context.get("structural",false)) and enemy.has("core_until") and music.timeline<float(enemy.core_until): damage*=1.5
 	var actual=minf(enemy.hp,damage); enemy.hp-=damage; enemy.flash=.09
+	receipt.hit(kind,context,actual,damage,enemy.hp<=0.)
+	var motion: Dictionary=context.get("trajectory",{})
+	if float(motion.get("conduct",0.))>0.:
+		if str(context.get("family",""))=="chain" and music.timeline<float(enemy.get("conduct_until",-1.)) and allow_procs:
+			var discharge=context.duplicate(true); discharge.depth=int(discharge.get("depth",0))+1
+			proc_queue.append({"at":enemy.at,"radius":140.,"damage":damage*float(motion.conduct),"color":Color("9ccfff"),"kind":kind,"context":discharge})
+		enemy.conduct_until=music.timeline+3.
+
 	if visible_world().has_point(enemy.at):
 		fx.number(enemy.at,actual,Color("e1ebff"))
 		# Rate-limit repeated sustained damage on one target, purely visually.
@@ -974,9 +1097,14 @@ func hurt_enemy(enemy: Dictionary,damage: float,kind: String,context: Dictionary
 	if allow_procs and float(effects.get("explode_kill",0))>0 and proc_queue.size()<128:
 		var value=float(effects.explode_kill)
 		proc_queue.append({"at":enemy.at,"radius":minf(220.,80.+value*3.),"damage":value,"color":color,"kind":kind,"context":context})
-	fx.burst(enemy.at,color,30 if enemy.kind in ["boss","elite"] else 10,380)
-	fx.ring(enemy.at,color,150 if enemy.kind in ["boss","elite"] else 50,.3)
-	sound("kill",-14)
+	fx.death(enemy.at,color,str(enemy.kind),(enemy.at-player).normalized())
+	if enemy.kind in ["boss","elite"]: fx.blast(enemy.at,color,210. if enemy.kind=="boss" else 95.)
+	mixer.death(str(enemy.kind))
+	if enemy.has("boss_owner"):
+		var owner: Dictionary=by_id.get(int(enemy.boss_owner),{})
+		if not owner.is_empty() and owner.hp>0.:
+			var structural=context.duplicate(true); structural.structural=true; structural.depth=1
+			hurt_enemy(owner,float(owner.max_hp)*.08,kind,structural,false)
 	if enemy.kind=="boss": boss_down=true
 	if enemy.kind=="splitter": pending_splits.append(enemy.at)
 	# Preserve the small early-planet bonuses:1.08x yields an occasional extra
@@ -1001,14 +1129,16 @@ func update_enemy_bullets(delta: float) -> void:
 		var bullet=enemy_bullets[i]; bullet.at+=bullet.v*delta; bullet.life-=delta
 		if bullet.life<=0 or not bounds.has_point(bullet.at): enemy_bullets.remove_at(i); continue
 		if bullet.at.distance_to(player)<19:
-			hurt_player(float(bullet.get("damage",1.))); enemy_bullets.remove_at(i)
+			enemy_bullets.remove_at(i); last_damage_reason="敌舰弹幕"; hurt_player(float(bullet.get("damage",1.)))
+			if state!="combat": return
 func update_warnings() -> void:
 	for i in range(warnings.size()-1,-1,-1):
 		var warning=warnings[i]
 		if music.timeline<float(warning.target): continue
-		fx.beam(warning.at,warning.to,Color("ff7c9c"),34)
-		if Geometry2D.get_closest_point_to_segment(player,warning.at,warning.to).distance_to(player)<27: hurt_player(float(warning.get("damage",2.)))
 		warnings.remove_at(i)
+		fx.beam(warning.at,warning.to,Color("ff7c9c"),34)
+		if Geometry2D.get_closest_point_to_segment(player,warning.at,warning.to).distance_to(player)<float(warning.get("width",24.))*.5+13.: last_damage_reason="机械巨物射线"; hurt_player(float(warning.get("damage",2.)))
+		if state!="combat": return
 func update_pickups(delta: float) -> void:
 	var reach=175.*float(stats_snapshot.get("magnet",1.))
 	for i in range(pickups.size()-1,-1,-1):
@@ -1037,11 +1167,12 @@ func hurt_player(amount: float) -> void:
 	if shield_points>0 and music.timeline<shield_until:
 		shield_points=maxf(0,shield_points-1); invulnerable=.25; fx.ring(player,Color("a3e9ff"),70,.3); sound("metal",-16); return
 	var received=float(amount)/(1.+.12*float(stats_snapshot.get("armor",0)))
+	receipt.received+=received; receipt.death_reason=last_damage_reason
 	health=maxf(0,health-received); invulnerable=.8
 	fx.burst(player,Color("ff779d"),16,220); sound("hit",-6)
 	if health<=0: finish_run(false)
 func check_wave() -> void:
-	if free_music_run: return
+	if free_music_run or is_preview: return
 	if state!="combat": return
 	if wave==wave_count():
 		if boss_down: finish_run(true)
@@ -1052,16 +1183,24 @@ func check_wave() -> void:
 	# fake kills or loot, rather than making a large arena a tedious cleanup hunt.
 	for enemy in enemies:
 		if enemy.hp>0: fx.ring(enemy.at,Color("7585ac"),55,.22)
+	var retreat_count=enemies.size()
 	enemies.clear(); by_id.clear(); spatial.clear()
 	# Collect earned drops on transition so the shop never strands rewards.
 	for item in pickups: collect_pickup(item,false)
+	receipt.end_wave(wave,music.timeline-wave_start,picked-wave_picked_start,total_spawned-wave_spawn_start,retreat_count)
 	pending_splits.clear()
-	pickups.clear(); enemy_bullets.clear(); bullets.clear(); warnings.clear()
+	pickups.clear(); enemy_bullets.clear(); bullets.clear(); warnings.clear(); pending_triggers.clear(); pending_projectiles.clear()
+	if not (test_mode and simulation_only): standard_music.prepare(loadout)
 	shop_offers=loadout.make_shop(rng,wave); shop_reroll_cost=8; editing_changed=false; selected_uid=-1
 	rewards.clear(); reward_taken=false; state="reward"; music.hold(true); sound("reward",-9); ui.refresh()
 func finish_run(won: bool) -> void:
-	if state!="combat": return
+	if state!="combat" or is_preview: return
 	if free_music_run: return_to_composer(); return
+	if won:
+		for item in pickups: collect_pickup(item,false)
+		pickups.clear()
+	receipt.end_wave(wave,music.timeline-wave_start,picked-wave_picked_start,total_spawned-wave_spawn_start,0)
+	pending_triggers.clear(); pending_projectiles.clear(); results_tail=Time.get_ticks_msec()*.001+1.
 	state="victory" if won else "defeat"; best=maxi(best,score)
 	var record=planet_record(active_planet); record.attempts+=1
 	record.best_score=maxi(int(record.best_score),score); record.last_result="clear" if won else "failed"
@@ -1097,6 +1236,10 @@ func _draw() -> void:
 		if enemy.hp<=0: continue
 		var draw_bounds=visible_rect.grow(maxf(0.,float(enemy.radius)*1.8-140.)) if enemy.kind=="boss" else visible_rect
 		if not draw_bounds.has_point(enemy.at): continue
+		if enemy.has("boss_owner"):
+			var owner: Dictionary=by_id.get(int(enemy.boss_owner),{})
+			if not owner.is_empty(): draw_line(owner.at,enemy.at,Color(.3,.6,.8,.3),2.,true)
+		if music.timeline<float(enemy.get("conduct_until",-1.)): draw_arc(enemy.at,float(enemy.radius)+5.,0,TAU,16,Color("a8e6ff"),2.,true)
 		if batch and enemy.kind not in ["elite","boss"]: continue
 		if enemy.kind=="boss": MACHINE_ART.draw(self,enemy,int(enemy.get("machine_style",0)),music.timeline,pulse)
 		else: ART.draw_enemy(self,enemy.at,enemy.radius,enemy.angle,enemy.kind,enemy.flash,pulse)
@@ -1117,3 +1260,90 @@ func _draw() -> void:
 		if module.is_empty(): continue
 		var at=player+Vector2.from_angle(-PI*.5+i*TAU/loadout.slots.size())*55
 		draw_circle(at,4 if active_slot!=i%8 or slot_flash<=0 else 7,C.color(module.kind))
+
+func dispatch_trigger(trigger: Dictionary) -> void:
+	if state!="combat": return
+	fire_log.append({"step":posmod(int(trigger.serial),8),"track":trigger.get("track",0),"uid":trigger.uid,"serial":trigger.serial,"deadline":trigger.deadline,"actual":music.timeline,"kind":trigger.kind,"voice":trigger.voice,"pitch":trigger.get("pitch",0),"pilot":trigger.get("pilot",""),"repeat_index":trigger.get("repeat_index",0),"event_id":trigger.event_id})
+	if fire_log.size()>480: fire_log.pop_front()
+	fire_weapon(trigger)
+func flush_triggers() -> void:
+	for i in range(pending_triggers.size()-1,-1,-1):
+		var trigger: Dictionary=pending_triggers[i]
+		if music.timeline+0.0001>=float(trigger.deadline): dispatch_trigger(trigger); pending_triggers.remove_at(i)
+func split_projectile(bullet: Dictionary,enemy: Dictionary) -> void:
+	if bool(bullet.get("split_done",false)): return
+	var context: Dictionary=bullet.get("context",{}); var motion: Dictionary=context.get("trajectory",{})
+	var count=clampi(int(motion.get("split_count",0)),0,4); var depth=int(context.get("depth",0))
+	var key=str(context.get("root_event",""))
+	if count==0 or depth>=2 or int(root_budgets.get(key,0))<count: return
+	bullet.split_done=true; root_budgets[key]-=count
+	for i in range(count):
+		var axis=Vector2.from_angle(i*TAU/count)
+		var child=shot(bullet.at,axis,maxf(350.,bullet.v.length()*.8),float(bullet.damage)*.26,bullet.color,bullet.kind,1.1,0)
+		child.family=bullet.get("family","pulse"); child.context=context.duplicate(true); child.context.depth=depth+1
+		child.context.trajectory={}; child.hit[enemy.uid]=true
+		receipt.count("derived_projectiles")
+func toggle_offer_lock(index: int) -> bool:
+	if state!="reward" or index<0 or index>=shop_offers.size() or bool(shop_offers[index].sold): return false
+	shop_offers[index].locked=not bool(shop_offers[index].get("locked",false)); ui.refresh(); return true
+func replay_tutorial() -> void:
+	settings.tutorial_done=false; settings.tutorial_skipped=false; save_settings()
+	tutorial_active=true; tutorial_stage=0; tutorial_origin=player; tutorial_retimed=false
+func skip_tutorial() -> void:
+	tutorial_active=false; settings.tutorial_skipped=true; notice="教学已跳过 · 设置中可补看"; notice_until=music.timeline+3.; save_settings()
+func update_tutorial() -> void:
+	if not tutorial_active or free_music_run or is_preview: return
+	if tutorial_stage==0 and player.distance_to(tutorial_origin)>100.: tutorial_stage=1
+	if tutorial_stage==1 and actual_steps>8: tutorial_stage=2
+	if tutorial_stage==2 and tutorial_retimed: tutorial_stage=3
+	if tutorial_stage==3 and dash_cooldown>0.: tutorial_stage=4
+	if tutorial_stage>=4:
+		tutorial_active=false; settings.tutorial_done=true; save_settings(); return
+	var movement=" / ".join([binding_name("up"),binding_name("left"),binding_name("down"),binding_name("right")])
+	var tips=[movement+" 自由飞行 · 武器跟随节拍自动开火","观察下方音序 · 每格半拍，一小节循环一次",binding_name("editor")+" 打开音序工坊 · 把武器拖到另一个拍位，听声音变化",binding_name("dash")+" 冲刺穿过缺口 · "+binding_name("overload")+" 满充能后超载"]
+	notice=tips[tutorial_stage]; notice_until=INF
+
+func apply_input_bindings() -> void:
+	if is_preview: return
+	for action in settings.input_bindings:
+		if not InputMap.has_action(str(action)): continue
+		var code=int(settings.input_bindings[action])
+		if code<=0: continue
+		InputMap.action_erase_events(str(action))
+		var key=InputEventKey.new(); key.physical_keycode=code; InputMap.action_add_event(str(action),key)
+func binding_name(action: String) -> String:
+	for event in InputMap.action_get_events(action):
+		if event is InputEventKey: return OS.get_keycode_string(event.physical_keycode)
+	return "未绑定"
+func capture_binding(action: String) -> void:
+	binding_capture=action; ui.refresh()
+
+func resync_pending() -> void:
+	pending_triggers.clear()
+	var serial=floori(music.timeline/.25)
+	for event in loadout.schedule(serial):
+		if str(event.family)!="support" and float(event.deadline)>music.timeline+.001: pending_triggers.append(event)
+
+func _prepared_resume(key: String) -> void:
+	if pending_resume.is_empty() or not can_edit() or key!=standard_music.key_for(loadout): return
+	var mode=pending_resume; pending_resume=""
+	if mode=="wave": continue_wave()
+	else: close_editor()
+
+func ensure_lab() -> void:
+	if not is_instance_valid(lab):
+		lab=load("res://scripts/arsenal_lab.gd").new(); lab.source_game=self; add_child(lab)
+
+func prepare_loadout() -> void:
+	if not (test_mode and simulation_only): standard_music.prepare(loadout)
+
+func formation_spawn_frame(outward: Vector2,count: int,style: String) -> Dictionary:
+	var bounds=field().grow(-45.); var safe=visible_world().grow(90.)
+	for rotation_index in range(12):
+		var axis=outward.rotated(rotation_index*TAU/12.); var origin=spawn_origin(axis); var valid=true
+		for i in range(count):
+			var point=PLAN.formation(origin,axis,i,count,style)
+			if not bounds.has_point(point) or safe.has_point(point): valid=false; break
+		if valid: return {"axis":axis,"origin":origin}
+	receipt.count("formation_edge_fallback")
+	return {"axis":outward,"origin":spawn_origin(outward)}

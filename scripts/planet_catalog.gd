@@ -5,7 +5,7 @@ const IDS=["mercury","venus","earth","mars","jupiter","saturn","uranus","neptune
 const THEMES=["rocky","volcanic","ocean","desert","gas","ringed","ice","storm"]
 const WAVE_COUNTS=[6,7,8,8,9,9,10,10]
 const HP_SCALES=[1.0,1.18,1.40,1.68,2.05,2.45,2.90,3.40]
-const BOSS_HP=[4000.,5200.,6800.,8700.,11200.,14400.,18500.,24000.]
+const BOSS_HP=[3000.,5200.,6800.,8700.,11200.,14400.,18500.,24000.]
 const BOSS_RADII=[158.,166.,172.,178.,205.,200.,192.,214.]
 const MACHINE_TYPES=["日冕采掘体","硫云熔炉","轨道仲裁站","赤砂攻城堡","巨斑涡轮","星环歼灭器","极轴观测体","深潮终奏舰"]
 const SPEEDS=[1.0,1.04,1.08,1.12,1.17,1.21,1.25,1.30]
@@ -125,6 +125,7 @@ static func kind(id: String,wave: int,ordinal: int) -> String:
 	## Zero-based wave/ordinal; fixed planet+wave+ordinal always gives one role.
 	var index=_index(id)
 	var kind_value=str(MIXES[index][posmod(ordinal+wave*3,20)])
+	if index>=4 and wave<2 and kind_value in ["sentinel","splitter"]: return "shooter" if kind_value=="sentinel" else "mote"
 	if index==0:
 		if kind_value=="dart" and wave<1: return "mote"
 		if kind_value=="shooter" and wave<2: return "mote"
@@ -136,3 +137,14 @@ static func kind(id: String,wave: int,ordinal: int) -> String:
 		if kind_value=="sentinel" and wave<3: return "mote"
 	elif index==3 and kind_value=="sentinel" and wave<2: return "mote"
 	return kind_value
+
+static func wave_rules(id: String,wave: int) -> Dictionary:
+	var result=combat(id); var index=_index(id)
+	var progress=clampf(float(wave-1)/maxf(1.,float(WAVE_COUNTS[index]-2)),0.,1.)
+	# Advanced planets still start with a fresh loadout. Full threat is reached
+	# after their own shops, not imposed before the first purchase is possible.
+	result.hp_scale=1.+(float(result.hp_scale)-1.)*lerpf(.22,1.,progress)
+	result.damage=1.+(float(result.damage)-1.)*lerpf(.12,1.,progress)
+	result.enemy_speed=1.+(float(result.enemy_speed)-1.)*lerpf(.40,1.,progress)
+	result.bullet_speed=1.+(float(result.bullet_speed)-1.)*lerpf(.30,1.,progress)
+	return result

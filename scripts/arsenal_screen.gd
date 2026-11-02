@@ -7,7 +7,7 @@ const RARITIES = ["普通", "稀有", "史诗", "传奇"]
 const RARITY_COLORS = [Color("91a0b4"), Color("70b8ff"), Color("bd9cff"), Color("ffd286")]
 const CATEGORY_NAMES = {"weapon":"武器", "mod":"改装", "rhythm":"音律", "defense":"防御", "core":"核心"}
 const MAIN_STATS = [["ballistic","弹道",Color("f3c27e")],["energy","能量",Color("77dbf5")],["power","动力",Color("ff9b86")],["support","支援",Color("bbaaff")]]
-const SECONDARY_STATS = [["max_health","生命上限"],["armor","装甲"],["regen","再生"],["move_percent","移动加成"],["crit_chance","暴击率"],["crit_damage","暴击伤害"],["extra_projectiles","额外弹丸"],["bullet_multiplier","弹丸倍率"],["magnet","收集范围"],["luck","幸运"]]
+const SECONDARY_STATS = [["max_health","生命上限"],["armor","装甲"],["regen","再生"],["move_percent","移动加成"],["crit_chance","暴击率"],["crit_damage","暴击伤害"],["extra_projectiles","额外弹丸"],["bullet_multiplier","单发伤害倍率"],["magnet","收集范围"],["luck","幸运"]]
 const PANEL_NAMES = [["panel_attributes","属性"],["panel_status","状态"],["panel_buffs","增益"],["panel_inventory","背包"],["panel_sequencer","音序"]]
 var game
 var mode: String = "editor"
@@ -29,6 +29,8 @@ var panel_rects: Dictionary = {}
 var inventory_drop
 var font: SystemFont
 var charge_bar_serial: int = -1
+var lab_status: Label
+var lab_mutes: Array=[]
 
 class ModuleCard:
 	extends Button
@@ -185,7 +187,7 @@ func _label(text_value: String, text_size: int = 19, color: Color = Color("c8d3e
 	var node := Label.new()
 	node.text = text_value
 	node.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	node.add_theme_font_size_override("font_size", text_size)
+	node.add_theme_font_size_override("font_size",roundi(text_size*float(game.settings.get("text_scale",1.))))
 	node.add_theme_color_override("font_color", color)
 	return node
 
@@ -229,7 +231,7 @@ func refresh() -> void:
 	var view := get_viewport_rect().size
 	var compact: bool = view.x < 1550.0 or view.y < 850.0
 	var left_width: float = 240.0 if compact else 282.0
-	var right_width: float = 260.0 if compact else 310.0
+	var right_width: float = 290.0 if compact else 420.0
 	var top: float = 122.0
 	var bottom_height: float = 244.0 if compact else 294.0
 	var sequence_x: float = left_width + 42.0
@@ -255,6 +257,10 @@ func refresh() -> void:
 	_build_top(view)
 	if _panel_visible("panel_attributes"): _build_attributes(panel_rects.attributes)
 	if _panel_visible("panel_status"): _build_status(panel_rects.status)
+	if mode!="combat":
+		panel_rects.buffs.position.y+=410.0 if not compact else 340.0
+		panel_rects.buffs.size.y=maxf(180.,view.y-panel_rects.buffs.position.y-24.)
+		_build_lab(Rect2(view.x-right_width-22.,top,right_width,396. if not compact else 326.))
 	if _panel_visible("panel_buffs"): _build_buffs(panel_rects.buffs)
 	if _panel_visible("panel_inventory"): _build_inventory(panel_rects.inventory)
 	if _panel_visible("panel_sequencer"): _build_sequencer(panel_rects.sequencer)
@@ -568,7 +574,10 @@ func _build_shop(rect: Rect2) -> void:
 		card.sold = bool(offer.sold)
 		card.name = "ShopOffer_%d" % index
 		card.position = Vector2(float(index % columns) * (width + gap), float(index / columns) * (height + gap))
-		card.size = Vector2(width, height)
+		card.position.y+=27.
+		card.size = Vector2(width, height-28.)
+		var lock_button=_button("已锁定" if bool(offer.get("locked",false)) else "锁定",game.toggle_offer_lock.bind(index),Color("e7c88d"),24.)
+		lock_button.name="ShopLock_%d"%index; lock_button.position=card.position-Vector2(0,27); lock_button.size=Vector2(width,25.); lock_button.disabled=bool(offer.sold); area.add_child(lock_button)
 		card.disabled = card.sold or game.dust < card.price or game.loadout.modules.size() >= 64
 		decorate_card(card, row.get("color", Color("91b1c5")))
 		area.add_child(card)
@@ -673,6 +682,15 @@ func _update_detail() -> void:
 		var actual: Dictionary = game.loadout.item_stats(preview_uid, serial) if not module.is_empty() else row
 		_detail_text("所在拍预览 · 第 %d 格" % (head % 8 + 1) if head >= 0 else "基础参数", 18, row.color)
 		_detail_text("单发伤害 %.1f  ·  弹丸 %d\n穿透 %d  ·  速度 %.0f\n爆破半径 %.0f  ·  %d 小节充能" % [float(actual.get("damage", row.get("damage", 0.0))), int(actual.get("count", row.get("count", 1))), int(actual.get("pierce", row.get("pierce", 0))), float(actual.get("speed", row.get("speed", 0.0))), float(actual.get("explosion", row.get("explosion", 0.0))), int(actual.get("charge", row.get("charge", 1)))], 18)
+		if not actual.get("calculation",{}).is_empty():
+			var f: Dictionary=actual.calculation
+			_detail_text("计算明细\n基础 %.1f × 舰体 %.2f × 等级 %.2f\n× 属性 %.2f × 单发倍率 %.2f × 改装 %.2f"%[f.base_damage,f.ship_multiplier,f.level_multiplier,f.attribute_multiplier,f.damage_multiplier,f.mod_multiplier],16)
+			_detail_text("弹数 %d + %d → %d  上限 %d\n充能 %d → %d 小节  每小节2秒"%[f.base_count,f.extra_count,actual.count,f.count_cap,actual.charge_base,actual.charge],16,Color("9dcdd8"))
+			_detail_text("其中属性换算弹数 %d"%int(f.get("attribute_count",0)),15,Color("829eb5"))
+			for rule_text in game.loadout.rule_explanation(preview_uid,serial): _detail_text(rule_text,14,Color("7e9caf"))
+		if preview_uid>=0 and game.get("receipt")!=null:
+			var last=game.receipt.for_uid(preview_uid,true)
+			_detail_text("上波此实例  %.0f 伤害 / %.0f 命中\n过量 %.0f / 衍生触发 %.0f"%[last.damage,last.hits,last.overkill,last.procs],17,Color("f0ce9c"))
 		var damage: float = float(game.weapon_damage.get(str(row.id), 0.0))
 		_detail_text("本局实际伤害  %s" % _short_number(damage), 19, Color("f0ce9c"))
 		_detail_text("属性归属  " + _stat_name(str(row.attr)), 17, Color("879db6"))
@@ -702,6 +720,8 @@ func _update_detail() -> void:
 			if equipped:
 				actions.add_child(_button("卸下", drop_module.bind(preview_uid, -1), Color("92adca"), 37))
 			_detail_text("合成需要另一个同类、同级模块；最高 Lv.4。", 16, Color("7189a5"))
+	if module.is_empty() and editable() and is_instance_valid(game.get("lab")):
+		detail_controls.add_child(_button("试装此卡 不购买",game.lab.try_item.bind(str(row.id)),Color("91dcd4"),34))
 	_add_detail_close()
 
 func _add_detail_close() -> void:
@@ -788,6 +808,9 @@ func _process(delta: float) -> void:
 	tick = 0.0
 	_update_live()
 func _update_live() -> void:
+	for index in range(lab_mutes.size()):
+		if is_instance_valid(lab_mutes[index]): lab_mutes[index].text=("静音 " if bool(game.standard_music.track_mutes[index]) else "有声 ")+char(65+index)
+	if is_instance_valid(lab_status) and is_instance_valid(game.get("lab")): lab_status.text=game.lab.status+("\n"+game.lab.comparison if not game.lab.comparison.is_empty() else "")
 	if game == null or not is_instance_valid(content): return
 	if is_instance_valid(currency_label): currency_label.text = "✦ %d   /   WAVE %02d" % [int(game.dust), int(game.wave)]
 	if not stat_labels.is_empty():
@@ -808,3 +831,49 @@ func _update_live() -> void:
 				card.charge_progress = fposmod(float(game.music.timeline) + 2.0 - float(card.slot_index % 8) * 0.25, 2.0 * card.charge_bars) / (2.0 * card.charge_bars)
 				card.queue_redraw()
 	if game.music != null: charge_bar_serial = int(game.music.timeline / 2.0)
+
+func _build_lab(rect: Rect2) -> void:
+	lab_mutes.clear()
+	if game.get("is_preview")==true or not game.has_method("ensure_lab"): return
+	game.ensure_lab(); game.lab.activate()
+	var column=_panel(rect,"配装试射")
+	column.add_theme_constant_override("separation",3)
+	var presets=OptionButton.new(); presets.add_item("当前配装")
+	for path in game.PATHS.PATHS: presets.add_item(str(path.name)+" 蓝图")
+	presets.select(game.lab.sample_path+1); presets.item_selected.connect(game.lab.select_sample); column.add_child(presets)
+	var image=TextureRect.new(); image.texture=game.lab.viewport.get_texture()
+	image.custom_minimum_size=Vector2(0,maxf(95.,rect.size.y-205.)); image.size_flags_vertical=Control.SIZE_EXPAND_FILL
+	image.expand_mode=TextureRect.EXPAND_IGNORE_SIZE; image.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	column.add_child(image)
+	var controls=HBoxContainer.new(); controls.add_theme_constant_override("separation",4); column.add_child(controls)
+	controls.add_child(_button("播放/暂停",game.lab.toggle_pause,Color("a9d8df"),26))
+	controls.add_child(_button("重播",game.lab.replay,Color("a9d8df"),26))
+	var targets=OptionButton.new(); targets.add_item("纵列"); targets.add_item("矩阵"); targets.add_item("巨物靶")
+	targets.select(game.lab.target_layout); targets.item_selected.connect(game.lab.set_targets); controls.add_child(targets)
+	var tracks=HBoxContainer.new(); tracks.add_theme_constant_override("separation",4); column.add_child(tracks)
+	for i in range(3):
+		var mute=_button(("静音 " if bool(game.standard_music.track_mutes[i]) else "有声 ")+char(65+i),game.lab.toggle_track.bind(i),Color("a9bde0"),25)
+		mute.tooltip_text="左键切换静音，右键独奏此轨。只改变声音。"
+		mute.gui_input.connect(func(event):
+			if event is InputEventMouseButton and event.pressed and event.button_index==MOUSE_BUTTON_RIGHT: game.lab.toggle_track(i,true))
+		tracks.add_child(mute); lab_mutes.append(mute)
+	var options=HBoxContainer.new(); options.add_theme_constant_override("separation",4); column.add_child(options)
+	var loop=CheckButton.new(); loop.text="循环一小节"; loop.button_pressed=game.lab.loop_bar
+	loop.add_theme_font_size_override("font_size",13); loop.toggled.connect(func(value): game.lab.loop_bar=value); options.add_child(loop)
+	var solo=OptionButton.new(); solo.add_item("全部轨道")
+	for index in range(3): solo.add_item("独奏 "+char(65+index))
+	solo.add_theme_font_size_override("font_size",13)
+	solo.item_selected.connect(func(index):
+		if index==0:
+			game.standard_music.track_mutes=[false,false,false]; game.lab.signature=""; game.lab.sync()
+		else: game.lab.toggle_track(index-1,true))
+	options.add_child(solo)
+	lab_status=_label("静音只影响声音",13,Color("6d899f")); lab_status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; column.add_child(lab_status)
+	for bar in [controls,tracks]:
+		for control in bar.get_children():
+			if control is Button:
+				control.add_theme_font_size_override("font_size",13)
+				for state_name in ["normal","hover","pressed"]:
+					var style=control.get_theme_stylebox(state_name).duplicate()
+					style.content_margin_top=3; style.content_margin_bottom=3; style.content_margin_left=5; style.content_margin_right=5
+					control.add_theme_stylebox_override(state_name,style)

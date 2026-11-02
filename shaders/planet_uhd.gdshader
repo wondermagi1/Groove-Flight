@@ -1,6 +1,7 @@
 shader_type canvas_item;
 render_mode unshaded;
 uniform float travel=0.;
+uniform float music_pulse=0.;
 uniform vec2 world_position=vec2(0.);
 uniform int planet_style=0;
 uniform vec4 planet_color : source_color=vec4(.56,.58,.63,1.);
@@ -25,6 +26,10 @@ void fragment(){
  vec3 sky=texture(star_map,sky_uv).rgb;
  vec3 col=vec3(.002,.004,.012)+sky*.19+sqrt(max(sky,vec3(0.)))*.012;
  col+=sky_tint.rgb*.012;
+ // Quiet far-plane orbital beacons; no full-screen exposure pumping.
+ vec2 lane=UV*vec2(3.,2.)+world_position*.000018;
+ float beacon=pow(max(0.,1.-length(fract(lane)-.5)*35.),3.);
+ col+=vec3(.12,.25,.38)*beacon*(.12+music_pulse*.26);
  vec2 center=vec2(.69,-.41); float radius=.77,offset=.58;
  if(planet_style==1){center=vec2(-.72,-.38);radius=.76;offset=.51;}
  if(planet_style==2){center=vec2(.62,-.25);radius=.65;offset=.57;}

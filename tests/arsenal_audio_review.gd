@@ -33,7 +33,7 @@ func run() -> void:
 	var score=game.music.compose(model)
 	var score_bytes=score.data
 	check(JSON.stringify([model.modules,model.slots,model.next_uid])==snapshot,"compiling128s score never mutates ownership or charge state")
-	check(score_bytes.size()==22050*128*2 and score.loop_end==22050*128 and score.loop_mode==AudioStreamWAV.LOOP_FORWARD,"native64bar PCM loop includes the full charged-weapon melody")
+	check(score.stereo and score_bytes.size()==22050*128*4 and score.loop_end==22050*128 and score.loop_mode==AudioStreamWAV.LOOP_FORWARD,"native64bar PCM loop includes the full charged-weapon melody")
 	var manifest=game.music.score_events.duplicate(true); var expected: Array=[]
 	for serial in range(512):
 		for event in model.schedule(serial): expected.append([serial,event.uid,event.kind,int(event.get("pitch",serial%8)),int(event.get("repeat_index",0)),str(event.get("pilot",""))])
@@ -50,6 +50,7 @@ func run() -> void:
 	var changed=game.music.compose(model)
 	check(hash(score_bytes)!=hash(changed.data),"moving a module changes the actual native PCM soundtrack")
 	game.start_run(20261029); game.invulnerable=1000
+	while not game.music.playing: await process_frame
 	await create_timer(4.3).timeout
 	check(game.music.playing and game.music.timeline>4. and game.fire_log.size()>8,"actual native score advances and triggers flight weapons")
 	var max_error=0.; var seen: Dictionary={}
@@ -67,6 +68,7 @@ func run() -> void:
 	await create_timer(.25).timeout
 	check(is_equal_approx(held,game.music.timeline),"editing pauses the native audible clock")
 	game.move_module(game.loadout.slots[0],7); game.close_editor()
+	while game.state=="editor": await process_frame
 	check(game.music.last_step==old_serial and game.state=="combat","rebuild keeps event history and cannot farm the first attack")
 	await create_timer(.4).timeout
 	check(game.music.timeline>held and game.music.timeline<held+1.,"resume retains song phase instead of restarting or counting compile time")

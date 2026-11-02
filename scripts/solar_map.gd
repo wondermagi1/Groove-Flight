@@ -214,9 +214,16 @@ func _refresh_selection() -> void:
 	_detail(str(row.description),19)
 	var rule=_label("航线强度",17,Color("6b819c")); detail_content.add_child(rule)
 	_detail("%d 波  ·  %d 次补给"%[route.size(),route.size()-1],21,Color("e2edf9"))
-	_detail("敌机耐久 ×%.2f\n敌弹速度 ×%.2f\n接触 / 弹幕伤害 %.1f\n最终旗舰耐久 %s"%[combat.hp_scale,combat.bullet_speed,combat.damage,_number(float(combat.boss_hp))],18)
+	_detail("末波上限 逐波递增\n敌机耐久 ×%.2f\n敌弹速度 ×%.2f\n接触 / 弹幕伤害 %.1f\n最终旗舰耐久 %s"%[combat.hp_scale,combat.bullet_speed,combat.damage,_number(float(combat.boss_hp))],18)
 	_detail("最终旗舰  /  "+str(row.bossname),18,row.color)
 	_detail(str(row.hint),18,Color("b9cfdf"))
+	_detail("起始节律",17,Color("8fb7c5"))
+	var path=OptionButton.new(); path.name="StartingPath"; path.custom_minimum_size.y=40
+	for title in ["原型配装","实弹裂阵","能量共振","动力曲射"]: path.add_item(title)
+	path.select(clampi(int(game.settings.starting_path),0,3))
+	path.item_selected.connect(func(index):game.settings.starting_path=index; game.save_settings(); _refresh_selection.call_deferred())
+	detail_content.add_child(path)
+	if int(game.settings.starting_path)>0: _detail(str(game.PATHS.PATHS[int(game.settings.starting_path)-1].detail),16,Color("89a9c0"))
 	var clears=int(record.get("clears",0)); var attempts=int(record.get("attempts",0))
 	if clears>0:
 		_detail("✓ 航线已突破  %d 次"%clears,19,Color("9de3b7"))

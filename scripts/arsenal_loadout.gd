@@ -2,11 +2,14 @@ extends RefCounted
 ## Pure arsenal/sequence model. Currency, health changes and audio playback belong
 ## to the game. Occupied cells contain UIDs; only each item's head emits events.
 const C=preload("res://scripts/arsenal_catalog.gd")
+const CLOCK=preload("res://scripts/music_clock.gd")
+const PATHS=preload("res://scripts/build_paths.gd")
 const TRACKS=3
 const STEPS=8
 const INVENTORY_LIMIT=64
 const STAT_KEYS=["ballistic","energy","power","support","extra_projectiles","bullet_multiplier","crit_chance","crit_damage","max_health","regen","armor","move_percent","magnet","luck"]
 const WEAPON_KEYS=["damage_percent","count","pierce","speed_percent","range_percent","explosion","spread_percent","chain_count","homing","bounces"]
+const TRAJECTORY_KEYS=["split_count","accel_forward","accel_side","offset_forward","offset_side","turn_after","turn_deg","conduct","count_per_attribute","chain_per_attribute"]
 const BEAT_KEYS=["charge_reduce","repeat","rotate","streak","chord"]
 const EVENT_KEYS=["heal_bar","shield_dash","heal_pickup","explode_kill","charge_kill","missiles_dash","heal_kill"]
 var modules: Array=[]
@@ -256,7 +259,8 @@ func _weapon_event(uid: int,serial: int,sources: Array) -> Dictionary:
 	var module=find(uid); var row=_row(str(module.get("kind",""))); var at=equipped_head(uid)
 	if module.is_empty() or row.is_empty() or at<0 or str(row.get("category",""))!="weapon": return {}
 	var attributes=_stats_for(uid,serial,sources)
-	var weapon: Dictionary={}; var beat: Dictionary={}
+	var weapon: Dictionary={}; var beat: Dictionary={}; var trajectory: Dictionary={}
+	for key in TRAJECTORY_KEYS: trajectory[key]=0.
 	for key in WEAPON_KEYS: weapon[key]=0.
 	for key in BEAT_KEYS: beat[key]=0.
 	for source in sources:
@@ -264,6 +268,7 @@ func _weapon_event(uid: int,serial: int,sources: Array) -> Dictionary:
 		var rule: Dictionary=source.rule; var kind=str(rule.get("type","")); var key=str(rule.get("key",""))
 		if kind=="weapon" and weapon.has(key): weapon[key]+=float(rule.get("value",0))*float(source.scale)
 		if kind=="beat" and beat.has(key): beat[key]+=float(rule.get("value",0))*float(source.scale)
+		if kind=="trajectory" and trajectory.has(key): trajectory[key]+=float(rule.get("value",0))*float(source.scale)
 	var charge=_effective_charge(maxf(1.,float(row.get("charge",1))-beat.charge_reduce))
 	var previous=_previous_weapon(at); var same=not previous.is_empty() and str(previous.family)==str(row.family)
 	var chord=not previous.is_empty() and not same and beat.chord>0
@@ -271,7 +276,8 @@ func _weapon_event(uid: int,serial: int,sources: Array) -> Dictionary:
 	var damage=float(row.get("damage",1))*damage_scale*(1.+.45*(int(module.level)-1))
 	damage*=maxf(.1,1.+float(attributes.get(attribute,0))/100.+float(attributes.power)/200.)
 	damage*=attributes.bullet_multiplier*maxf(.1,1.+weapon.damage_percent+(beat.streak if same else 0.))
-	var extra=clampi(roundi(float(attributes.extra_projectiles)+weapon.count),-80,80)
+	var attribute_count=floori(maxf(0.,float(attributes.get(attribute,0.)))*float(trajectory.count_per_attribute))
+	var extra=clampi(roundi(float(attributes.extra_projectiles)+weapon.count)+attribute_count,-80,80)
 	var bar=floori(float(maxi(0,serial))/STEPS)
 	var melody: Array=row.get("melody",[0,2,4,3,0,4,6,4])
 	# The melody advances when this charged weapon fires, not on silent bars.
@@ -280,7 +286,7 @@ func _weapon_event(uid: int,serial: int,sources: Array) -> Dictionary:
 	var note_number=maxi(0,floori(float(bar+1)/charge)-1)
 	var pitch=posmod(int(melody[note_number%melody.size()])+at%STEPS,STEPS)
 	var count_limit=8 if str(row.family)=="chain" else (12 if str(row.family)=="beam" else 96)
-	return {"uid":uid,"kind":str(row.id),"voice":str(row.get("voice",row.id)),"pitch":pitch,"family":str(row.family),"name":str(row.name),"category":"weapon","attr":attribute,"level":int(module.level),"width":int(row.width),"slot":at,"damage":clampf(damage,.1,100000.),"count":clampi(int(row.get("count",1))+extra,1,count_limit),"extra":extra,"pierce":clampi(int(row.get("pierce",0))+roundi(weapon.pierce),0,40),"speed":clampf(float(row.get("speed",700))*maxf(.1,1.+weapon.speed_percent),0.,3000.),"life":clampf(float(row.get("life",2))*maxf(.1,1.+weapon.range_percent),.1,30.),"spread":clampf(float(row.get("spread",0))*maxf(0.,1.+weapon.spread_percent),0.,TAU),"explosion":clampf(float(row.get("explosion",0))+weapon.explosion,0.,800.),"homing":clampf(float(row.get("homing",0))+weapon.homing,0.,20.),"bounces":clampi(int(row.get("bounces",0))+roundi(weapon.bounces),0,24),"chain_count":clampi(maxi(1,int(row.get("bounces",3)))+roundi(weapon.chain_count),1,32),"chord":chord,"chord_power":clampf(beat.chord if chord else 0.,0.,5.),"repeat":clampi(roundi(beat.repeat),0,3),"repeat_index":0,"angle":deg_to_rad(fposmod(beat.rotate,360.)),"charge":charge,"charge_base":int(row.get("charge",1)),"eligible":posmod(bar+1,charge)==0,"crit_chance":attributes.crit_chance,"crit_damage":attributes.crit_damage,"stats":attributes,"events":_events_for(uid,serial,sources),"equipped":true}
+	return {"uid":uid,"kind":str(row.id),"voice":str(row.get("voice",row.id)),"pitch":pitch,"family":str(row.family),"name":str(row.name),"category":"weapon","attr":attribute,"level":int(module.level),"width":int(row.width),"slot":at,"damage":clampf(damage,.1,100000.),"count":clampi(int(row.get("count",1))+extra,1,count_limit),"extra":extra,"pierce":clampi(int(row.get("pierce",0))+roundi(weapon.pierce),0,40),"speed":clampf(float(row.get("speed",700))*maxf(.1,1.+weapon.speed_percent),0.,3000.),"life":clampf(float(row.get("life",2))*maxf(.1,1.+weapon.range_percent),.1,30.),"spread":clampf(float(row.get("spread",0))*maxf(0.,1.+weapon.spread_percent),0.,TAU),"explosion":clampf(float(row.get("explosion",0))+weapon.explosion,0.,800.),"homing":clampf(float(row.get("homing",0))+weapon.homing,0.,20.),"bounces":clampi(int(row.get("bounces",0))+roundi(weapon.bounces),0,24),"chain_count":clampi(maxi(1,int(row.get("bounces",3)))+roundi(weapon.chain_count)+floori(maxf(0.,float(attributes.get(attribute,0.)))*float(trajectory.chain_per_attribute)),1,32),"chord":chord,"chord_power":clampf(beat.chord if chord else 0.,0.,5.),"repeat":clampi(roundi(beat.repeat),0,3),"repeat_index":0,"angle":deg_to_rad(fposmod(beat.rotate,360.)),"charge":charge,"charge_base":int(row.get("charge",1)),"eligible":posmod(bar+1,charge)==0,"crit_chance":attributes.crit_chance,"crit_damage":attributes.crit_damage,"stats":attributes,"events":_events_for(uid,serial,sources),"equipped":true,"trajectory":trajectory,"calculation":{"base_damage":float(row.damage),"ship_multiplier":damage_scale,"level_multiplier":1.+.45*(int(module.level)-1),"attribute_multiplier":maxf(.1,1.+float(attributes.get(attribute,0))/100.+float(attributes.power)/200.),"damage_multiplier":attributes.bullet_multiplier,"mod_multiplier":maxf(.1,1.+weapon.damage_percent+(beat.streak if same else 0.)),"attribute_count":attribute_count,"base_count":int(row.get("count",1)),"extra_count":extra,"count_cap":count_limit}}
 
 func item_stats(uid: int,serial: int=0) -> Dictionary:
 	var module=find(uid)
@@ -316,13 +322,15 @@ func schedule(serial: int) -> Array[Dictionary]:
 			result.append(event)
 			for n in range(repeats):
 				var repeated=event.duplicate(true); repeated.repeat_index=n+1
+				repeated.offset_seconds=.25*float(n+1)/float(repeats+1)
 				repeated.angle=float(event.angle)+(.07 if n%2==0 else -.07)*float(1+floori(float(n)/2.))
 				result.append(repeated)
 		elif at%STEPS==index:
 			result.append({"uid":int(module.uid),"kind":str(row.id),"voice":str(row.get("voice","")),"pitch":index,"family":"support","category":str(row.category),"name":str(row.name),"attr":str(row.attr),"level":int(module.level),"width":int(row.width),"slot":at,"damage":0.,"count":0,"extra":0,"pierce":0,"speed":0.,"life":0.,"spread":0.,"explosion":0.,"homing":0.,"bounces":0,"chain_count":0,"chord":false,"repeat":0,"repeat_index":0,"angle":0.,"charge":1,"eligible":true,"rules":row.get("rules",[]).duplicate(true),"events":_events_for(int(module.uid),serial,sources)})
 	if echo_repeat and index==7 and not first.is_empty() and bool(first.eligible):
-		var echo=first.duplicate(true); echo.damage=float(echo.damage)*.5; echo.repeat=0; echo.repeat_index=0; echo.repeat_count=0; echo.pilot="echo"; echo.slot=7
+		var echo=first.duplicate(true); echo.damage=float(echo.damage)*.5; echo.repeat=0; echo.repeat_index=0; echo.repeat_count=0; echo.pilot="echo"; echo.source_slot=first.slot; echo.slot=7; echo.offset_seconds=0.
 		result.append(echo)
+	for i in range(result.size()): result[i]=CLOCK.stamp(result[i],serial)
 	return result
 func advance_step(_index: int,serial: int) -> Array[Dictionary]: return schedule(serial)
 
@@ -344,28 +352,38 @@ func salvage(uid: int) -> int:
 	var refund=maxi(1,roundi(float(_row(str(module.kind)).get("cost",10))*.4*(1.+.5*(int(module.level)-1))))
 	unequip_uid(uid); modules.erase(module); return refund
 
-func make_shop(rng: RandomNumberGenerator,wave: int) -> Array[Dictionary]:
+func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[]) -> Array[Dictionary]:
 	var pool: Array=[]; var result: Array[Dictionary]=[]
 	var max_rarity=clampi(1+floori(float(maxi(wave,1)-1)/3.),1,3)
 	for row in C.rows():
-		if int(row.rarity)<=max_rarity: pool.append(row)
+		if int(row.rarity)<=max_rarity and not excluded.has(str(row.id)): pool.append(row)
 	var luck=float(stats().luck)
+	var owned: Array=[]
+	for module in modules: owned.append(str(module.kind))
 	while result.size()<6 and not pool.is_empty():
 		# Luck changes the odds within the wave's unlocked rarity pool. It never
 		# bypasses that unlock or creates duplicate offers within one shop.
 		# Reserve the first offer for a weapon so a large support catalogue cannot
 		# produce several shops in a row with no opportunity to change firepower.
 		var candidates: Array[int]=[]; var total=0.
+		var mechanism_bag=result.size()==1 and wave>=2 and rng.randf()<.75
+		var survival_bag=result.size()==2 and rng.randf()<.65
 		for candidate in range(pool.size()):
 			if result.is_empty() and str(pool[candidate].category)!="weapon": continue
-			candidates.append(candidate); total+=1.+float(pool[candidate].rarity)*luck*.04
+			if mechanism_bag:
+				var spatial=false
+				for rule in pool[candidate].get("rules",[]):
+					if str(rule.type)=="trajectory" or (str(rule.type)=="beat" and str(rule.key) in ["repeat","charge_reduce","chord"]): spatial=true
+				if not spatial: continue
+			if survival_bag and str(pool[candidate].category)!="defense": continue
+			candidates.append(candidate); total+=(1.+float(pool[candidate].rarity)*luck*.04)*PATHS.affinity(str(pool[candidate].id),owned)
 		if candidates.is_empty(): break
 		var roll=rng.randf()*total; var index=candidates[-1]
 		for candidate in candidates:
-			roll-=1.+float(pool[candidate].rarity)*luck*.04
+			roll-=(1.+float(pool[candidate].rarity)*luck*.04)*PATHS.affinity(str(pool[candidate].id),owned)
 			if roll<=0.: index=candidate; break
 		var row: Dictionary=pool[index]; pool.remove_at(index)
-		result.append({"id":str(row.id),"price":maxi(1,roundi(float(row.cost)*(1.+.025*maxi(0,wave-1)))),"sold":false})
+		result.append({"id":str(row.id),"price":maxi(1,roundi(float(row.cost)*(1.+.025*maxi(0,wave-1)))),"sold":false,"locked":false})
 	return result
 func buy(offer: Dictionary,dust: int) -> Dictionary:
 	var denied={"ok":false,"cost":0,"uid":-1}
@@ -390,3 +408,18 @@ func take(reward: Dictionary) -> bool:
 			module.level=int(module.level)+1; return true
 		"power": damage_scale+=.18; return true
 	return false
+
+func clone():
+	var copy=get_script().new()
+	copy.modules=modules.duplicate(true); copy.slots.assign(slots); copy.next_uid=next_uid
+	copy.perks=perks.duplicate(true); copy.damage_scale=damage_scale; copy.echo_repeat=echo_repeat
+	copy._base_health=_base_health; copy._base_extra=_base_extra; copy._fleet_stats=_fleet_stats.duplicate(true)
+	return copy
+func rule_explanation(uid: int,serial: int) -> Array[String]:
+	var result: Array[String]=[]
+	for source in _rules():
+		if int(source.uid)==uid: continue
+		var rule: Dictionary=source.rule
+		var tag="生效" if _applies(source,uid,serial) else "未满足位置 属性或拍位"
+		result.append(str(source.name)+" · "+tag+" · "+C.describe_rule(rule))
+	return result

@@ -67,7 +67,7 @@ func run() -> void:
 	var max_error=0.
 	for event in game.fire_log: max_error=maxf(max_error,absf(float(event.actual)-float(event.deadline)))
 	check(max_error<.06,"trial attacks remain within60ms of native note onsets")
-	facts.max_note_error=max_error; facts.trial_events=game.fire_log.size(); facts.wav_bytes=wav.size()
+	facts.event_timing=game.fire_log.duplicate(true); facts.max_note_error=max_error; facts.trial_events=game.fire_log.size(); facts.wav_bytes=wav.size()
 	var health=game.health; game.hurt_player(100.)
 	check(game.health==health,"composition trial is an invulnerable practice arena")
 	game.pause_game(); var held=game.music.timeline; await create_timer(.2).timeout
@@ -80,7 +80,7 @@ func run() -> void:
 	check(game.planet_records==progress and game.best==best and score.note_count()==6,"practice never grants planet records and retains the song")
 	game.close_composer(); await frames()
 	check(game.state=="title" and not game.composer_player.playing,"editor closes to its original menu with music stopped")
-	game.start_run(61234,"mercury"); await create_timer(.55).timeout
+	game.start_run(61234,"mercury"); await wait_for(func():return game.standard_music.playing); await create_timer(.55).timeout
 	check(game.state=="combat" and not game.free_music_run and game.music==game.standard_music and game.music.playing,"ordinary roguelike mode still uses its original native score")
 	game.return_title(); await frames(); game.composer_player.stop_song()
 	game.standard_music.stop(); game.standard_music.stream=null

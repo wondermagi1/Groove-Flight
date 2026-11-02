@@ -4,7 +4,7 @@ extends Node2D
 const DATA=preload("res://scripts/arsenal_catalog.gd")
 const BODY=preload("res://shaders/weapon_body.gdshader")
 const GLOW=preload("res://shaders/weapon_glow.gdshader")
-const CAPACITY=1200
+const CAPACITY=4096
 const SIZES=[Vector2(30,12),Vector2(20,14),Vector2(36,12),Vector2(38,20),Vector2(23,23),Vector2(28,12),Vector2(68,10),Vector2(32,32),Vector2(29,29),Vector2(31,31),Vector2(48,24),Vector2(33,28)]
 var bodies: Array[MultiMeshInstance2D]=[]
 var glows: Array[MultiMeshInstance2D]=[]

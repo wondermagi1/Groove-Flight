@@ -2,6 +2,7 @@ extends AudioStreamPlayer
 ## A user-authored score is compiled on a worker into one native stereo PCM
 ## stream. The exact compiled note manifest also drives the flight callbacks.
 const DATA=preload("res://scripts/arsenal_catalog.gd")
+const CLOCK=preload("res://scripts/music_clock.gd")
 const RATE=22050
 const MAX_NOTE_SECONDS=3600.
 const MAX_CACHE_FRAMES=2000000
@@ -194,6 +195,8 @@ func _process(_delta: float) -> void:
 	if _looped and raw<_previous_raw-minf(.5,duration_seconds*.4): loop_count+=1
 	_previous_raw=raw
 	var correction=AudioServer.get_time_since_last_mix()-AudioServer.get_output_latency()
+	# Before the first native mix, its age belongs to the previous stream.
+	if raw<=.000001: correction=0.
 	timeline=maxf(timeline,maxf(0.,loop_count*duration_seconds+raw+correction))
 	if not _looped: timeline=minf(timeline,duration_seconds-.00001)
 	var serial=floori(timeline/step_duration)
@@ -206,6 +209,7 @@ func _process(_delta: float) -> void:
 		step_fired.emit(posmod(last_step,16),last_step,deadline)
 		for note in _events_by_step.get(posmod(last_step,score_step_count),[]):
 			var event: Dictionary=note.duplicate(true); event.serial=last_step
+			event=CLOCK.stamp(event,last_step,step_duration,60./maxf(.0001,step_duration*4.),"composer",duration_seconds)
 			event_fired.emit(event,deadline)
 			if not _running: break
 		if not _running: break

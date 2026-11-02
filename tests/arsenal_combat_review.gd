@@ -140,5 +140,6 @@ func economy_callbacks() -> void:
 	check(not game.shop_reroll() and game.dust==0 and game.shop_offers==shop,"insufficient reroll funds preserve offers and currency")
 	check(not game.continue_wave(),"shop cannot resume a battle after salvaging last equipped weapon")
 	game.loadout.add_module("pulse",0); game.refresh_loadout_stats(); game.state="reward"; var previous_wave=game.wave
+	game.standard_music.compose(game.loadout)
 	check(game.continue_wave() and game.state=="combat" and game.wave==previous_wave+1,"shop resumes battle only with real equipped weapon")
 	await frames(3); game.music.hold(true); game.music.stop(); game.music._running=false
