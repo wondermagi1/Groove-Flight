@@ -1,0 +1,12 @@
+{
+	"checks": 328,
+	"facts": {
+		"compile_msec": 1375.81,
+		"max_native_error": 0.00601620395886915,
+		"pcm_peak_sampled": 9465,
+		"score_events": 168,
+		"weapon_files": 256
+	},
+	"failures": [],
+	"scope": "All256original weapon WAVs,32distinct instruments/eight pitches,128s native score versus pure512-step schedule, actual flight timing and paused rebuild. No claim of human musical taste acceptance."
+}

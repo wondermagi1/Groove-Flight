@@ -1,9 +1,9 @@
 {
 	"checks": 328,
 	"facts": {
-		"compile_msec": 660.193,
-		"max_native_error": 0.0262569334198236,
-		"pcm_peak_sampled": 14783,
+		"compile_msec": 1375.81,
+		"max_native_error": 0.00601620395886915,
+		"pcm_peak_sampled": 9465,
 		"score_events": 168,
 		"weapon_files": 256
 	},

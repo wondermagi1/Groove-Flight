@@ -1,0 +1,15 @@
+{
+	"checks": 13,
+	"failures": [],
+	"images": [
+		"res://docs/screenshots/v11-build-1.png",
+		"res://docs/screenshots/v11-build-2.png",
+		"res://docs/screenshots/v11-build-3.png",
+		"res://docs/screenshots/v11-mercury-machine.png",
+		"res://docs/screenshots/v11-shop-1080p.png",
+		"res://docs/screenshots/v11-shop-720p.png",
+		"res://docs/screenshots/v11-settings.png",
+		"res://docs/screenshots/v11-receipt.png"
+	],
+	"scope": "Controlled real GPU render, three actual blueprint trajectories, separate boss motif, native sandbox, settings and receipt. Six generated eight-second stereo extracts; no human listening or natural full-run claim."
+}

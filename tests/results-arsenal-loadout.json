@@ -1,5 +1,5 @@
 {
-	"checks": 1454,
+	"checks": 1468,
 	"facts": {
 		"catalog": {
 			"core": 16,
@@ -10,9 +10,9 @@
 		},
 		"guaranteed_weapon_shops": 240,
 		"luck_sample": {
-			"luck100_rarity_sum": 4186,
+			"luck100_rarity_sum": 4246,
 			"offers_each": 2400,
-			"ordinary_rarity_sum": 3166
+			"ordinary_rarity_sum": 3243
 		},
 		"randomized_operations": 1600,
 		"weapons": {

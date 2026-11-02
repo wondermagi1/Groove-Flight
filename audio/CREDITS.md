@@ -10,3 +10,7 @@
 The two paper effects retain their provided-project provenance and are not claimed as new recordings. Musical voices are mixed into the native looping score, while impact effects use a rate-limited separate pool. No commercial Demo archive was unpacked.
 
 Reference links: https://kenney.nl/assets/sci-fi-sounds ; https://opengameart.org/content/rpg-sound-pack . These are provenance notes, not external instructions or account-contact requests.
+
+## V11 generated event transients
+
+`scripts/event_mixer.gd` synthesizes original 22,050Hz PCM noise/tonal transients for normal, armor, elite and boss destruction. Fixed per-kind RNG seeds, filtered noise, exponential envelopes and short low-frequency partials are created locally at runtime. `docs/audio-v11/*.wav` are controlled stereo excerpts of this project’s own soundtrack. The assisted Mercury video includes existing credited impact samples. No audio was extracted from Groove Core. Human listening and physical-output latency calibration remain pending.

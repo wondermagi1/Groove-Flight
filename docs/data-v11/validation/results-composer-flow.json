@@ -1,0 +1,72 @@
+{
+	"checks": 29,
+	"facts": {
+		"event_timing": [
+			{
+				"actual": 0.0,
+				"deadline": 0.0,
+				"duration": 0.3333335,
+				"kind": "pulse",
+				"note_id": 1,
+				"pitch": 61,
+				"role": "auto",
+				"serial": 0
+			},
+			{
+				"actual": 0.337456338974357,
+				"deadline": 0.3333335,
+				"duration": 0.666667,
+				"kind": "pulse",
+				"note_id": 2,
+				"pitch": 68,
+				"role": "auto",
+				"serial": 2
+			},
+			{
+				"actual": 0.668794706201911,
+				"deadline": 0.666667,
+				"duration": 0.666667,
+				"kind": "beam",
+				"note_id": 4,
+				"pitch": 60,
+				"role": "auto",
+				"serial": 4
+			},
+			{
+				"actual": 0.668794706201911,
+				"deadline": 0.666667,
+				"duration": 0.666667,
+				"kind": "beam",
+				"note_id": 5,
+				"pitch": 64,
+				"role": "auto",
+				"serial": 4
+			},
+			{
+				"actual": 0.668794706201911,
+				"deadline": 0.666667,
+				"duration": 0.666667,
+				"kind": "beam",
+				"note_id": 6,
+				"pitch": 67,
+				"role": "auto",
+				"serial": 4
+			},
+			{
+				"actual": 1.33513438105237,
+				"deadline": 1.333334,
+				"duration": 0.16666675,
+				"kind": "pulse",
+				"note_id": 3,
+				"pitch": 73,
+				"role": "auto",
+				"serial": 8
+			}
+		],
+		"max_note_error": 0.00412283897435667,
+		"trial_events": 6,
+		"wav_bytes": 470444
+	},
+	"failures": [],
+	"scope": "Actual title projectile to piano roll, authored chromatic chords, worker native playback, JSON/MIDI/WAV callbacks, unranked note-driven invulnerable trial, pause/return and ordinary-mode regression. File fixtures are original notes, not a commercial-song transcription; no human listening acceptance."
+}

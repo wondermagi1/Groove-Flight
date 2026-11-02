@@ -1,0 +1,102 @@
+[
+  {
+    "file": "docs/audio-v11/boss-native-assisted.wav",
+    "bytes": 705678,
+    "sha256": "097a7e3bf9c796f5f6da621d177f5ad9f3260bd2fae844457b824e3132546d95"
+  },
+  {
+    "file": "docs/audio-v11/build-1.wav",
+    "bytes": 705644,
+    "sha256": "43c6edb87308600e709f7d16682cc3dad22864777505940bfdeda0ef42867864"
+  },
+  {
+    "file": "docs/audio-v11/build-2.wav",
+    "bytes": 705644,
+    "sha256": "320bd4a43b94e67efcdee1a953c2a8b50ea86cab19844c78d2b5df7b0d237b33"
+  },
+  {
+    "file": "docs/audio-v11/build-3.wav",
+    "bytes": 705644,
+    "sha256": "be6dd3221bbac1beae4ac80807a84bb4d803462ed054640764edc7cf24314c76"
+  },
+  {
+    "file": "docs/audio-v11/growth-1-start.wav",
+    "bytes": 705644,
+    "sha256": "d05fb36497e597c0365a4ae317412af2844d2bc28e4cd296cdd8b1541f643d08"
+  },
+  {
+    "file": "docs/audio-v11/growth-2-middle.wav",
+    "bytes": 705644,
+    "sha256": "f6505c28f40893a2e69d99e06d6ae0c8825cccceb7f1a7d2a3c56bc544fe4eef"
+  },
+  {
+    "file": "docs/audio-v11/growth-3-full.wav",
+    "bytes": 705644,
+    "sha256": "43c6edb87308600e709f7d16682cc3dad22864777505940bfdeda0ef42867864"
+  },
+  {
+    "file": "docs/screenshots/v11-build-1.png",
+    "bytes": 1090197,
+    "sha256": "41ad94ed6638cf469c908c51fd28f15b7b23d3d9a3c2a89f2d7d0ec310bddbb3"
+  },
+  {
+    "file": "docs/screenshots/v11-build-2.png",
+    "bytes": 1140349,
+    "sha256": "f9764c4d1ffb767351cae5937b33fe0fac609396c238f4f7ec6a72fd5f0f27c6"
+  },
+  {
+    "file": "docs/screenshots/v11-build-3.png",
+    "bytes": 1118465,
+    "sha256": "a39f85830d48b350535f27880d31666a0e4c136675a0eee26995c8a1788f66c6"
+  },
+  {
+    "file": "docs/screenshots/v11-mercury-machine.png",
+    "bytes": 1086921,
+    "sha256": "cc7c7aa2d6f359353292104022df4c529f3d7b2dc7820ce416f8557a2b149e24"
+  },
+  {
+    "file": "docs/screenshots/v11-native-victory.png",
+    "bytes": 281136,
+    "sha256": "b27b2c625a1009b2361dc154b58c27f8a9529ec765c96e4bd0e404e567a60100"
+  },
+  {
+    "file": "docs/screenshots/v11-native-wave-1.png",
+    "bytes": 1072561,
+    "sha256": "5b9c8a04451f8833b75b76e7950ac0686bfd2e78a8544ac705156ec3fdfda1be"
+  },
+  {
+    "file": "docs/screenshots/v11-native-wave-3.png",
+    "bytes": 1099692,
+    "sha256": "704c31f1a12e2725dbf16f90366663167ae20bab648d2f6ef87696eeeceac181"
+  },
+  {
+    "file": "docs/screenshots/v11-native-wave-6.png",
+    "bytes": 1080690,
+    "sha256": "4185ba81d9ee45fd3c85e237bcb3411fdd093d5cfcfd6e44045245a7029fee91"
+  },
+  {
+    "file": "docs/screenshots/v11-receipt.png",
+    "bytes": 681013,
+    "sha256": "6da47373c02606a4d885375d37d086614af790c4aa6c88fb3352e16260676bbb"
+  },
+  {
+    "file": "docs/screenshots/v11-settings.png",
+    "bytes": 678001,
+    "sha256": "288ee838d69a411fa1efde89e7a8b2890d34a42a4a5433d0ffb0cf175577a168"
+  },
+  {
+    "file": "docs/screenshots/v11-shop-1080p.png",
+    "bytes": 510309,
+    "sha256": "97cc4a88b3c48c075050f2ebc969b10b2d8132a88193a5b6b4897d1bd46db792"
+  },
+  {
+    "file": "docs/screenshots/v11-shop-720p.png",
+    "bytes": 286331,
+    "sha256": "5d1dd549e2ac2a382958b67a22cb79a6569b5e585ccb1a3be6b6181a691802c0"
+  },
+  {
+    "file": "docs/video-v11/mercury-native-sample.mp4",
+    "bytes": 30010633,
+    "sha256": "b56003ba2f064ce8ae32f518b1e9cabfd875bb6e76529ff8bcfd2490afdc2471"
+  }
+]

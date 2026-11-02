@@ -5,7 +5,7 @@
 		{
 			"combat": {
 				"accent": "(0.8471, 0.7098, 0.5804, 1.0)",
-				"boss_hp": 4000.0,
+				"boss_hp": 3000.0,
 				"bullet_speed": 1.0,
 				"damage": 1.0,
 				"drop_scale": 1.0,

@@ -1,0 +1,404 @@
+{
+	"audio_seconds": 156.714564657471,
+	"failures": [],
+	"kills": 671,
+	"peak_bullets": 130,
+	"peak_enemies": 126,
+	"purchases": [
+		{
+			"dust_after": 35,
+			"id": "d_escape_rack",
+			"price": 23,
+			"slot": 3,
+			"wave": 1
+		},
+		{
+			"dust_after": 20,
+			"id": "mod_flame_4",
+			"price": 15,
+			"slot": 1,
+			"wave": 1
+		},
+		{
+			"dust_after": 0,
+			"id": "r_drum_fuel",
+			"price": 20,
+			"slot": 5,
+			"wave": 1
+		},
+		{
+			"dust_after": 80,
+			"id": "d_magnetic_armor",
+			"price": 17,
+			"slot": 10,
+			"wave": 2
+		},
+		{
+			"dust_after": 59,
+			"id": "d_windrunner",
+			"price": 21,
+			"slot": 11,
+			"wave": 2
+		},
+		{
+			"dust_after": 41,
+			"id": "mod_boomerang_2",
+			"price": 18,
+			"slot": 12,
+			"wave": 2
+		},
+		{
+			"dust_after": 144,
+			"id": "pulse",
+			"price": 15,
+			"slot": 13,
+			"wave": 3
+		},
+		{
+			"dust_after": 131,
+			"id": "d_calm_seal",
+			"price": 13,
+			"slot": 13,
+			"wave": 3
+		},
+		{
+			"dust_after": 111,
+			"id": "d_safe_hands",
+			"price": 20,
+			"slot": 14,
+			"wave": 3
+		},
+		{
+			"dust_after": 246,
+			"id": "r_cross",
+			"price": 27,
+			"slot": 16,
+			"wave": 4
+		},
+		{
+			"dust_after": 217,
+			"id": "d_emergency_vault",
+			"price": 29,
+			"slot": 16,
+			"wave": 4
+		},
+		{
+			"dust_after": 195,
+			"id": "mod_orbit_5",
+			"price": 22,
+			"slot": 18,
+			"wave": 4
+		},
+		{
+			"dust_after": 393,
+			"id": "d_medkit",
+			"price": 14,
+			"slot": 15,
+			"wave": 5
+		},
+		{
+			"dust_after": 376,
+			"id": "mod_flame_4",
+			"price": 17,
+			"slot": 20,
+			"wave": 5
+		},
+		{
+			"dust_after": 356,
+			"id": "d_feather_armor",
+			"price": 20,
+			"slot": 20,
+			"wave": 5
+		}
+	],
+	"receipt": {
+		"death_reason": "",
+		"received": 0.0,
+		"requests": {
+			"derived_projectiles": 2664,
+			"formation_edge_fallback": 17,
+			"projectile_requested": 4686,
+			"projectile_spawned": 4686,
+			"spawn_checks": 121
+		},
+		"waves": [
+			{
+				"dust": 58,
+				"retreated": 12,
+				"seconds": 20.0177261733398,
+				"spawned": 70,
+				"wave": 1,
+				"weapons": {
+					"-1:overload": {
+						"damage": 532.81856,
+						"hits": 24,
+						"kills": 21,
+						"kind": "overload",
+						"overkill": 907.18144,
+						"procs": 0,
+						"shots": 0,
+						"uid": -1
+					},
+					"1:pulse": {
+						"damage": 554.85184,
+						"hits": 108,
+						"kills": 30,
+						"kind": "pulse",
+						"overkill": 111.55712,
+						"procs": 47,
+						"shots": 118,
+						"uid": 1
+					},
+					"2:scatter": {
+						"damage": 179.58912,
+						"hits": 37,
+						"kills": 7,
+						"kind": "scatter",
+						"overkill": 41.7184,
+						"procs": 16,
+						"shots": 128,
+						"uid": 2
+					}
+				}
+			},
+			{
+				"dust": 97,
+				"retreated": 3,
+				"seconds": 22.0181062145996,
+				"spawned": 100,
+				"wave": 2,
+				"weapons": {
+					"-1:overload": {
+						"damage": 920.92864,
+						"hits": 41,
+						"kills": 35,
+						"kind": "overload",
+						"overkill": 1539.07136,
+						"procs": 0,
+						"shots": 0,
+						"uid": -1
+					},
+					"1:pulse": {
+						"damage": 940.66432,
+						"hits": 136,
+						"kills": 49,
+						"kind": "pulse",
+						"overkill": 235.14752,
+						"procs": 58,
+						"shots": 130,
+						"uid": 1
+					},
+					"2:scatter": {
+						"damage": 271.6384,
+						"hits": 52,
+						"kills": 13,
+						"kind": "scatter",
+						"overkill": 73.7920000000001,
+						"procs": 28,
+						"shots": 150,
+						"uid": 2
+					}
+				}
+			},
+			{
+				"dust": 118,
+				"retreated": 22,
+				"seconds": 24.0148097155762,
+				"spawned": 140,
+				"wave": 3,
+				"weapons": {
+					"-1:overload": {
+						"damage": 1667.58912,
+						"hits": 65,
+						"kills": 54,
+						"kind": "overload",
+						"overkill": 2232.41088,
+						"procs": 0,
+						"shots": 0,
+						"uid": -1
+					},
+					"1:pulse": {
+						"damage": 795.5456,
+						"hits": 146,
+						"kills": 42,
+						"kind": "pulse",
+						"overkill": 181.89184,
+						"procs": 75,
+						"shots": 132,
+						"uid": 1
+					},
+					"2:scatter": {
+						"damage": 392.0576,
+						"hits": 88,
+						"kills": 22,
+						"kind": "scatter",
+						"overkill": 108.25984,
+						"procs": 46,
+						"shots": 160,
+						"uid": 2
+					}
+				}
+			},
+			{
+				"dust": 162,
+				"retreated": 29,
+				"seconds": 26.00747565625,
+				"spawned": 191,
+				"wave": 4,
+				"weapons": {
+					"-1:overload": {
+						"damage": 1614.588544,
+						"hits": 83,
+						"kills": 77,
+						"kind": "overload",
+						"overkill": 3365.411456,
+						"procs": 0,
+						"shots": 0,
+						"uid": -1
+					},
+					"1:pulse": {
+						"damage": 1939.110304,
+						"hits": 202,
+						"kills": 62,
+						"kind": "pulse",
+						"overkill": 615.53264,
+						"procs": 86,
+						"shots": 150,
+						"uid": 1
+					},
+					"2:scatter": {
+						"damage": 581.347232,
+						"hits": 103,
+						"kills": 23,
+						"kind": "scatter",
+						"overkill": 100.199648,
+						"procs": 45,
+						"shots": 176,
+						"uid": 2
+					}
+				}
+			},
+			{
+				"dust": 212,
+				"retreated": 28,
+				"seconds": 28.0144813193359,
+				"spawned": 240,
+				"wave": 5,
+				"weapons": {
+					"-1:overload": {
+						"damage": 2438.226085,
+						"hits": 117,
+						"kills": 104,
+						"kind": "overload",
+						"overkill": 4581.773915,
+						"procs": 0,
+						"shots": 0,
+						"uid": -1
+					},
+					"1:pulse": {
+						"damage": 2023.690959,
+						"hits": 219,
+						"kills": 80,
+						"kind": "pulse",
+						"overkill": 722.577976199999,
+						"procs": 104,
+						"shots": 194,
+						"uid": 1
+					},
+					"2:scatter": {
+						"damage": 678.548984800001,
+						"hits": 135,
+						"kills": 28,
+						"kind": "scatter",
+						"overkill": 140.1833912,
+						"procs": 66,
+						"shots": 222,
+						"uid": 2
+					}
+				}
+			},
+			{
+				"dust": 35,
+				"retreated": 0,
+				"seconds": 34.1446272373047,
+				"spawned": 27,
+				"wave": 6,
+				"weapons": {
+					"-1:overload": {
+						"damage": 132.0,
+						"hits": 3,
+						"kills": 1,
+						"kind": "overload",
+						"overkill": 48.0,
+						"procs": 0,
+						"shots": 0,
+						"uid": -1
+					},
+					"1:pulse": {
+						"damage": 2898.5548368,
+						"hits": 179,
+						"kills": 15,
+						"kind": "pulse",
+						"overkill": 100.770004799996,
+						"procs": 19,
+						"shots": 214,
+						"uid": 1
+					},
+					"2:scatter": {
+						"damage": 407.4451632,
+						"hits": 74,
+						"kills": 8,
+						"kind": "scatter",
+						"overkill": 25.7438448,
+						"procs": 16,
+						"shots": 248,
+						"uid": 2
+					}
+				}
+			}
+		],
+		"weapons": {
+			"-1:overload": {
+				"damage": 7306.150949,
+				"hits": 333,
+				"kills": 292,
+				"kind": "overload",
+				"overkill": 12673.849051,
+				"procs": 0,
+				"shots": 0,
+				"uid": -1
+			},
+			"1:pulse": {
+				"damage": 9152.41785980002,
+				"hits": 990,
+				"kills": 278,
+				"kind": "pulse",
+				"overkill": 1967.47710099999,
+				"procs": 389,
+				"shots": 938,
+				"uid": 1
+			},
+			"2:scatter": {
+				"damage": 2510.6265,
+				"hits": 489,
+				"kills": 101,
+				"kind": "scatter",
+				"overkill": 489.897124,
+				"procs": 217,
+				"shots": 1084,
+				"uid": 2
+			}
+		}
+	},
+	"result": "victory",
+	"scope": "Full production Mercury route using its real native stereo clock and legally earned purchases. Assistance: invulnerability, scripted steering, automatic overload and purchases; not a human difficulty or listening test. No seeking, forced kills, free money or enemy HP changes.",
+	"seed": 411,
+	"shops": 5,
+	"timing": {
+		"max_seconds": 0.0379518802490217,
+		"median_seconds": 0.0160722397460944,
+		"p95_seconds": 0.0345289916992186,
+		"samples": 155
+	},
+	"wall_seconds": 256.533
+}

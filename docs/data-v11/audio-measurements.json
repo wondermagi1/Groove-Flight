@@ -1,0 +1,65 @@
+[
+  {
+    "file": "boss-native-assisted.wav",
+    "channels": 2,
+    "rate": 22050,
+    "seconds": 8.0,
+    "peak": 0.102935791015625,
+    "rms": 0.011451620245881807,
+    "scope": "PCM only; human listening pending"
+  },
+  {
+    "file": "build-1.wav",
+    "channels": 2,
+    "rate": 22050,
+    "seconds": 8.0,
+    "peak": 0.247467041015625,
+    "rms": 0.0245546675726019,
+    "scope": "PCM only; human listening pending"
+  },
+  {
+    "file": "build-2.wav",
+    "channels": 2,
+    "rate": 22050,
+    "seconds": 8.0,
+    "peak": 0.2586669921875,
+    "rms": 0.03411581241583479,
+    "scope": "PCM only; human listening pending"
+  },
+  {
+    "file": "build-3.wav",
+    "channels": 2,
+    "rate": 22050,
+    "seconds": 8.0,
+    "peak": 0.2349853515625,
+    "rms": 0.025703722579270304,
+    "scope": "PCM only; human listening pending"
+  },
+  {
+    "file": "growth-1-start.wav",
+    "channels": 2,
+    "rate": 22050,
+    "seconds": 8.0,
+    "peak": 0.237335205078125,
+    "rms": 0.024384397093024677,
+    "scope": "PCM only; human listening pending"
+  },
+  {
+    "file": "growth-2-middle.wav",
+    "channels": 2,
+    "rate": 22050,
+    "seconds": 8.0,
+    "peak": 0.237335205078125,
+    "rms": 0.02438983698204907,
+    "scope": "PCM only; human listening pending"
+  },
+  {
+    "file": "growth-3-full.wav",
+    "channels": 2,
+    "rate": 22050,
+    "seconds": 8.0,
+    "peak": 0.247467041015625,
+    "rms": 0.0245546675726019,
+    "scope": "PCM only; human listening pending"
+  }
+]

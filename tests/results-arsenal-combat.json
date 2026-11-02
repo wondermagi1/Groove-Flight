@@ -94,7 +94,7 @@
 			},
 			"mine_cluster": {
 				"count": 6,
-				"damage": 80.0,
+				"damage": 100.0,
 				"family": "mine",
 				"pitch": 0
 			},
@@ -118,13 +118,13 @@
 			},
 			"nova": {
 				"count": 10,
-				"damage": 10.0,
+				"damage": 20.0,
 				"family": "nova",
 				"pitch": 0
 			},
 			"nova_spiral": {
 				"count": 16,
-				"damage": 39.0,
+				"damage": 26.0,
 				"family": "nova",
 				"pitch": 0
 			},
@@ -178,7 +178,7 @@
 			},
 			"scatter": {
 				"count": 5,
-				"damage": 35.0,
+				"damage": 28.0,
 				"family": "scatter",
 				"pitch": 0
 			},

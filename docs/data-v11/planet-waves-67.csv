@@ -1,0 +1,68 @@
+﻿星球,波,名称,时间秒,计划预算,编队,精英,敌型组成每20项,生命倍率,伤害倍率,移速倍率,弹速倍率,掉落倍率,Boss生命,Boss机制
+mercury,1,日照试航,20.0,70,vanguard,False,"{""armor"": 4, ""mote"": 16}",1.0,1.0,1.0,1.0,1.0,3000.0,钻臂扫掘
+mercury,2,浅坑编队,22.0,100,wedge,False,"{""armor"": 4, ""dart"": 2, ""mote"": 14}",1.0,1.0,1.0,1.0,1.0,3000.0,钻臂扫掘
+mercury,3,终昏弯月,24.0,140,crescent,False,"{""armor"": 4, ""dart"": 2, ""mote"": 12, ""shooter"": 2}",1.0,1.0,1.0,1.0,1.0,3000.0,钻臂扫掘
+mercury,4,矿脊拦截,26.0,190,twin_column,True,"{""armor"": 4, ""dart"": 2, ""mote"": 12, ""shooter"": 2}",1.0,1.0,1.0,1.0,1.0,3000.0,钻臂扫掘
+mercury,5,热流出口,28.0,240,broken_arc,False,"{""armor"": 4, ""dart"": 2, ""mote"": 12, ""shooter"": 2}",1.0,1.0,1.0,1.0,1.0,3000.0,钻臂扫掘
+mercury,6,水星机器,0.0,0,boss,False,"{""armor"": 4, ""dart"": 2, ""mote"": 12, ""shooter"": 2}",1.0,1.0,1.0,1.0,1.0,3000.0,钻臂扫掘
+venus,1,入云,22.0,95,crescent,False,"{""armor"": 3, ""dart"": 2, ""mote"": 15}",1.0396,1.018,1.016,1.012,1.08,5200.0,硫云风扇
+venus,2,硫幕蜂群,24.0,135,clusters,False,"{""armor"": 3, ""dart"": 2, ""mote"": 11, ""shooter"": 4}",1.06768,1.0444,1.0208,1.0176,1.08,5200.0,硫云风扇
+venus,3,风眼缺口,26.0,180,broken_arc,False,"{""armor"": 3, ""dart"": 2, ""mote"": 11, ""shooter"": 4}",1.09576,1.0708,1.0256,1.0232,1.08,5200.0,硫云风扇
+venus,4,炽云突围,28.0,230,wedge,True,"{""armor"": 3, ""dart"": 2, ""mote"": 9, ""shooter"": 4, ""splitter"": 2}",1.12384,1.0972,1.0304,1.0288,1.08,5200.0,硫云风扇
+venus,5,双层锋面,30.0,290,twin_column,False,"{""armor"": 3, ""dart"": 2, ""mote"": 9, ""shooter"": 4, ""splitter"": 2}",1.15192,1.1236,1.0352,1.0344,1.08,5200.0,硫云风扇
+venus,6,暮光交击,32.0,350,cross_wedge,False,"{""armor"": 3, ""dart"": 2, ""mote"": 9, ""shooter"": 4, ""splitter"": 2}",1.18,1.15,1.04,1.04,1.08,5200.0,硫云风扇
+venus,7,金星机器,0.0,0,boss,False,"{""armor"": 3, ""dart"": 2, ""mote"": 9, ""shooter"": 4, ""splitter"": 2}",1.18,1.15,1.04,1.04,1.08,5200.0,硫云风扇
+earth,1,外海接触,24.0,120,vanguard,False,"{""armor"": 4, ""dart"": 2, ""mote"": 11, ""shooter"": 3}",1.088,1.042,1.032,1.024,1.18,6800.0,护航闸门
+earth,2,赤道双列,26.0,165,twin_column,False,"{""armor"": 4, ""dart"": 2, ""mote"": 11, ""shooter"": 3}",1.14,1.09333333333333,1.04,1.03333333333333,1.18,6800.0,护航闸门
+earth,3,潮汐防线,28.0,220,crescent,False,"{""armor"": 4, ""dart"": 2, ""mote"": 10, ""shooter"": 3, ""splitter"": 1}",1.192,1.14466666666667,1.048,1.04266666666667,1.18,6800.0,护航闸门
+earth,4,近岸楔阵,30.0,280,wedge,True,"{""armor"": 4, ""dart"": 2, ""mote"": 9, ""sentinel"": 1, ""shooter"": 3, ""splitter"": 1}",1.244,1.196,1.056,1.052,1.18,6800.0,护航闸门
+earth,5,轨道救援,32.0,340,clusters,False,"{""armor"": 4, ""dart"": 2, ""mote"": 9, ""sentinel"": 1, ""shooter"": 3, ""splitter"": 1}",1.296,1.24733333333333,1.064,1.06133333333333,1.18,6800.0,护航闸门
+earth,6,交叉护航,34.0,400,cross_wedge,False,"{""armor"": 4, ""dart"": 2, ""mote"": 9, ""sentinel"": 1, ""shooter"": 3, ""splitter"": 1}",1.348,1.29866666666667,1.072,1.07066666666667,1.18,6800.0,护航闸门
+earth,7,蔚蓝合奏,36.0,470,constellation,False,"{""armor"": 4, ""dart"": 2, ""mote"": 9, ""sentinel"": 1, ""shooter"": 3, ""splitter"": 1}",1.4,1.35,1.08,1.08,1.18,6800.0,护航闸门
+earth,8,地球机器,0.0,0,boss,False,"{""armor"": 4, ""dart"": 2, ""mote"": 9, ""sentinel"": 1, ""shooter"": 3, ""splitter"": 1}",1.4,1.35,1.08,1.08,1.18,6800.0,护航闸门
+mars,1,红沙冲锋,25.0,145,wedge,False,"{""armor"": 6, ""dart"": 5, ""mote"": 6, ""shooter"": 2, ""splitter"": 1}",1.1496,1.072,1.048,1.036,1.3,8700.0,冲城钻锋
+mars,2,峡谷交击,27.0,195,cross_wedge,False,"{""armor"": 6, ""dart"": 5, ""mote"": 6, ""shooter"": 2, ""splitter"": 1}",1.238,1.16,1.06,1.05,1.3,8700.0,冲城钻锋
+mars,3,重装廊道,29.0,255,twin_column,False,"{""armor"": 6, ""dart"": 5, ""mote"": 5, ""sentinel"": 1, ""shooter"": 2, ""splitter"": 1}",1.3264,1.248,1.072,1.064,1.3,8700.0,冲城钻锋
+mars,4,断层缺口,31.0,325,broken_arc,True,"{""armor"": 6, ""dart"": 5, ""mote"": 5, ""sentinel"": 1, ""shooter"": 2, ""splitter"": 1}",1.4148,1.336,1.084,1.078,1.3,8700.0,冲城钻锋
+mars,5,沙暴雷群,33.0,400,clusters,False,"{""armor"": 6, ""dart"": 5, ""mote"": 5, ""sentinel"": 1, ""shooter"": 2, ""splitter"": 1}",1.5032,1.424,1.096,1.092,1.3,8700.0,冲城钻锋
+mars,6,前哨重启,35.0,475,vanguard,False,"{""armor"": 6, ""dart"": 5, ""mote"": 5, ""sentinel"": 1, ""shooter"": 2, ""splitter"": 1}",1.5916,1.512,1.108,1.106,1.3,8700.0,冲城钻锋
+mars,7,双锋反攻,37.0,555,braided_columns,True,"{""armor"": 6, ""dart"": 5, ""mote"": 5, ""sentinel"": 1, ""shooter"": 2, ""splitter"": 1}",1.68,1.6,1.12,1.12,1.3,8700.0,冲城钻锋
+mars,8,火星机器,0.0,0,boss,False,"{""armor"": 6, ""dart"": 5, ""mote"": 5, ""sentinel"": 1, ""shooter"": 2, ""splitter"": 1}",1.68,1.6,1.12,1.12,1.3,8700.0,冲城钻锋
+jupiter,1,云带剪影,26.0,175,crescent,False,"{""armor"": 3, ""dart"": 5, ""mote"": 6, ""shooter"": 6}",1.231,1.114,1.068,1.051,1.43,11200.0,风暴双螺旋
+jupiter,2,巨斑裂弧,28.0,230,broken_arc,False,"{""armor"": 3, ""dart"": 5, ""mote"": 6, ""shooter"": 6}",1.348,1.23342857142857,1.08257142857143,1.068,1.43,11200.0,风暴双螺旋
+jupiter,3,风暴辫流,30.0,300,braided_columns,False,"{""armor"": 3, ""dart"": 5, ""mote"": 4, ""sentinel"": 2, ""shooter"": 4, ""splitter"": 2}",1.465,1.35285714285714,1.09714285714286,1.085,1.43,11200.0,风暴双螺旋
+jupiter,4,雷群聚合,32.0,380,clusters,True,"{""armor"": 3, ""dart"": 5, ""mote"": 4, ""sentinel"": 2, ""shooter"": 4, ""splitter"": 2}",1.582,1.47228571428571,1.11171428571429,1.102,1.43,11200.0,风暴双螺旋
+jupiter,5,气旋交叉,34.0,465,cross_wedge,False,"{""armor"": 3, ""dart"": 5, ""mote"": 4, ""sentinel"": 2, ""shooter"": 4, ""splitter"": 2}",1.699,1.59171428571429,1.12628571428571,1.119,1.43,11200.0,风暴双螺旋
+jupiter,6,压境楔群,36.0,550,wedge,False,"{""armor"": 3, ""dart"": 5, ""mote"": 4, ""sentinel"": 2, ""shooter"": 4, ""splitter"": 2}",1.816,1.71114285714286,1.14085714285714,1.136,1.43,11200.0,风暴双螺旋
+jupiter,7,六角眼壁,38.0,640,constellation,True,"{""armor"": 3, ""dart"": 5, ""mote"": 4, ""sentinel"": 2, ""shooter"": 4, ""splitter"": 2}",1.933,1.83057142857143,1.15542857142857,1.153,1.43,11200.0,风暴双螺旋
+jupiter,8,终风双列,40.0,730,twin_column,False,"{""armor"": 3, ""dart"": 5, ""mote"": 4, ""sentinel"": 2, ""shooter"": 4, ""splitter"": 2}",2.05,1.95,1.17,1.17,1.43,11200.0,风暴双螺旋
+jupiter,9,木星机器,0.0,0,boss,False,"{""armor"": 3, ""dart"": 5, ""mote"": 4, ""sentinel"": 2, ""shooter"": 4, ""splitter"": 2}",2.05,1.95,1.17,1.17,1.43,11200.0,风暴双螺旋
+saturn,1,光环入口,27.0,205,twin_column,False,"{""armor"": 6, ""dart"": 2, ""mote"": 6, ""shooter"": 6}",1.319,1.162,1.084,1.069,1.58,14400.0,星环缺口
+saturn,2,六芒卫队,29.0,275,constellation,False,"{""armor"": 6, ""dart"": 2, ""mote"": 6, ""shooter"": 6}",1.48057142857143,1.33171428571429,1.102,1.092,1.58,14400.0,星环缺口
+saturn,3,碎环缺口,31.0,355,broken_arc,False,"{""armor"": 6, ""dart"": 2, ""mote"": 4, ""sentinel"": 3, ""shooter"": 3, ""splitter"": 2}",1.64214285714286,1.50142857142857,1.12,1.115,1.58,14400.0,星环缺口
+saturn,4,冰尘楔阵,33.0,445,wedge,True,"{""armor"": 6, ""dart"": 2, ""mote"": 4, ""sentinel"": 3, ""shooter"": 3, ""splitter"": 2}",1.80371428571429,1.67114285714286,1.138,1.138,1.58,14400.0,星环缺口
+saturn,5,双轨封锁,35.0,540,braided_columns,False,"{""armor"": 6, ""dart"": 2, ""mote"": 4, ""sentinel"": 3, ""shooter"": 3, ""splitter"": 2}",1.96528571428571,1.84085714285714,1.156,1.161,1.58,14400.0,星环缺口
+saturn,6,环带弯月,37.0,640,crescent,False,"{""armor"": 6, ""dart"": 2, ""mote"": 4, ""sentinel"": 3, ""shooter"": 3, ""splitter"": 2}",2.12685714285714,2.01057142857143,1.174,1.184,1.58,14400.0,星环缺口
+saturn,7,交会节点,39.0,745,cross_wedge,True,"{""armor"": 6, ""dart"": 2, ""mote"": 4, ""sentinel"": 3, ""shooter"": 3, ""splitter"": 2}",2.28842857142857,2.18028571428571,1.192,1.207,1.58,14400.0,星环缺口
+saturn,8,光屑集结,41.0,850,clusters,False,"{""armor"": 6, ""dart"": 2, ""mote"": 4, ""sentinel"": 3, ""shooter"": 3, ""splitter"": 2}",2.45,2.35,1.21,1.23,1.58,14400.0,星环缺口
+saturn,9,土星机器,0.0,0,boss,False,"{""armor"": 6, ""dart"": 2, ""mote"": 4, ""sentinel"": 3, ""shooter"": 3, ""splitter"": 2}",2.45,2.35,1.21,1.23,1.58,14400.0,星环缺口
+uranus,1,极夜断弧,28.0,235,broken_arc,False,"{""armor"": 2, ""dart"": 6, ""mote"": 7, ""shooter"": 5}",1.418,1.222,1.1,1.087,1.75,18500.0,极轴栅格
+uranus,2,倾轴双流,30.0,310,braided_columns,False,"{""armor"": 2, ""dart"": 6, ""mote"": 7, ""shooter"": 5}",1.60325,1.4255,1.11875,1.112375,1.75,18500.0,极轴栅格
+uranus,3,冰缝交锋,32.0,400,cross_wedge,False,"{""armor"": 2, ""dart"": 6, ""mote"": 3, ""sentinel"": 2, ""shooter"": 3, ""splitter"": 4}",1.7885,1.629,1.1375,1.13775,1.75,18500.0,极轴栅格
+uranus,4,镜晶蜂群,34.0,500,clusters,True,"{""armor"": 2, ""dart"": 6, ""mote"": 3, ""sentinel"": 2, ""shooter"": 3, ""splitter"": 4}",1.97375,1.8325,1.15625,1.163125,1.75,18500.0,极轴栅格
+uranus,5,冷涡月阵,36.0,605,crescent,False,"{""armor"": 2, ""dart"": 6, ""mote"": 3, ""sentinel"": 2, ""shooter"": 3, ""splitter"": 4}",2.159,2.036,1.175,1.1885,1.75,18500.0,极轴栅格
+uranus,6,极光双列,38.0,715,twin_column,False,"{""armor"": 2, ""dart"": 6, ""mote"": 3, ""sentinel"": 2, ""shooter"": 3, ""splitter"": 4}",2.34425,2.2395,1.19375,1.213875,1.75,18500.0,极轴栅格
+uranus,7,反向穿插,40.0,830,wedge,True,"{""armor"": 2, ""dart"": 6, ""mote"": 3, ""sentinel"": 2, ""shooter"": 3, ""splitter"": 4}",2.5295,2.443,1.2125,1.23925,1.75,18500.0,极轴栅格
+uranus,8,北冕编队,42.0,950,vanguard,False,"{""armor"": 2, ""dart"": 6, ""mote"": 3, ""sentinel"": 2, ""shooter"": 3, ""splitter"": 4}",2.71475,2.6465,1.23125,1.264625,1.75,18500.0,极轴栅格
+uranus,9,冰轴共振,44.0,1080,constellation,False,"{""armor"": 2, ""dart"": 6, ""mote"": 3, ""sentinel"": 2, ""shooter"": 3, ""splitter"": 4}",2.9,2.85,1.25,1.29,1.75,18500.0,极轴栅格
+uranus,10,天王星机器,0.0,0,boss,False,"{""armor"": 2, ""dart"": 6, ""mote"": 3, ""sentinel"": 2, ""shooter"": 3, ""splitter"": 4}",2.9,2.85,1.25,1.29,1.75,18500.0,极轴栅格
+neptune,1,深蓝门槛,29.0,270,constellation,False,"{""armor"": 4, ""dart"": 3, ""mote"": 5, ""shooter"": 8}",1.528,1.288,1.12,1.105,1.95,24000.0,终潮回响
+neptune,2,暗流交错,31.0,355,cross_wedge,False,"{""armor"": 4, ""dart"": 3, ""mote"": 5, ""shooter"": 8}",1.762,1.552,1.1425,1.135625,1.95,24000.0,终潮回响
+neptune,3,风暴断面,33.0,455,broken_arc,False,"{""armor"": 4, ""dart"": 3, ""mote"": 2, ""sentinel"": 4, ""shooter"": 4, ""splitter"": 3}",1.996,1.816,1.165,1.16625,1.95,24000.0,终潮回响
+neptune,4,深潮编织,35.0,565,braided_columns,True,"{""armor"": 4, ""dart"": 3, ""mote"": 2, ""sentinel"": 4, ""shooter"": 4, ""splitter"": 3}",2.23,2.08,1.1875,1.196875,1.95,24000.0,终潮回响
+neptune,5,双线合围,37.0,685,twin_column,False,"{""armor"": 4, ""dart"": 3, ""mote"": 2, ""sentinel"": 4, ""shooter"": 4, ""splitter"": 3}",2.464,2.344,1.21,1.2275,1.95,24000.0,终潮回响
+neptune,6,远海群落,39.0,810,clusters,False,"{""armor"": 4, ""dart"": 3, ""mote"": 2, ""sentinel"": 4, ""shooter"": 4, ""splitter"": 3}",2.698,2.608,1.2325,1.258125,1.95,24000.0,终潮回响
+neptune,7,无光弯月,41.0,940,crescent,True,"{""armor"": 4, ""dart"": 3, ""mote"": 2, ""sentinel"": 4, ""shooter"": 4, ""splitter"": 3}",2.932,2.872,1.255,1.28875,1.95,24000.0,终潮回响
+neptune,8,极压楔群,43.0,1075,wedge,False,"{""armor"": 4, ""dart"": 3, ""mote"": 2, ""sentinel"": 4, ""shooter"": 4, ""splitter"": 3}",3.166,3.136,1.2775,1.319375,1.95,24000.0,终潮回响
+neptune,9,最后迎击,45.0,1220,vanguard,False,"{""armor"": 4, ""dart"": 3, ""mote"": 2, ""sentinel"": 4, ""shooter"": 4, ""splitter"": 3}",3.4,3.4,1.3,1.35,1.95,24000.0,终潮回响
+neptune,10,海王星机器,0.0,0,boss,False,"{""armor"": 4, ""dart"": 3, ""mote"": 2, ""sentinel"": 4, ""shooter"": 4, ""splitter"": 3}",3.4,3.4,1.3,1.35,1.95,24000.0,终潮回响

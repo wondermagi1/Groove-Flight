@@ -1,0 +1,120 @@
+{
+	"cases": [
+		{
+			"audio_skipped_steps": 0,
+			"cpu_process_ms": {
+				"max": 140.404,
+				"median": 24.977,
+				"p95": 140.404,
+				"p99": 140.404
+			},
+			"deferred": 0,
+			"enemies": 256,
+			"frame_ms": {
+				"max": 25.023,
+				"median": 19.235,
+				"p95": 22.451,
+				"p99": 23.973
+			},
+			"frames": 150,
+			"gpu_render_ms": {
+				"max": 2.04699993133545,
+				"median": 0.748000025749207,
+				"p95": 1.87699997425079,
+				"p99": 2.03500008583069
+			},
+			"logical_bullets_target": 1200,
+			"memory_static_peak_bytes": 177146222.0,
+			"mixer": {
+				"aggregated": 0,
+				"limited": 23201,
+				"played": 73,
+				"stolen": 3
+			},
+			"peak_bullets": 1247,
+			"peak_hostile": 347,
+			"reduced": false
+		},
+		{
+			"audio_skipped_steps": 0,
+			"cpu_process_ms": {
+				"max": 76.404,
+				"median": 34.661,
+				"p95": 76.404,
+				"p99": 76.404
+			},
+			"deferred": 96,
+			"enemies": 640,
+			"frame_ms": {
+				"max": 35.006,
+				"median": 31.033,
+				"p95": 33.475,
+				"p99": 34.706
+			},
+			"frames": 150,
+			"gpu_render_ms": {
+				"max": 5.78000020980835,
+				"median": 3.1029999256134,
+				"p95": 5.04300022125244,
+				"p99": 5.7649998664856
+			},
+			"logical_bullets_target": 4096,
+			"memory_static_peak_bytes": 184055050.0,
+			"mixer": {
+				"aggregated": 0,
+				"limited": 34968,
+				"played": 163,
+				"stolen": 3
+			},
+			"peak_bullets": 4096,
+			"peak_hostile": 700,
+			"reduced": false
+		},
+		{
+			"audio_skipped_steps": 0,
+			"cpu_process_ms": {
+				"max": 76.052,
+				"median": 33.74,
+				"p95": 39.56,
+				"p99": 76.052
+			},
+			"deferred": 96,
+			"enemies": 640,
+			"frame_ms": {
+				"max": 39.62,
+				"median": 30.394,
+				"p95": 35.658,
+				"p99": 39.194
+			},
+			"frames": 150,
+			"gpu_render_ms": {
+				"max": 6.41499996185303,
+				"median": 2.71700000762939,
+				"p95": 4.93200016021729,
+				"p99": 6.10500001907349
+			},
+			"logical_bullets_target": 4096,
+			"memory_static_peak_bytes": 184292850.0,
+			"mixer": {
+				"aggregated": 0,
+				"limited": 46776,
+				"played": 256,
+				"stolen": 3
+			},
+			"peak_bullets": 4096,
+			"peak_hostile": 698,
+			"reduced": true
+		}
+	],
+	"cpu": "Intel(R) Core(TM) i9-14900HX",
+	"event_dispatch_ms": {
+		"max": 33.2801958411935,
+		"median": 11.4623561195142,
+		"p95": 21.3157278083562,
+		"p99": 33.2801958411935
+	},
+	"gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+	"renderer": "forward_plus",
+	"resolution": "1920x1080",
+	"scope": "180 frames each, discard first30. Real AI, spatial queries, collisions, native music, FX and HUD in a controlled maintained-entity stress scene. Invulnerable stationary player and high-HP enemies; not eight-planet playability or prolonged FPS/audio output certification. GPU timer may report zero when unsupported."
+}
