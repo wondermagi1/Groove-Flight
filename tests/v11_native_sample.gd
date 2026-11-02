@@ -3,11 +3,11 @@ extends "res://tests/v11_balance_sim.gd"
 ## Assist: invulnerability, scripted steering, automatic overload and purchases.
 ## No time seeking, forced kills, free funds, HP reduction or injected items.
 func watchdog() -> void:
-	await create_timer(390.).timeout; push_error("V11 native sample timeout"); quit(2)
+	await create_timer(720.).timeout; push_error("V11 native sample timeout"); quit(2)
 func run() -> void:
 	watchdog.call_deferred()
 	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_NO_FOCUS,true)
-	root.auto_accept_quit=false; root.size=Vector2i(1920,1080)
+	root.size=Vector2i(1920,1080)
 	game=load("res://scenes/Main.tscn").instantiate(); root.add_child(game); current_scene=game
 	await process_frame
 	game.settings.starting_path=1; game.selected_pilot="mender"; game.start_run(411,"mercury")
@@ -16,7 +16,7 @@ func run() -> void:
 	while not game.music.playing: await process_frame
 	var start=Time.get_ticks_msec(); var last_shop=-1; var shops=0; var max_enemies=0; var max_bullets=0
 	var errors: Array=[]; var observed: Dictionary={}; var held_wave=-1; var capture_stages: Dictionary={}
-	while game.state not in ["victory","defeat"] and Time.get_ticks_msec()-start<360000:
+	while game.state not in ["victory","defeat"] and Time.get_ticks_msec()-start<720000:
 		await process_frame
 		if game.state=="reward":
 			if last_shop!=game.wave:

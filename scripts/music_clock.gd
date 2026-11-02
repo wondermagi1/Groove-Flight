@@ -10,7 +10,7 @@ static func position(seconds: float,bpm: float=120.,subdivisions: int=2,loop_sec
 	return {"schema":SCHEMA,"seconds":seconds,"bpm":bpm,"beat":beat,"bar":floori(beat/4.),"phase":fposmod(beat,1.),"subdivision":subdivisions,"step_seconds":beat_seconds/maxi(1,subdivisions),"loop":floori(seconds/maxf(.001,loop_seconds)),"latency_seconds":latency}
 static func stamp(value: Dictionary,serial: int,step_seconds: float=.25,bpm: float=120.,mode: String="arsenal",loop_seconds: float=128.) -> Dictionary:
 	var event=value.duplicate(true)
-	var source_slot=int(event.get("source_slot",event.get("slot",0)))
+	var source_slot=int(event.get("source_slot",event.get("slot",event.get("step",0))))
 	var offset=float(event.get("offset_seconds",0.))
 	var deadline=serial*step_seconds+offset
 	event.schema=SCHEMA; event.serial=serial; event.deadline=deadline

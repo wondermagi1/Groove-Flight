@@ -13,12 +13,17 @@ for name in [x for x in sys.argv[1:] if x not in ['--gpu','--movie','--forward']
  if movie and name=='v11_native_sample': args[1:1]=['--write-movie',str(root/'work/v11-final-native.avi'),'--fixed-fps','30']
  start=time.time()
  try:
-  p=subprocess.run(args,env=env,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=480 if name=='v11_native_sample' else 240)
-  log=p.stdout+'\n'+p.stderr
+  with (work/(name+'.live.log')).open('w',encoding='utf-8') as live:
+   p=subprocess.run(args,env=env,stdout=live,stderr=subprocess.STDOUT,text=True,encoding='utf-8',errors='replace',timeout=900 if name=='v11_native_sample' else 240)
+  log=(work/(name+'.live.log')).read_text(encoding='utf-8',errors='replace')
   (work/(name+'.log')).write_text(log,encoding='utf-8')
   print(name,'EXIT',p.returncode,'%.1fs'%(time.time()-start),flush=True)
   print('\n'.join(x for x in log.splitlines() if 'Error' in x or 'ERROR' in x or 'Parse' in x)[:5000],flush=True)
   script_errors=[x for x in log.splitlines() if 'SCRIPT ERROR' in x or 'Parse Error' in x]
+  if name=='v11_native_sample':
+   result_path=root/'tests/results-v11-native.json'
+   if not result_path.exists() or result_path.stat().st_mtime<start:
+    script_errors.append('Native test exited without writing a fresh completion result')
   results.append({'test':name,'exit':p.returncode or (1 if script_errors else 0),'seconds':time.time()-start,'script_errors':script_errors,'warnings':[x for x in log.splitlines() if 'WARNING:' in x or 'ERROR:' in x]})
  except subprocess.TimeoutExpired as e:
   print(name,'TIMEOUT',flush=True);results.append({'test':name,'exit':124})

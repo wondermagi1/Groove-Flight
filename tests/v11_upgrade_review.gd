@@ -40,6 +40,8 @@ func run() -> void:
 func clock_tests() -> void:
 	var a=CLOCK.position(2.,120.,2); var b=CLOCK.position(2.,120.,4)
 	check(a.bar==1 and is_equal_approx(a.step_seconds,.25) and is_equal_approx(b.step_seconds,.125),"bar/beat adapters distinguish eight cells and sixteen piano subdivisions")
+	var piano=CLOCK.stamp({"uid":18,"step":11,"track":5,"pitch":67,"duration":.4},11,.125,120.,"composer",8.)
+	check(piano.source_slot==11 and piano.track==5 and piano.pitch_midi==67 and is_equal_approx(piano.duration,.4),"piano adapter preserves actual note column, track, pitch and gate")
 	var model=L.new(); model.set_starters([]); model.add_module("pulse",0); model.add_module("r_triplet",1)
 	var events=model.schedule(0).filter(func(e):return e.family!="support")
 	check(events.size()==3 and is_equal_approx(float(events[1].deadline),.25/3.) and is_equal_approx(float(events[2].deadline),.5/3.),"triplets use three evenly spaced real deadlines, not a simultaneous salvo")
