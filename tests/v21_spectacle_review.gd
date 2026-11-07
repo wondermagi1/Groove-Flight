@@ -79,7 +79,7 @@ func scale_and_density_checks() -> void:
 	for planet in game.PLANETS.IDS:
 		for difficulty in [0,1]:
 			var route=game.PLANETS.route(planet,difficulty)
-			check(route.slice(0,-1).all(func(w): return w.formation=="battalion_grid"),"only square battalions appear on every ordinary wave / "+planet)
+			check(route.slice(0,-1).all(func(w): return w.formation in ["battalion_grid","radial_bloom"]),"ordinary waves use the confirmed matrix and circular births / "+planet)
 			var baseline: Array=game.PLANETS.BUDGETS[game.PLANETS.IDS.find(planet)]
 			check(int(route[0].budget)>int(baseline[0])*2 and int(route[-2].budget)>int(baseline[-1])*2,"density grows beyond the earlier route at both ends / "+planet)
 	fixture(""); game.is_preview=false; game.rng.seed=2117; game.spawn_for_step(0)
@@ -96,10 +96,11 @@ func scale_and_density_checks() -> void:
 	for plan in plans:
 		var members=game.enemies.filter(func(e): return Vector2(e.spawn_grid.center).is_equal_approx(plan.center))
 		check(members.size()==int(plan.count) and members.all(func(e): return e.kind==str(plan.kind)),"a complete matrix materializes with exactly one enemy model")
-	var a: Dictionary=game.enemies[0]; var b: Dictionary=game.enemies[1]
-	var initial_distance=Vector2(a.at).distance_to(b.at)
-	for i in range(61): game.music.timeline=.81+float(i)/60.; game.update_enemies(1./60.)
-	check(absf(Vector2(a.at).distance_to(b.at)-initial_distance)>1.,"individual pursuit deforms the birth matrix instead of translating it as one unit")
+	var initial: Array=game.enemies.map(func(e): return Vector2(e.at))
+	for i in range(181): game.music.timeline=.81+float(i)/60.; game.update_enemies(1./60.)
+	var first_shift=Vector2(game.enemies[0].at)-Vector2(initial[0]); var variation=0.
+	for i in range(game.enemies.size()): variation=maxf(variation,(Vector2(game.enemies[i].at)-Vector2(initial[i])-first_shift).length())
+	check(variation>10.,"individually assigned near/flank tasks deform the birth matrix instead of moving it as one rigid unit")
 	check(game.enemies.all(func(e): return e.formation_phase=="独立追击"),"every newly born ordinary enemy selects its own chase destination")
 	fixture(""); game.active_planet="uranus"; game.wave_rows=game.PLANETS.route("uranus"); game.wave=7
 	game.planet_rules=game.PLANETS.wave_rules("uranus",7); game.is_preview=false; game.rng.seed=211107
@@ -155,6 +156,13 @@ func visual_checks() -> void:
 	game.planet_rules=game.PLANETS.wave_rules("uranus",7); game.is_preview=false; game.rng.seed=211107
 	game.spawn_for_step(0); game.music.timeline=.35; await capture("600-red-warning")
 	game.music.timeline=.81; game.update_spawn_telegraphs(); await capture("600-square-birth")
+	fixture(""); game.wave=3; game.planet_rules=game.PLANETS.wave_rules("mercury",3); game.is_preview=false; game.rng.seed=835
+	game.spawn_for_step(0); game.music.timeline=.35; await capture("circle-red-warning")
+	game.music.timeline=.81; game.update_spawn_telegraphs(); await capture("circle-birth")
+	for i in range(61): game.music.timeline=.81+float(i)/30.; game.update_enemies(1./30.)
+	await capture("circle-expanded")
+	for i in range(300): game.music.timeline=2.85+float(i)/30.; game.update_enemies(1./30.)
+	await capture("circle-encircling")
 
 func battle_tick(time: float,delta: float,last_step: int,armed: bool) -> int:
 	game.music.timeline=time

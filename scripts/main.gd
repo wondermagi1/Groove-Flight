@@ -75,7 +75,7 @@ var pilot_amp_until: float=-1.
 var pilot_heal_progress: int=0
 var movement_facing: Vector2=Vector2.UP
 var flight_trail: Array=[]; var flight_trail_clock: float=0.
-var pending_splits: Array[Vector2]=[]
+var pending_splits: Array[Dictionary]=[]
 var boss_down: bool=false
 var spawn_log: Array=[]
 var spawn_telegraphs: Array=[]
@@ -925,12 +925,17 @@ func _process(delta: float) -> void:
 			if enemies[i].hp<=0: by_id.erase(enemies[i].uid); enemies.remove_at(i)
 		# Resolve births after all damage loops; a splitter cannot mutate a spatial
 		# query or the same enemy iteration which killed it.
-		for at in pending_splits:
-			for i in range(3):
-					if enemies.size()<MAX_ENEMIES:
-						var child=spawn_enemy("mote",at+Vector2.from_angle(i*TAU/3)*38)
-						child.warned_entry=true
-		pending_splits.clear()
+		if not pending_splits.is_empty():
+			var birth_grid=ARRIVAL.birth_grid(enemies)
+			for batch_index in range(mini(16,pending_splits.size())):
+				var birth: Dictionary=pending_splits.pop_front()
+				while int(birth.count)>0 and enemies.size()<MAX_ENEMIES:
+					var point=ARRIVAL.birth_position(birth_grid,birth.at,"mote")
+					if point==Vector2.INF: break
+					var child=spawn_enemy("mote",point); child.warned_entry=true
+					if not birth.maneuver.is_empty(): child.maneuver=birth.maneuver.duplicate(true)
+					ARRIVAL.reserve_birth(birth_grid,child); birth.count=int(birth.count)-1
+				if int(birth.count)>0: pending_splits.append(birth)
 		check_wave()
 		fx.set_process(true)
 	else: fx.set_process(state in ["title","victory","defeat"])
@@ -1017,7 +1022,7 @@ func spawn_for_step(serial: int) -> void:
 		return
 	var config=wave_profile(); var elapsed=music.timeline-wave_start
 	receipt.count("spawn_checks")
-	var batch=ARRIVAL.batch_size(wave,int(config.budget))
+	var batch=ARRIVAL.batch_size(wave,int(config.budget),str(config.formation))
 	var dispatch_seconds=maxf(1.,float(config.seconds)-ARRIVAL.WARNING_SECONDS-.5)
 	var desired=mini(int(config.budget),batch+int(maxf(0.,elapsed)/dispatch_seconds*(int(config.budget)-batch)))
 	var reserved=0
@@ -1036,7 +1041,7 @@ func spawn_wave_group(amount: int,style: String,boss_support: bool=false) -> voi
 	if amount<=0: return
 	# One model per arrival. The grid is a birth arrangement, never an AI group.
 	var kind=("dart" if rng.randf()<.25 else "mote") if boss_support else ("mote" if wave<=1 else PLANETS.kind(active_planet,wave-1,rng.randi_range(0,19),difficulty))
-	var plan=ARRIVAL.choose(self,amount,kind)
+	var plan=ARRIVAL.choose(self,amount,kind,style)
 	if plan.is_empty(): return
 	plan.kind=kind; plan.count=amount; plan.born=music.timeline; plan.deadline=music.timeline+ARRIVAL.WARNING_SECONDS
 	plan.wave=wave; plan.wave_budget=not free_music_run and not boss_support
@@ -1052,16 +1057,20 @@ func update_spawn_telegraphs() -> void:
 			# A live pursuer may enter a warning during its lead-in. Re-warn a
 			# clear location or wait; never materialize a matrix on occupied hulls.
 			spawn_telegraphs.remove_at(i)
-			var replacement=ARRIVAL.choose(self,int(plan.count),str(plan.kind))
+			var replacement=ARRIVAL.choose(self,int(plan.count),str(plan.kind),str(plan.get("shape","battalion_grid")))
 			for key in replacement: plan[key]=replacement[key]
 			plan.born=music.timeline; plan.deadline=music.timeline+ARRIVAL.WARNING_SECONDS
 			spawn_telegraphs.append(plan); continue
+		var members: Array=[]
 		for point in plan.points:
 			var enemy=spawn_enemy(str(plan.kind),point)
 			if enemy.is_empty(): break
-			enemy.warned_entry=true; enemy.spawn_grid={"center":plan.center,"columns":plan.columns,"rows":plan.rows,"kind":plan.kind,"style":"battalion_grid"}
+			enemy.warned_entry=true; enemy.spawn_grid={"center":plan.center,"columns":plan.columns,"rows":plan.rows,"kind":plan.kind,"style":str(plan.get("shape","battalion_grid"))}
 			enemy.individual_speed_scale=.9+float(posmod(int(enemy.uid)*37,17))*.0125
+			enemy.angle=(Vector2(enemy.at)-Vector2(plan.center)).angle() if str(plan.get("shape",""))=="radial_bloom" else (player-Vector2(enemy.at)).angle()
+			members.append(enemy)
 			if bool(plan.wave_budget): spawned+=1
+		SWARM.MANEUVER.assign_batch(members,plan.center,player,visible_world(),music.timeline,str(plan.get("shape","battalion_grid")))
 		spawn_telegraphs.remove_at(i)
 		sound("spawn",-21.)
 
@@ -1427,7 +1436,7 @@ func hurt_enemy(enemy: Dictionary,damage: float,kind: String,context: Dictionary
 			var structural=context.duplicate(true); structural.structural=true; structural.depth=1
 			hurt_enemy(owner,float(owner.max_hp)*.08,kind,structural,false)
 	if enemy.kind=="boss": boss_down=true
-	if enemy.kind=="splitter": pending_splits.append(enemy.at)
+	if enemy.kind=="splitter": pending_splits.append({"at":enemy.at,"count":3,"maneuver":enemy.get("maneuver",{}).duplicate(true)})
 	# Preserve the small early-planet bonuses:1.08x yields an occasional extra
 	# star rather than rounding every normal enemy back down to1 forever.
 	drop_fraction+=(12 if enemy.kind=="boss" else (5 if enemy.kind=="elite" else 1))*float(planet_rules.drop_scale)
@@ -1560,7 +1569,7 @@ func _draw() -> void:
 		fleet_batch.visible=false; weapon_renderer.visible=false; shield_renderer.visible=false; return
 	var visible_rect=visible_world().grow(140.)
 	var pulse=music.pulse()
-	var batch=enemies.size()>64
+	var batch=not enemies.is_empty()
 	fleet_batch.visible=batch
 	if batch: fleet_batch.update_fleet(enemies,visible_rect)
 	draw_rect(field(),Color(.10,.29,.49,.40),false,5.)

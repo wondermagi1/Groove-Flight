@@ -25,7 +25,7 @@ func populate_one(kind: String="armor",at: Vector2=Vector2(0,-180)) -> Dictionar
 
 func run() -> void:
 	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_NO_FOCUS,true)
-	root.size=Vector2i(1600,900)
+	root.size=Vector2i(1920,1080)
 	game=load("res://scenes/Main.tscn").instantiate(); root.add_child(game); current_scene=game
 	await frames(6)
 	check(game.test_mode,"fleet review uses isolated test mode instead of player settings")
@@ -101,7 +101,7 @@ func difficulty_contracts() -> void:
 	isolated(); game.pending_splits.clear(); game.wave=1; game.boss_down=false; game.invulnerable=1000
 	var hard_rows=game.wave_rows; var radial=false; var extra_elites=0
 	for row in hard_rows:
-		radial=radial or str(row.formation) in ["prism_ring","dual_spiral"]
+		radial=radial or str(row.formation)=="radial_bloom"
 		extra_elites+=int(row.elite)
 	check(game.difficulty==1 and radial,"high difficulty reaches production route with radial entry formations")
 	check(float(game.planet_rules.boss_hp)>float(PLANETS.combat("uranus",0).boss_hp),"high difficulty raises the actual Boss health")
@@ -118,8 +118,8 @@ func difficulty_contracts() -> void:
 
 func pilot_contracts() -> void:
 	game.selected_ship="hex"; game.selected_pilot="echo"; fixture()
-	for i in range(16): game.loadout.unequip(i)
-	game.loadout.add_module("recorded_crude",0)
+	for i in range(game.loadout.slots.size()): game.loadout.unequip(i)
+	game.loadout.add_module("pulse",0)
 	var score_echo=game.music.compose(game.loadout)
 	var echo_events=game.music.score_events.size()
 	game.loadout.echo_repeat=false
@@ -128,7 +128,7 @@ func pilot_contracts() -> void:
 	check(echo_events>plain_events and score_echo.loop_end==score_plain.loop_end and score_echo.mix_rate==score_plain.mix_rate,"echo pilot adds a real score event while retaining exact loop size")
 	game.loadout.echo_repeat=true
 	var target=populate_one(); var initial_hp=float(target.hp)
-	game.music.timeline=1.75; game.fire_log.clear(); game.on_step(7,7,1.75)
+	game.music.timeline=.875; game.fire_log.clear(); game.on_step(7,7,.875)
 	var base_event={}
 	for event in game.loadout.schedule(0):
 		if str(event.get("category",""))=="weapon": base_event=event; break
@@ -159,23 +159,24 @@ func pilot_contracts() -> void:
 	check(game.health==5 and game.pilot_heal_progress==0,"another pilot cannot inherit mender healing")
 
 func capture_spawn(seed_value: int,at: Vector2,heading: Vector2) -> Array:
-	fixture(seed_value); game.wave=8; game.wave_start=0.; game.spawned=0; game.elite_spawned=false
+	fixture(seed_value); game.wave=7; game.wave_start=0.; game.spawned=0; game.elite_spawned=false
 	game.player=at; game.camera.position=at; game.camera.reset_smoothing(); game.facing=heading; game.movement_facing=heading
 	await frames(3)
 	game.music.timeline=float(game.wave_profile().seconds)*.7
 	var snapshot: Array=[]
 	for serial in range(128,144): game.spawn_for_step(serial)
+	game.music.timeline+=.81; game.update_spawn_telegraphs()
 	var view: Rect2=game.visible_world()
 	var legal=true; var outside=true; var forward=0
 	for enemy in game.enemies:
 		legal=legal and game.field().has_point(enemy.at)
-		outside=outside and not view.grow(40).has_point(enemy.at)
+		outside=outside and (view.has_point(enemy.at) if game.SWARM.is_ordinary(enemy) else true)
 		if (enemy.at-at).dot(heading)>0: forward+=1
 		snapshot.append({"kind":str(enemy.kind),"at":enemy.at})
-	check(legal and outside,"seeded formations stay in world and outside camera safety margin / "+str(at))
+	check(legal and outside,"warned birth matrices stay in world and inside the visible battlefield / "+str(at))
 	if at==Vector2.ZERO:
 		check(game.enemies.size()>50,"dense scheduled batches materially exceed the previous five-at-a-time trickle")
-		check(forward>game.enemies.size()/2,"seeded approach favors ship nose while retaining flanks")
+		check(game.enemies.filter(func(e): return game.SWARM.is_ordinary(e)).all(func(e): return e.has("maneuver") and not e.has("formation")),"born matrices receive independent attack/encirclement tasks")
 	return snapshot
 
 func spawn_contracts() -> void:

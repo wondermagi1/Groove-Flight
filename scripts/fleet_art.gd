@@ -142,6 +142,16 @@ static func _ship_finish(canvas: CanvasItem,ship_id: String,accent: Color,pulse:
 
 static func draw_ship(canvas: CanvasItem,at: Vector2,radius: float,angle: float,ship_id: String,pulse: float=0.,opacity: float=1.) -> void:
 	var data=F.ship(ship_id); var accent: Color=data.color
+	var silhouette=[[1.77,0],[.73,-.72],[-.18,-.9],[-.75,-1.25],[-1.45,-1.13],[-1.18,-.42],[-1.42,0],[-1.18,.42],[-1.45,1.13],[-.75,1.25],[-.18,.9],[.73,.72]]
+	match ship_id:
+		"swift": silhouette=[[-1.9,-1.48],[-.15,-.72],[1.97,0],[-.15,.72],[-1.9,1.48],[-1.12,.25],[-1.12,-.25]]
+		"bastion": silhouette=[[1.35,-1.35],[1.72,-.7],[1.52,.88],[.55,1.5],[-1.42,1.4],[-1.7,.65],[-1.7,-.65],[-1.42,-1.4]]
+		"sabre": silhouette=[[2.28,0],[.55,-.30],[-1.45,-.72],[-1.82,0],[-1.45,.72],[.55,.30]]
+		"manta": silhouette=[[2.22,0],[.88,-.31],[.28,-.72],[-.56,-1.48],[-1.66,-1.36],[-1.34,-.62],[-1.72,0],[-1.34,.62],[-1.66,1.36],[-.56,1.48],[.28,.72],[.88,.31]]
+	canvas.draw_set_transform(at+Vector2(5.,10.),angle,Vector2.ONE*radius)
+	_poly(canvas,silhouette,Color("030917",opacity*.2))
+	canvas.draw_set_transform(at+Vector2(0.,5.),angle,Vector2.ONE*radius)
+	_poly(canvas,silhouette,Color("3c4d67",opacity))
 	canvas.draw_set_transform(at,angle,Vector2.ONE*radius)
 	# Dark extrusion is offset consistently so the silhouette reads as plated metal.
 	match ship_id:

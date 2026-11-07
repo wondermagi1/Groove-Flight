@@ -30,27 +30,32 @@ func run() -> void:
 	game.camera.position_smoothing_enabled=false; game.camera.force_update_scroll(); game.rng.seed=211107
 	game.music.timeline=0.; game.is_preview=false; game.spawn_for_step(0); game.music.timeline=.81; game.update_spawn_telegraphs()
 	check(game.enemies.size()==600,"production600unit matrix exists for independent crowd simulation")
-	var start: Dictionary={}; var initial_mean=0.
-	for enemy in game.enemies: start[enemy.uid]=enemy.at; initial_mean+=Vector2(enemy.at).distance_to(game.player)/game.enemies.size()
+	var start: Dictionary={}; var initial_mean=0.; var initial_pressure=0.; var pressure_count=0
+	for enemy in game.enemies:
+		start[enemy.uid]=enemy.at; initial_mean+=Vector2(enemy.at).distance_to(game.player)/game.enemies.size()
+		if str(enemy.maneuver.role)=="pressure": initial_pressure+=Vector2(enemy.at).distance_to(game.player); pressure_count+=1
+	initial_pressure/=maxi(1,pressure_count)
 	var worst=minimum_margin(); var moving=0; var waiting=0
 	for frame in range(451):
 		game.music.timeline=.81+float(frame)/30.
 		game.player=Vector2(sin(float(frame)/90.)*120.,sin(float(frame)/55.)*80.)
 		game.update_enemies(1./30.)
 		if frame%5==0: worst=minf(worst,minimum_margin())
-	var final_mean=0.
+	var final_mean=0.; var final_pressure=0.
 	for enemy in game.enemies:
 		final_mean+=Vector2(enemy.at).distance_to(game.player)/game.enemies.size()
 		if Vector2(enemy.at).distance_to(start[enemy.uid])>20.: moving+=1
 		if bool(enemy.get("crowd_wait",false)): waiting+=1
+		if str(enemy.maneuver.role)=="pressure": final_pressure+=Vector2(enemy.at).distance_to(game.player)
+	final_pressure/=maxi(1,pressure_count)
 	check(worst>=-.02,"complete enemy hull clearances remain separate throughout converging15second pursuit")
-	check(moving>450 and final_mean<initial_mean-80.,"crowd avoidance still advances most units instead of freezing the army")
+	check(moving>450 and final_pressure<initial_pressure-60.,"nearest attackers advance while distant encirclers keep moving instead of freezing the army")
 	check(game.enemies.all(func(e): return not e.has("formation")),"avoidance never reintroduces matrix movement groups")
 	var frozen=game.enemies.map(func(e): return Vector2(e.at))
 	game.update_enemies(.5)
 	check(frozen==game.enemies.map(func(e): return Vector2(e.at)),"unchanged music time keeps all units and avoidance frozen")
 	check(game.enemy_bullets.is_empty(),"dense independent pursuit never restores ordinary enemy fire")
-	facts={"units":600,"simulated_seconds":15.,"sample_rate":30,"minimum_clearance_margin_world":worst,"units_moved_over20world":moving,"waiting_at_end":waiting,"initial_mean_distance":initial_mean,"final_mean_distance":final_mean}
+	facts={"units":600,"simulated_seconds":15.,"sample_rate":30,"minimum_clearance_margin_world":worst,"units_moved_over20world":moving,"waiting_at_end":waiting,"initial_mean_distance":initial_mean,"final_mean_distance":final_mean,"initial_pressure_distance":initial_pressure,"final_pressure_distance":final_pressure}
 	FileAccess.open("res://tests/results-v21-crowd.json",FileAccess.WRITE).store_string(JSON.stringify({"checks":checks,"failures":failures,"facts":facts,"scope":"Actual production600-unit spawn and half-beat pursuit around a moving invulnerable player. Pairwise hull-circle margins sampled every5frames; safe relative swept reservations prevent inter-frame crossing. No human difficulty claim."},"\t"))
 	print("V21_CROWD ",JSON.stringify(facts)," failures=",failures)
 	game.music.stop(); game.composer_player.stop_song(); current_scene=null; game.queue_free()
