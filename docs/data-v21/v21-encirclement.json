@@ -1,0 +1,17 @@
+{
+	"checks": 9,
+	"facts": {
+		"count": 144,
+		"encircle": 97,
+		"max_route_leg": 3,
+		"mean_radius_after_expansion": 333.592571152581,
+		"mean_radius_before": 225.62499806616,
+		"minimum_clearance_margin_world": -0.000698089599609375,
+		"pressure": 47,
+		"simulated_seconds": 52.5,
+		"units_returned": 44,
+		"units_seen_offscreen": 97
+	},
+	"failures": [],
+	"scope": "Real circular birth, radial expansion, nearest-first task assignment and52.5seconds of world-space half-beat routing. Camera fixed, no shooting, invulnerable player; not human balance certification."
+}

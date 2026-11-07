@@ -11,6 +11,16 @@ func mean_radius(center: Vector2) -> float:
 	var value=0.
 	for enemy in game.enemies: value+=Vector2(enemy.at).distance_to(center)/game.enemies.size()
 	return value
+func minimum_margin() -> float:
+	var grid: Dictionary={}; var result=INF
+	for enemy in game.enemies:
+		var key=Vector2i((Vector2(enemy.at)/96.).floor())
+		for x in range(key.x-1,key.x+2):
+			for y in range(key.y-1,key.y+2):
+				for other in grid.get(Vector2i(x,y),[]): result=minf(result,Vector2(enemy.at).distance_to(other.at)-game.ARRIVAL.clearance(enemy.kind)-game.ARRIVAL.clearance(other.kind)-2.)
+		if not grid.has(key): grid[key]=[]
+		grid[key].append(enemy)
+	return result
 func run() -> void:
 	game=load("res://scenes/Main.tscn").instantiate(); game.is_preview=true; root.add_child(game); current_scene=game
 	for i in range(4): await process_frame
@@ -33,20 +43,24 @@ func run() -> void:
 	for enemy in flank: near_flank=minf(near_flank,Vector2(enemy.at).distance_to(game.player))
 	check(far_pressure<=near_flank+.01,"the nearest section of the circle is selected to attack first")
 	check(flank.any(func(e): return e.maneuver.waypoints.any(func(p): return not view.has_point(p))),"encirclement has actual world-space waypoints beyond the visible screen")
-	var before=mean_radius(center)
-	for i in range(49): game.music.timeline=.81+float(i)/30.; game.update_enemies(1./30.)
+	var before=mean_radius(center); var worst=minimum_margin()
+	for i in range(49):
+		game.music.timeline=.81+float(i)/30.; game.update_enemies(1./30.)
+		if i%5==0: worst=minf(worst,minimum_margin())
 	var expanded=mean_radius(center)
 	check(expanded>before+30.,"real circle hulls expand radially before entering the attack/encircle phases")
 	var invisible: Dictionary={}; var returned: Dictionary={}; var max_leg=0
 	for i in range(1501):
 		game.music.timeline=2.5+float(i)/30.; game.update_enemies(1./30.)
+		if i%10==0: worst=minf(worst,minimum_margin())
 		for enemy in flank:
 			max_leg=maxi(max_leg,int(enemy.maneuver.index))
 			if not view.has_point(enemy.at): invisible[enemy.uid]=true
 			elif invisible.has(enemy.uid): returned[enemy.uid]=true
 	check(not invisible.is_empty() and not returned.is_empty() and max_leg>=2,"invisible enemies keep routing and later reenter from the sides")
 	check(game.enemies.all(func(e): return not e.has("formation")) and game.enemy_bullets.is_empty(),"circular routing retains individual AI and zero ordinary ranged fire")
-	facts={"count":game.enemies.size(),"pressure":pressure.size(),"encircle":flank.size(),"mean_radius_before":before,"mean_radius_after_expansion":expanded,"units_seen_offscreen":invisible.size(),"units_returned":returned.size(),"max_route_leg":max_leg,"simulated_seconds":52.5}
+	check(worst>=-.02,"circle expansion and52.5seconds of encirclement retain complete individual hull clearances")
+	facts={"minimum_clearance_margin_world":worst,"count":game.enemies.size(),"pressure":pressure.size(),"encircle":flank.size(),"mean_radius_before":before,"mean_radius_after_expansion":expanded,"units_seen_offscreen":invisible.size(),"units_returned":returned.size(),"max_route_leg":max_leg,"simulated_seconds":52.5}
 	FileAccess.open("res://tests/results-v21-encirclement.json",FileAccess.WRITE).store_string(JSON.stringify({"checks":checks,"failures":failures,"facts":facts,"scope":"Real circular birth, radial expansion, nearest-first task assignment and52.5seconds of world-space half-beat routing. Camera fixed, no shooting, invulnerable player; not human balance certification."},"\t"))
 	print("V21_ENCIRCLEMENT ",JSON.stringify(facts)," failures=",failures)
 	game.music.stop(); game.composer_player.stop_song(); current_scene=null; game.queue_free()

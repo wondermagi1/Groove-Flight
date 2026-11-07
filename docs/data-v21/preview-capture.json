@@ -1,0 +1,57 @@
+{
+  "checks": 78,
+  "facts": {
+    "giant_matrix": {
+      "columns": 25,
+      "count": 600,
+      "kind": "shooter",
+      "rows": 24,
+      "screen_pitch": 31.1999988555908
+    },
+    "new_mechanisms": [
+      "gilded_helix",
+      "weave_cross",
+      "crown_orbit"
+    ],
+    "preview": {
+      "fps": 24,
+      "peaks": {
+        "enemies": 599,
+        "hostile": 0,
+        "projectiles": 182
+      },
+      "scope": "Controlled music time, level3six-weapon loadout, invulnerability and initial enemy accumulation. No save/reward changes; no human balance claim. Capture frame times include PNG readback/encoding.",
+      "seconds": 8
+    },
+    "scale": {
+      "camera_zoom": 0.65,
+      "max_enemies": 1024,
+      "ordinary_core_radii": [
+        16.0,
+        17.0,
+        18.0
+      ],
+      "player_art_radius": 16.0
+    }
+  },
+  "failures": [],
+  "images": [
+    "res://docs/screenshots/v21-gilded_helix.png",
+    "res://docs/screenshots/v21-weave_cross.png",
+    "res://docs/screenshots/v21-crown_orbit.png",
+    "res://docs/screenshots/v21-impact-shield.png",
+    "res://docs/screenshots/v21-guard-fading.png",
+    "res://docs/screenshots/v21-red-spawn-warning.png",
+    "res://docs/screenshots/v21-square-birth.png",
+    "res://docs/screenshots/v21-600-red-warning.png",
+    "res://docs/screenshots/v21-600-square-birth.png",
+    "res://docs/screenshots/v21-matrix-dispersing-1s.png",
+    "res://docs/screenshots/v21-matrix-dispersed-3s.png",
+    "res://docs/screenshots/v21-matrix-dispersal-overview.png",
+    "res://docs/screenshots/v21-circle-red-warning.png",
+    "res://docs/screenshots/v21-circle-birth.png",
+    "res://docs/screenshots/v21-circle-expanded.png",
+    "res://docs/screenshots/v21-circle-encircling.png"
+  ],
+  "scope": "Actual new weapon trajectories/damage, all15visual profiles, matrix/circular wave routes, real density/population/renderer cap, player scale and received-hit guard lifecycle. Controlled GPU captures when enabled."
+}

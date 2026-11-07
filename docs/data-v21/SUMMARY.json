@@ -1,0 +1,114 @@
+{
+  "version": "0.21.0-fleet-spectacle",
+  "date": "2026-11-07",
+  "branch": "codex/v21-fleet-spectacle",
+  "backup_before_latest_round": "d39df7646c8478b010910ca635f15e8090785f25",
+  "active_weapons": 15,
+  "original_twelve_sample_hashes_match_first_remote_backup": true,
+  "check_total": 1467,
+  "reports": [
+    {
+      "report": "selected-weapons.json",
+      "checks": 427,
+      "failures": [],
+      "scope": "Original twelve plus three new weapons, exact fifteen-name roster, restored heavy, live inventory gate,320 real six-offer shops, retired-score migration and instrument PCM routing."
+    },
+    {
+      "report": "arsenal-combat.json",
+      "checks": 120,
+      "failures": [],
+      "scope": "Production methods under controlled position/time/high-HP fixtures:36weapon impacts, projectiles, attributes,7procs, inventory/shop currency callbacks. Native full-route timing/audio and human balance are separate."
+    },
+    {
+      "report": "contact-swarm.json",
+      "checks": 128,
+      "failures": [],
+      "scope": "Restored production radial spawning and original formations, all eight directions, ordinary attack gates, half-second pacing/pause, 30/60/120Hz agreement and actual swept contact damage. Controlled fixtures, not a complete campaign or human balance review."
+    },
+    {
+      "report": "weapon-cycle.json",
+      "checks": 177,
+      "failures": [],
+      "scope": "Pure production scheduling of every active weapon for eight seconds; separate UID scheduling, 1-second deadlines, fixed voices, damage conservation and pure snapshot/clone behavior."
+    },
+    {
+      "report": "prism-cross.json",
+      "checks": 88,
+      "failures": [],
+      "scope": "Production scan, four parallel beam groups, twelve visible lane hits, penetration endpoint, track/aim invariance, real modifiers and renderer submission; controlled GPU image when available."
+    },
+    {
+      "report": "composer-score.json",
+      "checks": 112,
+      "failures": [],
+      "scope": "Pure score/editor transactions, boundedJSONsave/load, actualSMF0/1 byte fixtures/runningstatus/chords/sustain/tempo handling/corruptinput, MIDIandJSONroundtrip, sharedschedule. No audio or UI/nativeflight acceptance."
+    },
+    {
+      "report": "electronic-audio-logic.json",
+      "checks": 51,
+      "failures": [],
+      "scope": "Fixed voices for the active weapon roster, same-type12/34 native PCM overlap and live fire, zero-volume/track mute, live/paused PCM refresh and isolated preview compilation. Native fixture uses invulnerability; no human listening or balance claim."
+    },
+    {
+      "report": "rhythm-feedback.json",
+      "checks": 40,
+      "failures": [],
+      "scope": "Production Main callbacks, native audio transport, fixed-voice recompile, death/receive/pickup feedback and bounded drum scheduling. Invulnerable native smoke fixture; no human difficulty or subjective listening claim."
+    },
+    {
+      "report": "v21-spectacle.json",
+      "checks": 76,
+      "failures": [],
+      "scope": "Actual new weapon trajectories/damage, all15visual profiles, matrix/circular wave routes, real density/population/renderer cap, player scale and received-hit guard lifecycle. Controlled GPU captures when enabled."
+    },
+    {
+      "report": "v21-crowd.json",
+      "checks": 10,
+      "failures": [],
+      "scope": "Actual production600-unit spawn, smooth3second deployment and half-beat encirclement/close approach around a moving invulnerable player. Pairwise hull-circle margins sampled every5frames; safe relative swept reservations prevent inter-frame crossing. No human difficulty claim."
+    },
+    {
+      "report": "v21-encirclement.json",
+      "checks": 9,
+      "failures": [],
+      "scope": "Real circular birth, radial expansion, nearest-first task assignment and52.5seconds of world-space half-beat routing. Camera fixed, no shooting, invulnerable player; not human balance certification."
+    },
+    {
+      "report": "v21-density.json",
+      "checks": null,
+      "failures": [],
+      "scope": "First20frames discarded. Production matrix case240frames with real3second deployment/culling; other maintained-grid stress cases120frames. Production AI/spatial/collision/rendering/FX/native music under maintained high-HP enemies and distributed real projectile types; invulnerable stationary player, muted master. Short controlled stress measurement, not a sustained FPS or human balance certification. GPU time can be zero if unsupported."
+    },
+    {
+      "report": "v21-audio-assets.json",
+      "checks": null,
+      "failures": [],
+      "scope": ""
+    },
+    {
+      "report": "fleet-density.json",
+      "checks": 229,
+      "failures": [],
+      "scope": "Sixteen real ship/pilot start configurations; retry/reset isolation; PCM echo difference and actual beam-repeat damage; native dash-end pilot buff; collected-quantity healing; seeded warned matrix fixtures; eight enemy roles; controlled dense update/render sampling. Time, position and high-HP stress fixtures are explicitly injected. Not a full run, listening acceptance, human balance or a stable-FPS certification."
+    }
+  ],
+  "world": {
+    "size": [
+      12288,
+      12288
+    ],
+    "area": 150994944,
+    "design_resolution": [
+      1920,
+      1080
+    ],
+    "camera_zoom": 0.65,
+    "screen_equivalents": 30.7655111111
+  },
+  "limits": [
+    "Controlled invulnerable fixtures and video do not certify human balance or eight-planet playthroughs.",
+    "Ordinary survivors are withdrawn at wave transition; cross-wave pursuers are not implemented.",
+    "960enemies/1400maintained projectiles remain an extreme stress limit: visible hitches and skipped music steps are recorded in raw results. Skipped-step counters are cumulative across benchmark cases.",
+    "600enemy production-matrix performance sample covers240native frames, not prolonged thermal stability."
+  ]
+}

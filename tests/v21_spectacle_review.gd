@@ -156,6 +156,11 @@ func visual_checks() -> void:
 	game.planet_rules=game.PLANETS.wave_rules("uranus",7); game.is_preview=false; game.rng.seed=211107
 	game.spawn_for_step(0); game.music.timeline=.35; await capture("600-red-warning")
 	game.music.timeline=.81; game.update_spawn_telegraphs(); await capture("600-square-birth")
+	for i in range(91):
+		game.music.timeline=.81+float(i)/30.; game.update_enemies(1./30.)
+		if i==30: await capture("matrix-dispersing-1s")
+	await capture("matrix-dispersed-3s")
+	game.camera.zoom=Vector2.ONE*.16; game.camera.force_update_scroll(); await capture("matrix-dispersal-overview")
 	fixture(""); game.wave=3; game.planet_rules=game.PLANETS.wave_rules("mercury",3); game.is_preview=false; game.rng.seed=835
 	game.spawn_for_step(0); game.music.timeline=.35; await capture("circle-red-warning")
 	game.music.timeline=.81; game.update_spawn_telegraphs(); await capture("circle-birth")
@@ -227,7 +232,7 @@ func run() -> void:
 	game.fx.set_process(false); game.music.stop(); game.music._running=false
 	game.settings.master=0.; game.apply_audio()
 	mechanism_checks(); scale_and_density_checks(); await guard_checks(); await visual_checks(); await preview_capture()
-	var result={"checks":checks,"failures":failures,"facts":facts,"images":images,"scope":"Actual new weapon trajectories/damage, all15visual profiles, square-only wave routes, real density/population/renderer cap, player scale and received-hit guard lifecycle. Controlled GPU captures when enabled."}
+	var result={"checks":checks,"failures":failures,"facts":facts,"images":images,"scope":"Actual new weapon trajectories/damage, all15visual profiles, matrix/circular wave routes, real density/population/renderer cap, player scale and received-hit guard lifecycle. Controlled GPU captures when enabled."}
 	FileAccess.open("res://tests/results-v21-spectacle.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	print("V21_SPECTACLE ",JSON.stringify(result))
 	game.music.stop(); game.composer_player.stop_song(); stop_audio(game); current_scene=null; game.queue_free(); await frames(5)

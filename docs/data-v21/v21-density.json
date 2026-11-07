@@ -1,0 +1,118 @@
+{
+	"cases": [
+		{
+			"cpu_process_ms": {
+				"max": 26.972,
+				"median": 21.685,
+				"p95": 26.972
+			},
+			"enemies": 600,
+			"frame_ms": {
+				"max": 22.178,
+				"median": 13.181,
+				"p95": 15.641
+			},
+			"gpu_render_ms": {
+				"max": 3.08299994468689,
+				"median": 0.819000005722046,
+				"p95": 2.14100003242493
+			},
+			"hostile_projectiles": 0,
+			"maintained_projectiles": 320,
+			"memory_static_peak_bytes": 199115134.0,
+			"min_rendered_enemies": 224,
+			"peak_projectiles": 406,
+			"production_matrix": true,
+			"reduced_fx": false,
+			"sampled_frames": 220,
+			"skipped_music_steps": 0
+		},
+		{
+			"cpu_process_ms": {
+				"max": 135.59,
+				"median": 116.4,
+				"p95": 135.59
+			},
+			"enemies": 512,
+			"frame_ms": {
+				"max": 135.742,
+				"median": 17.986,
+				"p95": 26.668
+			},
+			"gpu_render_ms": {
+				"max": 6.63700008392334,
+				"median": 1.74300003051758,
+				"p95": 5.81300020217896
+			},
+			"hostile_projectiles": 0,
+			"maintained_projectiles": 700,
+			"memory_static_peak_bytes": 199567928.0,
+			"min_rendered_enemies": 512,
+			"peak_projectiles": 774,
+			"production_matrix": false,
+			"reduced_fx": false,
+			"sampled_frames": 100,
+			"skipped_music_steps": 0
+		},
+		{
+			"cpu_process_ms": {
+				"max": 407.43,
+				"median": 262.676,
+				"p95": 407.43
+			},
+			"enemies": 960,
+			"frame_ms": {
+				"max": 266.518,
+				"median": 32.434,
+				"p95": 256.878
+			},
+			"gpu_render_ms": {
+				"max": 11.4840002059937,
+				"median": 5.80999994277954,
+				"p95": 9.9350004196167
+			},
+			"hostile_projectiles": 0,
+			"maintained_projectiles": 1400,
+			"memory_static_peak_bytes": 203514452.0,
+			"min_rendered_enemies": 960,
+			"peak_projectiles": 1445,
+			"production_matrix": false,
+			"reduced_fx": false,
+			"sampled_frames": 100,
+			"skipped_music_steps": 10
+		},
+		{
+			"cpu_process_ms": {
+				"max": 422.381,
+				"median": 263.448,
+				"p95": 406.091
+			},
+			"enemies": 960,
+			"frame_ms": {
+				"max": 271.048,
+				"median": 27.806,
+				"p95": 250.717
+			},
+			"gpu_render_ms": {
+				"max": 10.4519996643066,
+				"median": 4.65299987792969,
+				"p95": 9.21700000762939
+			},
+			"hostile_projectiles": 0,
+			"maintained_projectiles": 1400,
+			"memory_static_peak_bytes": 203014704.0,
+			"min_rendered_enemies": 960,
+			"peak_projectiles": 1463,
+			"production_matrix": false,
+			"reduced_fx": true,
+			"sampled_frames": 100,
+			"skipped_music_steps": 20
+		}
+	],
+	"cpu": "Intel(R) Core(TM) i9-14900HX",
+	"failures": [],
+	"gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+	"renderer": "forward_plus",
+	"resolution": "1920x1080",
+	"scope": "First20frames discarded. Production matrix case240frames with real3second deployment/culling; other maintained-grid stress cases120frames. Production AI/spatial/collision/rendering/FX/native music under maintained high-HP enemies and distributed real projectile types; invulnerable stationary player, muted master. Short controlled stress measurement, not a sustained FPS or human balance certification. GPU time can be zero if unsupported."
+}

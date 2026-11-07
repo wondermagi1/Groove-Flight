@@ -1,6 +1,7 @@
 extends RefCounted
 ## Individual world-space routes; visibility never controls route progress.
 const EXPANSION_SECONDS=1.8
+const MATRIX_SCATTER_SECONDS=3.
 
 static func assign_batch(members: Array,center: Vector2,player: Vector2,view: Rect2,time: float,shape: String) -> void:
 	if members.is_empty(): return
@@ -9,16 +10,37 @@ static func assign_batch(members: Array,center: Vector2,player: Vector2,view: Re
 	var near_ids: Dictionary={}
 	for i in range(maxi(1,ceili(members.size()*.32))): near_ids[ordered[i].uid]=true
 	var approach=(center-player).normalized(); var tangent=approach.orthogonal()
+	var half=Vector2.ONE
+	for enemy in members: half=half.max((Vector2(enemy.at)-center).abs())
+	var scatter_half=Vector2(half.x*2.85,half.y*2.8+260.)
+	var scatter_center=center.clamp(Vector2.ONE*-5900.+scatter_half,Vector2.ONE*5900.-scatter_half)
 	for enemy in members:
 		var side=1. if (Vector2(enemy.at)-center).dot(tangent)>=0. else -1.
-		var bearing=(Vector2(enemy.at)-player).angle()
-		var radius=clampf(view.size.length()*.49,1350.,1900.)+float(int(enemy.uid)%5)*22.
-		var waypoints: Array[Vector2]=[]
-		for turn in [.65,1.25,1.95]:
-			var reach=radius if float(turn)<1.9 else 620.+float(int(enemy.uid)%7)*24.
-			waypoints.append((player+Vector2.from_angle(bearing+side*float(turn))*reach).clamp(Vector2.ONE*-5900.,Vector2.ONE*5900.))
 		var radial: Vector2=Vector2(enemy.at)-center
-		enemy.maneuver={"role":"pressure" if near_ids.has(enemy.uid) else "encircle","phase":"径向展开" if shape=="radial_bloom" else "分流接近","born":time,"expansion_until":time+EXPANSION_SECONDS if shape=="radial_bloom" else time,"expand_target":center+radial*1.55,"waypoints":waypoints,"index":0,"leg_started":time,"last_refit":time,"reference_player":player,"side":side,"lane":float(int(enemy.uid)%9-4)/4.}
+		var upper=radial.y<0. or (is_zero_approx(radial.y) and int(enemy.uid)%2==0)
+		var row=clampf(radial.y/half.y,-1.,1.)
+		var middle=1.-smoothstep(0.,.4,absf(row))
+		var scatter_target=scatter_center+Vector2(radial.x*(2.4+.45*middle),radial.y*2.8+sin(row*PI*.5)*260.)
+		# Rotate the whole two-dimensional spread through broad world regions.
+		# Preserve personal depth; hundreds of units must not funnel to one ring.
+		var seed=scatter_target if shape!="radial_bloom" else center+radial*1.55
+		var anchor=player.clamp(Vector2.ONE*-1600.,Vector2.ONE*1600.)
+		var bearing=(seed-anchor).angle()
+		var radius=clampf(view.size.length()*.49+seed.distance_to(anchor)*.6,1500.,4100.)
+		var waypoints: Array[Vector2]=[]
+		for turn in [.45,.95,1.5]:
+			var reach=radius if float(turn)<1.4 else maxf(650.,radius*.6)
+			waypoints.append(anchor+Vector2.from_angle(bearing+side*float(turn))*reach)
+		var scatter_start=ceilf(time/.5)*.5
+		enemy.maneuver={"role":"pressure" if near_ids.has(enemy.uid) else "encircle","phase":"径向展开" if shape=="radial_bloom" else "矩阵上下疏散","born":time,"batch_center":center,"scatter_start":scatter_start,"scatter_until":scatter_start+MATRIX_SCATTER_SECONDS if shape!="radial_bloom" else time,"scatter_origin":enemy.at,"scatter_target":scatter_target,"sector":"middle" if absf(row)<.25 else ("upper" if upper else "lower"),"expansion_until":time+EXPANSION_SECONDS if shape=="radial_bloom" else time,"expand_target":center+radial*1.55,"waypoints":waypoints,"index":0,"leg_started":scatter_start+MATRIX_SCATTER_SECONDS if shape!="radial_bloom" else time,"last_refit":time,"reference_player":player,"side":side,"lane":float(int(enemy.uid)%9-4)/4.}
+
+static func scatter_step(enemy: Dictionary,time: float) -> Variant:
+	var route: Dictionary=enemy.get("maneuver",{})
+	if route.is_empty() or time>=float(route.scatter_until): return null
+	route.phase="矩阵上下疏散"
+	var progress=clampf((time+.5-float(route.scatter_start))/MATRIX_SCATTER_SECONDS,0.,1.)
+	progress=smoothstep(0.,1.,progress)
+	return Vector2(route.scatter_origin).lerp(route.scatter_target,progress)-Vector2(enemy.at)
 
 static func target(enemy: Dictionary,time: float,player: Vector2) -> Vector2:
 	if not enemy.has("maneuver"): return player

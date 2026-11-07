@@ -55,7 +55,7 @@ func run() -> void:
 	player.queue_free()
 	for i in range(3): await process_frame
 	await create_timer(.15,true).timeout
-	var result={"checks":checks,"failures":failures,"selected_names":expected,"scope":"Exact twelve-name roster, restored heavy, live inventory gate,320 real six-offer shops, retired-score migration and instrument PCM routing."}
+	var result={"checks":checks,"failures":failures,"selected_names":expected,"scope":"Original twelve plus three new weapons, exact fifteen-name roster, restored heavy, live inventory gate,320 real six-offer shops, retired-score migration and instrument PCM routing."}
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://docs/data-v19"))
 	FileAccess.open("res://tests/results-selected-weapons.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	print("SELECTED_WEAPONS ",JSON.stringify({"checks":checks,"failures":failures})); quit(0 if failures.is_empty() else 1)

@@ -37,7 +37,7 @@ func run() -> void:
 	world_response_contracts()
 	await density_fixture()
 	var result={"checks":checks,"failures":failures,"facts":facts,"density":dense_stats,
-		"scope":"Sixteen real ship/pilot start configurations; retry/reset isolation; PCM echo difference and actual beam-repeat damage; native dash-end pilot buff; collected-quantity healing; seeded offscreen formation fixtures; eight enemy roles; controlled dense update/render sampling. Time, position and high-HP stress fixtures are explicitly injected. Not a full run, listening acceptance, human balance or a stable-FPS certification."}
+		"scope":"Sixteen real ship/pilot start configurations; retry/reset isolation; PCM echo difference and actual beam-repeat damage; native dash-end pilot buff; collected-quantity healing; seeded warned matrix fixtures; eight enemy roles; controlled dense update/render sampling. Time, position and high-HP stress fixtures are explicitly injected. Not a full run, listening acceptance, human balance or a stable-FPS certification."}
 	FileAccess.open("res://tests/results-fleet-density.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	print("GROOVE_FLIGHT_FLEET_DENSITY ",JSON.stringify(result))
 	game.music.stop(); current_scene=null; game.queue_free(); await frames(6)
@@ -62,7 +62,7 @@ func fleet_contracts() -> void:
 					recorded_weapons+=1
 					if not game.C.is_weapon_audio_ready(kind): recorded_loadout=false
 			recorded_loadout=recorded_loadout and recorded_weapons==2
-			check(recorded_loadout and game.loadout.valid(),"temporary recorded-only starter loadout and unique ownership / "+label_value)
+			check(recorded_loadout and game.loadout.valid(),"current two-instrument starter loadout and unique ownership / "+label_value)
 			check(bool(game.loadout.echo_repeat)==(str(pilot.id)=="echo"),"pilot audible repeat flag is isolated / "+label_value)
 			# Exercise the actual movement/dash methods, beyond reading Inspector data.
 			var before_move: Vector2=game.player
@@ -135,7 +135,7 @@ func pilot_contracts() -> void:
 	var echo_event={}
 	for event in game.loadout.schedule(7):
 		if int(event.get("track",0))==-1: echo_event=event; break
-	check(not base_event.is_empty() and not echo_event.is_empty() and is_equal_approx(float(echo_event.damage),float(base_event.damage)*.5),"echo final step schedules exactly half the first recorded weapon's actual damage")
+	check(not base_event.is_empty() and not echo_event.is_empty() and is_equal_approx(float(echo_event.damage),float(base_event.damage)*.5),"echo final step schedules exactly half the first active weapon's actual damage")
 	check(game.fire_log.any(func(event): return int(event.track)==-1 and int(event.step)==7),"echo repeat is logged on the same audible final step")
 	var hp=float(target.hp); game.on_step(6,6,1.5)
 	check(is_equal_approx(float(target.hp),hp),"empty non-final step does not invent another echo attack")

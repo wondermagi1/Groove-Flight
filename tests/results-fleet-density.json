@@ -10,9 +10,9 @@
 			"friendly": 800,
 			"hostile": 450
 		},
-		"frame_interval_ms_max": 65.663,
-		"frame_interval_ms_median": 34.143,
-		"frame_interval_ms_p95": 53.758,
+		"frame_interval_ms_max": 27.656,
+		"frame_interval_ms_median": 17.793,
+		"frame_interval_ms_p95": 20.377,
 		"gpu": "",
 		"note": "Controlled fixture with frozen native audio, stationary high-HP enemies and positive one-damage bullets. Frame intervals include graphics/OS scheduling; this is a short sample rather than stable FPS or human gameplay.",
 		"peak_enemies": 480,
@@ -20,24 +20,24 @@
 		"peak_hostile": 450,
 		"phase_ms": {
 			"collision": {
-				"max": 27.967,
-				"median": 13.582,
-				"p95": 23.364
+				"max": 15.401,
+				"median": 7.929,
+				"p95": 8.949
 			},
 			"enemy": {
-				"max": 5.365,
-				"median": 2.082,
-				"p95": 3.695
+				"max": 1.271,
+				"median": 0.979,
+				"p95": 1.147
 			},
 			"hostile": {
-				"max": 0.949,
-				"median": 0.448,
-				"p95": 0.762
+				"max": 0.437,
+				"median": 0.254,
+				"p95": 0.28
 			},
 			"spatial": {
-				"max": 2.79,
-				"median": 1.083,
-				"p95": 2.081
+				"max": 1.15,
+				"median": 0.657,
+				"p95": 0.745
 			}
 		},
 		"render_driver": "vulkan",
@@ -59,11 +59,11 @@
 			}
 		},
 		"samples": 90,
-		"sampling_elapsed_ms": 3310,
-		"sampling_started_utc": "2026-11-07T05:31:38",
-		"update_ms_max": 34.373,
-		"update_ms_median": 17.3,
-		"update_ms_p95": 28.566,
+		"sampling_elapsed_ms": 1624,
+		"sampling_started_utc": "2026-11-07T05:55:37",
+		"update_ms_max": 17.562,
+		"update_ms_median": 9.807,
+		"update_ms_p95": 11.082,
 		"window": "(0, 0)"
 	},
 	"facts": {
@@ -429,5 +429,5 @@
 		"normal_spawn_budget": 3130
 	},
 	"failures": [],
-	"scope": "Sixteen real ship/pilot start configurations; retry/reset isolation; PCM echo difference and actual beam-repeat damage; native dash-end pilot buff; collected-quantity healing; seeded offscreen formation fixtures; eight enemy roles; controlled dense update/render sampling. Time, position and high-HP stress fixtures are explicitly injected. Not a full run, listening acceptance, human balance or a stable-FPS certification."
+	"scope": "Sixteen real ship/pilot start configurations; retry/reset isolation; PCM echo difference and actual beam-repeat damage; native dash-end pilot buff; collected-quantity healing; seeded warned matrix fixtures; eight enemy roles; controlled dense update/render sampling. Time, position and high-HP stress fixtures are explicitly injected. Not a full run, listening acceptance, human balance or a stable-FPS certification."
 }

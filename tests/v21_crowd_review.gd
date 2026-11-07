@@ -19,6 +19,10 @@ func minimum_margin() -> float:
 		if not grid.has(key): grid[key]=[]
 		grid[key].append(enemy)
 	return result
+func bounds() -> Rect2:
+	var area=Rect2(game.enemies[0].at,Vector2.ZERO)
+	for enemy in game.enemies: area=area.expand(enemy.at)
+	return area
 func run() -> void:
 	game=load("res://scenes/Main.tscn").instantiate(); game.is_preview=true; root.add_child(game); current_scene=game
 	for i in range(4): await process_frame
@@ -35,12 +39,32 @@ func run() -> void:
 		start[enemy.uid]=enemy.at; initial_mean+=Vector2(enemy.at).distance_to(game.player)/game.enemies.size()
 		if str(enemy.maneuver.role)=="pressure": initial_pressure+=Vector2(enemy.at).distance_to(game.player); pressure_count+=1
 	initial_pressure/=maxi(1,pressure_count)
+	var original_bounds=bounds(); var deployment: Dictionary={}
+	var sectors: Dictionary={}
+	for enemy in game.enemies: sectors[enemy.maneuver.sector]=true
+	check(sectors.has("upper") and sectors.has("middle") and sectors.has("lower"),"matrix deployment has a middle transition band between upper/lower regions")
+	var row_targets: Dictionary={}
+	for enemy in game.enemies: row_targets[float(enemy.maneuver.scatter_origin.y)]=float(enemy.maneuver.scatter_target.y)
+	var row_keys=row_targets.keys(); row_keys.sort(); var min_gap=INF; var max_gap=0.
+	for i in range(1,row_keys.size()):
+		var gap=float(row_targets[row_keys[i]])-float(row_targets[row_keys[i-1]])
+		min_gap=minf(min_gap,gap); max_gap=maxf(max_gap,gap)
+	check(min_gap>0. and max_gap/min_gap<1.4,"middle rows interpolate smoothly without a discontinuous split at the centre")
 	var worst=minimum_margin(); var moving=0; var waiting=0
 	for frame in range(451):
 		game.music.timeline=.81+float(frame)/30.
 		game.player=Vector2(sin(float(frame)/90.)*120.,sin(float(frame)/55.)*80.)
 		game.update_enemies(1./30.)
 		if frame%5==0: worst=minf(worst,minimum_margin())
+		if frame==90:
+			var expanded=bounds(); var upper=0.; var lower=0.; var nu=0; var nl=0; var stuck=0
+			for enemy in game.enemies:
+				var shift=Vector2(enemy.at)-Vector2(start[enemy.uid])
+				if str(enemy.maneuver.sector)=="upper": upper+=shift.y; nu+=1
+				if str(enemy.maneuver.sector)=="lower": lower+=shift.y; nl+=1
+				if shift.length()<30.: stuck+=1
+			deployment={"seconds":3.,"area_ratio":expanded.get_area()/original_bounds.get_area(),"upper_mean_y":upper/maxi(1,nu),"lower_mean_y":lower/maxi(1,nl),"stuck":stuck}
+			check(deployment.area_ratio>6. and deployment.upper_mean_y< -400. and deployment.lower_mean_y>400. and stuck<20,"600unit matrix spreads to broad upper/lower world regions within3seconds")
 	var final_mean=0.; var final_pressure=0.
 	for enemy in game.enemies:
 		final_mean+=Vector2(enemy.at).distance_to(game.player)/game.enemies.size()
@@ -50,13 +74,14 @@ func run() -> void:
 	final_pressure/=maxi(1,pressure_count)
 	check(worst>=-.02,"complete enemy hull clearances remain separate throughout converging15second pursuit")
 	check(moving>450 and final_pressure<initial_pressure-60.,"nearest attackers advance while distant encirclers keep moving instead of freezing the army")
+	check(waiting<game.enemies.size()/4,"distant encircling sectors remain mobile rather than inheriting a global stop")
 	check(game.enemies.all(func(e): return not e.has("formation")),"avoidance never reintroduces matrix movement groups")
 	var frozen=game.enemies.map(func(e): return Vector2(e.at))
 	game.update_enemies(.5)
 	check(frozen==game.enemies.map(func(e): return Vector2(e.at)),"unchanged music time keeps all units and avoidance frozen")
 	check(game.enemy_bullets.is_empty(),"dense independent pursuit never restores ordinary enemy fire")
-	facts={"units":600,"simulated_seconds":15.,"sample_rate":30,"minimum_clearance_margin_world":worst,"units_moved_over20world":moving,"waiting_at_end":waiting,"initial_mean_distance":initial_mean,"final_mean_distance":final_mean,"initial_pressure_distance":initial_pressure,"final_pressure_distance":final_pressure}
-	FileAccess.open("res://tests/results-v21-crowd.json",FileAccess.WRITE).store_string(JSON.stringify({"checks":checks,"failures":failures,"facts":facts,"scope":"Actual production600-unit spawn and half-beat pursuit around a moving invulnerable player. Pairwise hull-circle margins sampled every5frames; safe relative swept reservations prevent inter-frame crossing. No human difficulty claim."},"\t"))
+	facts={"units":600,"simulated_seconds":15.,"sample_rate":30,"minimum_clearance_margin_world":worst,"units_moved_over20world":moving,"waiting_at_end":waiting,"initial_mean_distance":initial_mean,"final_mean_distance":final_mean,"initial_pressure_distance":initial_pressure,"final_pressure_distance":final_pressure,"deployment":deployment}
+	FileAccess.open("res://tests/results-v21-crowd.json",FileAccess.WRITE).store_string(JSON.stringify({"checks":checks,"failures":failures,"facts":facts,"scope":"Actual production600-unit spawn, smooth3second deployment and half-beat encirclement/close approach around a moving invulnerable player. Pairwise hull-circle margins sampled every5frames; safe relative swept reservations prevent inter-frame crossing. No human difficulty claim."},"\t"))
 	print("V21_CROWD ",JSON.stringify(facts)," failures=",failures)
 	game.music.stop(); game.composer_player.stop_song(); current_scene=null; game.queue_free()
 	for i in range(5): await process_frame
