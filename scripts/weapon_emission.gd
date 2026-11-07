@@ -27,7 +27,7 @@ static func mounted_shot(pattern: String,forward: Vector2,index: int,count: int,
 		var lanes=columns(maxi(1,arm_count))
 		var offset=(float(rank%lanes)-float(lanes-1)*.5)*13.
 		var axis=right*(1. if arm==0 else -1.)
-		return {"axis":axis,"offset":axis*34.+forward*offset,"delay":floorf(float(rank)/lanes)*.028}
+		return {"axis":axis,"offset":axis*34.+forward*offset,"delay":floorf(float(rank)/lanes)*.065}
 	# Equal-angle rays create nested U-shaped wavefronts behind the hull.
 	# The last partial row uses its own centre rather than favouring one wing.
 	var lanes=columns(count); var row=index/lanes; var lane=index%lanes

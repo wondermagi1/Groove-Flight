@@ -11,19 +11,19 @@ func directional_checks() -> void:
 			if kind=="rail_horizon":
 				var right=Vector2(-heading.y,heading.x)
 				var left_count=game.bullets.filter(func(b): return Vector2(b.v).dot(right)<0.).size()
-				check(game.bullets.all(func(b): return absf(Vector2(b.v).normalized().dot(heading))<.001) and absi(left_count*2-int(event.count))<=1,"both wing batteries emit perpendicular parallel rays with a balanced allocation")
+				check(game.bullets.all(func(b): return absf(Vector2(b.v).normalized().dot(heading))<.30) and absi(left_count*2-int(event.count))<=1,"both wing batteries keep their left/right envelopes while individual launch angles vary")
 			else:
-				check(game.bullets.all(func(b): return Vector2(b.v).normalized().dot(heading)<-.55),"all stern fan lanes remain behind the hull")
+				check(game.bullets.all(func(b): return Vector2(b.v).normalized().dot(heading)<-.22),"all opening stern fan jets remain behind the hull")
 				check(game.bullets.any(func(b): return float(b.launch_delay)>0.) and game.bullets.any(func(b): return Color(b.color).g>Color(b.color).r) and game.bullets.any(func(b): return Color(b.color).b>Color(b.color).g),"stern fan contains staggered rows and the reference green-to-pink wings")
 	fixture("rail_horizon"); game.settings.aim_mode=2
 	var event=game.loadout.trigger(0).duplicate(true); event.crit_chance=0.; event.explosion=0.; game.fire_weapon(event)
 	var targets: Array=[]
-	for bullet in game.bullets:
-		var enemy=game.spawn_enemy("armor",Vector2(bullet.at)+Vector2(bullet.v).normalized()*150.)
-		enemy.hp=100000.; enemy.max_hp=enemy.hp; enemy.radius=1.; enemy.speed=0.; targets.append(enemy)
+	for at in [Vector2(-300,0),Vector2(300,0)]:
+		var enemy=game.spawn_enemy("armor",at)
+		enemy.hp=100000.; enemy.max_hp=enemy.hp; enemy.radius=90.; enemy.speed=0.; targets.append(enemy)
 	game.rebuild_spatial()
-	for i in range(15): game.update_bullets(.01)
-	check(targets.size()==event.count and targets.all(func(e): return is_equal_approx(100000.-float(e.hp),float(event.damage))),"every left/right projectile lane deals actual damage exactly once")
+	for i in range(60): game.update_bullets(.01)
+	check(targets.all(func(e): return e.hp<100000.) and is_equal_approx(200000.-float(targets[0].hp)-float(targets[1].hp),float(event.damage)*event.count),"both swaying wing jets deal their real total damage without creating extra projectiles")
 	fixture("stern_fan"); game.settings.aim_mode=2
 	var front=game.spawn_enemy("armor",Vector2(0,-170)); front.hp=100000.; front.radius=35.; front.speed=0.
 	var back=game.spawn_enemy("armor",Vector2(0,200)); back.hp=100000.; back.radius=45.; back.speed=0.
@@ -73,13 +73,46 @@ func range_checks() -> void:
 	check(game.weapon_renderer.definitions.missile.style==3 and game.weapon_renderer.definitions.nova.style==4,"missile hull and energy-orb rendering retain their own class instead of inheriting the feather body")
 	check(C.item("beam").visual_class=="laser_beam" and C.item("scatter_prism").visual_class=="laser_beam" and C.item("chain").visual_class=="electric_arc","instant lasers and electrical chains remain separate visual classes")
 
+func motion_sample(kind: String,dt: float) -> Array:
+	fixture(kind); game.settings.aim_mode=2
+	var event=game.loadout.trigger(0).duplicate(true); event.crit_chance=0.; event.uid=777; event.serial=24
+	game.fire_weapon(event)
+	var initial=game.bullets.map(func(b): return {"at":Vector2(b.at),"v":Vector2(b.v),"mass":float(b.flight_mass),"seed":int(b.flight_seed)})
+	var elapsed=0.
+	while elapsed<.6-.000001:
+		var step=minf(dt,.6-elapsed); game.update_bullets(step); elapsed+=step
+	var result: Array=[]
+	for i in range(game.bullets.size()):
+		var bullet: Dictionary=game.bullets[i]
+		result.append({"at":Vector2(bullet.at),"v":Vector2(bullet.v),"from":initial[i].at,"before_v":initial[i].v,"mass":initial[i].mass,"seed":initial[i].seed,"points":bullet.trail_points.duplicate()})
+	return result
+
+func individual_motion_checks() -> void:
+	for kind in game.VISUALS.MOVING_IDS:
+		var sample=motion_sample(kind,1./60.)
+		var masses: Dictionary={}; var speeds: Dictionary={}; var curved=0
+		for particle in sample:
+			masses[particle.mass]=true; speeds[Vector2(particle.v).length()]=true
+			var points: Array=particle.points
+			for i in range(1,points.size()-1):
+				if absf((Vector2(points[i])-Vector2(points[0])).cross(Vector2(points[-1])-Vector2(points[0])))>1.: curved+=1; break
+		check(masses.size()>1 and speeds.size()>1,"each physical projectile owns its own mass and actual speed / "+kind)
+		check(curved>0,"actual collision trajectories leave independently curved residual paths / "+kind)
+	var a=motion_sample("rail_horizon",1./60.); var replay=motion_sample("rail_horizon",1./60.)
+	check(a.size()==replay.size() and range(a.size()).all(func(i): return Vector2(a[i].at).is_equal_approx(replay[i].at)),"individual jitter is reproducible from the event and projectile seed")
+	var coarse=motion_sample("rail_horizon",1./30.); var fine=motion_sample("rail_horizon",1./120.); var error=0.
+	for i in range(coarse.size()): error=maxf(error,Vector2(coarse[i].at).distance_to(fine[i].at))
+	check(error<8.,"30Hz and120Hz actual independent-force trajectories stay within8world units")
+	facts.individual_motion={"physical_weapon_types":game.VISUALS.MOVING_IDS.size(),"horizon_30_120hz_max_error_world":error,"reproducible":true}
+
 func run() -> void:
 	root.size=Vector2i(1920,1080)
 	game=load("res://scenes/Main.tscn").instantiate(); game.is_preview=true; root.add_child(game); current_scene=game; await frames(4)
 	game.set_process(false); game.set_physics_process(false); game.set_process_unhandled_input(false); game.fx.set_process(false)
 	game.music.stop(); game.music._running=false; game.settings.master=0.; game.apply_audio()
-	directional_checks(); range_checks()
+	directional_checks(); range_checks(); individual_motion_checks()
 	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"Actual hull-relative wing/rear emissions across five headings, real lane/rear damage, shared standard heads, exact travel-distance clipping, size preservation before range, post-range visual-only shrink/glow and bounded removal. Controlled fixtures; no source-game code, human balance or sustained FPS claim."}
 	FileAccess.open("res://tests/results-v23-directional.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("V23_DIRECTIONAL ",JSON.stringify(result))
+	if DisplayServer.get_name()!="headless": FileAccess.open("res://tests/results-v23-directional-gpu.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	game.music.stop(); game.composer_player.stop_song(); stop_audio(game); current_scene=null; game.queue_free(); await frames(6)
 	quit(0 if failures.is_empty() else 1)

@@ -20,6 +20,7 @@ void fragment(){
   if(style==2 && variant>.25) trim+=exp(-abs(p.x+.35)*35.)*.7;
  }else if(style==1){
   d=abs(p.x)*.62+abs(p.y)-.64;
+  if(variant>.75) d=max(abs(p.x)-.98,abs(p.y)-.64*pow(max(0.,1.-p.x*p.x),.66));
   core=exp(-length(p-vec2(.22,0))*7.); trim=step(.0,p.x)*exp(-abs(p.y)*12.);
  }else if(style==3){
   float hull=max(abs(p.y)-.27,max(-.66-p.x,p.x+abs(p.y)*.8-.76));

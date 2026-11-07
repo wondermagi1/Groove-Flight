@@ -1287,7 +1287,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 			bullet.target=int(target.get("uid",-1)); bullet.explosion=float(trigger.get("explosion",0))
 			bullet.homing=float(trigger.get("homing",0)); bullet.bounces=int(trigger.get("bounces",0))
 			bullet.original_speed=speed; bullet.orbit_angle=axis.angle(); bullet.radius=10. if family in ["boomerang","orbit","drone"] else (13. if family=="mine" else (8. if family=="flame" else 5.))
-			if kind in VISUALS.STANDARD_IDS: bullet.range_limit=reach
+			if kind in VISUALS.MOVING_IDS: bullet.range_limit=reach
 			VISUALS.setup(bullet,kind,i,count,player,music.timeline)
 			if not radial: bullet.launch_delay=EMISSION.projectile_delay(i,count)
 			if mounted:
@@ -1295,7 +1295,10 @@ func fire_weapon(trigger: Dictionary) -> void:
 				if mount.has("tint"): bullet.color=mount.tint
 				if mount.has("rear_axis"):
 					bullet.stern_axis=mount.rear_axis; bullet.stern_launch_axis=axis
-					bullet.stern_speed_scale=mount.speed_scale; bullet.v*=float(mount.speed_scale)
+					bullet.stern_speed_scale=mount.speed_scale
+					var rear_axis=Vector2(mount.rear_axis); var rear_side=rear_axis.orthogonal()
+					bullet.v=rear_axis*Vector2(bullet.v).dot(rear_axis)*float(mount.speed_scale)+rear_side*Vector2(bullet.v).dot(rear_side)
+			VISUALS.individualize(bullet,i,music.timeline,int(trigger.get("uid",0)),int(trigger.get("serial",0)))
 			bullet.muzzle_offset=Vector2(bullet.at)-player
 	if bool(trigger.get("chord",false)) and not target.is_empty():
 		var strength=float(trigger.get("chord_power",.22))
@@ -1379,25 +1382,27 @@ func explosion(at: Vector2,radius: float,damage: float,color: Color,kind: String
 		if other.hp>0 and int(other.uid)!=exclude_uid and other.at.distance_to(at)<radius: hurt_enemy(other,damage,kind,context)
 func shot(at: Vector2,direction: Vector2,speed: float,damage: float,color: Color,kind: String,life: float,pierce: int) -> Dictionary:
 	receipt.count("projectile_requested")
-	var bullet={"at":at,"v":direction*speed,"damage":damage,"color":color,"kind":kind,"life":life,"total_life":life,"age":0.,"pierce":pierce,"hit":{},"radius":5.,"target":-1,"explosion":0.}
-	if kind in VISUALS.STANDARD_IDS:
-		bullet.trail_points=[at]; bullet.trail_clock=0.; bullet.travelled=0.
-		bullet.range_limit=EMISSION.weapon_reach(speed,life); bullet.retiring=false; bullet.fade_age=0.
+	var bullet={"at":at,"v":direction*speed,"original_speed":speed,"damage":damage,"color":color,"kind":kind,"life":life,"total_life":life,"age":0.,"pierce":pierce,"hit":{},"radius":5.,"target":-1,"explosion":0.,"range_tracked":kind in VISUALS.MOVING_IDS,"travelled":0.,"range_limit":EMISSION.weapon_reach(speed,life),"retiring":false,"fade_age":0.}
+	if kind in VISUALS.MOVING_IDS:
+		bullet.trail_points=[at]; bullet.trail_clock=0.
 	if bullets.size()<MAX_BULLETS: bullets.append(bullet); receipt.count("projectile_spawned")
 	else: pending_projectiles.append(bullet); receipt.count("projectile_deferred")
 	return bullet
-func update_bullets(delta: float) -> void:
+func update_bullets(frame_delta: float) -> void:
 	var bounds=visible_world().grow(500)
 	while not pending_projectiles.is_empty() and bullets.size()<MAX_BULLETS:
 		bullets.append(pending_projectiles.pop_front()); receipt.count("projectile_spawned")
 	for i in range(bullets.size()-1,-1,-1):
+		var delta=frame_delta
 		var bullet=bullets[i]
 		if float(bullet.get("launch_delay",0.))>0.:
-			bullet.launch_delay=maxf(0.,float(bullet.launch_delay)-delta)
-			bullet.at=player+Vector2(bullet.get("muzzle_offset",Vector2.ZERO))
+			var waited=float(bullet.launch_delay)
+			bullet.launch_delay=maxf(0.,waited-delta)
+			if bullet.has("muzzle_offset"): bullet.at=player+Vector2(bullet.muzzle_offset)
 			if bullet.has("trail_points"): bullet.trail_points=[Vector2(bullet.at)]
-			continue
-		var standard=str(bullet.kind) in VISUALS.STANDARD_IDS
+			if waited>=delta: continue
+			delta-=waited
+		var standard=bool(bullet.get("range_tracked",false))
 		if standard and bool(bullet.get("retiring",false)):
 			bullet.fade_age+=delta; bullet.life=VISUALS.RANGE_FADE_SECONDS-float(bullet.fade_age)
 			if bullet.life<=0.: bullets.remove_at(i); continue
@@ -1456,6 +1461,7 @@ func update_bullets(delta: float) -> void:
 						var exclude: Array=bullet.hit.keys(); var next=nearest(bullet.at,exclude)
 						if not next.is_empty():
 							bullet.v=(next.at-bullet.at).normalized()*maxf(200.,bullet.v.length()); bullet.bounces-=1; bullet.pierce=maxi(1,int(bullet.pierce))
+							if bullet.has("flight_axis"): bullet.flight_axis=Vector2(bullet.v).normalized(); bullet.flight_lateral=0.
 					if bullet.pierce<=0: dead=true; break
 					bullet.pierce-=1
 		if dead: bullets.remove_at(i)
@@ -1808,6 +1814,8 @@ func split_projectile(bullet: Dictionary,enemy: Dictionary) -> void:
 		var child=shot(bullet.at,axis,maxf(350.,bullet.v.length()*.8),float(bullet.damage)*.26,bullet.color,bullet.kind,1.1,0)
 		child.family=bullet.get("family","pulse"); child.context=context.duplicate(true); child.context.depth=depth+1
 		child.context.trajectory={}; child.hit[enemy.uid]=true
+		VISUALS.individualize(child,i,music.timeline,int(bullet.get("flight_seed",context.get("root_uid",0))),int(context.get("serial",0)),true)
+		child.at=Vector2(bullet.at); child.trail_points=[Vector2(child.at)]
 		receipt.count("derived_projectiles")
 func toggle_offer_lock(index: int) -> bool:
 	if state!="reward" or index<0 or index>=shop_offers.size() or bool(shop_offers[index].sold): return false

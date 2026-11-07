@@ -750,7 +750,7 @@ func _update_detail() -> void:
 			if bool(actual.growth.capped): _detail_text("已达单次发射上限 %d"%int(actual.growth.cap),16,Color("ffd478"))
 
 		_detail_text("单发伤害 %.1f  ·  弹丸 %d\n穿透 %d  ·  速度 %.0f\n爆破半径 %.0f  ·  %d 小节充能" % [float(actual.get("damage", row.get("damage", 0.0))), int(actual.get("count", row.get("count", 1))), int(actual.get("pierce", row.get("pierce", 0))), float(actual.get("speed", row.get("speed", 0.0))), float(actual.get("explosion", row.get("explosion", 0.0))), int(actual.get("charge", row.get("charge", 1)))], 18)
-		if str(row.id) in DATA.VISUALS.STANDARD_IDS:
+		if str(row.id) in DATA.VISUALS.MOVING_IDS and str(row.family)!="orbit":
 			_detail_text("有效射程 %.0f\n到达射程后缩小消散"%game.EMISSION.weapon_reach(float(actual.get("speed",row.speed)),float(actual.get("life",row.life))),17,Color("aacdbd"))
 		_detail_text("固定音色 · 白点经过时播放一次\n同种武器各自发声，可错位重奏\n充能 %d 轮；声音保持固定，充能仍限制弹体"%int(actual.get("charge",1)),16,Color("e7c78d"))
 		_detail_text(str(row.detail),17,Color("879db6"))

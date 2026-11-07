@@ -1,0 +1,40 @@
+{
+	"checks": 2,
+	"cpu": "Intel(R) Core(TM) i9-14900HX",
+	"failures": [],
+	"frame_ms": {
+		"max": 114.989,
+		"median": 19.465,
+		"p95": 27.659
+	},
+	"gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+	"gpu_render_ms": {
+		"max": 0.273000001907349,
+		"median": 0.234999999403954,
+		"p95": 0.256999999284744
+	},
+	"peaks": {
+		"enemies": 600,
+		"hostile": 0,
+		"projectiles": 439,
+		"rendered": 600
+	},
+	"renderer": "forward_plus",
+	"sampled_frames": 420,
+	"scope": "Separate native1920x1080 run without capture or concurrent tests. Manual1/60 clock calls production dispatch, individual motion, actual collision,600enemy AI and FX for8seconds; first60frames discarded. Eight Lv4 weapons, four stats24, high-HP enemies, invulnerable player and stopped/muted audio. Occupied grid is a stress fixture rather than an allowed birth. Short measurement, no sustained FPS or human balance claim.",
+	"simulation_ms": {
+		"max": 104.25,
+		"median": 8.99,
+		"p95": 17.066
+	},
+	"weapons_fired": [
+		"pulse",
+		"beam",
+		"stern_fan",
+		"gilded_helix",
+		"crown_orbit",
+		"weave_cross",
+		"scatter_prism",
+		"rail_horizon"
+	]
+}

@@ -67,7 +67,7 @@ func _ready() -> void:
 		var variant=int(variants.get(row.family,0)); variants[row.family]=variant+1
 		definitions[row.id]={"style":DATA.FAMILIES.find(row.family),"color":DATA.color(row.id),"variant":float(posmod(hash(row.id),997))/997.,"variant_index":minf(1.,variant*.5),"scale":clampf(.95+float(row.width)*.06,1.,1.22)}
 		var visual: Dictionary=row.get("visual",{})
-		for key in ["size","tail","width","style"]:
+		for key in ["size","tail","width","style","trail_alpha"]:
 			if visual.has(key): definitions[row.id][key]=visual[key]
 		if visual.has("variant"): definitions[row.id].variant_index=float(visual.variant)
 	for style in range(DATA.FAMILIES.size()):
@@ -88,6 +88,7 @@ func update_projectiles(bullets: Array,bounds: Rect2,reduced: bool=false) -> voi
 	counts.fill(0)
 	ribbons.begin()
 	var dense=bullets.size()>650
+	var trail_dense=bullets.size()>500
 	for bullet in bullets:
 		if float(bullet.get("launch_delay",0.))>0.: continue
 		if float(bullet.life)<=0. or not bounds.has_point(bullet.at): culled_count+=1; continue
@@ -106,16 +107,19 @@ func update_projectiles(bullets: Array,bounds: Rect2,reduced: bool=false) -> voi
 		# than pointing through the inside of a spiral or orbit.
 		if bullet.has("trail_points") and not reduced:
 			var points: Array=bullet.trail_points
-			var stride=3 if dense else 1
+			var stride=3 if trail_dense else 1
 			for n in range(1,points.size(),stride):
 				var end=mini(n+stride-1,points.size()-1)
-				ribbons.add(style,points[n-1],points[end],Color(bullet.color,float(end)/points.size()*(.55 if dense else .8)*life_scale),float(row.get("width",3.))*maxf(.12,life_scale))
+				var progress=float(end)/points.size()
+				var alpha=float(row.get("trail_alpha",.8))*progress*progress*(.7 if dense else 1.)*life_scale
+				ribbons.add(style,points[n-1],points[end],Color(bullet.color,alpha),float(row.get("width",3.))*maxf(.12,life_scale)*(.16+.84*progress))
+			if not points.is_empty(): ribbons.add(style,points[-1],bullet.at,Color(bullet.color,float(row.get("trail_alpha",.8))*life_scale),float(row.get("width",3.))*maxf(.12,life_scale))
 		else:
 			tail=minf(tail,velocity.length()*age) if DATA.NEW_INSTRUMENTS.has(str(bullet.kind)) else tail
 			ribbons.add(style,bullet.at-direction*tail,bullet.at,Color(bullet.color,.62 if dense else .9),float(row.get("width",0.)))
 		var size_value: Vector2=Vector2(row.get("size",SIZES[style]*float(row.scale)))*life_scale
 		var pose=Transform2D(angle,bullet.at).scaled_local(size_value)
-		var visible_life=1. if str(bullet.kind) in DATA.VISUALS.STANDARD_IDS and not bool(bullet.get("retiring",false)) else minf(1.,float(bullet.life))
+		var visible_life=1. if bool(bullet.get("range_tracked",false)) and not bool(bullet.get("retiring",false)) else minf(1.,float(bullet.life))
 		var custom=Color(fposmod(age,100.),float(row.variant),visible_life,float(row.variant_index))
 		bodies[style].multimesh.set_instance_transform_2d(index,pose)
 		bodies[style].multimesh.set_instance_color(index,draw_color)
@@ -128,6 +132,6 @@ func update_projectiles(bullets: Array,bounds: Rect2,reduced: bool=false) -> voi
 		bodies[style].multimesh.visible_instance_count=counts[style]
 		glows[style].multimesh.visible_instance_count=counts[style]
 		glows[style].visible=not reduced
-		glows[style].material.set_shader_parameter("intensity",.19 if dense else .34)
+		glows[style].material.set_shader_parameter("intensity",(.23 if dense else .40) if style==1 else (.19 if dense else .34))
 	ribbons.visible=not reduced
 	ribbons.finish()

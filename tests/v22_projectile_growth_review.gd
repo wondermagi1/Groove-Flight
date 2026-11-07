@@ -81,7 +81,7 @@ func run() -> void:
 	game.state="combat"; game.ui.refresh(); game.settings.master=0.; game.apply_audio(); game.camera.enabled=true
 	game.camera.position=Vector2.ZERO; game.camera.position_smoothing_enabled=false; game.camera.force_update_scroll()
 	model_checks(); firing_checks()
-	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"All15weapons x4upgrade levels x5attribute values, unrelated attributes, real merge, visible caps, actual damaging rays/branches and train projectiles. Fixed controlled fixtures; no human balance claim."}
+	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"All active weapons x4upgrade levels x5attribute values, unrelated attributes, real merge, visible caps, actual damaging rays/branches and train projectiles. Fixed controlled fixtures; no human balance claim."}
 	FileAccess.open("res://tests/results-v22-projectile-growth.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("V22_PROJECTILE_GROWTH ",JSON.stringify(result))
 	game.music.stop(); game.composer_player.stop_song(); current_scene=null; game.queue_free()
 	for i in range(5): await process_frame

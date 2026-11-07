@@ -1,0 +1,77 @@
+{
+	"checks": 3,
+	"facts": {
+		"preview": {
+			"fps": 24,
+			"scope": "Controlled single triggers: Lv4 attributes40 for horizon and stern fan; then explicit350-unit range fixture for visible retirement. Muted, no enemies; not a campaign acquisition, charge-cadence or performance recording.",
+			"seconds": 7
+		},
+		"retirement_samples": [
+			{
+				"remaining_objects": 1,
+				"retiring": false,
+				"scale": 1.0,
+				"time": 0.15,
+				"travelled": 75.0
+			},
+			{
+				"remaining_objects": 1,
+				"retiring": false,
+				"scale": 1.0,
+				"time": 0.6,
+				"travelled": 300.0
+			},
+			{
+				"remaining_objects": 1,
+				"retiring": true,
+				"scale": 1.0,
+				"time": 0.7,
+				"travelled": 350.0
+			},
+			{
+				"remaining_objects": 1,
+				"retiring": true,
+				"scale": 0.797839610666517,
+				"time": 1.05,
+				"travelled": 350.0
+			},
+			{
+				"remaining_objects": 1,
+				"retiring": true,
+				"scale": 0.554784736033923,
+				"time": 1.45,
+				"travelled": 350.0
+			},
+			{
+				"remaining_objects": 1,
+				"retiring": true,
+				"scale": 0.21805770511812,
+				"time": 1.95,
+				"travelled": 350.0
+			},
+			{
+				"remaining_objects": 0,
+				"retiring": true,
+				"scale": 0.0,
+				"time": 2.25,
+				"travelled": 350.0
+			}
+		]
+	},
+	"failures": [],
+	"images": [
+		"res://docs/screenshots/v23-horizon.png",
+		"res://docs/screenshots/v23-stern-fan.png",
+		"res://docs/screenshots/v23-rotated-horizon.png",
+		"res://docs/screenshots/v23-shared-heads.png",
+		"res://docs/screenshots/v23-range-015.png",
+		"res://docs/screenshots/v23-range-060.png",
+		"res://docs/screenshots/v23-range-070.png",
+		"res://docs/screenshots/v23-range-105.png",
+		"res://docs/screenshots/v23-range-145.png",
+		"res://docs/screenshots/v23-range-195.png",
+		"res://docs/screenshots/v23-range-225.png"
+	],
+	"renderer": "forward_plus",
+	"scope": "Native GPU actual direction patterns, uniform shared heads, and range-triggered terminal scaling. Explicit controlled fixtures, no source-game internals or human balance claim."
+}

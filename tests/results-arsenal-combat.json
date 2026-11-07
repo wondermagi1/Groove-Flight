@@ -250,7 +250,7 @@
 			},
 			"stern_fan": {
 				"count": 26,
-				"damage": 68.4000000001106,
+				"damage": 57.6000000000931,
 				"family": "pulse",
 				"pitch": 0
 			},

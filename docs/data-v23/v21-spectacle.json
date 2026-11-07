@@ -1,0 +1,30 @@
+{
+	"checks": 77,
+	"facts": {
+		"giant_matrix": {
+			"columns": 25,
+			"count": 600,
+			"kind": "shooter",
+			"rows": 24,
+			"screen_pitch": 31.1999988555908
+		},
+		"new_mechanisms": [
+			"gilded_helix",
+			"weave_cross",
+			"crown_orbit"
+		],
+		"scale": {
+			"camera_zoom": 0.65,
+			"max_enemies": 1024,
+			"ordinary_core_radii": [
+				16.0,
+				17.0,
+				18.0
+			],
+			"player_art_radius": 16.0
+		}
+	},
+	"failures": [],
+	"images": [],
+	"scope": "Actual new weapon trajectories/damage, all active visual profiles, matrix/circular wave routes, real density/population/renderer cap, player scale and received-hit guard lifecycle. Controlled GPU captures when enabled."
+}

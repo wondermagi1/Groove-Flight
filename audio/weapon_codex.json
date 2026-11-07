@@ -1,8 +1,8 @@
 {
-	"sample_file_count": 120,
+	"sample_file_count": 128,
 	"schema": 1,
-	"scope": "Original twelve instruments plus three new spectacle weapons. Fixed pitch0 battle sounds; no automatic strength or melody cycles.",
-	"weapon_count": 15,
+	"scope": "Original twelve instruments plus four new weapons, including the rear fan. Fixed pitch0 battle sounds; no automatic strength or melody cycles.",
+	"weapon_count": 16,
 	"weapons": [
 		{
 			"cadence": {
@@ -1053,6 +1053,76 @@
 				}
 			],
 			"voice": "inst_crown_orbit"
+		},
+		{
+			"cadence": {
+				"beats": 1,
+				"label": "固定声音",
+				"pitches": [
+					0
+				],
+				"scales": [
+					1.0
+				]
+			},
+			"cadence_total": 1.0,
+			"family": "pulse",
+			"id": "stern_fan",
+			"instrument": "拨弦弦乐",
+			"name": "尾羽回响",
+			"recorded_audio": false,
+			"reference_layer": "sampled_instrument",
+			"samples": [
+				{
+					"bytes": 27384,
+					"path": "res://audio/arsenal/notes/inst_stern_fan_0.wav",
+					"pitch": 0,
+					"sha256": "bdfe64fa7e12db13b7fa621ed9c9cd4c99e2088a9803e711d1c8f59fc9017bce"
+				},
+				{
+					"bytes": 27384,
+					"path": "res://audio/arsenal/notes/inst_stern_fan_1.wav",
+					"pitch": 1,
+					"sha256": "dc0457ed6709ca647a61a26758ac3691f02c55287cf704059c5458a8d30ca554"
+				},
+				{
+					"bytes": 27384,
+					"path": "res://audio/arsenal/notes/inst_stern_fan_2.wav",
+					"pitch": 2,
+					"sha256": "ceb3136c1290bd9ba0985285f8d3af88e8f54c0e8350d6c837d99dfa02cba8da"
+				},
+				{
+					"bytes": 27384,
+					"path": "res://audio/arsenal/notes/inst_stern_fan_3.wav",
+					"pitch": 3,
+					"sha256": "e0901f4ad0c17421456683f80a020bd73ecdeb1101ce2988fd1ec6b73d5b0115"
+				},
+				{
+					"bytes": 27384,
+					"path": "res://audio/arsenal/notes/inst_stern_fan_4.wav",
+					"pitch": 4,
+					"sha256": "192e1dd5cece1a6aa6f14237f548875a4e9cc40d5cfe6d6549239872ebde56a0"
+				},
+				{
+					"bytes": 27384,
+					"path": "res://audio/arsenal/notes/inst_stern_fan_5.wav",
+					"pitch": 5,
+					"sha256": "eed9dd06ae1f95caf2362a9c75a86466601668902654faa1fcdef722c6c462a5"
+				},
+				{
+					"bytes": 27384,
+					"path": "res://audio/arsenal/notes/inst_stern_fan_6.wav",
+					"pitch": 6,
+					"sha256": "9a0d75f8f9c77a4ff965a37f577ba4235f6c678e7a2170d4cc6d315428bff106"
+				},
+				{
+					"bytes": 27384,
+					"path": "res://audio/arsenal/notes/inst_stern_fan_7.wav",
+					"pitch": 7,
+					"sha256": "296789af8ce6d4e386e381b63228c4b4ec5a1438070b2b90d2394798c8a884e0"
+				}
+			],
+			"voice": "inst_stern_fan"
 		}
 	]
 }

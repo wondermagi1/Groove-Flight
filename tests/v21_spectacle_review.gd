@@ -232,7 +232,7 @@ func run() -> void:
 	game.fx.set_process(false); game.music.stop(); game.music._running=false
 	game.settings.master=0.; game.apply_audio()
 	mechanism_checks(); scale_and_density_checks(); await guard_checks(); await visual_checks(); await preview_capture()
-	var result={"checks":checks,"failures":failures,"facts":facts,"images":images,"scope":"Actual new weapon trajectories/damage, all15visual profiles, matrix/circular wave routes, real density/population/renderer cap, player scale and received-hit guard lifecycle. Controlled GPU captures when enabled."}
+	var result={"checks":checks,"failures":failures,"facts":facts,"images":images,"scope":"Actual new weapon trajectories/damage, all active visual profiles, matrix/circular wave routes, real density/population/renderer cap, player scale and received-hit guard lifecycle. Controlled GPU captures when enabled."}
 	FileAccess.open("res://tests/results-v21-spectacle.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	print("V21_SPECTACLE ",JSON.stringify(result))
 	game.music.stop(); game.composer_player.stop_song(); stop_audio(game); current_scene=null; game.queue_free(); await frames(5)

@@ -1,0 +1,25 @@
+{
+	"checks": 96,
+	"facts": {
+		"base": {
+			"base_total_damage": 77.0,
+			"beams_per_arm": 4,
+			"colors": [
+				"57e8ffff",
+				"ff69bcff",
+				"ffe477ff",
+				"ad85ffff",
+				"71ffb8ff",
+				"ff955eff",
+				"709fffff"
+			],
+			"count": 16,
+			"origin": [
+				0.0,
+				-64.0
+			]
+		}
+	},
+	"failures": [],
+	"scope": "Production scan, four parallel beam groups, quality-scaled visible lane hits, penetration endpoint, track/aim invariance, real modifiers and renderer submission; controlled GPU image when available."
+}
