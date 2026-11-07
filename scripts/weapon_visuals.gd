@@ -32,13 +32,15 @@ static func setup(bullet: Dictionary,kind: String,index: int,count: int,player: 
 		var arm=index%4; var rank=floori(float(index)/4.)
 		var axis=Vector2.from_angle(arm*PI*.5)
 		var side=Vector2(-axis.y,axis.x); var lane=-1. if rank%2==0 else 1.
-		bullet.at=player+axis*(28.+floori(float(rank)/2.)*22.)+side*lane*13.
+		bullet.at=player+axis*28.+side*lane*13.
+		bullet.launch_delay=floorf(float(rank)/2.)*.028
 		bullet.v=axis*float(bullet.original_speed)
 		bullet.weave_side=side; bullet.weave_phase=rank*.72; bullet.weave_amplitude=18.
 		bullet.color=PALETTE[(arm+rank)%PALETTE.size()]
 	elif kind=="crown_orbit":
 		bullet.orbit_angle=float(index)*TAU/count+time*.45
-		bullet.orbit_radius=146.+float(index%3)*28.; bullet.orbit_rate=1.7+float(index%3)*.16
+		var layers=clampi(ceili(float(count)/12.),3,8)
+		bullet.orbit_radius=146.+float(index%layers)*28.; bullet.orbit_rate=1.7+float(index%layers)*.16
 		bullet.at=player+Vector2.from_angle(bullet.orbit_angle)*float(bullet.orbit_radius)
 		bullet.color=PALETTE[floori(float(index)/2.)%PALETTE.size()]
 	if kind in ["gilded_helix","weave_cross","crown_orbit"]: bullet.trail_points=[Vector2(bullet.at)]; bullet.trail_clock=0.

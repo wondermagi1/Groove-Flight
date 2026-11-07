@@ -49,7 +49,7 @@ func mechanism_checks() -> void:
 	for row in C.playable_weapons():
 		check(row.has("visual") and row.visual.has("size") and game.weapon_renderer.definitions[row.id].has("tail"),"live weapon uses its dedicated body/energy/trail profile / "+str(row.id))
 	fixture("gilded_helix"); var event=fire()
-	check(game.bullets.size()==48 and event.pitch==0,"one gold-helix trigger emits48actual rounds with one fixed instrument")
+	check(game.bullets.size()==52 and event.pitch==0,"one gold-helix trigger emits52quality-scaled actual rounds with one fixed instrument")
 	var first: Dictionary=game.bullets[0]; var initial: Vector2=first.v
 	for i in range(10): game.update_bullets(.025)
 	check(absf(initial.angle_to(first.v))>.15 and first.trail_points.size()>3,"gold helix changes the actual collision trajectory and retains an arc trail")
@@ -61,13 +61,13 @@ func mechanism_checks() -> void:
 	fixture("weave_cross"); event=fire()
 	var arms: Dictionary={}
 	for b in game.bullets: arms[Vector2(signf(b.v.x),signf(b.v.y)).round()]=true
-	check(game.bullets.size()==64 and arms.size()==4,"woven cross emits64rounds into four cardinal groups")
+	check(game.bullets.size()==70 and arms.size()==4,"woven cross emits70quality-scaled rounds into four cardinal groups")
 	first=game.bullets[0]; var start: Vector2=first.at
 	for i in range(12): game.update_bullets(.02)
 	check(absf(first.at.y-start.y)>4. and first.trail_points.size()>3,"woven ribbons have actual lateral motion rather than straight decorative lines")
 	fixture("crown_orbit"); fire(); game.player=Vector2(120,60)
 	for i in range(12): game.update_bullets(.02)
-	check(game.bullets.size()==16 and game.bullets.all(func(b): return absf(Vector2(b.at).distance_to(game.player)-float(b.orbit_radius))<.01),"sixteen crown rounds retain their three orbital radii around the moved ship")
+	check(game.bullets.size()==20 and game.bullets.all(func(b): return absf(Vector2(b.at).distance_to(game.player)-float(b.orbit_radius))<.01),"twenty quality-scaled crown rounds retain their three orbital radii around the moved ship")
 	check(game.bullets.all(func(b): return b.pierce==3 and b.damage>0.),"orbital coverage consists of real damaging projectiles")
 	facts.new_mechanisms=["gilded_helix","weave_cross","crown_orbit"]
 

@@ -3,8 +3,8 @@
 	"facts": {
 		"weapon_impacts": {
 			"beam": {
-				"count": 1,
-				"damage": 23.0,
+				"count": 3,
+				"damage": 69.0,
 				"family": "beam",
 				"pitch": 0
 			},
@@ -15,8 +15,8 @@
 				"pitch": 0
 			},
 			"beam_split": {
-				"count": 2,
-				"damage": 36.0,
+				"count": 6,
+				"damage": 108.0,
 				"family": "beam",
 				"pitch": 0
 			},
@@ -39,8 +39,8 @@
 				"pitch": 0
 			},
 			"chain": {
-				"count": 1,
-				"damage": 19.0,
+				"count": 3,
+				"damage": 57.0,
 				"family": "chain",
 				"pitch": 0
 			},
@@ -51,8 +51,8 @@
 				"pitch": 0
 			},
 			"crown_orbit": {
-				"count": 16,
-				"damage": 18.0,
+				"count": 20,
+				"damage": 24.0,
 				"family": "orbit",
 				"pitch": 0
 			},
@@ -76,7 +76,7 @@
 			},
 			"flame_cone": {
 				"count": 10,
-				"damage": 56.0,
+				"damage": 70.0,
 				"family": "flame",
 				"pitch": 0
 			},
@@ -87,7 +87,7 @@
 				"pitch": 0
 			},
 			"gilded_helix": {
-				"count": 48,
+				"count": 52,
 				"damage": 26.0,
 				"family": "nova",
 				"pitch": 0
@@ -106,13 +106,13 @@
 			},
 			"mine_cluster": {
 				"count": 6,
-				"damage": 100.0,
+				"damage": 120.0,
 				"family": "mine",
 				"pitch": 0
 			},
 			"missile": {
-				"count": 1,
-				"damage": 28.0,
+				"count": 3,
+				"damage": 84.0,
 				"family": "missile",
 				"pitch": 0
 			},
@@ -129,7 +129,7 @@
 				"pitch": 0
 			},
 			"nova": {
-				"count": 10,
+				"count": 12,
 				"damage": 20.0,
 				"family": "nova",
 				"pitch": 0
@@ -165,8 +165,8 @@
 				"pitch": 0
 			},
 			"pulse_needle": {
-				"count": 1,
-				"damage": 27.0,
+				"count": 3,
+				"damage": 81.0,
 				"family": "pulse",
 				"pitch": 0
 			},
@@ -177,14 +177,14 @@
 				"pitch": 0
 			},
 			"rail": {
-				"count": 1,
-				"damage": 58.0,
+				"count": 3,
+				"damage": 174.0,
 				"family": "rail",
 				"pitch": 0
 			},
 			"rail_horizon": {
-				"count": 1,
-				"damage": 195.0,
+				"count": 7,
+				"damage": 1170.0,
 				"family": "rail",
 				"pitch": 0
 			},
@@ -196,7 +196,7 @@
 			},
 			"recorded_ballistic_legend": {
 				"count": 11,
-				"damage": 363.0,
+				"damage": 297.0,
 				"family": "pulse",
 				"pitch": 0
 			},
@@ -214,7 +214,7 @@
 			},
 			"recorded_crude_legend": {
 				"count": 10,
-				"damage": 450.0,
+				"damage": 360.0,
 				"family": "pulse",
 				"pitch": 0
 			},
@@ -225,14 +225,14 @@
 				"pitch": 0
 			},
 			"recorded_heavy": {
-				"count": 1,
-				"damage": 88.0,
+				"count": 7,
+				"damage": 528.0,
 				"family": "rail",
 				"pitch": 0
 			},
 			"scatter": {
 				"count": 5,
-				"damage": 28.0,
+				"damage": 35.0,
 				"family": "scatter",
 				"pitch": 0
 			},
@@ -243,14 +243,14 @@
 				"pitch": 0
 			},
 			"scatter_prism": {
-				"count": 12,
-				"damage": 19.2500000000146,
+				"count": 16,
+				"damage": 25.6666666666861,
 				"family": "scatter",
 				"pitch": 0
 			},
 			"weave_cross": {
-				"count": 64,
-				"damage": 28.7999999999302,
+				"count": 70,
+				"damage": 40.799999999901,
 				"family": "pulse",
 				"pitch": 0
 			}

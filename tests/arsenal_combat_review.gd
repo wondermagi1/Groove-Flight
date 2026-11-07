@@ -64,7 +64,7 @@ func projectile_mechanics() -> void:
 	game.update_bullets(.01)
 	check(seam.hp==995.,"large new projectiles hit across a spatial-grid cell seam")
 	fixture(["beam"]); var a=target(Vector2(0,-100),10000.,20.); var b=target(Vector2(0,-180),10000.,20.); var c=target(Vector2(0,-260),10000.,20.)
-	var event=fire()
+	var event=game.loadout.trigger(0).duplicate(true); event.count=1; event.crit_chance=0.; game.fire_weapon(event)
 	check(is_equal_approx(10000.-a.hp,event.damage) and is_equal_approx(10000.-b.hp,event.damage) and is_equal_approx(10000.-c.hp,event.damage),"beam deals actual ordered penetration damage to multiple targets")
 	fixture(["missile"]); a=target(Vector2(0,-100),10000.,25.); b=target(Vector2(65,-100),10000.,20.); fire()
 	for i in range(80): game.update_bullets(.02)

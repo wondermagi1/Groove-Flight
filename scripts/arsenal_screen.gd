@@ -6,7 +6,7 @@ const ART = preload("res://scripts/item_art.gd")
 const RARITIES = ["普通", "稀有", "史诗", "传奇"]
 const RARITY_COLORS = [Color("91a0b4"), Color("70b8ff"), Color("bd9cff"), Color("ffd286")]
 const CATEGORY_NAMES = {"weapon":"武器", "mod":"改装", "rhythm":"音律", "defense":"防御", "core":"核心"}
-const MAIN_STATS = [["ballistic","弹道",Color("f3c27e")],["energy","能量",Color("77dbf5")],["power","动力",Color("ff9b86")],["support","支援",Color("bbaaff")]]
+const MAIN_STATS = [["ballistic","实弹",Color("f3c27e")],["support","支援",Color("77c7b7")],["energy","能量",Color("bbaaff")],["power","动力",Color("b1bed8")]]
 const SECONDARY_STATS = [["max_health","生命上限"],["armor","装甲"],["regen","再生"],["move_percent","移动加成"],["crit_chance","暴击率"],["crit_damage","暴击伤害"],["extra_projectiles","额外弹丸"],["bullet_multiplier","单发伤害倍率"],["magnet","收集范围"],["luck","幸运"]]
 const PANEL_NAMES = [["panel_attributes","属性"],["panel_status","状态"],["panel_buffs","增益"],["panel_inventory","背包"],["panel_sequencer","音序"]]
 var game
@@ -96,7 +96,7 @@ class ModuleCard:
 	func _draw() -> void:
 		var row: Dictionary = DATA.item(item_id)
 		if row.is_empty(): return
-		var accent: Color = DATA.quality_color(row)
+		var accent: Color = DATA.quality_color(row,item_level)
 		if flight_compact:
 			ART.draw_icon(self, Rect2(Vector2(8, 1), Vector2(size.x - 16, size.y - 4)), item_id)
 			if item_level > 1:
@@ -118,13 +118,13 @@ class ModuleCard:
 		if small:
 			draw_string(card_font, Vector2(size.x - 26.0, 18.0), str(item_level), HORIZONTAL_ALIGNMENT_LEFT, 20.0, 13, Color(accent, 0.9))
 		else:
-			draw_string(card_font, Vector2(11.0, 24.0), DATA.quality_name(row) + " / " + str(row.width) + " 格", HORIZONTAL_ALIGNMENT_LEFT, size.x - 22.0, 15, DATA.quality_color(row))
-			if row.has("quality"):
-				var stats_now=screen.game.loadout.stats() if screen!=null and screen.game!=null else {}
-				var attr_points=int(round(float(stats_now.get(str(row.attr),0.))))
-				var attr_name={"ballistic":"实弹","energy":"能量","power":"动力","support":"支援"}.get(str(row.attr),str(row.attr))
-				var formula="发射 %d [%d+%s %d×%.1f]"%[int(row.count)+roundi(attr_points*float(row.get("attribute_count_scale",0.))),int(row.count),attr_name,attr_points,float(row.get("attribute_count_scale",0.))]
-				draw_string(card_font,Vector2(11.0,size.y-36.0),formula,HORIZONTAL_ALIGNMENT_LEFT,size.x-22.0,13,Color(DATA.quality_color(row),.9))
+			draw_string(card_font, Vector2(11.0, 24.0), DATA.quality_name(row,item_level) + " / " + str(row.width) + " 格", HORIZONTAL_ALIGNMENT_LEFT, size.x - 22.0, 15, DATA.quality_color(row))
+			if bool(row.get("linear_projectiles",false)):
+				var growth=screen.projectile_preview(item_id,item_level,module_uid)
+				var formula="发射 %d · %s %.1f · 品质 +%d"%[int(growth.count),str(DATA.GROWTH.ATTR_NAMES.get(str(row.attr),"属性")),float(growth.points),int(growth.quality_count)]
+				if bool(growth.capped): formula+=" · 上限"
+				draw_string(card_font,Vector2(11.0,size.y-33.0),formula,HORIZONTAL_ALIGNMENT_LEFT,size.x-22.0,13,Color(accent,.95))
+
 			draw_string(card_font, Vector2(11.0, size.y - 17.0), "已售出" if sold else "✦ %d  ·  购买" % price, HORIZONTAL_ALIGNMENT_LEFT, size.x - 22.0, 18, Color("6c7d96") if sold else accent)
 		if selected:
 			draw_line(Vector2(10.0, 1.0), Vector2(size.x - 10.0, 1.0), accent, 2.0, true)
@@ -463,6 +463,13 @@ func _build_inventory(rect: Rect2) -> void:
 		empty.position = Vector2(3, 10)
 		area.add_child(empty)
 
+func projectile_preview(kind: String,level: int=1,uid: int=-1) -> Dictionary:
+	var row=DATA.item(kind)
+	if uid>=0 and game.loadout.equipped_head(uid)>=0:
+		var actual=game.loadout.item_stats(uid)
+		if actual.has("growth"): return actual.growth
+	return DATA.GROWTH.calculate(row,game.loadout.stats(),level)
+
 func _find_inventory_space(used: Array[bool], width: int, columns: int) -> int:
 	for at in range(260):
 		if at % columns + width > columns: continue
@@ -633,7 +640,7 @@ func _build_shop(rect: Rect2) -> void:
 		var lock_button=_button("已锁定" if bool(offer.get("locked",false)) else "锁定",game.toggle_offer_lock.bind(index),Color("e7c88d"),24.)
 		lock_button.name="ShopLock_%d"%index; lock_button.position=card.position-Vector2(0,27); lock_button.size=Vector2(width,25.); lock_button.disabled=bool(offer.sold); area.add_child(lock_button)
 		card.disabled = card.sold or game.dust < card.price or game.loadout.modules.size() >= 64
-		decorate_card(card, DATA.quality_color(row))
+		decorate_card(card, DATA.quality_color(row,card.item_level))
 		area.add_child(card)
 
 func _build_inspector(view: Vector2, center_x: float, center_width: float, top: float, bottom_height: float) -> void:
@@ -711,6 +718,7 @@ func _update_detail() -> void:
 			var target_value: String = str(source.get("target", ""))
 			if not target_value.is_empty(): tags.append("限定 " + _stat_name(target_value))
 			if not tags.is_empty(): _detail_text(" / ".join(tags), 15, Color("7189a5"))
+		if preview_stat in DATA.GROWTH.ATTR_NAMES: _detail_text("每增加1点%s，对应武器额外发射1颗子弹或1束光束。"%str(DATA.GROWTH.ATTR_NAMES[preview_stat]),17,Color("bce8d8"))
 		_detail_text("只有已装备模块参与结算。位置、目标类型与节拍条件会继续影响具体武器。", 17, Color("6f87a2"))
 		_add_detail_close()
 		return
@@ -720,7 +728,7 @@ func _update_detail() -> void:
 		return
 	detail_panel.visible = true
 	_detail_text(str(row.name), 27, Color("f0f6ff"))
-	_detail_text("//%s  /  %s  /  占 %d 格" % [DATA.quality_name(row), CATEGORY_NAMES.get(str(row.category), "模块"), int(row.width)], 16, DATA.quality_color(row))
+	_detail_text("//%s  /  %s  /  占 %d 格" % [DATA.quality_name(row,int(game.loadout.find(preview_uid).get("level",1))), CATEGORY_NAMES.get(str(row.category), "模块"), int(row.width)], 16, DATA.quality_color(row))
 	var illustration := DetailIllustration.new()
 	illustration.item_id = str(row.id)
 	illustration.item_level = int(game.loadout.find(preview_uid).get("level", 1))
@@ -731,20 +739,19 @@ func _update_detail() -> void:
 	var module: Dictionary = game.loadout.find(preview_uid)
 	if str(row.category) == "weapon":
 		var head: int = game.loadout.equipped_head(preview_uid)
-		var serial: int = maxi(0, floori(float(game.music.timeline) / 2.0)) * 8 + maxi(0, head) % 8
+		var serial: int = maxi(0, floori(float(game.music.timeline) / 1.0)) * 8 + maxi(0, head) % 8
 		var actual: Dictionary = game.loadout.item_stats(preview_uid, serial) if not module.is_empty() else row
 		_detail_text("所在拍预览 · 第 %d 格" % (head % 8 + 1) if head >= 0 else "基础参数", 18, row.color)
-		if row.has("quality"):
-			var stats_now=game.loadout.stats()
-			var attr_points=int(round(float(stats_now.get(str(row.attr),0.))))
-			var attr_scale=float(row.get("attribute_count_scale",0.))
-			_detail_text("发射 %d  [%d + %s %d × %.1f]\n颗子弹" % [int(actual.get("count",row.get("count",1))),int(row.get("count",1)),_stat_name(str(row.attr)),attr_points,attr_scale],20,DATA.quality_color(row))
+		if actual.has("growth"):
+			_detail_text(DATA.GROWTH.formula(actual.growth),18,DATA.quality_color(row,int(module.get("level",1))))
+			if bool(actual.growth.capped): _detail_text("已达单次发射上限 %d"%int(actual.growth.cap),16,Color("ffd478"))
+
 		_detail_text("单发伤害 %.1f  ·  弹丸 %d\n穿透 %d  ·  速度 %.0f\n爆破半径 %.0f  ·  %d 小节充能" % [float(actual.get("damage", row.get("damage", 0.0))), int(actual.get("count", row.get("count", 1))), int(actual.get("pierce", row.get("pierce", 0))), float(actual.get("speed", row.get("speed", 0.0))), float(actual.get("explosion", row.get("explosion", 0.0))), int(actual.get("charge", row.get("charge", 1)))], 18)
 		_detail_text("固定音色 · 白点经过时播放一次\n同种武器各自发声，可错位重奏\n充能 %d 轮；声音保持固定，充能仍限制弹体"%int(actual.get("charge",1)),16,Color("e7c78d"))
 		if not actual.get("calculation",{}).is_empty():
 			var f: Dictionary=actual.calculation
 			_detail_text("计算明细\n基础 %.1f × 舰体 %.2f × 等级 %.2f\n× 属性 %.2f × 单发倍率 %.2f × 改装 %.2f"%[f.base_damage,f.ship_multiplier,f.level_multiplier,f.attribute_multiplier,f.damage_multiplier,f.mod_multiplier],16)
-			_detail_text("弹数 %d + %d → %d  上限 %d\n充能 %d → %d 小节  每小节2秒"%[f.base_count,f.extra_count,actual.count,f.count_cap,actual.charge_base,actual.charge],16,Color("9dcdd8"))
+			_detail_text("弹数 %d + %d → %d  上限 %d\n充能 %d → %d 小节  每轮1秒"%[f.base_count,f.extra_count,actual.count,f.count_cap,actual.charge_base,actual.charge],16,Color("9dcdd8"))
 			_detail_text("其中属性换算弹数 %d"%int(f.get("attribute_count",0)),15,Color("829eb5"))
 			for rule_text in game.loadout.rule_explanation(preview_uid,serial): _detail_text(rule_text,14,Color("7e9caf"))
 		if preview_uid>=0 and game.get("receipt")!=null:
@@ -753,12 +760,8 @@ func _update_detail() -> void:
 		var damage: float = float(game.weapon_damage.get(str(row.id), 0.0))
 		_detail_text("本局实际伤害  %s" % _short_number(damage), 19, Color("f0ce9c"))
 		_detail_text("属性归属  " + _stat_name(str(row.attr)), 17, Color("879db6"))
-		var motif: PackedStringArray = []
-		for note in row.get("melody", []): motif.append(str(int(note) + 1))
-		if not motif.is_empty():
-			_detail_text("八音动机  " + " · ".join(motif), 17, Color("9dcdd8"))
-			_detail_text("每次有效发射推进一个音符；拖动拍位会改变音高。", 16, Color("69819b"))
-		_detail_text("拍位、充能周期和相邻模块会改变触发；移动卡片会同时改变开火与旋律。", 16, Color("69819b"))
+		_detail_text("拍位决定触发时刻；武器保持固定乐器音色。其他音高素材用于显式作曲。",16,Color("69819b"))
+
 	if not module.is_empty():
 		var equipped: bool = game.loadout.slots.has(preview_uid)
 		_detail_text("Lv.%d / 4   ·   %s" % [int(module.level), "已装备" if equipped else "备用仓 / 未生效"], 18, Color("9bccdd"))

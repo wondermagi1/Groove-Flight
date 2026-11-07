@@ -89,6 +89,7 @@ func update_projectiles(bullets: Array,bounds: Rect2,reduced: bool=false) -> voi
 	ribbons.begin()
 	var dense=bullets.size()>650
 	for bullet in bullets:
+		if float(bullet.get("launch_delay",0.))>0.: continue
 		if float(bullet.life)<=0. or not bounds.has_point(bullet.at): culled_count+=1; continue
 		var row: Dictionary=definitions.get(str(bullet.kind),definitions.pulse)
 		var style=int(row.style); var index=counts[style]

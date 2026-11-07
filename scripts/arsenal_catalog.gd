@@ -11,6 +11,7 @@ const QUALITY_COLORS=[Color("a7a7a7"),Color("59d96f"),Color("ef4ddd")]
 const DEFAULT_RECORDED_WEAPON_IDS=["recorded_crude","recorded_ballistic"]
 const RECORDED_WEAPONS_ENABLED=false
 const VISUALS=preload("res://scripts/weapon_visuals.gd")
+const GROWTH=preload("res://scripts/projectile_growth.gd")
 const ACTIVE_WEAPON_IDS=["pulse","scatter","beam","missile","nova","chain","rail","pulse_needle","scatter_prism","beam_split","rail_horizon","recorded_heavy","gilded_helix","weave_cross","crown_orbit"]
 const INSTRUMENTS={"pulse":"钢琴","scatter":"军鼓","beam":"小提琴","missile":"底鼓","nova":"中音萨克斯","chain":"颤音琴＋电子泛音","rail":"大提琴","pulse_needle":"钢弦吉他","scatter_prism":"低音通鼓","beam_split":"合成弦乐＋电子光芯","rail_horizon":"低音钢琴","recorded_heavy":"定音鼓"}
 const INSTRUMENT_ROOTS={"chain":72,"rail":48,"rail_horizon":36,"recorded_heavy":43}
@@ -84,10 +85,12 @@ static func is_item_available(id: String) -> bool:
 	for rule in row.get("rules",[]):
 		if str(rule.get("target",""))=="" or str(rule.get("target","")) in available: return true
 	return false
-static func quality_name(data: Dictionary) -> String:
+static func quality_name(data: Dictionary,level: int=1) -> String:
+	if bool(data.get("linear_projectiles",false)): return GROWTH.QUALITY_NAMES[GROWTH.quality(data,level)]
 	var quality=int(data.get("quality",-1))
 	return QUALITY_NAMES[clampi(quality,0,QUALITY_NAMES.size()-1)] if quality>=0 else RARITY_NAMES[clampi(int(data.get("rarity",0)),0,3)]
-static func quality_color(data: Dictionary) -> Color:
+static func quality_color(data: Dictionary,level: int=1) -> Color:
+	if bool(data.get("linear_projectiles",false)): return GROWTH.QUALITY_COLORS[GROWTH.quality(data,level)]
 	var quality=int(data.get("quality",-1))
 	return QUALITY_COLORS[quality] if quality>=0 and quality<QUALITY_COLORS.size() else Color(data.get("color",Color("a4b7cf")))
 static func playable_weapons() -> Array[Dictionary]:
@@ -104,6 +107,7 @@ static func family_index(family: String) -> int: return maxi(0,FAMILIES.find(fam
 static func color(id: String) -> Color:
 	var data=item(id)
 	if data.is_empty(): return Color("a4b7cf")
+	if bool(data.get("linear_projectiles",false)): return Color(data.color)
 	return quality_color(data)
 static func _rule(type: String,key: String,value: float,scope: String="all",target: String="",condition: String="always") -> Dictionary:
 	var r={"type":type,"key":key,"value":value,"scope":scope,"condition":condition}
@@ -216,6 +220,8 @@ static func _build_weapons() -> void:
 			data.tags.append("四向平行彩色光束")
 		data.active=str(data.id) in ACTIVE_WEAPON_IDS
 		if data.active:
+			data.linear_projectiles=true
+			data.attribute_count_scale=GROWTH.PER_ATTRIBUTE
 			data.voice="inst_"+str(data.id)
 			data.instrument_samples=true
 			data.instrument=str(NEW_INSTRUMENTS.get(str(data.id),INSTRUMENTS.get(str(data.id),"乐器")))
@@ -234,7 +240,10 @@ static func weapon_description(data: Dictionary) -> String:
 	if str(data.get("emission",""))=="prism_cross": parts.append("机头前方朝四个斜角同时发射彩色光束；基础每方向3道并排平行光束")
 	if str(data.id)=="gilded_helix": parts.append("金色羽状弹向四周展开并弯转，形成双层螺旋弹幕")
 	elif str(data.id)=="weave_cross": parts.append("四个方向同时射出彩色编织弹流，弹道左右交错")
-	elif str(data.id)=="crown_orbit": parts.append("十六枚星冕弹环绕战机形成三层防线，随战机移动")
+	elif str(data.id)=="crown_orbit": parts.append("星冕弹环绕战机形成三层防线，弹数增加时向外扩展至多八层，随战机移动")
+	if bool(data.get("linear_projectiles",false)):
+		parts.append("弹数随%s线性成长：每1点+1发；每档品质+2发，强化每级另+1发"%str(GROWTH.ATTR_NAMES.get(str(data.attr),str(data.attr))))
+		parts.append("单次发射上限%d，达到上限时显示"%GROWTH.count_limit(data))
 	if data.has("quality"):
 		parts.append("品质%s"%str(data.get("quality_name",QUALITY_NAMES[clampi(int(data.quality),0,2)])))
 		parts.append("发射 %d + %s属性 × %.1f 颗弹丸"%[int(data.count),{"ballistic":"实弹","energy":"能量","power":"动力","support":"支援"}.get(str(data.attr),str(data.attr)),float(data.get("attribute_count_scale",0.))])

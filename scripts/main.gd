@@ -1053,6 +1053,8 @@ func update_spawn_telegraphs() -> void:
 		var plan: Dictionary=spawn_telegraphs[i]
 		if int(plan.wave)!=wave: spawn_telegraphs.remove_at(i); continue
 		if music.timeline<float(plan.deadline): continue
+		var deployment=SWARM.MANEUVER.deployment_space(plan.center,plan.points,player,str(plan.get("shape","battalion_grid")))
+		if not deployment.is_empty(): plan.deployment=deployment
 		if not ARRIVAL.is_clear(self,plan):
 			# A live pursuer may enter a warning during its lead-in. Re-warn a
 			# clear location or wait; never materialize a matrix on occupied hulls.
@@ -1213,7 +1215,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 	if selected_pilot=="volt" and music.timeline<pilot_amp_until: damage*=1.25; count+=1
 	if selected_pilot=="nova" and posmod(floori(music.timeline/.25),8)==0: damage*=1.20
 	if music.timeline<overload_until: damage*=1.75; count+=2
-	count=clampi(count,1,8 if family=="chain" else (12 if family=="beam" else 96))
+	count=clampi(count,1,C.GROWTH.count_limit(C.item(kind)))
 	var context=trigger.duplicate(true)
 	context.root_uid=int(context.get("root_uid",context.get("uid",-1)))
 	context.root_event=str(context.get("root_event",str(Time.get_ticks_usec())))
@@ -1225,6 +1227,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 	var speed=float(trigger.get("speed",700)); var lifetime=float(trigger.get("life",2))
 	var spread=float(trigger.get("spread",.1)); var pierce=int(trigger.get("pierce",0))
 	var reach=minf(2400.,maxf(120.,speed*lifetime))
+	if prism_cross or family=="beam": rebuild_spatial()
 	fx.volley(origin,direction,color,family,count)
 	if prism_cross:
 		fx.ring(origin,Color("f0f6ff"),22.,.16)
@@ -1236,34 +1239,37 @@ func fire_weapon(trigger: Dictionary) -> void:
 	if prism_cross:
 		_fire_prism_beams(context,origin,count,damage,reach)
 	elif family=="chain":
-		for branch in range(mini(count,8)):
-			var start=origin; var hit: Array=[]
+		var roots=enemies.filter(func(e): return e.hp>0. and player.distance_to(e.at)<reach)
+		roots.sort_custom(func(a,b): return player.distance_squared_to(a.at)<player.distance_squared_to(b.at))
+		for branch in range(count):
+			var start=EMISSION.beam_origin(origin,direction,branch,count); var hit: Array=[]
 			for bounce in range(int(trigger.get("chain_count",3))):
-				var enemy=target if bounce==0 and not target.is_empty() and str(target.get("kind",""))=="boss" and float(target.get("hp",0.))>0. else nearest(start,hit)
+				var enemy=roots[branch%roots.size()] if bounce==0 and not roots.is_empty() else nearest(start,hit)
 				if enemy.is_empty() or start.distance_to(enemy.at)>(reach if bounce==0 else reach*.55): break
-				fx.beam(start,enemy.at,color,11.,true); hit.append(enemy.uid); hurt_enemy(enemy,damage,kind,context)
+				fx.beam(start,enemy.at,EMISSION.volley_color(color,branch,int(trigger.get("quality",0))),EMISSION.beam_width(count),true); hit.append(enemy.uid); hurt_enemy(enemy,damage,kind,context)
 				if float(trigger.get("explosion",0))>0: explosion(enemy.at,float(trigger.explosion),damage*.5,color,kind,context,enemy.uid)
 				start=enemy.at
 	elif family=="beam":
-		for i in range(mini(count,12)):
+		for i in range(count):
 			var axis=direction.rotated((float(i)/maxf(1,count-1)-.5)*spread if count>1 else 0.)
-			var tint=color.lerp(Color("ff91df"),.58) if kind=="beam_split" and i%2==1 else color
-			var end=origin+axis*reach; fx.beam(origin,end,tint,16+float(trigger.get("level",1))*2)
+			var start=EMISSION.beam_origin(origin,direction,i,count)
+			var tint=EMISSION.volley_color(color,i,int(trigger.get("quality",0)))
+			var width=EMISSION.beam_width(count)
+			var end=start+axis*reach; fx.beam(start,end,tint,width,false,.22)
 			# Sort contacts so a finite penetration budget stops at the proper
 			# target, not whichever dictionary happened to be inserted first.
-			var contacts: Array=[]
-			for enemy in enemies:
-				if enemy.hp>0 and Geometry2D.get_closest_point_to_segment(enemy.at,origin,end).distance_to(enemy.at)<float(enemy.radius)+12: contacts.append(enemy)
-			contacts.sort_custom(func(a,b): return player.distance_squared_to(a.at)<player.distance_squared_to(b.at))
+			var contacts=_ray_contacts(start,end,width*.5)
 			for j in range(mini(contacts.size(),pierce+1)):
 				var enemy=contacts[j]; hurt_enemy(enemy,damage,kind,context)
 				if float(trigger.get("explosion",0))>0: explosion(enemy.at,float(trigger.explosion),damage*.5,color,kind,context,enemy.uid)
 	else:
-		for i in range(mini(count,96)):
+		for i in range(count):
 			var angle=(float(i)/maxf(1,count-1)-.5)*spread if count>1 else 0.
 			if family in ["nova","orbit"]: angle=i*TAU/count
-			var axis=direction.rotated(angle)
-			var bullet=shot(origin+axis*(50 if family=="orbit" else 24),axis,speed,damage,color,kind,lifetime,pierce)
+			var radial=family in ["nova","orbit"] or kind=="weave_cross"
+			var axis=direction.rotated(angle) if radial else EMISSION.projectile_axis(direction,i,count,spread)
+			var muzzle=origin+axis*(50 if family=="orbit" else 24) if radial else EMISSION.projectile_origin(origin,direction,i,count,family)
+			var bullet=shot(muzzle,axis,speed,damage,color,kind,lifetime,pierce)
 			if bullet.is_empty(): break
 			bullet.acceleration=axis*float(motion.get("accel_forward",0.))+axis.orthogonal()*float(motion.get("accel_side",0.))
 			bullet.turn_at=float(motion.get("turn_after",0.)); bullet.turn_deg=float(motion.get("turn_deg",0.)); bullet.turned=false
@@ -1272,9 +1278,23 @@ func fire_weapon(trigger: Dictionary) -> void:
 			bullet.homing=float(trigger.get("homing",0)); bullet.bounces=int(trigger.get("bounces",0))
 			bullet.original_speed=speed; bullet.orbit_angle=axis.angle(); bullet.radius=10. if family in ["boomerang","orbit","drone"] else (13. if family=="mine" else (8. if family=="flame" else 5.))
 			VISUALS.setup(bullet,kind,i,count,player,music.timeline)
+			if not radial: bullet.launch_delay=EMISSION.projectile_delay(i,count)
+			bullet.muzzle_offset=Vector2(bullet.at)-player
 	if bool(trigger.get("chord",false)) and not target.is_empty():
 		var strength=float(trigger.get("chord_power",.22))
 		explosion(target.at,105.,damage*strength,color,kind,context)
+
+func _ray_contacts(start: Vector2,finish: Vector2,half_width: float) -> Array:
+	var contacts: Array=[]; var checked: Dictionary={}
+	# Spatial AABBs already include hull radius plus13units; every current beam
+	# half-width is within that margin. Traverse only cells crossed by the ray.
+	for cell in EMISSION.ray_cells(start,finish,GRID):
+		for enemy in spatial.get(cell,[]):
+			if checked.has(enemy.uid): continue
+			checked[enemy.uid]=true
+			if enemy.hp>0. and Geometry2D.get_closest_point_to_segment(enemy.at,start,finish).distance_to(enemy.at)<float(enemy.radius)+half_width: contacts.append(enemy)
+	contacts.sort_custom(func(a,b): return start.distance_squared_to(a.at)<start.distance_squared_to(b.at))
+	return contacts
 
 func _fire_prism_beams(context: Dictionary,center: Vector2,count: int,damage: float,reach: float) -> void:
 	var spread=float(context.get("spread",.24)); var rotation=float(context.get("angle",0.))
@@ -1283,11 +1303,7 @@ func _fire_prism_beams(context: Dictionary,center: Vector2,count: int,damage: fl
 		var axis=EMISSION.prism_axis(i,count,spread,rotation)
 		var start=EMISSION.prism_ray_origin(center,i,count,spread,rotation)
 		var end=start+axis*reach; var tint=EMISSION.prism_color(i)
-		var contacts: Array=[]
-		for enemy in enemies:
-			if enemy.hp>0 and Geometry2D.get_closest_point_to_segment(enemy.at,start,end).distance_to(enemy.at)<float(enemy.radius)+EMISSION.PRISM_BEAM_WIDTH*.5:
-				contacts.append(enemy)
-		contacts.sort_custom(func(a,b): return start.distance_squared_to(a.at)<start.distance_squared_to(b.at))
+		var contacts=_ray_contacts(start,end,EMISSION.PRISM_BEAM_WIDTH*.5)
 		# Keep explicit hit-splitting modifiers on this scatter-family weapon.
 		var impact={"at":start,"v":axis*float(context.get("speed",800.)),"damage":damage,"color":tint,"kind":kind,"family":str(context.family),"context":context}
 		for j in range(mini(contacts.size(),pierce+1)):
@@ -1355,7 +1371,13 @@ func update_bullets(delta: float) -> void:
 	while not pending_projectiles.is_empty() and bullets.size()<MAX_BULLETS:
 		bullets.append(pending_projectiles.pop_front()); receipt.count("projectile_spawned")
 	for i in range(bullets.size()-1,-1,-1):
-		var bullet=bullets[i]; bullet.life-=delta
+		var bullet=bullets[i]
+		if float(bullet.get("launch_delay",0.))>0.:
+			bullet.launch_delay=maxf(0.,float(bullet.launch_delay)-delta)
+			bullet.at=player+Vector2(bullet.get("muzzle_offset",Vector2.ZERO))
+			if bullet.has("trail_points"): bullet.trail_points=[Vector2(bullet.at)]
+			continue
+		bullet.life-=delta
 		if bullet.life<=0 or not bounds.has_point(bullet.at): bullets.remove_at(i); continue
 		bullet.age=float(bullet.get("age",0))+delta
 		bullet.v+=bullet.get("acceleration",Vector2.ZERO)*delta
@@ -1697,8 +1719,11 @@ func draw_preview_ranges() -> void:
 		elif family in ["orbit","nova","mine"]:
 			draw_arc(origin,reach,0,TAU,64,Color(color,.62),2.1,true)
 		elif family=="beam":
-			draw_line(origin,origin+direction*reach,Color(color,.20),3.,true)
-			draw_dashed_line(origin,origin+direction*reach,Color(color,.60),2.2,12,true)
+			var count=int(actual.get("count",1))
+			for i in range(count):
+				var start=EMISSION.beam_origin(origin,direction,i,count)
+				var axis=direction.rotated((float(i)/maxf(1,count-1)-.5)*float(actual.get("spread",0.)))
+				draw_dashed_line(start,start+axis*reach,Color(color,.45),1.3,12,true)
 		else:
 			var half=clampf(float(actual.get("spread",.1))*.5,.025,.48)
 			var radius=minf(reach,760.)
