@@ -50,7 +50,10 @@ func weapon_impacts() -> void:
 	for row in C.weapons():
 		fixture([str(row.id)])
 		# The prism's four diagonal arms deliberately leave the vertical axis clear.
-		var enemy=target(Vector2(110,-174) if str(row.id)=="scatter_prism" else Vector2(0,-100))
+		var at=Vector2(110,-174) if str(row.id)=="scatter_prism" else Vector2(0,-100)
+		if str(row.get("emission",""))=="hull_broadside": at=Vector2(-100,0)
+		elif str(row.get("emission",""))=="stern_fan": at=Vector2(0,100)
+		var enemy=target(at)
 		var event=fire()
 		for i in range(100): game.update_bullets(.02)
 		var damage=100000.-float(enemy.hp)

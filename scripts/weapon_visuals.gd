@@ -1,6 +1,12 @@
 extends RefCounted
 ## Art-only profiles. Collision and damage remain in production firing code.
 const PALETTE=[Color("ffe98a"),Color("8effb5"),Color("57eaff"),Color("b99aff"),Color("ff8bd7"),Color("ffba79")]
+const STANDARD_IDS=["pulse","scatter","rail","pulse_needle","rail_horizon","recorded_heavy","gilded_helix","weave_cross","stern_fan"]
+# The selected gold-helix baseline, including its existing glow shader. Only
+# tint, emission geometry and motion distinguish the active solid projectiles.
+const STANDARD={"style":1,"size":Vector2(48,16),"tail":165.,"width":3.2,"variant":.92}
+const RANGE_FADE_SECONDS=1.5
+const RANGE_FADE_DRAG=2.6
 const PROFILES={
 	"pulse":{"size":Vector2(42,9),"tail":155.,"width":2.8,"color":Color("73f3ee")},
 	"scatter":{"size":Vector2(34,11),"tail":125.,"width":2.5,"color":Color("ffe08b")},
@@ -16,11 +22,20 @@ const PROFILES={
 	"recorded_heavy":{"size":Vector2(114,17),"tail":340.,"width":5.,"color":Color("ffcda1")},
 	"gilded_helix":{"style":1,"size":Vector2(48,16),"tail":165.,"width":3.2,"variant":.92,"color":Color("fff09a")},
 	"weave_cross":{"style":1,"size":Vector2(42,16),"tail":145.,"width":3.,"variant":.92,"color":Color("b2ffb4")},
-	"crown_orbit":{"style":1,"size":Vector2(46,18),"tail":120.,"width":3.4,"variant":.92,"color":Color("9fffe2")}
+	"crown_orbit":{"style":1,"size":Vector2(46,18),"tail":120.,"width":3.4,"variant":.92,"color":Color("9fffe2")},
+	"stern_fan":{"color":Color("ff9ecb")}
 }
 
 static func profile(id: String) -> Dictionary:
-	return PROFILES.get(id,{})
+	var result: Dictionary=PROFILES.get(id,{}).duplicate()
+	if id in STANDARD_IDS: result.merge(STANDARD,true)
+	return result
+
+static func life_scale(bullet: Dictionary) -> float:
+	if str(bullet.get("kind","")) not in STANDARD_IDS: return 1.
+	if not bool(bullet.get("retiring",false)): return 1.
+	var progress=clampf(float(bullet.get("fade_age",0.))/RANGE_FADE_SECONDS,0.,1.)
+	return pow(1.-progress,.85)
 
 static func setup(bullet: Dictionary,kind: String,index: int,count: int,player: Vector2,time: float) -> void:
 	if kind=="gilded_helix":
@@ -43,7 +58,7 @@ static func setup(bullet: Dictionary,kind: String,index: int,count: int,player: 
 		bullet.orbit_radius=146.+float(index%layers)*28.; bullet.orbit_rate=1.7+float(index%layers)*.16
 		bullet.at=player+Vector2.from_angle(bullet.orbit_angle)*float(bullet.orbit_radius)
 		bullet.color=PALETTE[floori(float(index)/2.)%PALETTE.size()]
-	if kind in ["gilded_helix","weave_cross","crown_orbit"]: bullet.trail_points=[Vector2(bullet.at)]; bullet.trail_clock=0.
+	if kind in STANDARD_IDS or kind=="crown_orbit": bullet.trail_points=[Vector2(bullet.at)]; bullet.trail_clock=0.
 
 static func travel_offset(bullet: Dictionary,delta: float) -> Vector2:
 	if bullet.has("trail_points"):
@@ -51,6 +66,13 @@ static func travel_offset(bullet: Dictionary,delta: float) -> Vector2:
 		if bullet.trail_clock>=.035:
 			bullet.trail_clock=0.; bullet.trail_points.append(Vector2(bullet.at))
 			if bullet.trail_points.size()>8: bullet.trail_points.pop_front()
+	if bullet.has("stern_axis") and not bool(bullet.get("retiring",false)) and float(bullet.age)<=.65:
+		# The tail fan first opens sideways, then its feathers align behind the
+		# hull. Slower outer lanes give each row a rounded U-shaped envelope.
+		var progress=smoothstep(0.,.65,float(bullet.age))
+		var axis=Vector2(bullet.stern_launch_axis).slerp(Vector2(bullet.stern_axis),progress)
+		var speed=float(bullet.original_speed)*lerpf(float(bullet.stern_speed_scale),1.,progress)
+		bullet.v=axis*speed+Vector2(bullet.get("acceleration",Vector2.ZERO))*float(bullet.age)
 	if bullet.has("curve_rate"): bullet.v=Vector2(bullet.v).rotated(float(bullet.curve_rate)*delta)
 	if bullet.has("weave_side"):
 		var phase=float(bullet.weave_phase); var age=float(bullet.age)

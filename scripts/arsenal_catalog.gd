@@ -12,11 +12,11 @@ const DEFAULT_RECORDED_WEAPON_IDS=["recorded_crude","recorded_ballistic"]
 const RECORDED_WEAPONS_ENABLED=false
 const VISUALS=preload("res://scripts/weapon_visuals.gd")
 const GROWTH=preload("res://scripts/projectile_growth.gd")
-const ACTIVE_WEAPON_IDS=["pulse","scatter","beam","missile","nova","chain","rail","pulse_needle","scatter_prism","beam_split","rail_horizon","recorded_heavy","gilded_helix","weave_cross","crown_orbit"]
+const ACTIVE_WEAPON_IDS=["pulse","scatter","beam","missile","nova","chain","rail","pulse_needle","scatter_prism","beam_split","rail_horizon","recorded_heavy","gilded_helix","weave_cross","crown_orbit","stern_fan"]
 const INSTRUMENTS={"pulse":"钢琴","scatter":"军鼓","beam":"小提琴","missile":"底鼓","nova":"中音萨克斯","chain":"颤音琴＋电子泛音","rail":"大提琴","pulse_needle":"钢弦吉他","scatter_prism":"低音通鼓","beam_split":"合成弦乐＋电子光芯","rail_horizon":"低音钢琴","recorded_heavy":"定音鼓"}
 const INSTRUMENT_ROOTS={"chain":72,"rail":48,"rail_horizon":36,"recorded_heavy":43}
 const PERCUSSION_IDS=["scatter","missile","scatter_prism"]
-const NEW_INSTRUMENTS={"gilded_helix":"长笛","weave_cross":"钢片琴","crown_orbit":"竖琴"}
+const NEW_INSTRUMENTS={"gilded_helix":"长笛","weave_cross":"钢片琴","crown_orbit":"竖琴","stern_fan":"拨弦弦乐"}
 const LEGACY_WEAPON_ALIASES={"recorded_light":"pulse","recorded_medium":"scatter","recorded_heavy_rare":"recorded_heavy","recorded_heavy_legend":"recorded_heavy"}
 const RECORDED_QUALITY_PROFILES=[
 	{"suffix":"","rarity":0,"damage":1.,"count":0,"speed":1.,"pierce":0,"cost":1.,"attribute_scale":.5},
@@ -123,7 +123,7 @@ static func _support(id: String,name: String,category: String,rarity: int,cost: 
 
 static func _build() -> void:
 	_build_weapons(); _build_mods(); _build_rhythm(); _build_defense(); _build_cores(); _upgrade_trajectories()
-	assert(_records.size()==250,"Archived catalogue plus three spectacle weapons")
+	assert(_records.size()==251,"Archived catalogue plus four added weapons")
 
 static func _build_weapons() -> void:
 	# id, name, family, damage, count, speed, life, spread(rad), pierce,
@@ -151,7 +151,7 @@ static func _build_weapons() -> void:
 		["missile_siege","破晓攻城弹","missile",170.,1,285.,4.6,.02,0,235.,1.5,0,8,3,3,48,"saw",.68,3.0,-2,-1.],
 		["nova_spiral","螺旋星冕","nova",13.,16,630.,2.2,TAU,1,0.,0.,0,2,3,2,35,"triangle",.31,1.75,2,12.],
 		["chain_fork","雷树分岔器","chain",32.,2,1450.,.45,.35,0,0.,0.,6,4,3,2,35,"sine",.26,5.0,-1,-6.],
-		["rail_horizon","地平线终奏","rail",195.,1,2600.,2.0,.005,36,45.,0.,0,8,3,3,50,"triangle",.67,3.7,-2,8.],
+		["rail_horizon","地平线终奏","rail",195.,2,2600.,2.0,.005,36,45.,0.,0,8,3,3,50,"triangle",.67,3.7,-2,8.],
 		["boomerang_crescent","双月交响刃","boomerang",21.,2,725.,2.8,.72,3,0.,0.,1,2,2,2,31,"triangle",.45,1.35,1,15.],
 		["boomerang_ricochet","折返棱刀","boomerang",25.,1,860.,3.2,.20,1,0.,0.,4,2,2,2,31,"square",.28,2.45,0,-15.],
 		["orbit_lattice","六边天穹","orbit",12.,6,285.,5.0,TAU,6,0.,0.,0,4,3,2,36,"sine",.58,1.0,0,14.],
@@ -166,7 +166,8 @@ static func _build_weapons() -> void:
 		["recorded_heavy","终压攻城铳","rail",88.,1,1900.,1.65,.018,14,90.,0.,0,1,3,3,52,"triangle",.42,2.5,-1,5.],
 		["gilded_helix","鎏金螺旋阵","nova",3.25,48,570.,2.0,TAU,1,0.,0.,0,2,3,2,42,"triangle",.22,.7,1,0.],
 		["weave_cross","虹织十字炮","pulse",2.4,64,740.,1.75,0.,1,0.,0.,0,2,3,3,54,"sine",.24,1.4,1,0.],
-		["crown_orbit","星冕回旋阵","orbit",6.,16,245.,3.0,TAU,3,0.,0.,0,2,3,2,44,"sine",.35,.4,1,0.]
+		["crown_orbit","星冕回旋阵","orbit",6.,16,245.,3.0,TAU,3,0.,0.,0,2,3,2,44,"sine",.35,.4,1,0.],
+		["stern_fan","尾羽回响","pulse",3.6,24,720.,2.2,1.92,1,0.,0.,0,1,2,1,32,"triangle",.20,.5,0,0.]
 	]
 	var recorded_voices={"recorded_crude":"rec_crude","recorded_ballistic":"rec_ballistic"}
 	var recorded_sources={
@@ -218,6 +219,10 @@ static func _build_weapons() -> void:
 		if str(data.id)=="scatter_prism":
 			data.emission="prism_cross"
 			data.tags.append("四向平行彩色光束")
+		elif str(data.id)=="rail_horizon":
+			data.emission="hull_broadside"; data.tags.append("机翼左右双向")
+		elif str(data.id)=="stern_fan":
+			data.emission="stern_fan"; data.tags.append("机尾彩色扇面")
 		data.active=str(data.id) in ACTIVE_WEAPON_IDS
 		if data.active:
 			data.linear_projectiles=true
@@ -225,11 +230,12 @@ static func _build_weapons() -> void:
 			data.voice="inst_"+str(data.id)
 			data.instrument_samples=true
 			data.instrument=str(NEW_INSTRUMENTS.get(str(data.id),INSTRUMENTS.get(str(data.id),"乐器")))
-			data.sample_root=72 if NEW_INSTRUMENTS.has(str(data.id)) else int(INSTRUMENT_ROOTS.get(str(data.id),60))
+			data.sample_root=60 if str(data.id)=="stern_fan" else (72 if NEW_INSTRUMENTS.has(str(data.id)) else int(INSTRUMENT_ROOTS.get(str(data.id),60)))
 			data.percussion=str(data.id) in PERCUSSION_IDS
 			data.audio_status="sampled_instrument"
 			if str(data.family)!="orbit": data.life*=1.3
 			data.visual=VISUALS.profile(str(data.id)).duplicate()
+			data.visual_class="feather_projectile" if str(data.id) in VISUALS.STANDARD_IDS else {"beam":"laser_beam","chain":"electric_arc","missile":"missile_shell","nova":"energy_orb","orbit":"orbital_guard","scatter":"laser_beam"}.get(str(data.family),str(data.family))
 			if data.visual.has("color"): data.color=data.visual.color
 			if NEW_INSTRUMENTS.has(str(data.id)): data.tags.append("舰队弹幕")
 		data.detail=weapon_description(data)
@@ -238,10 +244,13 @@ static func _build_weapons() -> void:
 static func weapon_description(data: Dictionary) -> String:
 	var parts: Array[String]=["每%d小节在所在拍触发"%int(data.charge),"单发伤害%s × %d"%[_number(data.damage),int(data.count)],"弹速%s / 寿命%s秒"%[_number(data.speed),_number(data.life)]]
 	if str(data.get("emission",""))=="prism_cross": parts.append("机头前方朝四个斜角同时发射彩色光束；基础每方向3道并排平行光束")
+	elif str(data.get("emission",""))=="hull_broadside": parts.append("从机翼左右两侧同时发射并排弹列；总弹数分配到两侧，奇数额外弹逐轮交替；保持机身朝向")
+	elif str(data.get("emission",""))=="stern_fan": parts.append("从机尾向后展开多排彩色U形扇面；左翼绿黄、中央橙黄、右翼粉紫；随飞行逐渐缩小并淡出")
 	if str(data.id)=="gilded_helix": parts.append("金色羽状弹向四周展开并弯转，形成双层螺旋弹幕")
 	elif str(data.id)=="weave_cross": parts.append("四个方向同时射出彩色编织弹流，弹道左右交错")
 	elif str(data.id)=="crown_orbit": parts.append("星冕弹环绕战机形成三层防线，弹数增加时向外扩展至多八层，随战机移动")
 	if bool(data.get("linear_projectiles",false)):
+		if str(data.id) in VISUALS.STANDARD_IDS: parts.append("羽状实体弹；有效射程内保持完整，到射程末端缩小、减光并收拢尾迹")
 		parts.append("弹数随%s线性成长：每1点+1发；每档品质+2发，强化每级另+1发"%str(GROWTH.ATTR_NAMES.get(str(data.attr),str(data.attr))))
 		parts.append("单次发射上限%d，达到上限时显示"%GROWTH.count_limit(data))
 	if data.has("quality"):

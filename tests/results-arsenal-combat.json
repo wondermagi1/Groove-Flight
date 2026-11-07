@@ -1,5 +1,5 @@
 {
-	"checks": 120,
+	"checks": 122,
 	"facts": {
 		"weapon_impacts": {
 			"beam": {
@@ -183,8 +183,8 @@
 				"pitch": 0
 			},
 			"rail_horizon": {
-				"count": 7,
-				"damage": 1170.0,
+				"count": 8,
+				"damage": 780.0,
 				"family": "rail",
 				"pitch": 0
 			},
@@ -246,6 +246,12 @@
 				"count": 16,
 				"damage": 25.6666666666861,
 				"family": "scatter",
+				"pitch": 0
+			},
+			"stern_fan": {
+				"count": 26,
+				"damage": 68.4000000001106,
+				"family": "pulse",
 				"pitch": 0
 			},
 			"weave_cross": {

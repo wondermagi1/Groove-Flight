@@ -10,9 +10,9 @@ func check(ok: bool,message: String) -> void:
 func _initialize() -> void:
 	run.call_deferred()
 func run() -> void:
-	var expected=["脉冲机炮","星砂霰弹","棱镜光束","彗星导弹","新星环炮","跃迁电弧","苍穹轨炮","星针狙击器","七彩折光匣","双生棱镜","地平线终奏","终压攻城铳","鎏金螺旋阵","虹织十字炮","星冕回旋阵"]
+	var expected=["脉冲机炮","星砂霰弹","棱镜光束","彗星导弹","新星环炮","跃迁电弧","苍穹轨炮","星针狙击器","七彩折光匣","双生棱镜","地平线终奏","终压攻城铳","鎏金螺旋阵","虹织十字炮","星冕回旋阵","尾羽回响"]
 	var active=C.playable_weapons()
-	check(active.size()==15 and active.map(func(w): return str(w.name))==expected,"active catalogue preserves the user's twelve selections and adds three new mechanisms")
+	check(active.size()==16 and active.map(func(w): return str(w.name))==expected,"active catalogue preserves the user's twelve selections and adds four requested mechanisms")
 	check(C.item("recorded_heavy").family=="rail" and C.item("recorded_heavy").damage==88. and C.item("recorded_heavy").pierce==14,"heavy siege weapon is restored with its historical rail mechanics")
 	var model=L.new(); model.configure_live_rules(); model.reset()
 	check(model.equipped_weapons()==2 and model.modules.all(func(m): return C.is_item_available(str(m.kind))),"all starter equipment belongs to the selected pool")
@@ -26,7 +26,7 @@ func run() -> void:
 			check(offers.size()==6 and offers.all(func(o): return C.is_item_available(str(o.id))),"shop contains only selected weapons and useful family modifiers")
 			for offer in offers:
 				if C.item(str(offer.id)).category=="weapon": seen[str(offer.id)]=true
-	check(seen.size()==15 and seen.has("recorded_heavy"),"seeded late shops can obtain all fifteen weapons including the new mechanisms")
+	check(seen.size()==16 and seen.has("recorded_heavy") and seen.has("stern_fan"),"seeded late shops can obtain all sixteen weapons including the new stern fan")
 	var score=SCORE.new(); var old=score.to_dict()
 	old.tracks[0].weapon="boomerang"; old.tracks[1].weapon="orbit"; old.tracks[2].weapon="drone"
 	var original_notes=score.note_count()
@@ -55,7 +55,7 @@ func run() -> void:
 	player.queue_free()
 	for i in range(3): await process_frame
 	await create_timer(.15,true).timeout
-	var result={"checks":checks,"failures":failures,"selected_names":expected,"scope":"Original twelve plus three new weapons, exact fifteen-name roster, restored heavy, live inventory gate,320 real six-offer shops, retired-score migration and instrument PCM routing."}
+	var result={"checks":checks,"failures":failures,"selected_names":expected,"scope":"Original twelve plus four new weapons, exact sixteen-name roster, restored heavy, live inventory gate,320 real six-offer shops, retired-score migration and instrument PCM routing."}
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://docs/data-v19"))
 	FileAccess.open("res://tests/results-selected-weapons.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	print("SELECTED_WEAPONS ",JSON.stringify({"checks":checks,"failures":failures})); quit(0 if failures.is_empty() else 1)

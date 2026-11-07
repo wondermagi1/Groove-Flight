@@ -2,12 +2,40 @@ extends RefCounted
 ## World-aligned launch geometry shared by combat and the range preview.
 ## Screen Y points down; the player's Cartesian +Y is screen UP.
 const PRISM_CROSS="prism_cross"
+const BROADSIDE="hull_broadside"
+const STERN_FAN="stern_fan"
 const PRISM_OFFSET=Vector2(0,-64)
 const PRISM_AXES=[Vector2(-1,-1),Vector2(-1,1),Vector2(1,-1),Vector2(1,1)]
 const PRISM_COLORS=[Color("57e8ff"),Color("ff69bc"),Color("ffe477"),Color("ad85ff"),Color("71ffb8"),Color("ff955e"),Color("709fff")]
 const PRISM_LANE_SPACING=18.
 const PRISM_BEAM_WIDTH=10.
 const PRISM_BEAM_SECONDS=.24
+
+static func weapon_reach(speed: float,lifetime: float) -> float:
+	return minf(2400.,maxf(120.,speed*lifetime))
+
+static func mounted(pattern: String) -> bool:
+	return pattern in [BROADSIDE,STERN_FAN]
+
+static func mounted_shot(pattern: String,forward: Vector2,index: int,count: int,spread: float,serial: int=0) -> Dictionary:
+	forward=forward.normalized() if forward.length_squared()>.01 else Vector2.UP
+	var right=Vector2(-forward.y,forward.x)
+	if pattern==BROADSIDE:
+		var first_arm=posmod(floori(float(serial)/8.),2)
+		var arm=posmod(index+first_arm,2); var rank=index/2
+		var arm_count=count/2+(1 if count%2==1 and arm==first_arm else 0)
+		var lanes=columns(maxi(1,arm_count))
+		var offset=(float(rank%lanes)-float(lanes-1)*.5)*13.
+		var axis=right*(1. if arm==0 else -1.)
+		return {"axis":axis,"offset":axis*34.+forward*offset,"delay":floorf(float(rank)/lanes)*.028}
+	# Equal-angle rays create nested U-shaped wavefronts behind the hull.
+	# The last partial row uses its own centre rather than favouring one wing.
+	var lanes=columns(count); var row=index/lanes; var lane=index%lanes
+	var row_size=mini(lanes,count-row*lanes)
+	var t=float(lane)/maxf(1.,row_size-1) if row_size>1 else .5
+	var angle=(t-.5)*clampf(spread,.12,deg_to_rad(110.))
+	var axis=(-forward).rotated(-angle)
+	return {"axis":axis,"offset":-forward*36.+right*(t-.5)*24.,"delay":row*.08,"rear_axis":-forward,"speed_scale":.45+.55*pow(1.-absf(t-.5)*2.,2.),"tint":Color.from_hsv(fposmod(.30-.40*t,1.),.64,1.)}
 
 static func columns(count: int) -> int:
 	return mini(count,8 if count<64 else 12)

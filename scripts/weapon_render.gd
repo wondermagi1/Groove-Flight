@@ -98,6 +98,8 @@ func update_projectiles(bullets: Array,bounds: Rect2,reduced: bool=false) -> voi
 		var angle=velocity.angle() if velocity.length_squared()>.01 else float(bullet.get("orbit_angle",0.))
 		if style in [7,8,9]: angle+=age*(5. if style==7 else 1.4)
 		var direction=Vector2.from_angle(angle)
+		var life_scale=DATA.VISUALS.life_scale(bullet)
+		var draw_color=Color(bullet.color,Color(bullet.color).a*life_scale)
 		var speed_scale=clampf(velocity.length()/760.,.65,2.4)
 		var tail=minf(590.,float(row.get("tail",TRAILS[style]))*speed_scale*(.58 if dense else 1.))
 		# Curved weapons retain a sampled path, so ribbons follow the arc rather
@@ -107,18 +109,19 @@ func update_projectiles(bullets: Array,bounds: Rect2,reduced: bool=false) -> voi
 			var stride=3 if dense else 1
 			for n in range(1,points.size(),stride):
 				var end=mini(n+stride-1,points.size()-1)
-				ribbons.add(style,points[n-1],points[end],Color(bullet.color,float(end)/points.size()*(.55 if dense else .8)),float(row.get("width",3.)))
+				ribbons.add(style,points[n-1],points[end],Color(bullet.color,float(end)/points.size()*(.55 if dense else .8)*life_scale),float(row.get("width",3.))*maxf(.12,life_scale))
 		else:
 			tail=minf(tail,velocity.length()*age) if DATA.NEW_INSTRUMENTS.has(str(bullet.kind)) else tail
 			ribbons.add(style,bullet.at-direction*tail,bullet.at,Color(bullet.color,.62 if dense else .9),float(row.get("width",0.)))
-		var size_value: Vector2=row.get("size",SIZES[style]*float(row.scale))
+		var size_value: Vector2=Vector2(row.get("size",SIZES[style]*float(row.scale)))*life_scale
 		var pose=Transform2D(angle,bullet.at).scaled_local(size_value)
-		var custom=Color(fposmod(age,100.),float(row.variant),minf(1.,float(bullet.life)),float(row.variant_index))
+		var visible_life=1. if str(bullet.kind) in DATA.VISUALS.STANDARD_IDS and not bool(bullet.get("retiring",false)) else minf(1.,float(bullet.life))
+		var custom=Color(fposmod(age,100.),float(row.variant),visible_life,float(row.variant_index))
 		bodies[style].multimesh.set_instance_transform_2d(index,pose)
-		bodies[style].multimesh.set_instance_color(index,bullet.color)
+		bodies[style].multimesh.set_instance_color(index,draw_color)
 		bodies[style].multimesh.set_instance_custom_data(index,custom)
 		glows[style].multimesh.set_instance_transform_2d(index,pose.scaled_local(Vector2(2.5,2.6)))
-		glows[style].multimesh.set_instance_color(index,bullet.color)
+		glows[style].multimesh.set_instance_color(index,draw_color)
 		glows[style].multimesh.set_instance_custom_data(index,custom)
 		counts[style]+=1; active_count+=1
 	for style in range(bodies.size()):

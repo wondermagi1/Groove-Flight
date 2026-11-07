@@ -1190,7 +1190,9 @@ func nearest(at: Vector2,exclude: Array=[]) -> Dictionary:
 
 func fire_weapon(trigger: Dictionary) -> void:
 	var trigger_family=str(trigger.get("family",trigger.get("kind","pulse")))
-	var prism_cross=str(C.item(str(trigger.kind)).get("emission",""))==EMISSION.PRISM_CROSS
+	var pattern=str(C.item(str(trigger.kind)).get("emission",""))
+	var prism_cross=pattern==EMISSION.PRISM_CROSS
+	var mounted=EMISSION.mounted(pattern)
 	var target=nearest(player)
 	# Exposed cores are an explicit auto-aim priority, not an accuracy penalty.
 	if int(settings.aim_mode)==0:
@@ -1201,6 +1203,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 				target=boss
 				break
 	var direction=(target.at-player).normalized() if not target.is_empty() else facing
+	if mounted: direction=facing
 	if direction.length_squared()<.1: direction=Vector2.UP
 	if int(settings.aim_mode)==1: direction=movement_facing
 	elif int(settings.aim_mode)==2: direction=Vector2.UP
@@ -1226,13 +1229,16 @@ func fire_weapon(trigger: Dictionary) -> void:
 	if context.critical: damage*=float(trigger.get("crit_damage",1.5))
 	var speed=float(trigger.get("speed",700)); var lifetime=float(trigger.get("life",2))
 	var spread=float(trigger.get("spread",.1)); var pierce=int(trigger.get("pierce",0))
-	var reach=minf(2400.,maxf(120.,speed*lifetime))
+	var reach=EMISSION.weapon_reach(speed,lifetime)
 	if prism_cross or family=="beam": rebuild_spatial()
 	fx.volley(origin,direction,color,family,count)
 	if prism_cross:
 		fx.ring(origin,Color("f0f6ff"),22.,.16)
 		for arm in range(4):
 			fx.muzzle(origin,EMISSION.prism_axis(arm,4,0.,float(trigger.get("angle",0.))),EMISSION.PRISM_COLORS[arm],.75)
+	elif mounted:
+		for axis in [Vector2(-direction.y,direction.x),Vector2(direction.y,-direction.x)] if pattern==EMISSION.BROADSIDE else [-direction]:
+			fx.muzzle(origin+axis*32.,axis,color,.8)
 	else:
 		fx.muzzle(origin+direction*25,direction,color,1.25 if family in ["rail","beam","missile"] else 1.)
 	_play_weapon_reference(trigger,family)
@@ -1269,6 +1275,10 @@ func fire_weapon(trigger: Dictionary) -> void:
 			var radial=family in ["nova","orbit"] or kind=="weave_cross"
 			var axis=direction.rotated(angle) if radial else EMISSION.projectile_axis(direction,i,count,spread)
 			var muzzle=origin+axis*(50 if family=="orbit" else 24) if radial else EMISSION.projectile_origin(origin,direction,i,count,family)
+			var mount: Dictionary={}
+			if mounted:
+				mount=EMISSION.mounted_shot(pattern,direction,i,count,spread,int(trigger.get("serial",0)))
+				axis=mount.axis; muzzle=origin+Vector2(mount.offset)
 			var bullet=shot(muzzle,axis,speed,damage,color,kind,lifetime,pierce)
 			if bullet.is_empty(): break
 			bullet.acceleration=axis*float(motion.get("accel_forward",0.))+axis.orthogonal()*float(motion.get("accel_side",0.))
@@ -1277,8 +1287,15 @@ func fire_weapon(trigger: Dictionary) -> void:
 			bullet.target=int(target.get("uid",-1)); bullet.explosion=float(trigger.get("explosion",0))
 			bullet.homing=float(trigger.get("homing",0)); bullet.bounces=int(trigger.get("bounces",0))
 			bullet.original_speed=speed; bullet.orbit_angle=axis.angle(); bullet.radius=10. if family in ["boomerang","orbit","drone"] else (13. if family=="mine" else (8. if family=="flame" else 5.))
+			if kind in VISUALS.STANDARD_IDS: bullet.range_limit=reach
 			VISUALS.setup(bullet,kind,i,count,player,music.timeline)
 			if not radial: bullet.launch_delay=EMISSION.projectile_delay(i,count)
+			if mounted:
+				bullet.launch_delay=mount.delay
+				if mount.has("tint"): bullet.color=mount.tint
+				if mount.has("rear_axis"):
+					bullet.stern_axis=mount.rear_axis; bullet.stern_launch_axis=axis
+					bullet.stern_speed_scale=mount.speed_scale; bullet.v*=float(mount.speed_scale)
 			bullet.muzzle_offset=Vector2(bullet.at)-player
 	if bool(trigger.get("chord",false)) and not target.is_empty():
 		var strength=float(trigger.get("chord_power",.22))
@@ -1362,7 +1379,10 @@ func explosion(at: Vector2,radius: float,damage: float,color: Color,kind: String
 		if other.hp>0 and int(other.uid)!=exclude_uid and other.at.distance_to(at)<radius: hurt_enemy(other,damage,kind,context)
 func shot(at: Vector2,direction: Vector2,speed: float,damage: float,color: Color,kind: String,life: float,pierce: int) -> Dictionary:
 	receipt.count("projectile_requested")
-	var bullet={"at":at,"v":direction*speed,"damage":damage,"color":color,"kind":kind,"life":life,"pierce":pierce,"hit":{},"radius":5.,"target":-1,"explosion":0.}
+	var bullet={"at":at,"v":direction*speed,"damage":damage,"color":color,"kind":kind,"life":life,"total_life":life,"age":0.,"pierce":pierce,"hit":{},"radius":5.,"target":-1,"explosion":0.}
+	if kind in VISUALS.STANDARD_IDS:
+		bullet.trail_points=[at]; bullet.trail_clock=0.; bullet.travelled=0.
+		bullet.range_limit=EMISSION.weapon_reach(speed,life); bullet.retiring=false; bullet.fade_age=0.
 	if bullets.size()<MAX_BULLETS: bullets.append(bullet); receipt.count("projectile_spawned")
 	else: pending_projectiles.append(bullet); receipt.count("projectile_deferred")
 	return bullet
@@ -1377,8 +1397,18 @@ func update_bullets(delta: float) -> void:
 			bullet.at=player+Vector2(bullet.get("muzzle_offset",Vector2.ZERO))
 			if bullet.has("trail_points"): bullet.trail_points=[Vector2(bullet.at)]
 			continue
-		bullet.life-=delta
-		if bullet.life<=0 or not bounds.has_point(bullet.at): bullets.remove_at(i); continue
+		var standard=str(bullet.kind) in VISUALS.STANDARD_IDS
+		if standard and bool(bullet.get("retiring",false)):
+			bullet.fade_age+=delta; bullet.life=VISUALS.RANGE_FADE_SECONDS-float(bullet.fade_age)
+			if bullet.life<=0.: bullets.remove_at(i); continue
+			bullet.age+=delta; VISUALS.travel_offset(bullet,delta)
+			bullet.v*=exp(-delta*VISUALS.RANGE_FADE_DRAG); bullet.at+=bullet.v*delta
+			bullet.visual_velocity=bullet.v
+			# This is visual retirement past the weapon's actual range, with no
+			# extra damage, homing acquisition, splits, or explosion procs.
+			continue
+		bullet.life=maxf(.01,float(bullet.life)-delta) if standard else float(bullet.life)-delta
+		if not standard and (bullet.life<=0 or not bounds.has_point(bullet.at)): bullets.remove_at(i); continue
 		bullet.age=float(bullet.get("age",0))+delta
 		bullet.v+=bullet.get("acceleration",Vector2.ZERO)*delta
 		var travel_offset=VISUALS.travel_offset(bullet,delta)
@@ -1396,7 +1426,19 @@ func update_bullets(delta: float) -> void:
 			var target: Dictionary=by_id.get(int(bullet.target),{})
 			if target.is_empty() or target.hp<=0: target=nearest(bullet.at); bullet.target=target.get("uid",-1)
 			if not target.is_empty(): bullet.v=(bullet.v.normalized().lerp((target.at-bullet.at).normalized(),minf(1,delta*float(bullet.homing)))).normalized()*maxf(.01,bullet.v.length())
-		var previous: Vector2=bullet.at; bullet.at+=bullet.v*delta+travel_offset
+		var previous: Vector2=bullet.at; var proposed: Vector2=previous+bullet.v*delta+travel_offset
+		var range_ended=false
+		if standard:
+			if family=="orbit":
+				range_ended=float(bullet.age)>=float(bullet.total_life)
+			else:
+				var distance=previous.distance_to(proposed)
+				var remaining=maxf(0.,float(bullet.range_limit)-float(bullet.travelled))
+				if distance>=remaining and distance>.00001:
+					proposed=previous.lerp(proposed,remaining/distance); range_ended=true
+				bullet.travelled+=minf(distance,remaining)
+				if float(bullet.age)>minf(30.,float(bullet.total_life)*4.): range_ended=true
+		bullet.at=proposed
 		var low=Vector2i(floor(minf(previous.x,bullet.at.x)/GRID),floor(minf(previous.y,bullet.at.y)/GRID))
 		var high=Vector2i(floor(maxf(previous.x,bullet.at.x)/GRID),floor(maxf(previous.y,bullet.at.y)/GRID))
 		var dead=false
@@ -1417,6 +1459,8 @@ func update_bullets(delta: float) -> void:
 					if bullet.pierce<=0: dead=true; break
 					bullet.pierce-=1
 		if dead: bullets.remove_at(i)
+		elif range_ended:
+			bullet.retiring=true; bullet.fade_age=0.; bullet.life=VISUALS.RANGE_FADE_SECONDS
 func hurt_enemy(enemy: Dictionary,damage: float,kind: String,context: Dictionary={},allow_procs: bool=true,visual_color: Color=Color.TRANSPARENT) -> void:
 	if damage<=0 or enemy.hp<=0 or state!="combat": return
 	if enemy.kind=="boss" and not bool(context.get("structural",false)) and enemy.has("core_until") and music.timeline<float(enemy.core_until): damage*=1.5
@@ -1707,7 +1751,19 @@ func draw_preview_ranges() -> void:
 		var track=clampi(floori(float(head)/8.),0,2)
 		var color=Color(colors[track],.34)
 		var origin=player+direction.orthogonal()*[-17.,0.,17.][track]
-		if str(C.item(str(row.kind)).get("emission",""))==EMISSION.PRISM_CROSS:
+		var pattern=str(C.item(str(row.kind)).get("emission",""))
+		if EMISSION.mounted(pattern):
+			var forward=facing.normalized() if facing.length_squared()>.01 else Vector2.UP
+			if int(settings.aim_mode)==1: forward=movement_facing
+			elif int(settings.aim_mode)==2: forward=Vector2.UP
+			forward=forward.rotated(float(actual.get("angle",0.)))
+			var motion: Dictionary=actual.get("trajectory",{})
+			origin=player+forward.orthogonal()*([-17.,0.,17.][track]+float(motion.get("offset_side",0.)))+forward*float(motion.get("offset_forward",0.))
+			for i in range(int(actual.get("count",1))):
+				var mount=EMISSION.mounted_shot(pattern,forward,i,int(actual.count),float(actual.get("spread",0.)))
+				var start=origin+Vector2(mount.offset)
+				draw_dashed_line(start,start+Vector2(mount.axis)*minf(reach,1100.),Color(mount.get("tint",color),.42),1.3,12.,true)
+		elif pattern==EMISSION.PRISM_CROSS:
 			origin=EMISSION.prism_origin(player,actual.get("trajectory",{}))
 			var radius=reach
 			var count=int(actual.get("count",12)); var spread=float(actual.get("spread",.24)); var rotation=float(actual.get("angle",0.))

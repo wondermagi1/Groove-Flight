@@ -58,6 +58,22 @@ static func _weapon(canvas: CanvasItem,data: Dictionary,accent: Color,alpha: flo
 	var id: String=str(data.id)
 	var variant: int=1 if id.contains("_") else 0
 	var family: String=str(data.family)
+	if str(data.get("emission",""))=="hull_broadside":
+		_plate(canvas,Vector2(-17,-14),Vector2(34,28),accent)
+		for sign_value in [-1.,1.]:
+			for y in [-8.,4.]:
+				canvas.draw_line(Vector2(sign_value*12.,y),Vector2(sign_value*44.,y),Color(STEEL,alpha),7.,true)
+				canvas.draw_line(Vector2(sign_value*14.,y-1.),Vector2(sign_value*44.,y-1.),Color(LIGHT,alpha),2.,true)
+				canvas.draw_circle(Vector2(sign_value*44.,y),3.,accent)
+		return
+	elif str(data.get("emission",""))=="stern_fan":
+		_plate(canvas,Vector2(-4,-12),Vector2(32,24),accent)
+		for i in range(5):
+			var axis=Vector2.LEFT.rotated((i-2)*.22)
+			var head=axis*43.; var side=axis.orthogonal()*3.
+			canvas.draw_line(Vector2(-8,0),head,Color(STEEL,alpha),2.,true)
+			_poly(canvas,[head+axis*7.,head+side,head-axis*7.,head-side],Color.from_hsv(fposmod(.30-.10*i,1.),.64,1.,alpha))
+		return
 	match family:
 		"pulse":
 			_plate(canvas,Vector2(-27,-14),Vector2(42,30),accent)

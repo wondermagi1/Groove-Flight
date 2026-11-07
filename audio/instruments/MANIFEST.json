@@ -1327,6 +1327,94 @@
           "rms": 0.0736228310144367
         }
       ]
+    },
+    {
+      "id": "stern_fan",
+      "instrument": "拨弦弦乐",
+      "voice": "inst_stern_fan",
+      "bank": 0,
+      "program": 45,
+      "preset_name": "Pizzicato Strings",
+      "root_midi": 60,
+      "percussion": false,
+      "gain": 1.0222348494555462,
+      "hold": 0.07,
+      "release": 0.55,
+      "electronic_mix": 0.0,
+      "samples": [
+        {
+          "pitch_index": 0,
+          "root_midi": 60,
+          "file": "audio/arsenal/notes/inst_stern_fan_0.wav",
+          "seconds": 0.6199546485260771,
+          "sha256": "bdfe64fa7e12db13b7fa621ed9c9cd4c99e2088a9803e711d1c8f59fc9017bce",
+          "peak": 0.6772286014480898,
+          "rms": 0.07927989181273998
+        },
+        {
+          "pitch_index": 1,
+          "root_midi": 62,
+          "file": "audio/arsenal/notes/inst_stern_fan_1.wav",
+          "seconds": 0.6199546485260771,
+          "sha256": "dc0457ed6709ca647a61a26758ac3691f02c55287cf704059c5458a8d30ca554",
+          "peak": 0.646848321532338,
+          "rms": 0.12495792801954922
+        },
+        {
+          "pitch_index": 2,
+          "root_midi": 63,
+          "file": "audio/arsenal/notes/inst_stern_fan_2.wav",
+          "seconds": 0.6199546485260771,
+          "sha256": "ceb3136c1290bd9ba0985285f8d3af88e8f54c0e8350d6c837d99dfa02cba8da",
+          "peak": 0.6491381297983452,
+          "rms": 0.12297629250938495
+        },
+        {
+          "pitch_index": 3,
+          "root_midi": 65,
+          "file": "audio/arsenal/notes/inst_stern_fan_3.wav",
+          "seconds": 0.6199546485260771,
+          "sha256": "e0901f4ad0c17421456683f80a020bd73ecdeb1101ce2988fd1ec6b73d5b0115",
+          "peak": 0.6605004068865892,
+          "rms": 0.11893226440714118
+        },
+        {
+          "pitch_index": 4,
+          "root_midi": 67,
+          "file": "audio/arsenal/notes/inst_stern_fan_4.wav",
+          "seconds": 0.6199546485260771,
+          "sha256": "192e1dd5cece1a6aa6f14237f548875a4e9cc40d5cfe6d6549239872ebde56a0",
+          "peak": 0.664168145860554,
+          "rms": 0.11470344084815554
+        },
+        {
+          "pitch_index": 5,
+          "root_midi": 68,
+          "file": "audio/arsenal/notes/inst_stern_fan_5.wav",
+          "seconds": 0.6199546485260771,
+          "sha256": "eed9dd06ae1f95caf2362a9c75a86466601668902654faa1fcdef722c6c462a5",
+          "peak": 0.6661764577802971,
+          "rms": 0.1125627583001625
+        },
+        {
+          "pitch_index": 6,
+          "root_midi": 70,
+          "file": "audio/arsenal/notes/inst_stern_fan_6.wav",
+          "seconds": 0.6199546485260771,
+          "sha256": "9a0d75f8f9c77a4ff965a37f577ba4235f6c678e7a2170d4cc6d315428bff106",
+          "peak": 0.6725731880643973,
+          "rms": 0.10821136770947705
+        },
+        {
+          "pitch_index": 7,
+          "root_midi": 72,
+          "file": "audio/arsenal/notes/inst_stern_fan_7.wav",
+          "seconds": 0.6199546485260771,
+          "sha256": "296789af8ce6d4e386e381b63228c4b4ec5a1438070b2b90d2394798c8a884e0",
+          "peak": 0.68,
+          "rms": 0.10386274279766304
+        }
+      ]
     }
   ]
 }
