@@ -19,7 +19,10 @@ static func update(enemy: Dictionary,time: float,player: Vector2) -> bool:
 	var march: Dictionary=enemy.march
 	if index!=int(march.index):
 		var next=enemy.duplicate()
-		if not FORMATION.update(next,time,STEP_SECONDS,player):
+		if bool(enemy.get("warned_entry",false)):
+			next.at=Vector2(enemy.at).move_toward(player,float(enemy.speed)*float(enemy.get("individual_speed_scale",1.))*STEP_SECONDS)
+			next.formation_phase="独立追击"
+		elif not FORMATION.update(next,time,STEP_SECONDS,player):
 			next.at=Vector2(enemy.at).move_toward(player,float(enemy.speed)*STEP_SECONDS)
 			next.formation_phase="推进"
 		march.index=index; march.from=enemy.at; march.to=next.at

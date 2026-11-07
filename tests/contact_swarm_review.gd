@@ -28,6 +28,7 @@ func fixture() -> void:
 	game.enemies.clear(); game.by_id.clear(); game.spatial.clear()
 	game.bullets.clear(); game.pending_projectiles.clear(); game.enemy_bullets.clear(); game.warnings.clear()
 	game.pending_triggers.clear(); game.pending_splits.clear(); game.proc_queue.clear()
+	game.spawn_telegraphs.clear()
 	game.fx.marks.clear(); game.fx.particles.clear(); game.spawn_log.clear(); game.fire_log.clear()
 	game.player=Vector2.ZERO; game.facing=Vector2.UP; game.movement_facing=Vector2.UP
 	game.health=10.; game.invulnerable=0.; game.dash_left=0.; game.player_guard_until=-1.; game.shield_points=0.
@@ -64,12 +65,14 @@ func spawning_checks() -> void:
 			game.player=position; game.movement_facing=Vector2.from_angle(angle)
 			game.camera.position=position; game.camera.reset_smoothing(); game.camera.force_update_scroll()
 			game.spawn_for_step(0)
+			check(game.enemies.is_empty() and not game.spawn_telegraphs.is_empty(),"red birth warnings appear before any enemy in the batch")
+			var plans=game.spawn_telegraphs.duplicate(true)
+			check(plans.all(func(p): return game.visible_world().encloses(p.rect)),"red warning regions stay visible on the battlefield")
+			game.music.timeline=.81; game.update_spawn_telegraphs()
 			check(game.enemies.size()>=60 and game.enemies.size()<=96,"production opening spawns dense bounded battalions")
-			var safe: Rect2=game.visible_world().grow(90.)
-			check(game.enemies.all(func(e): return not safe.has_point(e.at)),"restored entries retain their original outside-screen safety margin")
+			check(game.spawn_telegraphs.is_empty(),"the red warning clears when the complete batches materialize")
 			check(game.enemies.all(func(e): return e.at.distance_to(game.player)>250.),"new formations retain a safe initial distance from the ship")
-			var group: Dictionary=game.enemies[0].formation.group
-			check(game.enemies.all(func(e): return e.formation.style==str(game.wave_profile().formation)),"production units retain their wave's shared battalion geometry")
+			check(game.enemies.all(func(e): return not e.has("formation") and e.kind==e.spawn_grid.kind),"same-model square births do not create shared movement formations")
 			var min_distance=INF
 			for i in range(game.enemies.size()):
 				for j in range(i): min_distance=minf(min_distance,game.enemies[i].at.distance_to(game.enemies[j].at))
@@ -79,16 +82,19 @@ func spawning_checks() -> void:
 	fixture(); game.is_preview=false; game.rng.seed=4023
 	var sectors: Dictionary={}
 	for i in range(256):
-		game.enemies.clear(); game.by_id.clear(); game.spawned=0
+		game.enemies.clear(); game.by_id.clear(); game.spawned=0; game.spawn_telegraphs.clear()
 		game.spawn_for_step(0)
-		var entry: Vector2=game.enemies[0].formation.origin-game.player
-		sectors[posmod(floori((entry.angle()+PI)/TAU*8.),8)]=true
+		for plan in game.spawn_telegraphs:
+			var entry: Vector2=plan.center-game.player
+			sectors[posmod(floori((entry.angle()+PI)/TAU*8.),8)]=true
 	check(sectors.size()==8,"seeded production spawning reaches all eight directions around a stationary ship")
 	facts.radial_sectors=sectors.size()
 	fixture(); game.free_music_run=true; game.is_preview=false; game.spawn_for_step(0)
-	check(game.enemies.size()==16 and game.enemies.all(func(e): return e.formation.style=="battalion_grid" and not game.visible_world().grow(90.).has_point(e.at)),"free music mode uses square battalions with outside-screen entries")
+	game.music.timeline=.81; game.update_spawn_telegraphs()
+	check(game.enemies.size()==16 and game.enemies.all(func(e): return e.spawn_grid.style=="battalion_grid"),"free music mode uses warned square births")
 	fixture(); game.wave=game.wave_count(); game.is_preview=false; game.spawn_for_step(0)
-	check(game.enemies.size()==9 and game.enemies.all(func(e): return e.formation.style=="battalion_grid" and not game.visible_world().grow(90.).has_point(e.at)),"ordinary boss reinforcements use square battalions with radial entries")
+	game.music.timeline=.81; game.update_spawn_telegraphs()
+	check(game.enemies.size()==9 and game.enemies.all(func(e): return e.spawn_grid.style=="battalion_grid"),"ordinary boss reinforcements use warned square births")
 
 func march_checks() -> void:
 	fixture(); var enemy=game.spawn_enemy("mote",Vector2(0,-300)); enemy.speed=100.

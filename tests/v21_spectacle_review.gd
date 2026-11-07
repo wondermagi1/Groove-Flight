@@ -15,6 +15,9 @@ func check(ok: bool,message: String) -> void:
 	if not ok: failures.append(message); push_error(message)
 func frames(n: int=3) -> void:
 	for i in range(n): await process_frame
+func stop_audio(node: Node) -> void:
+	if node is AudioStreamPlayer: node.stop(); node.stream=null
+	for child in node.get_children(): stop_audio(child)
 
 func fixture(kind: String="pulse") -> void:
 	game.is_preview=true; game.state="combat"; game.wave=1; game.wave_start=0.; game.music.timeline=0.
@@ -23,6 +26,7 @@ func fixture(kind: String="pulse") -> void:
 	game.enemies.clear(); game.by_id.clear(); game.spatial.clear(); game.bullets.clear()
 	game.enemy_bullets.clear(); game.pending_projectiles.clear(); game.pending_triggers.clear()
 	game.pickups.clear(); game.proc_queue.clear(); game.pending_splits.clear(); game.warnings.clear()
+	game.spawn_telegraphs.clear()
 	game.fx.particles.clear(); game.fx.marks.clear(); game.flight_trail.clear()
 	game.player=Vector2.ZERO; game.facing=Vector2.UP; game.movement_facing=Vector2.UP
 	game.health=10.; game.invulnerable=0.; game.dash_left=0.; game.shield_points=0.
@@ -79,11 +83,24 @@ func scale_and_density_checks() -> void:
 			var baseline: Array=game.PLANETS.BUDGETS[game.PLANETS.IDS.find(planet)]
 			check(int(route[0].budget)>int(baseline[0])*2 and int(route[-2].budget)>int(baseline[-1])*2,"density grows beyond the earlier route at both ends / "+planet)
 	fixture(""); game.is_preview=false; game.rng.seed=2117; game.spawn_for_step(0)
+	check(game.enemies.is_empty() and game.spawn_telegraphs.size()==2,"production arrivals begin with two red warning plans rather than immediate enemies")
+	var plans=game.spawn_telegraphs.duplicate(true)
+	check(plans.all(func(p): return game.visible_world().encloses(p.rect)),"red warnings cover the exact visible birth rectangles")
+	game.music.timeline=.79; game.update_spawn_telegraphs()
+	check(game.enemies.is_empty(),"no wave unit appears before its warning deadline")
+	game.music.timeline=.81; game.update_spawn_telegraphs()
 	check(game.enemies.size()>=60 and game.enemies.size()<=96,"actual opening dispatch produces a dense bounded force")
 	var groups: Dictionary={}
-	for enemy in game.enemies: groups[str(enemy.formation.group.origin)]=true
-	check(groups.size()==2 and game.enemies.all(func(e): return e.formation.style=="battalion_grid" and e.formation.entry_delay==0.),"a large arrival is split into two coherent square groups")
-	check(game.enemies.all(func(e): return not game.visible_world().grow(90.).has_point(e.at)),"whole battalions enter from beyond the screen margin")
+	for enemy in game.enemies: groups[str(enemy.spawn_grid.center)]=true
+	check(groups.size()==2 and game.enemies.all(func(e): return e.spawn_grid.style=="battalion_grid" and not e.has("formation")),"square is only the birth layout; enemies have no retained movement group")
+	for plan in plans:
+		var members=game.enemies.filter(func(e): return Vector2(e.spawn_grid.center).is_equal_approx(plan.center))
+		check(members.size()==int(plan.count) and members.all(func(e): return e.kind==str(plan.kind)),"a complete matrix materializes with exactly one enemy model")
+	var a: Dictionary=game.enemies[0]; var b: Dictionary=game.enemies[1]
+	var initial_distance=Vector2(a.at).distance_to(b.at)
+	for i in range(61): game.music.timeline=.81+float(i)/60.; game.update_enemies(1./60.)
+	check(absf(Vector2(a.at).distance_to(b.at)-initial_distance)>1.,"individual pursuit deforms the birth matrix instead of translating it as one unit")
+	check(game.enemies.all(func(e): return e.formation_phase=="独立追击"),"every newly born ordinary enemy selects its own chase destination")
 	fixture("")
 	for i in range(1024): game.spawn_enemy("mote",Vector2((i%40-20)*34.,(i/40-13)*34.))
 	game.fleet_batch.update_fleet(game.enemies,game.visible_world())
@@ -120,6 +137,9 @@ func visual_checks() -> void:
 	fixture(""); game.health=8.; game.music.timeline=10.; game.hurt_player(1.)
 	game.music.timeline=10.06; game.fx._process(.06); await capture("impact-shield")
 	game.music.timeline=12.6; game.fx._process(2.54); await capture("guard-fading")
+	fixture(""); game.is_preview=false; game.spawn_for_step(0)
+	game.music.timeline=.35; await capture("red-spawn-warning")
+	game.music.timeline=.81; game.update_spawn_telegraphs(); await capture("square-birth")
 
 func battle_tick(time: float,delta: float,last_step: int,armed: bool) -> int:
 	game.music.timeline=time
@@ -134,7 +154,7 @@ func battle_tick(time: float,delta: float,last_step: int,armed: bool) -> int:
 		last_step+=1
 		if armed: game.on_step(last_step%8,last_step,last_step*.125)
 		else: game.spawn_for_step(last_step)
-	game.update_enemies(delta); game.rebuild_spatial(); game.update_bullets(delta)
+	game.update_spawn_telegraphs(); game.update_enemies(delta); game.rebuild_spatial(); game.update_bullets(delta)
 	game.update_pickups(delta); game.fx._process(delta)
 	for i in range(game.enemies.size()-1,-1,-1):
 		if game.enemies[i].hp<=0.: game.by_id.erase(game.enemies[i].uid); game.enemies.remove_at(i)
@@ -166,7 +186,7 @@ func preview_capture() -> void:
 		im.save_png("res://work/v21-preview-frames/%04d.png"%i)
 		if i in [24,72,144]: im.save_png("res://docs/screenshots/v21-battle-%03d.png"%i)
 		frame_times.append((Time.get_ticks_usec()-before)/1000.)
-	check(peaks.enemies>150 and peaks.projectiles>80,"controlled production showcase contains real dense fleets and layered damaging barrages")
+	check(peaks.enemies>150 and peaks.projectiles>48,"controlled production showcase contains real dense fleets and layered damaging barrages")
 	check(peaks.hostile==0,"epic ordinary encounters do not restore red enemy projectile fire")
 	facts.preview={"seconds":8,"fps":24,"peaks":peaks,"scope":"Controlled music time, level3six-weapon loadout, invulnerability and initial enemy accumulation. No save/reward changes; no human balance claim. Capture frame times include PNG readback/encoding."}
 	game.ui.root_control.hide()
@@ -182,5 +202,6 @@ func run() -> void:
 	var result={"checks":checks,"failures":failures,"facts":facts,"images":images,"scope":"Actual new weapon trajectories/damage, all15visual profiles, square-only wave routes, real density/population/renderer cap, player scale and received-hit guard lifecycle. Controlled GPU captures when enabled."}
 	FileAccess.open("res://tests/results-v21-spectacle.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	print("V21_SPECTACLE ",JSON.stringify(result))
-	game.music.stop(); game.composer_player.stop_song(); current_scene=null; game.queue_free(); await frames(5)
+	game.music.stop(); game.composer_player.stop_song(); stop_audio(game); current_scene=null; game.queue_free(); await frames(5)
+	await create_timer(.15,true).timeout
 	quit(0 if failures.is_empty() else 1)

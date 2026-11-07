@@ -17,6 +17,7 @@ const BOSS_SCORE=preload("res://scripts/boss_score.gd")
 const RECEIPT=preload("res://scripts/combat_receipt.gd")
 const EMISSION=preload("res://scripts/weapon_emission.gd")
 const VISUALS=preload("res://scripts/weapon_visuals.gd")
+const ARRIVAL=preload("res://scripts/enemy_arrival.gd")
 const PATHS=preload("res://scripts/build_paths.gd")
 const LEVEL_MUSIC_PATH="res://audio/authorized/uranus_amber_loop.ogg"
 const URANUS_MUSIC_PATH=LEVEL_MUSIC_PATH
@@ -77,6 +78,7 @@ var flight_trail: Array=[]; var flight_trail_clock: float=0.
 var pending_splits: Array[Vector2]=[]
 var boss_down: bool=false
 var spawn_log: Array=[]
+var spawn_telegraphs: Array=[]
 var total_spawned: int=0
 var state: String="title"
 var previous_state: String="combat"
@@ -380,6 +382,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	BACKDROP_ASSETS.apply(background,active_planet,int(settings.background_quality),float(settings.background_exposure))
 	leave_hub()
 	receipt.reset(); pending_triggers.clear(); pending_projectiles.clear(); root_budgets.clear(); results_tail=-1.; pending_resume=""
+	spawn_telegraphs.clear()
 	if is_instance_valid(lab): lab.deactivate()
 	if seed_value==0: rng.randomize()
 	else: rng.seed=seed_value
@@ -418,6 +421,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 		tutorial_active=not test_mode and not bool(settings.tutorial_done) and not bool(settings.tutorial_skipped) and active_planet=="mercury"; tutorial_stage=0; tutorial_origin=player; tutorial_retimed=false
 func begin_wave() -> void:
 	pending_triggers.clear(); pending_projectiles.clear()
+	spawn_telegraphs.clear()
 	wave+=1; wave_start=music.timeline; wave_spawn_start=total_spawned; wave_picked_start=picked; spawned=0;
 	kill_combo=0; kill_combo_until=0.
 	planet_rules=PLANETS.wave_rules(active_planet,wave,difficulty); elite_spawned=false; reward_taken=false
@@ -902,7 +906,7 @@ func _process(delta: float) -> void:
 			if flight_trail[i].life<=0: flight_trail.remove_at(i)
 		health=minf(float(stats_snapshot.max_health),health+float(stats_snapshot.regen)*dt)
 		if music.timeline>=shield_until: shield_points=0
-		flush_triggers(); update_composer_holds(); update_enemies(dt)
+		flush_triggers(); update_composer_holds(); update_spawn_telegraphs(); update_enemies(dt)
 		if state!="combat": return
 		rebuild_spatial(); update_bullets(dt); update_enemy_bullets(dt)
 		if state!="combat": return
@@ -1013,29 +1017,42 @@ func spawn_for_step(serial: int) -> void:
 	receipt.count("spawn_checks")
 	var opening=60+wave*8
 	var desired=mini(int(config.budget),opening+int((elapsed+1.)/float(config.seconds)*int(config.budget)))
-	var amount=mini(96,desired-spawned)
+	var reserved=0
+	for plan in spawn_telegraphs:
+		if bool(plan.get("wave_budget",false)): reserved+=int(plan.count)
+	var amount=mini(96,desired-spawned-reserved)
 	if amount<16 and desired<int(config.budget): return
 	for offset in range(0,amount,48): spawn_wave_group(mini(48,amount-offset),str(config.formation))
 	if config.elite and not elite_spawned and elapsed>float(config.seconds)*.40 and enemies.size()<MAX_ENEMIES:
 		elite_spawned=true; spawn_enemy("elite")
 
 func spawn_wave_group(amount: int,style: String,boss_support: bool=false) -> void:
-	amount=mini(amount,MAX_ENEMIES-enemies.size())
+	var reserved=0
+	for plan in spawn_telegraphs: reserved+=int(plan.count)
+	amount=mini(amount,MAX_ENEMIES-enemies.size()-reserved)
 	if amount<=0: return
-	var outward=Vector2.from_angle(rng.randf()*TAU)
-	var placement=formation_spawn_frame(outward,amount,style); outward=placement.axis
-	var origin: Vector2=placement.origin
-	var squad=FORMATION.new_group(origin,outward,style,music.timeline,int(PLANETS.planet(active_planet).index))
-	squad.march_speed=135.*float(planet_rules.enemy_speed)
-	fx.formation_entry(origin,planet_rules.accent,style,amount); sound("spawn",-21.)
-	for i in range(amount):
-		if enemies.size()>=MAX_ENEMIES: break
-		var point=PLAN.formation(origin,outward,i,amount,style)
-		var kind=("dart" if i%3==0 else "mote") if boss_support else PLANETS.kind(active_planet,wave-1,spawned,difficulty)
-		var enemy=spawn_enemy(kind,safe_spawn_position(point,outward))
-		if enemy.is_empty(): break
-		FORMATION.attach(enemy,origin,outward,style,i,music.timeline,int(PLANETS.planet(active_planet).index),squad,i==0)
-		spawned+=1
+	# One model per arrival. The grid is a birth arrangement, never an AI group.
+	var kind=("dart" if rng.randf()<.25 else "mote") if boss_support else ("mote" if wave<=1 else PLANETS.kind(active_planet,wave-1,rng.randi_range(0,19),difficulty))
+	var plan=ARRIVAL.choose(self,amount,kind)
+	if plan.is_empty(): return
+	plan.kind=kind; plan.count=amount; plan.born=music.timeline; plan.deadline=music.timeline+ARRIVAL.WARNING_SECONDS
+	plan.wave=wave; plan.wave_budget=not free_music_run and not boss_support
+	spawn_telegraphs.append(plan)
+
+func update_spawn_telegraphs() -> void:
+	if state!="combat": return
+	for i in range(spawn_telegraphs.size()-1,-1,-1):
+		var plan: Dictionary=spawn_telegraphs[i]
+		if int(plan.wave)!=wave: spawn_telegraphs.remove_at(i); continue
+		if music.timeline<float(plan.deadline): continue
+		for point in plan.points:
+			var enemy=spawn_enemy(str(plan.kind),point)
+			if enemy.is_empty(): break
+			enemy.warned_entry=true; enemy.spawn_grid={"center":plan.center,"columns":plan.columns,"rows":plan.rows,"kind":plan.kind,"style":"battalion_grid"}
+			enemy.individual_speed_scale=.9+float(posmod(int(enemy.uid)*37,17))*.0125
+			if bool(plan.wave_budget): spawned+=1
+		spawn_telegraphs.remove_at(i)
+		sound("spawn",-21.)
 
 func spawn_origin(outward: Vector2) -> Vector2:
 	var rect=visible_world(); var half=rect.size*.5
@@ -1481,6 +1498,7 @@ func check_wave() -> void:
 		return
 	var config=wave_profile()
 	if music.timeline-wave_start<float(config.seconds): return
+	spawn_telegraphs.clear()
 	# Ordinary waves are survival passages. Remaining enemies withdraw without
 	# fake kills or loot, rather than making a large arena a tedious cleanup hunt.
 	for enemy in enemies:
@@ -1534,6 +1552,7 @@ func _draw() -> void:
 	fleet_batch.visible=batch
 	if batch: fleet_batch.update_fleet(enemies,visible_rect)
 	draw_rect(field(),Color(.10,.29,.49,.40),false,5.)
+	for plan in spawn_telegraphs: ARRIVAL.draw_warning(self,plan,music.timeline)
 	if is_preview and preview_show_ranges: draw_preview_ranges()
 	for item in pickups:
 		var color=Color("80efb1") if item.heal else Color("f4d88b")
@@ -1563,7 +1582,7 @@ func _draw() -> void:
 				draw_line(enemy.at-tail-side,enemy.at-side,Color("ff789f",.16),4.5,true)
 				draw_line(enemy.at-tail,enemy.at,Color("ffd6df",.55),1.2,true)
 		var entry_age=music.timeline-float(enemy.get("born",-10.))
-		if entry_age>=0. and entry_age<1.05 and visible_rect.has_point(enemy.at):
+		if entry_age>=0. and entry_age<1.05 and visible_rect.has_point(enemy.at) and not bool(enemy.get("warned_entry",false)):
 			var entry_fade=1.-entry_age/1.05
 			var entry_radius=float(enemy.radius)*(1.9+entry_age*1.8)
 			draw_arc(enemy.at,entry_radius,0,TAU,18,Color("6bf4ff",entry_fade*.62),1.5+entry_fade,true)
