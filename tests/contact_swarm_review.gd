@@ -36,7 +36,7 @@ func fixture() -> void:
 	game.loadout.audio_guard_enabled=false; game.loadout.reset()
 	game.loadout.set_fleet({"health":10,"damage_scale":1.},{"id":"mender"}); game.loadout.set_starters([])
 	game.refresh_loadout_stats(); game.camera.enabled=true; game.camera.position_smoothing_enabled=false
-	game.camera.zoom=Vector2.ONE*.9; game.camera.position=game.player
+	game.camera.zoom=Vector2.ONE*.65; game.camera.position=game.player
 	game.camera.reset_smoothing(); game.camera.force_update_scroll()
 	game.ui.root_control.hide(); game.settings.reduced_fx=false
 
@@ -69,7 +69,7 @@ func spawning_checks() -> void:
 			var plans=game.spawn_telegraphs.duplicate(true)
 			check(plans.all(func(p): return game.visible_world().encloses(p.rect)),"red warning regions stay visible on the battlefield")
 			game.music.timeline=.81; game.update_spawn_telegraphs()
-			check(game.enemies.size()>=60 and game.enemies.size()<=96,"production opening spawns dense bounded battalions")
+			check(game.enemies.size()==64,"production opening spawns a complete eight-by-eight battalion")
 			check(game.spawn_telegraphs.is_empty(),"the red warning clears when the complete batches materialize")
 			check(game.enemies.all(func(e): return e.at.distance_to(game.player)>250.),"new formations retain a safe initial distance from the ship")
 			check(game.enemies.all(func(e): return not e.has("formation") and e.kind==e.spawn_grid.kind),"same-model square births do not create shared movement formations")

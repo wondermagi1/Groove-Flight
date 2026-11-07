@@ -1015,14 +1015,14 @@ func spawn_for_step(serial: int) -> void:
 		return
 	var config=wave_profile(); var elapsed=music.timeline-wave_start
 	receipt.count("spawn_checks")
-	var opening=60+wave*8
-	var desired=mini(int(config.budget),opening+int((elapsed+1.)/float(config.seconds)*int(config.budget)))
+	var batch=ARRIVAL.batch_size(wave,int(config.budget))
+	var desired=mini(int(config.budget),batch+int(maxf(0.,elapsed)/float(config.seconds)*(int(config.budget)-batch)))
 	var reserved=0
 	for plan in spawn_telegraphs:
 		if bool(plan.get("wave_budget",false)): reserved+=int(plan.count)
-	var amount=mini(96,desired-spawned-reserved)
-	if amount<16 and desired<int(config.budget): return
-	for offset in range(0,amount,48): spawn_wave_group(mini(48,amount-offset),str(config.formation))
+	var amount=mini(batch,desired-spawned-reserved)
+	if amount<batch and desired<int(config.budget): return
+	if amount>0: spawn_wave_group(amount,str(config.formation))
 	if config.elite and not elite_spawned and elapsed>float(config.seconds)*.40 and enemies.size()<MAX_ENEMIES:
 		elite_spawned=true; spawn_enemy("elite")
 
@@ -1081,7 +1081,7 @@ func spawn_enemy(kind: String,position: Vector2=Vector2.INF) -> Dictionary:
 		enemy.radius=float(PLANETS.planet(active_planet).boss_radius); enemy.machine_style=int(PLANETS.planet(active_planet).index)
 		enemy.entry_until=music.timeline+2.4; enemy.machine_name=PLANETS.planet(active_planet).bossname
 	enemy.speed=float(enemy.speed)*float(planet_rules.enemy_speed); enemy.damage=float(planet_rules.damage)
-	if kind not in ["elite","boss"]: enemy.radius*=.76
+	if kind not in ["elite","boss"]: enemy.radius=ARRIVAL.hull_radius(kind)
 	if kind not in ["elite","boss"]: enemy.armed_after=music.timeline+1.
 	if kind=="lance": enemy.damage*=1.18
 	elif kind=="mirror": enemy.damage*=1.10
@@ -1600,7 +1600,7 @@ func _draw() -> void:
 	weapon_renderer.hazards.update_hazards(enemy_bullets,visible_rect)
 	_draw_flight_trail()
 	var opacity=.45 if invulnerable>0 and invulnerable<=.8 and int(invulnerable*20)%2==0 else 1.
-	ART.draw_ship(self,player,20.,facing.angle(),selected_ship,pulse,opacity)
+	ART.draw_ship(self,player,16.,facing.angle(),selected_ship,pulse,opacity)
 	if music.timeline<overload_until:
 		draw_arc(player,40+music.pulse()*6,0,TAU,36,Color("ffd68b"),3,true)
 	shield_renderer.update_state(player,music.timeline,player_guard_until-music.timeline,player_guard_started,shield_points>0 and music.timeline<shield_until,bool(settings.reduced_fx))

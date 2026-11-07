@@ -75,7 +75,7 @@ func scale_and_density_checks() -> void:
 	fixture("")
 	check(is_equal_approx(game.camera.zoom.x,.65),"production battle view uses the wider battlefield scale")
 	var mote=game.spawn_enemy("mote",Vector2(0,-100))
-	check(is_equal_approx(mote.radius,11.*.76),"ordinary enemies use smaller matching visual/collision hulls")
+	check(is_equal_approx(mote.radius,17.) and mote.radius/16.>1.,"ordinary hull cores are comparable to the player rather than miniature specks")
 	for planet in game.PLANETS.IDS:
 		for difficulty in [0,1]:
 			var route=game.PLANETS.route(planet,difficulty)
@@ -83,16 +83,16 @@ func scale_and_density_checks() -> void:
 			var baseline: Array=game.PLANETS.BUDGETS[game.PLANETS.IDS.find(planet)]
 			check(int(route[0].budget)>int(baseline[0])*2 and int(route[-2].budget)>int(baseline[-1])*2,"density grows beyond the earlier route at both ends / "+planet)
 	fixture(""); game.is_preview=false; game.rng.seed=2117; game.spawn_for_step(0)
-	check(game.enemies.is_empty() and game.spawn_telegraphs.size()==2,"production arrivals begin with two red warning plans rather than immediate enemies")
+	check(game.enemies.is_empty() and game.spawn_telegraphs.size()==1,"production opening begins with one red warning for a complete matrix")
 	var plans=game.spawn_telegraphs.duplicate(true)
 	check(plans.all(func(p): return game.visible_world().encloses(p.rect)),"red warnings cover the exact visible birth rectangles")
 	game.music.timeline=.79; game.update_spawn_telegraphs()
 	check(game.enemies.is_empty(),"no wave unit appears before its warning deadline")
 	game.music.timeline=.81; game.update_spawn_telegraphs()
-	check(game.enemies.size()>=60 and game.enemies.size()<=96,"actual opening dispatch produces a dense bounded force")
+	check(game.enemies.size()==64,"actual opening dispatch produces all64units of an eight-by-eight matrix")
 	var groups: Dictionary={}
 	for enemy in game.enemies: groups[str(enemy.spawn_grid.center)]=true
-	check(groups.size()==2 and game.enemies.all(func(e): return e.spawn_grid.style=="battalion_grid" and not e.has("formation")),"square is only the birth layout; enemies have no retained movement group")
+	check(groups.size()==1 and game.enemies.all(func(e): return e.spawn_grid.style=="battalion_grid" and not e.has("formation")),"square is only the birth layout; enemies have no retained movement group")
 	for plan in plans:
 		var members=game.enemies.filter(func(e): return Vector2(e.spawn_grid.center).is_equal_approx(plan.center))
 		check(members.size()==int(plan.count) and members.all(func(e): return e.kind==str(plan.kind)),"a complete matrix materializes with exactly one enemy model")
@@ -101,12 +101,23 @@ func scale_and_density_checks() -> void:
 	for i in range(61): game.music.timeline=.81+float(i)/60.; game.update_enemies(1./60.)
 	check(absf(Vector2(a.at).distance_to(b.at)-initial_distance)>1.,"individual pursuit deforms the birth matrix instead of translating it as one unit")
 	check(game.enemies.all(func(e): return e.formation_phase=="独立追击"),"every newly born ordinary enemy selects its own chase destination")
+	fixture(""); game.active_planet="uranus"; game.wave_rows=game.PLANETS.route("uranus"); game.wave=7
+	game.planet_rules=game.PLANETS.wave_rules("uranus",7); game.is_preview=false; game.rng.seed=211107
+	game.spawn_for_step(0)
+	check(game.spawn_telegraphs.size()==1 and game.spawn_telegraphs[0].count==600,"late-wave production reserves a single600enemy matrix")
+	var giant: Dictionary=game.spawn_telegraphs[0] if not game.spawn_telegraphs.is_empty() else {}
+	if not giant.is_empty():
+		check(giant.columns==25 and giant.rows==24 and game.visible_world().encloses(giant.rect),"the600enemy matrix is fully filled and fits the visible battlefield")
+		check(float(giant.spacing)*game.camera.zoom.x>=27. and float(giant.spacing)*game.camera.zoom.x<=32.,"1920x1080 matrix centre spacing is about28to32screen pixels")
+		game.music.timeline=.81; game.update_spawn_telegraphs()
+		check(game.enemies.size()==600 and game.enemies.all(func(e): return e.kind==str(giant.kind)),"all600actual enemies appear together with one model")
+		facts.giant_matrix={"count":600,"columns":giant.columns,"rows":giant.rows,"screen_pitch":float(giant.spacing)*game.camera.zoom.x,"kind":giant.kind}
 	fixture("")
 	for i in range(1024): game.spawn_enemy("mote",Vector2((i%40-20)*34.,(i/40-13)*34.))
 	game.fleet_batch.update_fleet(game.enemies,game.visible_world())
 	check(game.fleet_batch.active_count==1024 and game.fleet_batch.fleets.mote.visible_instance_count==1024,"all1024visible small enemies are submitted without overflowing the fleet mesh")
 	check(game.spawn_enemy("mote",Vector2.ZERO).is_empty() and game.enemies.size()==1024,"production spawning respects the bounded population cap")
-	facts.scale={"camera_zoom":.65,"ordinary_hull_scale":.76,"max_enemies":1024}
+	facts.scale={"camera_zoom":.65,"player_art_radius":16.,"ordinary_core_radii":[16.,17.,18.],"max_enemies":1024}
 
 func guard_checks() -> void:
 	fixture(""); game.health=8.; game.music.timeline=10.; game.hurt_player(1.)
@@ -140,6 +151,10 @@ func visual_checks() -> void:
 	fixture(""); game.is_preview=false; game.spawn_for_step(0)
 	game.music.timeline=.35; await capture("red-spawn-warning")
 	game.music.timeline=.81; game.update_spawn_telegraphs(); await capture("square-birth")
+	fixture(""); game.active_planet="uranus"; game.wave_rows=game.PLANETS.route("uranus"); game.wave=7
+	game.planet_rules=game.PLANETS.wave_rules("uranus",7); game.is_preview=false; game.rng.seed=211107
+	game.spawn_for_step(0); game.music.timeline=.35; await capture("600-red-warning")
+	game.music.timeline=.81; game.update_spawn_telegraphs(); await capture("600-square-birth")
 
 func battle_tick(time: float,delta: float,last_step: int,armed: bool) -> int:
 	game.music.timeline=time
@@ -167,8 +182,11 @@ func preview_capture() -> void:
 	fixture(""); game.is_preview=false; game.active_planet="uranus"
 	game.bind_input(); game.apply_input_bindings()
 	game.BACKDROP_ASSETS.apply(game.background,"uranus",int(game.settings.background_quality),float(game.settings.background_exposure))
-	game.wave_rows=game.PLANETS.route("uranus"); game.wave=5
-	game.planet_rules=game.PLANETS.wave_rules("uranus",5); game.rng.seed=211107
+	game.wave_rows=game.PLANETS.route("uranus"); game.wave=7
+	game.planet_rules=game.PLANETS.wave_rules("uranus",7); game.rng.seed=211107
+	game.background.set_shader_parameter("planet_style",int(game.planet_rules.planet_style))
+	game.background.set_shader_parameter("planet_color",game.planet_rules.accent)
+	game.background.set_shader_parameter("sky_tint",game.planet_rules.sky_tint)
 	game.invulnerable=1000.; game.loadout.set_starters([])
 	for entry in [["gilded_helix",0],["weave_cross",4],["crown_orbit",8],["scatter_prism",12],["nova",16],["recorded_heavy",18]]:
 		var uid=game.loadout.add_module(str(entry[0]),int(entry[1])); game.loadout.find(uid).level=3

@@ -1,11 +1,22 @@
 extends RefCounted
 ## Birth layout only. These plans never constrain an enemy after it appears.
 const WARNING_SECONDS=.8
-const RADII={"mote":11.,"armor":18.,"shooter":15.,"dart":9.,"splitter":17.,"sentinel":19.,"lance":20.,"mirror":18.}
+const RADII={"mote":17.,"armor":18.,"shooter":17.,"dart":16.,"splitter":18.,"sentinel":18.,"lance":18.,"mirror":18.}
+
+static func batch_size(wave: int,budget: int) -> int:
+	return mini(budget,64 if wave<=2 else (144 if wave<=4 else (300 if wave<=6 else 600)))
+
+static func hull_radius(kind: String) -> float:
+	return float(RADII.get(kind,17.))
 
 static func layout(center: Vector2,count: int,kind: String) -> Dictionary:
-	var spacing=maxf(25.,float(RADII.get(kind,11.))*.76*2.15+5.)
-	var columns=clampi(ceili(sqrt(float(maxi(1,count)))),1,8)
+	var spacing=hull_radius(kind)*2.5+3.
+	var columns=clampi(ceili(sqrt(float(maxi(1,count)))),1,32)
+	# Prefer a fully filled rectangle, e.g.300=20x15 and600=25x24.
+	# A final wave-budget remainder may use a partially filled last row.
+	for candidate in range(columns,33):
+		if count%candidate==0 and float(candidate)/maxf(1.,float(count)/candidate)<=2.:
+			columns=candidate; break
 	var rows=ceili(float(count)/columns)
 	var points: Array[Vector2]=[]
 	for i in range(count):
@@ -21,19 +32,19 @@ static func choose(game,count: int,kind: String) -> Dictionary:
 	view.position.y+=72./game.camera.zoom.y
 	view.size.y-=200./game.camera.zoom.y
 	var start_angle=game.rng.randf()*TAU
-	for attempt in range(16):
-		var axis=Vector2.from_angle(start_angle+float(attempt)*TAU/16.)
+	for attempt in range(20):
+		var axis=Vector2.from_angle(start_angle+float(attempt)*TAU/16.) if attempt<16 else Vector2.from_angle(float(attempt-16)*PI*.5)
 		var reach=1500.
 		if axis.x>.001: reach=minf(reach,(view.end.x-game.player.x-half.x)/axis.x)
 		elif axis.x<-.001: reach=minf(reach,(view.position.x-game.player.x+half.x)/axis.x)
 		if axis.y>.001: reach=minf(reach,(view.end.y-game.player.y-half.y)/axis.y)
 		elif axis.y<-.001: reach=minf(reach,(view.position.y-game.player.y+half.y)/axis.y)
 		if reach<400.: continue
-		var center: Vector2=game.player+axis*reach*game.rng.randf_range(.78,.94)
+		var center: Vector2=game.player+axis*reach*game.rng.randf_range(.94 if count>=300 else .78,.995 if count>=300 else .94)
 		var area=layout(center,count,kind)
 		var world: Rect2=game.field().grow(-20.)
 		if not world.encloses(area.rect): continue
-		if area.rect.grow(150.).has_point(game.player): continue
+		if area.rect.grow(90. if count>=300 else 150.).has_point(game.player): continue
 		var occupied=false
 		for pending in game.spawn_telegraphs:
 			if area.rect.grow(40.).intersects(pending.rect): occupied=true; break

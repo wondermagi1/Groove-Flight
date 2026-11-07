@@ -103,8 +103,10 @@ func update_projectiles(bullets: Array,bounds: Rect2,reduced: bool=false) -> voi
 		# than pointing through the inside of a spiral or orbit.
 		if bullet.has("trail_points") and not reduced:
 			var points: Array=bullet.trail_points
-			for n in range(1,points.size()):
-				ribbons.add(style,points[n-1],points[n],Color(bullet.color,float(n)/points.size()*(.55 if dense else .8)),float(row.get("width",3.)))
+			var stride=3 if dense else 1
+			for n in range(1,points.size(),stride):
+				var end=mini(n+stride-1,points.size()-1)
+				ribbons.add(style,points[n-1],points[end],Color(bullet.color,float(end)/points.size()*(.55 if dense else .8)),float(row.get("width",3.)))
 		else:
 			tail=minf(tail,velocity.length()*age) if DATA.NEW_INSTRUMENTS.has(str(bullet.kind)) else tail
 			ribbons.add(style,bullet.at-direction*tail,bullet.at,Color(bullet.color,.62 if dense else .9),float(row.get("width",0.)))

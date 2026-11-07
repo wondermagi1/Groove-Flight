@@ -1,6 +1,6 @@
 extends RefCounted
-## Retain the original formation routes while pacing ordinary enemies on
-## half-second music beats. Spawning remains in Main's original radial path.
+## New matrix births pursue independently on half-second music beats.
+## Legacy formation fixtures retain their historical route sampler.
 const FORMATION=preload("res://scripts/formation_motion.gd")
 const STEP_SECONDS=.5
 const MOVE_SECONDS=.22

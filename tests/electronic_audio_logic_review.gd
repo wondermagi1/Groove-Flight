@@ -117,7 +117,7 @@ func run() -> void:
 	check(game.state=="combat" and synth.is_current(game.loadout) and zero_pcm(synth.stream),"leaving the editor adopts track mute changes even without moving equipment")
 	var count=game.fire_log.size(); await create_timer(1.1).timeout
 	check(game.fire_log.size()>count,"muting audio never disables the actual projectiles")
-	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"Fixed electronic voices for32 active weapons, same-type12/34 native PCM overlap and live fire, zero-volume/track mute, live/paused PCM refresh and isolated preview compilation. Native fixture uses invulnerability; no human listening or balance claim."}
+	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"Fixed voices for the active weapon roster, same-type12/34 native PCM overlap and live fire, zero-volume/track mute, live/paused PCM refresh and isolated preview compilation. Native fixture uses invulnerability; no human listening or balance claim."}
 	FileAccess.open("res://tests/results-electronic-audio-logic.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	print("ELECTRONIC_AUDIO_LOGIC ",JSON.stringify({"checks":checks,"failures":failures}))
 	game.return_title(); current_scene=null; game.queue_free(); await frames(5)
