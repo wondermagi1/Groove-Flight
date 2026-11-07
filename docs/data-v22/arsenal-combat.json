@@ -1,0 +1,261 @@
+{
+	"checks": 120,
+	"facts": {
+		"weapon_impacts": {
+			"beam": {
+				"count": 3,
+				"damage": 69.0,
+				"family": "beam",
+				"pitch": 0
+			},
+			"beam_lance": {
+				"count": 1,
+				"damage": 160.0,
+				"family": "beam",
+				"pitch": 0
+			},
+			"beam_split": {
+				"count": 6,
+				"damage": 108.0,
+				"family": "beam",
+				"pitch": 0
+			},
+			"boomerang": {
+				"count": 1,
+				"damage": 18.0,
+				"family": "boomerang",
+				"pitch": 0
+			},
+			"boomerang_crescent": {
+				"count": 2,
+				"damage": 42.0,
+				"family": "boomerang",
+				"pitch": 0
+			},
+			"boomerang_ricochet": {
+				"count": 1,
+				"damage": 25.0,
+				"family": "boomerang",
+				"pitch": 0
+			},
+			"chain": {
+				"count": 3,
+				"damage": 57.0,
+				"family": "chain",
+				"pitch": 0
+			},
+			"chain_fork": {
+				"count": 2,
+				"damage": 64.0,
+				"family": "chain",
+				"pitch": 0
+			},
+			"crown_orbit": {
+				"count": 20,
+				"damage": 24.0,
+				"family": "orbit",
+				"pitch": 0
+			},
+			"drone": {
+				"count": 2,
+				"damage": 20.0,
+				"family": "drone",
+				"pitch": 0
+			},
+			"drone_sentry": {
+				"count": 3,
+				"damage": 72.0,
+				"family": "drone",
+				"pitch": 0
+			},
+			"flame": {
+				"count": 6,
+				"damage": 24.0,
+				"family": "flame",
+				"pitch": 0
+			},
+			"flame_cone": {
+				"count": 10,
+				"damage": 70.0,
+				"family": "flame",
+				"pitch": 0
+			},
+			"flame_spark": {
+				"count": 3,
+				"damage": 39.0,
+				"family": "flame",
+				"pitch": 0
+			},
+			"gilded_helix": {
+				"count": 52,
+				"damage": 26.0,
+				"family": "nova",
+				"pitch": 0
+			},
+			"mine": {
+				"count": 2,
+				"damage": 76.0,
+				"family": "mine",
+				"pitch": 0
+			},
+			"mine_anchor": {
+				"count": 1,
+				"damage": 120.0,
+				"family": "mine",
+				"pitch": 0
+			},
+			"mine_cluster": {
+				"count": 6,
+				"damage": 120.0,
+				"family": "mine",
+				"pitch": 0
+			},
+			"missile": {
+				"count": 3,
+				"damage": 84.0,
+				"family": "missile",
+				"pitch": 0
+			},
+			"missile_siege": {
+				"count": 1,
+				"damage": 170.0,
+				"family": "missile",
+				"pitch": 0
+			},
+			"missile_swarm": {
+				"count": 5,
+				"damage": 75.0,
+				"family": "missile",
+				"pitch": 0
+			},
+			"nova": {
+				"count": 12,
+				"damage": 20.0,
+				"family": "nova",
+				"pitch": 0
+			},
+			"nova_spiral": {
+				"count": 16,
+				"damage": 26.0,
+				"family": "nova",
+				"pitch": 0
+			},
+			"orbit": {
+				"count": 3,
+				"damage": 27.0,
+				"family": "orbit",
+				"pitch": 0
+			},
+			"orbit_binary": {
+				"count": 2,
+				"damage": 48.0,
+				"family": "orbit",
+				"pitch": 0
+			},
+			"orbit_lattice": {
+				"count": 6,
+				"damage": 72.0,
+				"family": "orbit",
+				"pitch": 0
+			},
+			"pulse": {
+				"count": 3,
+				"damage": 27.0,
+				"family": "pulse",
+				"pitch": 0
+			},
+			"pulse_needle": {
+				"count": 3,
+				"damage": 81.0,
+				"family": "pulse",
+				"pitch": 0
+			},
+			"pulse_ribbon": {
+				"count": 6,
+				"damage": 33.0,
+				"family": "pulse",
+				"pitch": 0
+			},
+			"rail": {
+				"count": 3,
+				"damage": 174.0,
+				"family": "rail",
+				"pitch": 0
+			},
+			"rail_horizon": {
+				"count": 7,
+				"damage": 1170.0,
+				"family": "rail",
+				"pitch": 0
+			},
+			"recorded_ballistic": {
+				"count": 3,
+				"damage": 33.0,
+				"family": "pulse",
+				"pitch": 0
+			},
+			"recorded_ballistic_legend": {
+				"count": 11,
+				"damage": 297.0,
+				"family": "pulse",
+				"pitch": 0
+			},
+			"recorded_ballistic_rare": {
+				"count": 6,
+				"damage": 108.899999999965,
+				"family": "pulse",
+				"pitch": 0
+			},
+			"recorded_crude": {
+				"count": 2,
+				"damage": 30.0,
+				"family": "pulse",
+				"pitch": 0
+			},
+			"recorded_crude_legend": {
+				"count": 10,
+				"damage": 360.0,
+				"family": "pulse",
+				"pitch": 0
+			},
+			"recorded_crude_rare": {
+				"count": 5,
+				"damage": 123.75,
+				"family": "pulse",
+				"pitch": 0
+			},
+			"recorded_heavy": {
+				"count": 7,
+				"damage": 528.0,
+				"family": "rail",
+				"pitch": 0
+			},
+			"scatter": {
+				"count": 5,
+				"damage": 35.0,
+				"family": "scatter",
+				"pitch": 0
+			},
+			"scatter_heavy": {
+				"count": 4,
+				"damage": 88.0,
+				"family": "scatter",
+				"pitch": 0
+			},
+			"scatter_prism": {
+				"count": 16,
+				"damage": 25.6666666666861,
+				"family": "scatter",
+				"pitch": 0
+			},
+			"weave_cross": {
+				"count": 70,
+				"damage": 40.799999999901,
+				"family": "pulse",
+				"pitch": 0
+			}
+		}
+	},
+	"failures": [],
+	"scope": "Production methods under controlled position/time/high-HP fixtures:36weapon impacts, projectiles, attributes,7procs, inventory/shop currency callbacks. Native full-route timing/audio and human balance are separate."
+}

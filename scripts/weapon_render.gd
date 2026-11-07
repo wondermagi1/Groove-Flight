@@ -98,30 +98,26 @@ func update_projectiles(bullets: Array,bounds: Rect2,reduced: bool=false) -> voi
 		var angle=velocity.angle() if velocity.length_squared()>.01 else float(bullet.get("orbit_angle",0.))
 		if style in [7,8,9]: angle+=age*(5. if style==7 else 1.4)
 		var direction=Vector2.from_angle(angle)
-		var speed_scale=clampf(velocity.length()/760.,.65,1.15)
-		var tail=float(row.get("tail",TRAILS[style]))*speed_scale
-		tail=minf(tail,velocity.length()*age)
-		# Clip sampled arcs to a short wake behind the actual head. A complete
-		# historical ribbon joins separate rounds into a luminous sheet.
+		var speed_scale=clampf(velocity.length()/760.,.65,2.4)
+		var tail=minf(590.,float(row.get("tail",TRAILS[style]))*speed_scale*(.58 if dense else 1.))
+		# Curved weapons retain a sampled path, so ribbons follow the arc rather
+		# than pointing through the inside of a spiral or orbit.
 		if bullet.has("trail_points") and not reduced:
 			var points: Array=bullet.trail_points
-			var cursor: Vector2=bullet.at; var remaining=tail
-			for n in range(points.size()-1,-1,-1):
-				var segment=cursor-Vector2(points[n]); var distance=segment.length()
-				if distance<.1: continue
-				var end=cursor-segment/distance*minf(distance,remaining)
-				ribbons.add(style,end,cursor,Color(bullet.color,.16 if dense else .23),float(row.get("width",1.)))
-				remaining-=distance; cursor=end
-				if remaining<=0.: break
+			var stride=3 if dense else 1
+			for n in range(1,points.size(),stride):
+				var end=mini(n+stride-1,points.size()-1)
+				ribbons.add(style,points[n-1],points[end],Color(bullet.color,float(end)/points.size()*(.55 if dense else .8)),float(row.get("width",3.)))
 		else:
-			ribbons.add(style,bullet.at-direction*tail,bullet.at,Color(bullet.color,.16 if dense else .23),float(row.get("width",0.)))
+			tail=minf(tail,velocity.length()*age) if DATA.NEW_INSTRUMENTS.has(str(bullet.kind)) else tail
+			ribbons.add(style,bullet.at-direction*tail,bullet.at,Color(bullet.color,.62 if dense else .9),float(row.get("width",0.)))
 		var size_value: Vector2=row.get("size",SIZES[style]*float(row.scale))
 		var pose=Transform2D(angle,bullet.at).scaled_local(size_value)
 		var custom=Color(fposmod(age,100.),float(row.variant),minf(1.,float(bullet.life)),float(row.variant_index))
 		bodies[style].multimesh.set_instance_transform_2d(index,pose)
 		bodies[style].multimesh.set_instance_color(index,bullet.color)
 		bodies[style].multimesh.set_instance_custom_data(index,custom)
-		glows[style].multimesh.set_instance_transform_2d(index,pose.scaled_local(Vector2(2.1,2.3)))
+		glows[style].multimesh.set_instance_transform_2d(index,pose.scaled_local(Vector2(2.5,2.6)))
 		glows[style].multimesh.set_instance_color(index,bullet.color)
 		glows[style].multimesh.set_instance_custom_data(index,custom)
 		counts[style]+=1; active_count+=1
@@ -129,6 +125,6 @@ func update_projectiles(bullets: Array,bounds: Rect2,reduced: bool=false) -> voi
 		bodies[style].multimesh.visible_instance_count=counts[style]
 		glows[style].multimesh.visible_instance_count=counts[style]
 		glows[style].visible=not reduced
-		glows[style].material.set_shader_parameter("intensity",.24 if dense else .32)
+		glows[style].material.set_shader_parameter("intensity",.19 if dense else .34)
 	ribbons.visible=not reduced
 	ribbons.finish()

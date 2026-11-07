@@ -1,0 +1,433 @@
+{
+	"checks": 229,
+	"density": {
+		"display_driver": "headless",
+		"fixture": {
+			"bullet_damage": 1,
+			"enemies": 480,
+			"enemy_hp": 10000000,
+			"fixed_update_delta": 0.0166666666666667,
+			"friendly": 800,
+			"hostile": 450
+		},
+		"frame_interval_ms_max": 34.871,
+		"frame_interval_ms_median": 23.896,
+		"frame_interval_ms_p95": 26.379,
+		"gpu": "",
+		"note": "Controlled fixture with frozen native audio, stationary high-HP enemies and positive one-damage bullets. Frame intervals include graphics/OS scheduling; this is a short sample rather than stable FPS or human gameplay.",
+		"peak_enemies": 480,
+		"peak_friendly": 800,
+		"peak_hostile": 450,
+		"phase_ms": {
+			"collision": {
+				"max": 19.796,
+				"median": 10.797,
+				"p95": 12.407
+			},
+			"enemy": {
+				"max": 2.035,
+				"median": 1.332,
+				"p95": 1.7
+			},
+			"hostile": {
+				"max": 0.756,
+				"median": 0.335,
+				"p95": 0.536
+			},
+			"spatial": {
+				"max": 1.953,
+				"median": 0.858,
+				"p95": 1.221
+			}
+		},
+		"render_driver": "vulkan",
+		"rendering": {
+			"draw_calls": {
+				"max": 0.0,
+				"median": 0.0,
+				"p95": 0.0
+			},
+			"objects": {
+				"max": 0.0,
+				"median": 0.0,
+				"p95": 0.0
+			},
+			"primitives": {
+				"max": 0.0,
+				"median": 0.0,
+				"p95": 0.0
+			}
+		},
+		"samples": 90,
+		"sampling_elapsed_ms": 2126,
+		"sampling_started_utc": "2026-11-07T10:05:54",
+		"update_ms_max": 22.783,
+		"update_ms_median": 13.515,
+		"update_ms_p95": 15.224,
+		"window": "(0, 0)"
+	},
+	"facts": {
+		"enemy_stats": {
+			"armor": {
+				"hp": 83.142,
+				"radius": 18.0,
+				"speed": 92.14
+			},
+			"boss": {
+				"hp": 13000.0,
+				"radius": 192.0,
+				"speed": 0.0
+			},
+			"dart": {
+				"hp": 13.41,
+				"radius": 16.0,
+				"speed": 257.992
+			},
+			"elite": {
+				"hp": 818.01,
+				"radius": 42.0,
+				"speed": 104.064
+			},
+			"lance": {
+				"hp": 115.326,
+				"radius": 18.0,
+				"speed": 82.384
+			},
+			"mirror": {
+				"hp": 88.506,
+				"radius": 18.0,
+				"speed": 136.584
+			},
+			"mote": {
+				"hp": 16.092,
+				"radius": 17.0,
+				"speed": 153.928
+			},
+			"sentinel": {
+				"hp": 107.28,
+				"radius": 18.0,
+				"speed": 92.14
+			},
+			"shooter": {
+				"hp": 40.23,
+				"radius": 17.0,
+				"speed": 108.4
+			},
+			"splitter": {
+				"hp": 56.322,
+				"radius": 18.0,
+				"speed": 134.416
+			}
+		},
+		"fleet_combinations": [
+			{
+				"damage": 1.0,
+				"dash": 1.6,
+				"health": 10.0,
+				"pilot": "echo",
+				"ship": "hex",
+				"speed": 470.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 1.0,
+				"dash": 1.6,
+				"health": 10.0,
+				"pilot": "volt",
+				"ship": "hex",
+				"speed": 470.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 1.0,
+				"dash": 1.6,
+				"health": 10.0,
+				"pilot": "mender",
+				"ship": "hex",
+				"speed": 470.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 1.0,
+				"dash": 1.6,
+				"health": 10.0,
+				"pilot": "nova",
+				"ship": "hex",
+				"speed": 470.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 1.0,
+				"dash": 1.6,
+				"health": 10.0,
+				"pilot": "rime",
+				"ship": "hex",
+				"speed": 470.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 0.92,
+				"dash": 1.15,
+				"health": 8.0,
+				"pilot": "echo",
+				"ship": "swift",
+				"speed": 560.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 0.92,
+				"dash": 1.15,
+				"health": 8.0,
+				"pilot": "volt",
+				"ship": "swift",
+				"speed": 560.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 0.92,
+				"dash": 1.15,
+				"health": 8.0,
+				"pilot": "mender",
+				"ship": "swift",
+				"speed": 560.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 0.92,
+				"dash": 1.15,
+				"health": 8.0,
+				"pilot": "nova",
+				"ship": "swift",
+				"speed": 560.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 0.92,
+				"dash": 1.15,
+				"health": 8.0,
+				"pilot": "rime",
+				"ship": "swift",
+				"speed": 560.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 1.18,
+				"dash": 2.0,
+				"health": 14.0,
+				"pilot": "echo",
+				"ship": "bastion",
+				"speed": 385.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 1.18,
+				"dash": 2.0,
+				"health": 14.0,
+				"pilot": "volt",
+				"ship": "bastion",
+				"speed": 385.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 1.18,
+				"dash": 2.0,
+				"health": 14.0,
+				"pilot": "mender",
+				"ship": "bastion",
+				"speed": 385.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 1.18,
+				"dash": 2.0,
+				"health": 14.0,
+				"pilot": "nova",
+				"ship": "bastion",
+				"speed": 385.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 1.18,
+				"dash": 2.0,
+				"health": 14.0,
+				"pilot": "rime",
+				"ship": "bastion",
+				"speed": 385.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 1.06,
+				"dash": 1.35,
+				"health": 9.0,
+				"pilot": "echo",
+				"ship": "sabre",
+				"speed": 525.0,
+				"starter": [
+					"r_mirror",
+					"nova",
+					"scatter_prism"
+				]
+			},
+			{
+				"damage": 1.06,
+				"dash": 1.35,
+				"health": 9.0,
+				"pilot": "volt",
+				"ship": "sabre",
+				"speed": 525.0,
+				"starter": [
+					"r_mirror",
+					"nova",
+					"scatter_prism"
+				]
+			},
+			{
+				"damage": 1.06,
+				"dash": 1.35,
+				"health": 9.0,
+				"pilot": "mender",
+				"ship": "sabre",
+				"speed": 525.0,
+				"starter": [
+					"r_mirror",
+					"nova",
+					"scatter_prism"
+				]
+			},
+			{
+				"damage": 1.06,
+				"dash": 1.35,
+				"health": 9.0,
+				"pilot": "nova",
+				"ship": "sabre",
+				"speed": 525.0,
+				"starter": [
+					"r_mirror",
+					"nova",
+					"scatter_prism"
+				]
+			},
+			{
+				"damage": 1.06,
+				"dash": 1.35,
+				"health": 9.0,
+				"pilot": "rime",
+				"ship": "sabre",
+				"speed": 525.0,
+				"starter": [
+					"r_mirror",
+					"nova",
+					"scatter_prism"
+				]
+			},
+			{
+				"damage": 0.98,
+				"dash": 1.75,
+				"health": 12.0,
+				"pilot": "echo",
+				"ship": "manta",
+				"speed": 420.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 0.98,
+				"dash": 1.75,
+				"health": 12.0,
+				"pilot": "volt",
+				"ship": "manta",
+				"speed": 420.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 0.98,
+				"dash": 1.75,
+				"health": 12.0,
+				"pilot": "mender",
+				"ship": "manta",
+				"speed": 420.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 0.98,
+				"dash": 1.75,
+				"health": 12.0,
+				"pilot": "nova",
+				"ship": "manta",
+				"speed": 420.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			},
+			{
+				"damage": 0.98,
+				"dash": 1.75,
+				"health": 12.0,
+				"pilot": "rime",
+				"ship": "manta",
+				"speed": 420.0,
+				"starter": [
+					"scatter_prism",
+					"nova"
+				]
+			}
+		],
+		"normal_spawn_budget": 3130
+	},
+	"failures": [],
+	"scope": "Sixteen real ship/pilot start configurations; retry/reset isolation; PCM echo difference and actual beam-repeat damage; native dash-end pilot buff; collected-quantity healing; seeded warned matrix fixtures; eight enemy roles; controlled dense update/render sampling. Time, position and high-HP stress fixtures are explicitly injected. Not a full run, listening acceptance, human balance or a stable-FPS certification."
+}

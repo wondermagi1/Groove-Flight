@@ -1,0 +1,19 @@
+{
+	"checks": 322,
+	"facts": {
+		"deployment_hull_gaps": {
+			"1": 383.598449707031,
+			"3": 1805.53491210938,
+			"7": 526.61572265625
+		},
+		"placement": {
+			"accepted": 72,
+			"attempts": 96,
+			"centre_accepted": 24,
+			"centre_preferred": 24,
+			"preferred": 72
+		}
+	},
+	"failures": [],
+	"scope": "Production warned births across8headings,3wave layouts and4world positions; actual three-second deployment exclusion, player entering a warning, and optional native GPU captures. No human balance claim."
+}

@@ -1,0 +1,28 @@
+{
+	"checks": 8,
+	"facts": {
+		"preview": {
+			"fps": 24,
+			"peaks": {
+				"beams": 70,
+				"enemies": 600,
+				"hostile": 0,
+				"projectiles": 599
+			},
+			"scope": "Controlled clock; six level4 weapons, four primary stats40, invulnerability, muted master. PNG capture time is not gameplay frame time. Loadout is an explicit late-build fixture, not a claimed natural acquisition.",
+			"seconds": 8
+		}
+	},
+	"failures": [],
+	"images": [
+		"res://docs/screenshots/v22-laser-low.png",
+		"res://docs/screenshots/v22-laser-high.png",
+		"res://docs/screenshots/v22-pulse-high.png",
+		"res://docs/screenshots/v22-gilded_helix-high.png",
+		"res://docs/screenshots/v22-weave_cross-high.png",
+		"res://docs/screenshots/v22-crown_orbit-high.png",
+		"res://docs/screenshots/v22-attribute-shop.png"
+	],
+	"renderer": "forward_plus",
+	"scope": "Native GPU growth comparison, actual high-count trajectories, 4-stat inspector and optional controlled sequence capture. Human balance/listening/full-route acceptance is separate."
+}

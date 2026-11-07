@@ -1,8 +1,8 @@
-# V22：四属性弹数成长与独立弹头
+# V22：四属性弹数成长与上方出场
 
 2026-11-07，版本 `0.22.0-attribute-barrages`，分支 `codex/v22-attribute-barrages`。
 
-本轮按用户最后确认实现：敌群从我方上方、左上方、右上方出场；武器弹数与实弹、支援、能量、动力对应属性线性关联，品质提高也增加弹数；密集弹幕保留逐颗清楚的弹头与柔和光晕。
+本轮保留：敌群从我方上方、左上方、右上方出场；武器弹数与实弹、支援、能量、动力对应属性线性关联，品质提高也增加弹数。用户随后明确撤销刚才的弹头和光晕调整，已恢复调整前视觉。
 
 ## 发射数量
 
@@ -27,17 +27,17 @@
 
 棱镜光束高配示例：`50 = 基础1 + 能量40 + 品质6 + 强化3`。每一束都有独立起点与实际命中；不是反复在同一条线上加亮。光束命中使用空间格穿越查询，并按距离消耗穿透次数。电弧以不同近端目标分配起始分支，再继续各自跳跃。
 
-## 密度与光晕
+## 视觉回退范围
 
-密集实体弹改为短而完整的彩色弹头、很短的尾迹、局部柔光。弯曲弹道只绘制弹头后有限长度的真实路径，不再把整段历史轨迹连成亮带。柔光仍然保留；高密度时收敛强度，命中、炮口、爆破继续保留亮光反馈。低特效设置仍可关闭柔光，实际弹体不会被关闭。
+用户选择“只撤销刚才的弹头和光晕调整，保留属性弹数与上方出兵”。以下六个文件完整恢复到`94d8bf7`，并以Git逐文件对照确认一致：`scripts/weapon_visuals.gd`、`scripts/weapon_render.gd`、`scripts/weapon_emission.gd`、`shaders/weapon_body.gdshader`、`shaders/weapon_glow.gdshader`、`shaders/weapon_effect.gdshader`。
 
-直射弹用8列或12列组织，同次触发的后续排间隔45毫秒；四向编织弹同样错开发射排，最大普通弹数的列车在下一轮扫描前完成。高弹数激光束芯收细，起点横向保持间隔；四向折光继续各臂并排。星冕随数量扩展为3—8层。
+恢复调整前的弹头尺寸、长尾迹、完整曲线尾带、光晕、激光宽度、弹列间距和28毫秒排间隔。属性/品质弹数结算、额外真实光束、空间命中查询、上方出生与安全复查均保留。星冕随数量扩展的3—8层也保留。
 
 这些弹体真实飞行、命中、穿透或爆破，数量变化也会增加实际输出。此轮完成机制和视觉验证，八星自然成长曲线与真人难度仍需试玩调整。演示采用明确的后期高属性配装，不表示开局就有这份火力。
 
-![四向彩色短弹头与柔光](screenshots/v22-weave_cross-high.png)
+![恢复后的四向彩色弹流](screenshots/v22-weave_cross-high.png)
 
-![50束实际光束与间隙](screenshots/v22-laser-high.png)
+![恢复后的50束实际光束](screenshots/v22-laser-high.png)
 
 ![面板同步发射数量](screenshots/v22-attribute-shop.png)
 
@@ -53,7 +53,7 @@
 
 音序器仍为3轨×8格、每格0.125秒、一轮1秒。白点扫到起始格播放一次固定乐器声，同种武器不同实例可以叠奏。增加弹列不增加额外声音事件；四拍强弱和自动变调仍搁置。现有120份样本未替换。
 
-现版原始验证、硬件与受控场景范围保存在 [data-v22/SUMMARY.json](data-v22/SUMMARY.json)，包括15武器成长组合、真实弹体与逐束命中、原生GPU、敌群净空/包围、固定声音及反馈回归。性能录制与PNG导出分开执行。
+现版原始验证与受控场景范围保存在 [data-v22/SUMMARY.json](data-v22/SUMMARY.json)，包括15武器成长组合、真实弹体与逐束命中、原生GPU、敌群净空/包围、固定声音及反馈回归。撤销的视觉尝试及未完成的性能诊断保留在回退前备份中，不作为当前通过结果或性能结论。
 
 [8秒原生弹幕预览](video-v22/attribute-barrage-preview.mp4)采用1920×1080、受控时间、六把Lv.4武器、四主属性40、无敌和静音条件。用于查看密度、光晕和上方入场，不替代真人听感、平衡或持续帧率验收。
 
@@ -61,8 +61,10 @@
 
 - `scripts/projectile_growth.gd`：数量、品质、上限与面板公式。
 - `scripts/weapon_emission.gd`、`scripts/weapon_visuals.gd`：实际发射位置、排间距、弹道与独立美术参数。
-- `scripts/weapon_render.gd`、`shaders/weapon_*.gdshader`：弹头、短尾迹、局部光晕。
+- `scripts/weapon_render.gd`、`shaders/weapon_*.gdshader`：已恢复的弹头、尾迹与光晕。
 - `scripts/arsenal_screen.gd`：四主属性和真实发射数量。
 - `scripts/enemy_arrival.gd`、`scripts/main.gd`：上方候选、预告结束时的安全展开复查。
 
 本轮修改前上传并核验的快照：`codex/backup-20261107-before-attribute-volley`（`3410c45`）、`codex/backup-20261107-before-linear-weapon-growth`（`45f8ba2`）、`codex/backup-20261107-before-projectile-grains`（`94d8bf7`）。这些分支保留供回看。
+
+视觉回退前的完整尝试保存在 `codex/backup-20261107-before-projectile-rollback`（`c9b23da`），已上传并核验SHA。

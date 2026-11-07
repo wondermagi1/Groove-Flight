@@ -1,0 +1,145 @@
+{
+  "version": "0.22.0-attribute-barrages",
+  "date": "2026-11-07",
+  "backup_before_round": "3410c45babb73f41bb841f956c82b94e62488c7e",
+  "backup_before_visual_rollback": "c9b23da89b184ac52326ea7fb8cfa1ec65bc7d3b",
+  "visual_restore_source": "94d8bf75f9a3e95e165adffec4fbb410a0951b20",
+  "visual_files_verified_exact": [
+    "scripts/weapon_visuals.gd",
+    "scripts/weapon_render.gd",
+    "scripts/weapon_emission.gd",
+    "shaders/weapon_body.gdshader",
+    "shaders/weapon_glow.gdshader",
+    "shaders/weapon_effect.gdshader"
+  ],
+  "retained": [
+    "linear projectile growth from associated primary attribute",
+    "quality and refinement add actual shots",
+    "upper-left/above/upper-right safe births",
+    "one-second fixed-voice sequencer"
+  ],
+  "reports": [
+    {
+      "report": "selected-weapons.json",
+      "checks": 427,
+      "failures": [],
+      "validation_stage": "retained mechanics during this development round; visual-only rollback does not change their source",
+      "scope": "Original twelve plus three new weapons, exact fifteen-name roster, restored heavy, live inventory gate,320 real six-offer shops, retired-score migration and instrument PCM routing."
+    },
+    {
+      "report": "v22-projectile-growth.json",
+      "checks": 851,
+      "failures": [],
+      "validation_stage": "after visual rollback",
+      "scope": "All15weapons x4upgrade levels x5attribute values, unrelated attributes, real merge, visible caps, actual damaging rays/branches and train projectiles. Fixed controlled fixtures; no human balance claim."
+    },
+    {
+      "report": "prism-cross.json",
+      "checks": 96,
+      "failures": [],
+      "validation_stage": "after visual rollback",
+      "scope": "Production scan, four parallel beam groups, quality-scaled visible lane hits, penetration endpoint, track/aim invariance, real modifiers and renderer submission; controlled GPU image when available."
+    },
+    {
+      "report": "arsenal-combat.json",
+      "checks": 120,
+      "failures": [],
+      "validation_stage": "after visual rollback",
+      "scope": "Production methods under controlled position/time/high-HP fixtures:36weapon impacts, projectiles, attributes,7procs, inventory/shop currency callbacks. Native full-route timing/audio and human balance are separate."
+    },
+    {
+      "report": "contact-swarm.json",
+      "checks": 88,
+      "failures": [],
+      "validation_stage": "retained mechanics during this development round; visual-only rollback does not change their source",
+      "scope": "Production square/circle births from upper-left, above and upper-right with boundary deferral, ordinary attack gates, half-second pacing/pause, 30/60/120Hz agreement and actual swept contact damage. Controlled fixtures, not a complete campaign or human balance review."
+    },
+    {
+      "report": "v21-spawn-safety.json",
+      "checks": 322,
+      "failures": [],
+      "validation_stage": "retained mechanics during this development round; visual-only rollback does not change their source",
+      "scope": "Production warned births across8headings,3wave layouts and4world positions; actual three-second deployment exclusion, player entering a warning, and optional native GPU captures. No human balance claim."
+    },
+    {
+      "report": "v21-crowd.json",
+      "checks": 10,
+      "failures": [],
+      "validation_stage": "retained mechanics during this development round; visual-only rollback does not change their source",
+      "scope": "Actual production600-unit spawn, smooth3second deployment and half-beat encirclement/close approach around a moving invulnerable player. Pairwise hull-circle margins sampled every5frames; safe relative swept reservations prevent inter-frame crossing. No human difficulty claim."
+    },
+    {
+      "report": "v21-encirclement.json",
+      "checks": 9,
+      "failures": [],
+      "validation_stage": "retained mechanics during this development round; visual-only rollback does not change their source",
+      "scope": "Real circular birth, radial expansion, nearest-first task assignment and52.5seconds of world-space half-beat routing. Camera fixed, no shooting, invulnerable player; not human balance certification."
+    },
+    {
+      "report": "fleet-density.json",
+      "checks": 229,
+      "failures": [],
+      "validation_stage": "retained mechanics during this development round; visual-only rollback does not change their source",
+      "scope": "Sixteen real ship/pilot start configurations; retry/reset isolation; PCM echo difference and actual beam-repeat damage; native dash-end pilot buff; collected-quantity healing; seeded warned matrix fixtures; eight enemy roles; controlled dense update/render sampling. Time, position and high-HP stress fixtures are explicitly injected. Not a full run, listening acceptance, human balance or a stable-FPS certification."
+    },
+    {
+      "report": "weapon-cycle.json",
+      "checks": 177,
+      "failures": [],
+      "validation_stage": "retained mechanics during this development round; visual-only rollback does not change their source",
+      "scope": "Pure production scheduling of every active weapon for eight seconds; separate UID scheduling, 1-second deadlines, fixed voices, damage conservation and pure snapshot/clone behavior."
+    },
+    {
+      "report": "composer-score.json",
+      "checks": 112,
+      "failures": [],
+      "validation_stage": "retained mechanics during this development round; visual-only rollback does not change their source",
+      "scope": "Pure score/editor transactions, boundedJSONsave/load, actualSMF0/1 byte fixtures/runningstatus/chords/sustain/tempo handling/corruptinput, MIDIandJSONroundtrip, sharedschedule. No audio or UI/nativeflight acceptance."
+    },
+    {
+      "report": "electronic-audio-logic.json",
+      "checks": 51,
+      "failures": [],
+      "validation_stage": "retained mechanics during this development round; visual-only rollback does not change their source",
+      "scope": "Fixed voices for the active weapon roster, same-type12/34 native PCM overlap and live fire, zero-volume/track mute, live/paused PCM refresh and isolated preview compilation. Native fixture uses invulnerability; no human listening or balance claim."
+    },
+    {
+      "report": "rhythm-feedback.json",
+      "checks": 40,
+      "failures": [],
+      "validation_stage": "retained mechanics during this development round; visual-only rollback does not change their source",
+      "scope": "Production Main callbacks, native audio transport, fixed-voice recompile, death/receive/pickup feedback and bounded drum scheduling. Invulnerable native smoke fixture; no human difficulty or subjective listening claim."
+    },
+    {
+      "report": "v21-spectacle.json",
+      "checks": 76,
+      "failures": [],
+      "validation_stage": "retained mechanics during this development round; visual-only rollback does not change their source",
+      "scope": "Actual new weapon trajectories/damage, all15visual profiles, matrix/circular wave routes, real density/population/renderer cap, player scale and received-hit guard lifecycle. Controlled GPU captures when enabled."
+    },
+    {
+      "report": "v22-native.json",
+      "checks": 8,
+      "failures": [],
+      "validation_stage": "after visual rollback",
+      "scope": "Native GPU growth comparison, actual high-count trajectories, 4-stat inspector and optional controlled sequence capture. Human balance/listening/full-route acceptance is separate."
+    }
+  ],
+  "audio_assets": {
+    "samples_checked": 120,
+    "all_sha256_match_uploaded_v21_1": true,
+    "failures": []
+  },
+  "preview": {
+    "fps": 24,
+    "peaks": {
+      "beams": 70,
+      "enemies": 600,
+      "hostile": 0,
+      "projectiles": 599
+    },
+    "scope": "Controlled clock; six level4 weapons, four primary stats40, invulnerability, muted master. PNG capture time is not gameplay frame time. Loadout is an explicit late-build fixture, not a claimed natural acquisition.",
+    "seconds": 8
+  },
+  "limits": "Visual attempt reverted as requested. Performance diagnostic from that rejected attempt is not a current passing result. No new sustained FPS, natural late-build acquisition, human listening or full-campaign balance claim."
+}

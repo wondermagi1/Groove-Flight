@@ -1,6 +1,6 @@
 # Groove Flight
 
-当前版本 **0.22.0-attribute-barrages**：15种武器的实际弹数随实弹、支援、能量、动力对应属性线性成长，品质提高也增加弹数。短弹头、短尾迹与局部柔光让密集弹幕逐颗可辨；激光有独立束芯与间隙。敌群改从上方、左上方、右上方红色预警后出场，出生与展开路径继续避开玩家。音序仍为1秒固定声音，同种武器允许重奏。见[本版说明与预览](docs/V22_ATTRIBUTE_BARRAGES.md)、[敌群机制与建模文档](docs/ENEMY_FORMATIONS_AND_ENCIRCLEMENT.md)与[当前接手说明](docs/CURRENT_HANDOFF.md)。
+当前版本 **0.22.0-attribute-barrages**：15种武器的实际弹数随实弹、支援、能量、动力对应属性线性成长，品质提高也增加弹数。按用户确认，弹头、尾迹、光晕和弹列间隔恢复到此次视觉微调前的版本。敌群从上方、左上方、右上方红色预警后出场，出生与展开路径继续避开玩家。音序仍为1秒固定声音，同种武器允许重奏。见[本版说明与预览](docs/V22_ATTRIBUTE_BARRAGES.md)、[敌群机制与建模文档](docs/ENEMY_FORMATIONS_AND_ENCIRCLEMENT.md)与[当前接手说明](docs/CURRENT_HANDOFF.md)。
 
 后续制作遵循[当前固定声音约定](docs/RHYTHM_CONTRACT.md)。四拍强弱与自动旋律暂时搁置，相关旧素材保留。
 
