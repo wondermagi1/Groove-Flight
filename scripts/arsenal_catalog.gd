@@ -160,9 +160,9 @@ static func _build_weapons() -> void:
 		["recorded_crude","裂响火弹","pulse",15.,2,790.,1.7,.14,1,0.,0.,0,1,2,1,31,"noise",.17,.42,0,-4.],
 		["recorded_ballistic","实弹连奏炮","pulse",11.,3,900.,1.55,.12,1,0.,0.,0,1,2,1,34,"noise",.12,.38,0,0.],
 		["recorded_heavy","终压攻城铳","rail",88.,1,1900.,1.65,.018,14,90.,0.,0,1,3,3,52,"triangle",.42,2.5,-1,5.],
-		["gilded_helix","鎏金螺旋阵","nova",6.5,24,570.,2.0,TAU,1,0.,0.,0,2,3,2,42,"triangle",.22,.7,1,0.],
-		["weave_cross","虹织十字炮","pulse",4.8,32,740.,1.75,0.,1,0.,0.,0,2,3,3,54,"sine",.24,1.4,1,0.],
-		["crown_orbit","星冕回旋阵","orbit",8.,12,245.,3.0,TAU,3,0.,0.,0,2,3,2,44,"sine",.35,.4,1,0.]
+		["gilded_helix","鎏金螺旋阵","nova",3.25,48,570.,2.0,TAU,1,0.,0.,0,2,3,2,42,"triangle",.22,.7,1,0.],
+		["weave_cross","虹织十字炮","pulse",2.4,64,740.,1.75,0.,1,0.,0.,0,2,3,3,54,"sine",.24,1.4,1,0.],
+		["crown_orbit","星冕回旋阵","orbit",6.,16,245.,3.0,TAU,3,0.,0.,0,2,3,2,44,"sine",.35,.4,1,0.]
 	]
 	var recorded_voices={"recorded_crude":"rec_crude","recorded_ballistic":"rec_ballistic"}
 	var recorded_sources={
@@ -234,7 +234,7 @@ static func weapon_description(data: Dictionary) -> String:
 	if str(data.get("emission",""))=="prism_cross": parts.append("机头前方朝四个斜角同时发射彩色光束；基础每方向3道并排平行光束")
 	if str(data.id)=="gilded_helix": parts.append("金色羽状弹向四周展开并弯转，形成双层螺旋弹幕")
 	elif str(data.id)=="weave_cross": parts.append("四个方向同时射出彩色编织弹流，弹道左右交错")
-	elif str(data.id)=="crown_orbit": parts.append("十二枚星冕弹环绕战机形成三层防线，随战机移动")
+	elif str(data.id)=="crown_orbit": parts.append("十六枚星冕弹环绕战机形成三层防线，随战机移动")
 	if data.has("quality"):
 		parts.append("品质%s"%str(data.get("quality_name",QUALITY_NAMES[clampi(int(data.quality),0,2)])))
 		parts.append("发射 %d + %s属性 × %.1f 颗弹丸"%[int(data.count),{"ballistic":"实弹","energy":"能量","power":"动力","support":"支援"}.get(str(data.attr),str(data.attr)),float(data.get("attribute_count_scale",0.))])

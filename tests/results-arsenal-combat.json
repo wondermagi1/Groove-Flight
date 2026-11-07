@@ -51,8 +51,8 @@
 				"pitch": 0
 			},
 			"crown_orbit": {
-				"count": 12,
-				"damage": 16.0,
+				"count": 16,
+				"damage": 18.0,
 				"family": "orbit",
 				"pitch": 0
 			},
@@ -87,7 +87,7 @@
 				"pitch": 0
 			},
 			"gilded_helix": {
-				"count": 24,
+				"count": 48,
 				"damage": 26.0,
 				"family": "nova",
 				"pitch": 0
@@ -249,8 +249,8 @@
 				"pitch": 0
 			},
 			"weave_cross": {
-				"count": 32,
-				"damage": 38.4000000000233,
+				"count": 64,
+				"damage": 28.7999999999302,
 				"family": "pulse",
 				"pitch": 0
 			}

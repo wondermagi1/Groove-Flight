@@ -17,10 +17,13 @@ static func choose(game,count: int,kind: String) -> Dictionary:
 	var shape=layout(Vector2.ZERO,count,kind)
 	var half: Vector2=shape.rect.size*.5
 	var view: Rect2=game.visible_world().grow(-45.)
+	# Keep whole birth grids in the battle area between the HUD and sequencer.
+	view.position.y+=72./game.camera.zoom.y
+	view.size.y-=200./game.camera.zoom.y
 	var start_angle=game.rng.randf()*TAU
 	for attempt in range(16):
 		var axis=Vector2.from_angle(start_angle+float(attempt)*TAU/16.)
-		var reach=860.
+		var reach=1500.
 		if axis.x>.001: reach=minf(reach,(view.end.x-game.player.x-half.x)/axis.x)
 		elif axis.x<-.001: reach=minf(reach,(view.position.x-game.player.x+half.x)/axis.x)
 		if axis.y>.001: reach=minf(reach,(view.end.y-game.player.y-half.y)/axis.y)
