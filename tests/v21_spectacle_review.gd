@@ -108,7 +108,7 @@ func scale_and_density_checks() -> void:
 	check(game.spawn_telegraphs.size()==1 and game.spawn_telegraphs[0].count==600,"late-wave production reserves a single600enemy matrix")
 	var giant: Dictionary=game.spawn_telegraphs[0] if not game.spawn_telegraphs.is_empty() else {}
 	if not giant.is_empty():
-		check(giant.columns==25 and giant.rows==24 and game.visible_world().encloses(giant.rect),"the600enemy matrix is fully filled and fits the visible battlefield")
+		check(giant.columns==25 and giant.rows==24 and game.visible_world().intersection(giant.rect).get_area()/giant.rect.get_area()>.5,"the600enemy matrix is complete and its warning remains mostly visible at a safe screen edge")
 		check(float(giant.spacing)*game.camera.zoom.x>=28. and float(giant.spacing)*game.camera.zoom.x<=35.,"1920x1080 matrix centre spacing is about30to35screen pixels")
 		game.music.timeline=.81; game.update_spawn_telegraphs()
 		check(game.enemies.size()==600 and game.enemies.all(func(e): return e.kind==str(giant.kind)),"all600actual enemies appear together with one model")

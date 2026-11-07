@@ -83,11 +83,12 @@ func spawning_checks() -> void:
 	var sectors: Dictionary={}
 	for i in range(256):
 		game.enemies.clear(); game.by_id.clear(); game.spawned=0; game.spawn_telegraphs.clear()
+		game.movement_facing=Vector2.from_angle(float(i%8)*TAU/8.)
 		game.spawn_for_step(0)
 		for plan in game.spawn_telegraphs:
 			var entry: Vector2=plan.center-game.player
 			sectors[posmod(floori((entry.angle()+PI)/TAU*8.),8)]=true
-	check(sectors.size()==8,"seeded production spawning reaches all eight directions around a stationary ship")
+	check(sectors.size()==8,"side/rear-preferred arrivals cover all eight world directions as the ship heading changes")
 	facts.radial_sectors=sectors.size()
 	fixture(); game.free_music_run=true; game.is_preview=false; game.spawn_for_step(0)
 	game.music.timeline=.81; game.update_spawn_telegraphs()

@@ -1,6 +1,9 @@
 extends RefCounted
 ## Birth layout only. These plans never constrain an enemy after it appears.
 const WARNING_SECONDS=.8
+const MANEUVER=preload("res://scripts/enemy_maneuver.gd")
+const PLAYER_CLEARANCE=MANEUVER.PLAYER_BIRTH_GAP
+const FORWARD_CLEARANCE=850.
 const RADII={"mote":17.,"armor":18.,"shooter":17.,"dart":16.,"splitter":18.,"sentinel":18.,"lance":18.,"mirror":18.}
 const CLEARANCE={"mote":25.,"armor":21.,"shooter":22.5,"dart":24.,"splitter":23.5,"sentinel":24.,"lance":31.5,"mirror":24.}
 
@@ -15,6 +18,7 @@ static func hull_radius(kind: String) -> float:
 	return float(RADII.get(kind,17.))
 
 static func is_clear(game,plan: Dictionary) -> bool:
+	if not player_safe(game,plan): return false
 	for enemy in game.enemies:
 		if float(enemy.hp)<=0.: continue
 		var motion: Dictionary=enemy.get("march",{})
@@ -23,6 +27,22 @@ static func is_clear(game,plan: Dictionary) -> bool:
 		var swept=Rect2(start.min(finish),(finish-start).abs()).grow(clearance(str(enemy.kind))+12.)
 		if plan.rect.intersects(swept): return false
 	return true
+
+static func _crosses_rect(start: Vector2,finish: Vector2,rect: Rect2) -> bool:
+	if rect.has_point(start) or rect.has_point(finish): return true
+	var corners=[rect.position,Vector2(rect.end.x,rect.position.y),rect.end,Vector2(rect.position.x,rect.end.y)]
+	for i in range(4):
+		if Geometry2D.segment_intersects_segment(start,finish,corners[i],corners[(i+1)%4])!=null: return true
+	return false
+
+static func player_safe(game,plan: Dictionary) -> bool:
+	if not plan.has("deployment"): return false
+	var swept: Rect2=plan.deployment.swept
+	var closest=Vector2(game.player).clamp(swept.position,swept.end)
+	if closest.distance_to(game.player)<PLAYER_CLEARANCE-.01: return false
+	var heading: Vector2=game.movement_facing.normalized()
+	if heading.length_squared()<.5: heading=Vector2.UP
+	return not _crosses_rect(game.player,game.player+heading*FORWARD_CLEARANCE,Rect2(plan.rect).grow(90.))
 
 static func birth_grid(enemies: Array) -> Dictionary:
 	var grid: Dictionary={}
@@ -89,20 +109,30 @@ static func choose(game,count: int,kind: String,style: String="battalion_grid") 
 	# Keep whole birth grids in the battle area between the HUD and sequencer.
 	view.position.y+=72./game.camera.zoom.y
 	view.size.y-=200./game.camera.zoom.y
+	# Large matrices can straddle a screen edge while retaining the red cue.
+	# This leaves room for the player-side clearance instead of centring on them.
+	if count>=300: view=view.grow(320.)
 	var start_angle=game.rng.randf()*TAU
-	for attempt in range(20):
-		var axis=Vector2.from_angle(start_angle+float(attempt)*TAU/16.) if attempt<16 else Vector2.from_angle(float(attempt-16)*PI*.5)
-		var reach=1500.
-		if axis.x>.001: reach=minf(reach,(view.end.x-game.player.x-half.x)/axis.x)
-		elif axis.x<-.001: reach=minf(reach,(view.position.x-game.player.x+half.x)/axis.x)
-		if axis.y>.001: reach=minf(reach,(view.end.y-game.player.y-half.y)/axis.y)
-		elif axis.y<-.001: reach=minf(reach,(view.position.y-game.player.y+half.y)/axis.y)
+	var heading: Vector2=game.movement_facing.normalized()
+	for attempt in range(80):
+		var slot=attempt%20
+		var axis=Vector2.from_angle(start_angle+float(slot)*TAU/16.) if slot<16 else Vector2.from_angle(float(slot-16)*PI*.5)
+		if attempt%40<20 and axis.dot(heading)>.45: continue
+		var search_view=view.grow(1400.) if attempt>=40 else view
+		var reach=3200. if attempt>=40 else 1500.
+		if axis.x>.001: reach=minf(reach,(search_view.end.x-game.player.x-half.x)/axis.x)
+		elif axis.x<-.001: reach=minf(reach,(search_view.position.x-game.player.x+half.x)/axis.x)
+		if axis.y>.001: reach=minf(reach,(search_view.end.y-game.player.y-half.y)/axis.y)
+		elif axis.y<-.001: reach=minf(reach,(search_view.position.y-game.player.y+half.y)/axis.y)
 		if reach<400.: continue
 		var center: Vector2=game.player+axis*reach*game.rng.randf_range(.94 if count>=300 else .78,.995 if count>=300 else .94)
 		var area=layout(center,count,kind,style)
 		var world: Rect2=game.field().grow(-20.)
 		if not world.encloses(area.rect): continue
-		if area.rect.grow(90. if count>=300 else 150.).has_point(game.player): continue
+		var deployment=MANEUVER.deployment_space(center,area.points,game.player,style)
+		if deployment.is_empty(): continue
+		area.deployment=deployment
+		if not player_safe(game,area): continue
 		var occupied=false
 		for pending in game.spawn_telegraphs:
 			if area.rect.grow(40.).intersects(pending.rect): occupied=true; break
@@ -114,11 +144,19 @@ static func choose(game,count: int,kind: String,style: String="battalion_grid") 
 		area.center=center; return area
 	return {}
 
-static func draw_warning(canvas: CanvasItem,plan: Dictionary,time: float) -> void:
+static func draw_warning(canvas: CanvasItem,plan: Dictionary,time: float,visible: Rect2=Rect2()) -> void:
 	var rect: Rect2=plan.rect
 	var progress=clampf((time-float(plan.born))/WARNING_SECONDS,0.,1.)
 	var pulse=.58+.22*sin(progress*TAU*2.)
 	var red=Color("ff4968")
+	if visible.size.length_squared()>1. and visible.intersection(rect).get_area()<rect.get_area()*.08:
+		var safe=Rect2(visible.position+Vector2(visible.size.x*.035,visible.size.y*.14),visible.size-Vector2(visible.size.x*.07,visible.size.y*.31))
+		var axis=(Vector2(plan.center)-safe.get_center()).normalized()
+		var half=safe.size*.5
+		var reach=minf(half.x/maxf(.001,absf(axis.x)),half.y/maxf(.001,absf(axis.y)))
+		var at=safe.get_center()+axis*reach; var side=axis.orthogonal()
+		canvas.draw_colored_polygon(PackedVector2Array([at+axis*17.,at-axis*12.+side*12.,at-axis*12.-side*12.]),Color(red,pulse))
+		canvas.draw_arc(at,27.+progress*8.,0.,TAU,24,Color(red,pulse*.65),2.,true)
 	if str(plan.get("shape",""))=="radial_bloom":
 		var radius=float(plan.radius)*lerpf(.2,1.,progress)
 		canvas.draw_circle(plan.center,radius,Color(red,.025))

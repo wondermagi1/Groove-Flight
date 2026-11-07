@@ -1,0 +1,24 @@
+{
+	"checks": 10,
+	"facts": {
+		"deployment": {
+			"area_ratio": 9.27400047805958,
+			"lower_mean_y": 856.584798177083,
+			"seconds": 3.0,
+			"stuck": 0,
+			"upper_mean_y": -856.584757486979
+		},
+		"final_mean_distance": 2718.73540902456,
+		"final_pressure_distance": 472.202840447426,
+		"initial_mean_distance": 1213.9932728068,
+		"initial_pressure_distance": 817.961386680603,
+		"minimum_clearance_margin_world": -0.00042724609375,
+		"sample_rate": 30,
+		"simulated_seconds": 15.0,
+		"units": 600,
+		"units_moved_over20world": 600,
+		"waiting_at_end": 1
+	},
+	"failures": [],
+	"scope": "Actual production600-unit spawn, smooth3second deployment and half-beat encirclement/close approach around a moving invulnerable player. Pairwise hull-circle margins sampled every5frames; safe relative swept reservations prevent inter-frame crossing. No human difficulty claim."
+}

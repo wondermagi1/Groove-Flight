@@ -1,0 +1,66 @@
+{
+  "version": "0.21.1-safe-arrivals",
+  "date": "2026-11-07",
+  "backup_before_changes": "50dd33186c059df83eb30d4805ec55130bb27118",
+  "baseline": "../data-v21/SUMMARY.json",
+  "rules": {
+    "near_clearance_world": 360,
+    "forward_corridor_world": 850,
+    "preferred_side_rear": true,
+    "exclude_birth_and_deployment_sweep": true,
+    "recheck_on_materialization": true,
+    "offscreen_red_indicator": true
+  },
+  "reports": [
+    {
+      "report": "v21-spawn-safety.json",
+      "checks": 394,
+      "failures": [],
+      "scope": "Production warned births across8headings,3wave layouts and4world positions; actual three-second deployment exclusion, player entering a warning, and optional native GPU captures. No human balance claim."
+    },
+    {
+      "report": "contact-swarm.json",
+      "checks": 128,
+      "failures": [],
+      "scope": "Restored production radial spawning and original formations, all eight directions, ordinary attack gates, half-second pacing/pause, 30/60/120Hz agreement and actual swept contact damage. Controlled fixtures, not a complete campaign or human balance review."
+    },
+    {
+      "report": "v21-crowd.json",
+      "checks": 10,
+      "failures": [],
+      "scope": "Actual production600-unit spawn, smooth3second deployment and half-beat encirclement/close approach around a moving invulnerable player. Pairwise hull-circle margins sampled every5frames; safe relative swept reservations prevent inter-frame crossing. No human difficulty claim."
+    },
+    {
+      "report": "v21-encirclement.json",
+      "checks": 9,
+      "failures": [],
+      "scope": "Real circular birth, radial expansion, nearest-first task assignment and52.5seconds of world-space half-beat routing. Camera fixed, no shooting, invulnerable player; not human balance certification."
+    },
+    {
+      "report": "v21-spectacle.json",
+      "checks": 76,
+      "failures": [],
+      "scope": "Actual new weapon trajectories/damage, all15visual profiles, matrix/circular wave routes, real density/population/renderer cap, player scale and received-hit guard lifecycle. Controlled GPU captures when enabled."
+    },
+    {
+      "report": "fleet-density.json",
+      "checks": 229,
+      "failures": [],
+      "scope": "Sixteen real ship/pilot start configurations; retry/reset isolation; PCM echo difference and actual beam-repeat damage; native dash-end pilot buff; collected-quantity healing; seeded warned matrix fixtures; eight enemy roles; controlled dense update/render sampling. Time, position and high-HP stress fixtures are explicitly injected. Not a full run, listening acceptance, human balance or a stable-FPS certification."
+    },
+    {
+      "report": "arsenal-combat.json",
+      "checks": 120,
+      "failures": [],
+      "scope": "Production methods under controlled position/time/high-HP fixtures:36weapon impacts, projectiles, attributes,7procs, inventory/shop currency callbacks. Native full-route timing/audio and human balance are separate."
+    },
+    {
+      "report": "prism-cross.json",
+      "checks": 88,
+      "failures": [],
+      "scope": "Production scan, four parallel beam groups, twelve visible lane hits, penetration endpoint, track/aim invariance, real modifiers and renderer submission; controlled GPU image when available."
+    }
+  ],
+  "check_total": 1054,
+  "scope": "Current targeted reruns. Older V21 weapon/audio and performance baselines are linked separately; old performance numbers are not claimed as new measurements."
+}

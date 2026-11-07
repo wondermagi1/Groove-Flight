@@ -1,6 +1,6 @@
 # Groove Flight
 
-当前版本 **0.21.0-fleet-spectacle**：原有12种武器保留并新增3种；普通敌机同型号方阵/圆阵出场，方阵先向大战场平滑疏散，中部扇形过渡，近端进攻、远端绕行包围。加入舰体厚度与蓝白受击保护场；音序仍为1秒固定声音，同种武器允许重奏。见[当前版本说明](docs/V21_FLEET_SPECTACLE.md)、[敌群机制与建模文档](docs/ENEMY_FORMATIONS_AND_ENCIRCLEMENT.md)与[当前接手说明](docs/CURRENT_HANDOFF.md)。
+当前版本 **0.21.1-safe-arrivals**：敌群出生与展开路径避开玩家，侧后方优先，预警后复查位置。见[出生安全说明](docs/V21_SAFE_ARRIVALS.md)。原有12种武器保留并新增3种；普通敌机同型号方阵/圆阵出场，方阵先向大战场平滑疏散，中部扇形过渡，近端进攻、远端绕行包围。加入舰体厚度与蓝白受击保护场；音序仍为1秒固定声音，同种武器允许重奏。见[当前版本说明](docs/V21_FLEET_SPECTACLE.md)、[敌群机制与建模文档](docs/ENEMY_FORMATIONS_AND_ENCIRCLEMENT.md)与[当前接手说明](docs/CURRENT_HANDOFF.md)。
 
 后续制作遵循[当前固定声音约定](docs/RHYTHM_CONTRACT.md)。四拍强弱与自动旋律暂时搁置，相关旧素材保留。
 

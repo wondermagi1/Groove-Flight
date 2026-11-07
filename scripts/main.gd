@@ -1058,6 +1058,7 @@ func update_spawn_telegraphs() -> void:
 			# clear location or wait; never materialize a matrix on occupied hulls.
 			spawn_telegraphs.remove_at(i)
 			var replacement=ARRIVAL.choose(self,int(plan.count),str(plan.kind),str(plan.get("shape","battalion_grid")))
+			if replacement.is_empty(): continue
 			for key in replacement: plan[key]=replacement[key]
 			plan.born=music.timeline; plan.deadline=music.timeline+ARRIVAL.WARNING_SECONDS
 			spawn_telegraphs.append(plan); continue
@@ -1070,7 +1071,7 @@ func update_spawn_telegraphs() -> void:
 			enemy.angle=(Vector2(enemy.at)-Vector2(plan.center)).angle() if str(plan.get("shape",""))=="radial_bloom" else (player-Vector2(enemy.at)).angle()
 			members.append(enemy)
 			if bool(plan.wave_budget): spawned+=1
-		SWARM.MANEUVER.assign_batch(members,plan.center,player,visible_world(),music.timeline,str(plan.get("shape","battalion_grid")))
+		SWARM.MANEUVER.assign_batch(members,plan.center,player,visible_world(),music.timeline,str(plan.get("shape","battalion_grid")),plan.deployment)
 		spawn_telegraphs.remove_at(i)
 		sound("spawn",-21.)
 
@@ -1573,7 +1574,7 @@ func _draw() -> void:
 	fleet_batch.visible=batch
 	if batch: fleet_batch.update_fleet(enemies,visible_rect)
 	draw_rect(field(),Color(.10,.29,.49,.40),false,5.)
-	for plan in spawn_telegraphs: ARRIVAL.draw_warning(self,plan,music.timeline)
+	for plan in spawn_telegraphs: ARRIVAL.draw_warning(self,plan,music.timeline,visible_world())
 	if is_preview and preview_show_ranges: draw_preview_ranges()
 	for item in pickups:
 		var color=Color("80efb1") if item.heal else Color("f4d88b")

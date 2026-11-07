@@ -170,10 +170,10 @@ func capture_spawn(seed_value: int,at: Vector2,heading: Vector2) -> Array:
 	var legal=true; var outside=true; var forward=0
 	for enemy in game.enemies:
 		legal=legal and game.field().has_point(enemy.at)
-		outside=outside and (view.has_point(enemy.at) if game.SWARM.is_ordinary(enemy) else true)
+		outside=outside and (Vector2(enemy.at).distance_to(game.player)>360. if game.SWARM.is_ordinary(enemy) else true)
 		if (enemy.at-at).dot(heading)>0: forward+=1
 		snapshot.append({"kind":str(enemy.kind),"at":enemy.at})
-	check(legal and outside,"warned birth matrices stay in world and inside the visible battlefield / "+str(at))
+	check(legal and outside,"warned birth matrices stay in world and leave nearby player space clear / "+str(at))
 	if at==Vector2.ZERO:
 		check(game.enemies.size()>50,"dense scheduled batches materially exceed the previous five-at-a-time trickle")
 		check(game.enemies.filter(func(e): return game.SWARM.is_ordinary(e)).all(func(e): return e.has("maneuver") and not e.has("formation")),"born matrices receive independent attack/encirclement tasks")
