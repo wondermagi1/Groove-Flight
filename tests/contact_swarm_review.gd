@@ -86,9 +86,9 @@ func spawning_checks() -> void:
 	check(sectors.size()==8,"seeded production spawning reaches all eight directions around a stationary ship")
 	facts.radial_sectors=sectors.size()
 	fixture(); game.free_music_run=true; game.is_preview=false; game.spawn_for_step(0)
-	check(game.enemies.size()==6 and game.enemies.all(func(e): return not game.visible_world().grow(90.).has_point(e.at)),"free music mode restores its previous entry positions")
+	check(game.enemies.size()==16 and game.enemies.all(func(e): return e.formation.style=="battalion_grid" and not game.visible_world().grow(90.).has_point(e.at)),"free music mode uses square battalions with outside-screen entries")
 	fixture(); game.wave=game.wave_count(); game.is_preview=false; game.spawn_for_step(0)
-	check(game.enemies.size()==3 and game.enemies.all(func(e): return not game.visible_world().grow(90.).has_point(e.at)),"ordinary boss reinforcements restore their previous radial entries")
+	check(game.enemies.size()==9 and game.enemies.all(func(e): return e.formation.style=="battalion_grid" and not game.visible_world().grow(90.).has_point(e.at)),"ordinary boss reinforcements use square battalions with radial entries")
 
 func march_checks() -> void:
 	fixture(); var enemy=game.spawn_enemy("mote",Vector2(0,-300)); enemy.speed=100.

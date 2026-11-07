@@ -14,9 +14,9 @@ const PROFILES={
 	"beam_split":{"size":Vector2(80,12),"tail":280.,"width":4.,"color":Color("e1aaff")},
 	"rail_horizon":{"size":Vector2(202,15),"tail":560.,"width":6.,"color":Color("fff1c2")},
 	"recorded_heavy":{"size":Vector2(114,17),"tail":340.,"width":5.,"color":Color("ffcda1")},
-	"gilded_helix":{"style":0,"size":Vector2(53,10),"tail":165.,"width":2.7,"variant":.92,"color":Color("fff09a")},
-	"weave_cross":{"style":0,"size":Vector2(47,11),"tail":145.,"width":2.7,"variant":.92,"color":Color("b2ffb4")},
-	"crown_orbit":{"style":0,"size":Vector2(54,12),"tail":120.,"width":3.,"variant":.92,"color":Color("9fffe2")}
+	"gilded_helix":{"style":1,"size":Vector2(48,16),"tail":165.,"width":3.2,"variant":.92,"color":Color("fff09a")},
+	"weave_cross":{"style":1,"size":Vector2(42,16),"tail":145.,"width":3.,"variant":.92,"color":Color("b2ffb4")},
+	"crown_orbit":{"style":1,"size":Vector2(46,18),"tail":120.,"width":3.4,"variant":.92,"color":Color("9fffe2")}
 }
 
 static func profile(id: String) -> Dictionary:

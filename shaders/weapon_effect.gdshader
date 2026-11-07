@@ -35,10 +35,9 @@ void fragment(){
    core=exp(-length(p*vec2(1.,2.))*15.);
    glow=cone*.8+exp(-length(p)*7.)*.3;
   }else{
-   float shell=exp(-abs(r-(.54+t*.22))*34.);
-   float outer=exp(-abs(r-(.20+t*.72))*52.);
-   core=exp(-r*13.)*max(0.,1.-t*4.)*.12;
-   glow=shell*.62+outer*.82+exp(-abs(r-.72)*7.)*.06*(1.-t);
+   core=exp(-r*r*55.)*(1.-t)*.95;
+   float spokes=pow(max(0.,cos(a*6.)),26.);
+   glow=exp(-r*r*6.)*.32+spokes*exp(-r*6.)*(1.-t)*.45;
   }
  }
  float edge=1.-smoothstep(.86,1.,(mode<=1 ? abs(p.y) : max(abs(p.x),abs(p.y))));

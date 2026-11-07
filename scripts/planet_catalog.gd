@@ -116,10 +116,7 @@ static func route(id: String,difficulty: int=0) -> Array[Dictionary]:
 		var elite=wave==3 or (index>=3 and wave==6)
 		if hard: elite=elite or wave in [1,4,7]
 		var formation=str(FORMATIONS[index][wave])
-		formation=["battalion_grid","battalion_diamond","battalion_bands"][(wave+index)%3]
-		if hard:
-			if wave in [2,5,8]: formation="dual_spiral"
-			elif wave in [3,6,7]: formation="prism_ring"
+		formation="battalion_grid"
 		var progression=float(wave)/maxf(1.,float(WAVE_COUNTS[index]-2))
 		var budget=int(round(float(BUDGETS[index][wave])*(2.2+.35*progression)*(1.18 if hard else 1.)))
 		result.append({"name":str(WAVE_NAMES[index][wave]),"seconds":start_seconds+2.*wave,"budget":budget,"elite":elite,"formation":formation,"difficulty":clampi(difficulty,0,1)})

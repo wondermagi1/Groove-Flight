@@ -1002,16 +1002,12 @@ func spawn_for_step(serial: int) -> void:
 	if is_preview: return
 	if free_music_run:
 		if serial%16!=0 or enemies.size()>=120: return
-		var outward=movement_facing.rotated(rng.randf_range(-1.2,1.2)); var origin=spawn_origin(outward)
-		for i in range(6):
-			var point=PLAN.formation(origin,outward,i,6,"crescent")
-			spawn_enemy(PLANETS.kind(active_planet,mini(8,int(serial/64)),i+serial,0),safe_spawn_position(point,outward))
+		spawn_wave_group(16,"battalion_grid")
 		return
 	if serial%4!=0: return
 	if wave==wave_count():
 		if not boss_down and serial%16==0:
-			for i in range(3+int(PLANETS.planet(active_planet).index)):
-				if enemies.size()<MAX_ENEMIES: spawn_enemy("dart" if i%3==0 else "mote")
+			spawn_wave_group(9,"battalion_grid",true)
 		return
 	var config=wave_profile(); var elapsed=music.timeline-wave_start
 	receipt.count("spawn_checks")
@@ -1023,7 +1019,7 @@ func spawn_for_step(serial: int) -> void:
 	if config.elite and not elite_spawned and elapsed>float(config.seconds)*.40 and enemies.size()<MAX_ENEMIES:
 		elite_spawned=true; spawn_enemy("elite")
 
-func spawn_wave_group(amount: int,style: String) -> void:
+func spawn_wave_group(amount: int,style: String,boss_support: bool=false) -> void:
 	amount=mini(amount,MAX_ENEMIES-enemies.size())
 	if amount<=0: return
 	var outward=Vector2.from_angle(rng.randf()*TAU)
@@ -1035,7 +1031,8 @@ func spawn_wave_group(amount: int,style: String) -> void:
 	for i in range(amount):
 		if enemies.size()>=MAX_ENEMIES: break
 		var point=PLAN.formation(origin,outward,i,amount,style)
-		var enemy=spawn_enemy(PLANETS.kind(active_planet,wave-1,spawned,difficulty),safe_spawn_position(point,outward))
+		var kind=("dart" if i%3==0 else "mote") if boss_support else PLANETS.kind(active_planet,wave-1,spawned,difficulty)
+		var enemy=spawn_enemy(kind,safe_spawn_position(point,outward))
 		if enemy.is_empty(): break
 		FORMATION.attach(enemy,origin,outward,style,i,music.timeline,int(PLANETS.planet(active_planet).index),squad,i==0)
 		spawned+=1

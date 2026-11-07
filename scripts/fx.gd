@@ -52,7 +52,6 @@ func blast(at: Vector2,color: Color,reach: float=100.) -> void:
 func shield(at: Vector2,color: Color=Color("ffc45e"),reach: float=82.) -> void:
 	var blue=Color("83ceff").lerp(color,.18)
 	_mark({"kind":"shield","at":at,"color":blue,"reach":clampf(reach,42.,180.),"life":.52,"max":.52},true)
-	ring(at,Color("d6f5ff"),reach*.66,.22)
 func volley(at: Vector2,axis: Vector2,color: Color,family: String,count: int) -> void:
 	if family in ["nova","orbit"]:
 		ring(at,Color(color,.58),54. if family=="nova" else 84.,.22)

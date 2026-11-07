@@ -60,17 +60,10 @@ static func formation(origin: Vector2, forward: Vector2, index: int, count: int,
 	var lateral: float = 0.0
 	var depth: float = 0.0
 	match style:
-		"battalion_grid","battalion_diamond":
+		"battalion_grid":
 			var cols=clampi(ceili(sqrt(float(count)*1.3)),3,10)
 			lateral=(float(slot%cols)-float(cols-1)*.5)*29.
 			depth=float(floori(float(slot)/cols))*31.
-			if style=="battalion_diamond":
-				var local=Vector2(lateral,depth-float(ceili(float(count)/cols)-1)*15.5).rotated(PI*.25)
-				lateral=local.x; depth=local.y+float(cols)*15.
-		"battalion_bands":
-			var group=slot/16; var within=slot%16
-			lateral=(float(group)-float(ceili(float(count)/16.)-1)*.5)*158.+(float(within%4)-1.5)*28.
-			depth=float(within/4)*30.+float(group%2)*24.
 		"vanguard":
 			# A forward-pointing V, anchored on its tip.
 			var wing: float = float(ceili(float(slot) * 0.5))
