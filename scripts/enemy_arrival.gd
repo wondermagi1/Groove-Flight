@@ -2,6 +2,10 @@ extends RefCounted
 ## Birth layout only. These plans never constrain an enemy after it appears.
 const WARNING_SECONDS=.8
 const RADII={"mote":17.,"armor":18.,"shooter":17.,"dart":16.,"splitter":18.,"sentinel":18.,"lance":18.,"mirror":18.}
+const CLEARANCE={"mote":25.,"armor":21.,"shooter":22.5,"dart":24.,"splitter":23.5,"sentinel":24.,"lance":31.5,"mirror":24.}
+
+static func clearance(kind: String) -> float:
+	return float(CLEARANCE.get(kind,25.))
 
 static func batch_size(wave: int,budget: int) -> int:
 	return mini(budget,64 if wave<=2 else (144 if wave<=4 else (300 if wave<=6 else 600)))
@@ -9,8 +13,18 @@ static func batch_size(wave: int,budget: int) -> int:
 static func hull_radius(kind: String) -> float:
 	return float(RADII.get(kind,17.))
 
+static func is_clear(game,plan: Dictionary) -> bool:
+	for enemy in game.enemies:
+		if float(enemy.hp)<=0.: continue
+		var motion: Dictionary=enemy.get("march",{})
+		var start: Vector2=motion.get("from",enemy.at)
+		var finish: Vector2=motion.get("to",enemy.at)
+		var swept=Rect2(start.min(finish),(finish-start).abs()).grow(clearance(str(enemy.kind))+12.)
+		if plan.rect.intersects(swept): return false
+	return true
+
 static func layout(center: Vector2,count: int,kind: String) -> Dictionary:
-	var spacing=hull_radius(kind)*2.5+3.
+	var spacing=clearance(kind)*2.+3.
 	var columns=clampi(ceili(sqrt(float(maxi(1,count)))),1,32)
 	# Prefer a fully filled rectangle, e.g.300=20x15 and600=25x24.
 	# A final wave-budget remainder may use a partially filled last row.
@@ -48,6 +62,10 @@ static func choose(game,count: int,kind: String) -> Dictionary:
 		var occupied=false
 		for pending in game.spawn_telegraphs:
 			if area.rect.grow(40.).intersects(pending.rect): occupied=true; break
+		if occupied: continue
+		# Warning plans reserve empty space: no later birth lands on an old swarm.
+		for enemy in game.enemies:
+			if float(enemy.hp)>0. and area.rect.grow(clearance(str(enemy.kind))+12.).has_point(enemy.at): occupied=true; break
 		if occupied: continue
 		area.center=center; return area
 	return {}

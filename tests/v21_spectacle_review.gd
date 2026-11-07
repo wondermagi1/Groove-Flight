@@ -108,7 +108,7 @@ func scale_and_density_checks() -> void:
 	var giant: Dictionary=game.spawn_telegraphs[0] if not game.spawn_telegraphs.is_empty() else {}
 	if not giant.is_empty():
 		check(giant.columns==25 and giant.rows==24 and game.visible_world().encloses(giant.rect),"the600enemy matrix is fully filled and fits the visible battlefield")
-		check(float(giant.spacing)*game.camera.zoom.x>=27. and float(giant.spacing)*game.camera.zoom.x<=32.,"1920x1080 matrix centre spacing is about28to32screen pixels")
+		check(float(giant.spacing)*game.camera.zoom.x>=28. and float(giant.spacing)*game.camera.zoom.x<=35.,"1920x1080 matrix centre spacing is about30to35screen pixels")
 		game.music.timeline=.81; game.update_spawn_telegraphs()
 		check(game.enemies.size()==600 and game.enemies.all(func(e): return e.kind==str(giant.kind)),"all600actual enemies appear together with one model")
 		facts.giant_matrix={"count":600,"columns":giant.columns,"rows":giant.rows,"screen_pitch":float(giant.spacing)*game.camera.zoom.x,"kind":giant.kind}

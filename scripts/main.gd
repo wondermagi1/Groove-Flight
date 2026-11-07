@@ -927,7 +927,9 @@ func _process(delta: float) -> void:
 		# query or the same enemy iteration which killed it.
 		for at in pending_splits:
 			for i in range(3):
-				if enemies.size()<MAX_ENEMIES: spawn_enemy("mote",at+Vector2.from_angle(i*TAU/3)*26)
+					if enemies.size()<MAX_ENEMIES:
+						var child=spawn_enemy("mote",at+Vector2.from_angle(i*TAU/3)*38)
+						child.warned_entry=true
 		pending_splits.clear()
 		check_wave()
 		fx.set_process(true)
@@ -1016,7 +1018,8 @@ func spawn_for_step(serial: int) -> void:
 	var config=wave_profile(); var elapsed=music.timeline-wave_start
 	receipt.count("spawn_checks")
 	var batch=ARRIVAL.batch_size(wave,int(config.budget))
-	var desired=mini(int(config.budget),batch+int(maxf(0.,elapsed)/float(config.seconds)*(int(config.budget)-batch)))
+	var dispatch_seconds=maxf(1.,float(config.seconds)-ARRIVAL.WARNING_SECONDS-.5)
+	var desired=mini(int(config.budget),batch+int(maxf(0.,elapsed)/dispatch_seconds*(int(config.budget)-batch)))
 	var reserved=0
 	for plan in spawn_telegraphs:
 		if bool(plan.get("wave_budget",false)): reserved+=int(plan.count)
@@ -1045,6 +1048,14 @@ func update_spawn_telegraphs() -> void:
 		var plan: Dictionary=spawn_telegraphs[i]
 		if int(plan.wave)!=wave: spawn_telegraphs.remove_at(i); continue
 		if music.timeline<float(plan.deadline): continue
+		if not ARRIVAL.is_clear(self,plan):
+			# A live pursuer may enter a warning during its lead-in. Re-warn a
+			# clear location or wait; never materialize a matrix on occupied hulls.
+			spawn_telegraphs.remove_at(i)
+			var replacement=ARRIVAL.choose(self,int(plan.count),str(plan.kind))
+			for key in replacement: plan[key]=replacement[key]
+			plan.born=music.timeline; plan.deadline=music.timeline+ARRIVAL.WARNING_SECONDS
+			spawn_telegraphs.append(plan); continue
 		for point in plan.points:
 			var enemy=spawn_enemy(str(plan.kind),point)
 			if enemy.is_empty(): break
@@ -1093,6 +1104,7 @@ func spawn_enemy(kind: String,position: Vector2=Vector2.INF) -> Dictionary:
 	if kind in ["elite","boss"]: fx.ring(position,Color("e68cad"),85,.5)
 	return enemy
 func update_enemies(delta: float) -> void:
+	SWARM.plan_individuals(enemies,music.timeline,player)
 	for enemy in enemies:
 		if enemy.hp<=0: continue
 		var previous_at: Vector2=enemy.at
