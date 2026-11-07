@@ -3,7 +3,7 @@ extends RefCounted
 const WARNING_SECONDS=.8
 const MANEUVER=preload("res://scripts/enemy_maneuver.gd")
 const PLAYER_CLEARANCE=MANEUVER.PLAYER_BIRTH_GAP
-const FORWARD_CLEARANCE=850.
+const TOP_LANES=[-PI*.75,-PI*.5,-PI*.25]
 const RADII={"mote":17.,"armor":18.,"shooter":17.,"dart":16.,"splitter":18.,"sentinel":18.,"lance":18.,"mirror":18.}
 const CLEARANCE={"mote":25.,"armor":21.,"shooter":22.5,"dart":24.,"splitter":23.5,"sentinel":24.,"lance":31.5,"mirror":24.}
 
@@ -40,9 +40,7 @@ static func player_safe(game,plan: Dictionary) -> bool:
 	var swept: Rect2=plan.deployment.swept
 	var closest=Vector2(game.player).clamp(swept.position,swept.end)
 	if closest.distance_to(game.player)<PLAYER_CLEARANCE-.01: return false
-	var heading: Vector2=game.movement_facing.normalized()
-	if heading.length_squared()<.5: heading=Vector2.UP
-	return not _crosses_rect(game.player,game.player+heading*FORWARD_CLEARANCE,Rect2(plan.rect).grow(90.))
+	return Rect2(plan.rect).end.y<=game.player.y-PLAYER_CLEARANCE
 
 static func birth_grid(enemies: Array) -> Dictionary:
 	var grid: Dictionary={}
@@ -111,15 +109,14 @@ static func choose(game,count: int,kind: String,style: String="battalion_grid") 
 	view.size.y-=200./game.camera.zoom.y
 	# Large matrices can straddle a screen edge while retaining the red cue.
 	# This leaves room for the player-side clearance instead of centring on them.
-	if count>=300: view=view.grow(320.)
-	var start_angle=game.rng.randf()*TAU
-	var heading: Vector2=game.movement_facing.normalized()
-	for attempt in range(80):
-		var slot=attempt%20
-		var axis=Vector2.from_angle(start_angle+float(slot)*TAU/16.) if slot<16 else Vector2.from_angle(float(slot-16)*PI*.5)
-		if attempt%40<20 and axis.dot(heading)>.45: continue
-		var search_view=view.grow(1400.) if attempt>=40 else view
-		var reach=3200. if attempt>=40 else 1500.
+	view.position.y-=180.; view.size.y+=180.
+	if count>=300: view=view.grow(900.)
+	var first_lane=game.rng.randi_range(0,2)
+	for attempt in range(60):
+		var lane=(first_lane+attempt)%3
+		var axis=Vector2.from_angle(float(TOP_LANES[lane])+game.rng.randf_range(-.09,.09))
+		var search_view=view.grow(1400.) if attempt>=30 else view
+		var reach=3200. if attempt>=30 else (2200. if count>=300 else 1500.)
 		if axis.x>.001: reach=minf(reach,(search_view.end.x-game.player.x-half.x)/axis.x)
 		elif axis.x<-.001: reach=minf(reach,(search_view.position.x-game.player.x+half.x)/axis.x)
 		if axis.y>.001: reach=minf(reach,(search_view.end.y-game.player.y-half.y)/axis.y)

@@ -63,8 +63,9 @@ func run() -> void:
 				if str(enemy.maneuver.sector)=="upper": upper+=shift.y; nu+=1
 				if str(enemy.maneuver.sector)=="lower": lower+=shift.y; nl+=1
 				if shift.length()<30.: stuck+=1
-			deployment={"seconds":3.,"area_ratio":expanded.get_area()/original_bounds.get_area(),"upper_mean_y":upper/maxi(1,nu),"lower_mean_y":lower/maxi(1,nl),"stuck":stuck}
-			check(deployment.area_ratio>6. and deployment.upper_mean_y< -400. and deployment.lower_mean_y>400. and stuck<20,"600unit matrix spreads to broad upper/lower world regions within3seconds")
+			var centre_shift=expanded.get_center().y-original_bounds.get_center().y
+			deployment={"centre_shift_y":centre_shift,"seconds":3.,"area_ratio":expanded.get_area()/original_bounds.get_area(),"upper_mean_y":upper/maxi(1,nu),"lower_mean_y":lower/maxi(1,nl),"stuck":stuck}
+			check(deployment.area_ratio>6. and deployment.upper_mean_y-centre_shift< -400. and deployment.lower_mean_y-centre_shift>400. and stuck<20,"600unit matrix spreads to broad upper/lower world regions within3seconds")
 	var final_mean=0.; var final_pressure=0.
 	for enemy in game.enemies:
 		final_mean+=Vector2(enemy.at).distance_to(game.player)/game.enemies.size()

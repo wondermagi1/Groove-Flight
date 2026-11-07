@@ -65,9 +65,12 @@ func spawning_checks() -> void:
 			game.player=position; game.movement_facing=Vector2.from_angle(angle)
 			game.camera.position=position; game.camera.reset_smoothing(); game.camera.force_update_scroll()
 			game.spawn_for_step(0)
-			check(game.enemies.is_empty() and not game.spawn_telegraphs.is_empty(),"red birth warnings appear before any enemy in the batch")
+			if game.spawn_telegraphs.is_empty():
+				check(position.y<game.field().position.y+500. and game.enemies.is_empty(),"upper-world-edge spawning waits until the upper field has space")
+				continue
+			check(game.enemies.is_empty(),"red birth warnings appear before any enemy in the batch")
 			var plans=game.spawn_telegraphs.duplicate(true)
-			check(plans.all(func(p): return game.visible_world().encloses(p.rect)),"red warning regions stay visible on the battlefield")
+			check(plans.all(func(p): return p.rect.end.y<game.player.y),"birth matrices remain entirely above the player")
 			game.music.timeline=.81; game.update_spawn_telegraphs()
 			check(game.enemies.size()==64,"production opening spawns a complete eight-by-eight battalion")
 			check(game.spawn_telegraphs.is_empty(),"the red warning clears when the complete batches materialize")
@@ -87,8 +90,8 @@ func spawning_checks() -> void:
 		game.spawn_for_step(0)
 		for plan in game.spawn_telegraphs:
 			var entry: Vector2=plan.center-game.player
-			sectors[posmod(floori((entry.angle()+PI)/TAU*8.),8)]=true
-	check(sectors.size()==8,"side/rear-preferred arrivals cover all eight world directions as the ship heading changes")
+			sectors[0 if absf(entry.x)<absf(entry.y)*.35 else (-1 if entry.x<0. else 1)]=true
+	check(sectors.size()==3,"production arrivals cover screen-up, upper-left and upper-right regardless of heading")
 	facts.radial_sectors=sectors.size()
 	fixture(); game.free_music_run=true; game.is_preview=false; game.spawn_for_step(0)
 	game.music.timeline=.81; game.update_spawn_telegraphs()

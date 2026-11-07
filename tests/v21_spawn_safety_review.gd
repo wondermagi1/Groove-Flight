@@ -39,14 +39,14 @@ func location_checks() -> void:
 				for plan in game.spawn_telegraphs:
 					check(distance_to_area(game.player,plan.deployment.swept)>=359.99,"player remains outside the birth and entire deployment corridor")
 					check(game.field().encloses(plan.rect) and game.field().encloses(plan.deployment.bounds),"birth and deployment both fit the actual world bounds")
-					if (Vector2(plan.center)-game.player).normalized().dot(game.movement_facing)<=.45:
+					if Vector2(plan.center).y<game.player.y:
 						preferred+=1
 						if position==Vector2.ZERO: centre_preferred+=1
 				game.music.timeline=.81; game.update_spawn_telegraphs()
 				check(game.enemies.size()>0 and game.enemies.all(func(e): return Vector2(e.at).distance_to(game.player)>360.),"real materialization leaves the ship's nearby space empty")
-				check(game.enemies.all(func(e): return Geometry2D.get_closest_point_to_segment(e.at,game.player,game.player+game.movement_facing*850.).distance_to(e.at)>90.),"no real hull materializes in the immediate forward travel corridor")
+				check(game.enemies.all(func(e): return Vector2(e.at).y<game.player.y-360.),"real hulls appear in the upper battlefield with player clearance")
 	check(centre_accepted==24 and accepted>=70,"normal headings and world-edge cases retain practical spawn availability")
-	check(centre_preferred==centre_accepted,"unconstrained battlefield births prefer side/rear positions over the ship nose")
+	check(centre_preferred==centre_accepted,"unconstrained battlefield births use the upper field")
 	facts.placement={"attempts":attempts,"accepted":accepted,"preferred":preferred,"centre_accepted":centre_accepted,"centre_preferred":centre_preferred}
 func motion_checks() -> void:
 	var margins: Dictionary={}
