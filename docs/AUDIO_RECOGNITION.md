@@ -10,7 +10,7 @@
 - NumPy：谱通量速度建议、音符选择、时值整理和网格量化。
 - Python3.13与PyInstaller：打包为Windows x64目录组件。运行时无需安装Python或联网。
 
-模型仅输出音高/起音概率。BeatDrift的音符分组、旋律优先选择、恒速估计、JSON协议与编辑器量化在`tools/transcribe_audio.py`。按照官方输入窗口、补零和重叠协议推理，未引入整套Basic Pitch Python依赖。
+模型仅输出音高/起音概率。Groove Flight的音符分组、旋律优先选择、恒速估计、JSON协议与编辑器量化在`tools/transcribe_audio.py`。按照官方输入窗口、补零和重叠协议推理，未引入整套Basic Pitch Python依赖。
 
 主要文件：
 

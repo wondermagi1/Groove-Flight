@@ -1,5 +1,5 @@
 extends RefCounted
-## BeatDrift v2's own ten-wave plan. These numbers are not Groove Core data.
+## Groove Flight v2's own ten-wave plan. These numbers are not Groove Core data.
 ## wave and ordinal are zero based. Geometry is deterministic and side-effect free.
 
 static func rows() -> Array[Dictionary]:
@@ -60,6 +60,17 @@ static func formation(origin: Vector2, forward: Vector2, index: int, count: int,
 	var lateral: float = 0.0
 	var depth: float = 0.0
 	match style:
+		"battalion_grid","battalion_diamond":
+			var cols=clampi(ceili(sqrt(float(count)*1.3)),3,10)
+			lateral=(float(slot%cols)-float(cols-1)*.5)*29.
+			depth=float(floori(float(slot)/cols))*31.
+			if style=="battalion_diamond":
+				var local=Vector2(lateral,depth-float(ceili(float(count)/cols)-1)*15.5).rotated(PI*.25)
+				lateral=local.x; depth=local.y+float(cols)*15.
+		"battalion_bands":
+			var group=slot/16; var within=slot%16
+			lateral=(float(group)-float(ceili(float(count)/16.)-1)*.5)*158.+(float(within%4)-1.5)*28.
+			depth=float(within/4)*30.+float(group%2)*24.
 		"vanguard":
 			# A forward-pointing V, anchored on its tip.
 			var wing: float = float(ceili(float(slot) * 0.5))
@@ -107,6 +118,20 @@ static func formation(origin: Vector2, forward: Vector2, index: int, count: int,
 			var group_count: int = ceili(float(count) / 6.0)
 			lateral = (float(group) - float(group_count - 1) * 0.5) * 180.0 + cos(angle) * 54.0
 			depth = sin(angle) * 54.0 + float(group % 2) * 80.0
+		"prism_ring":
+			# Concentric eight-fold rings echo the reference's radial fleet
+			# entrances while preserving a readable front edge.
+			var group: int = floori(float(slot) / 8.0)
+			var angle: float = float(slot % 8) * TAU / 8.0 + float(group) * PI / 8.0
+			var radius: float = 74.0 + float(group % 4) * 54.0
+			lateral = cos(angle) * radius
+			depth = sin(angle) * radius * 0.58 + float(group) * 82.0
+		"dual_spiral":
+			# Two interleaved spiral arms sweep inward from opposite flanks.
+			var arm: float = -1.0 if slot % 2 == 0 else 1.0
+			var row: float = float(floori(float(slot) * 0.5))
+			lateral = arm * (58.0 + row * 9.0) + sin(row * .72) * 58.0
+			depth = row * 46.0 + cos(row * .58) * 32.0
 		_:
 			lateral = centered * 45.0
 	return origin + side * lateral + facing * depth

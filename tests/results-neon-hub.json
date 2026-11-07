@@ -7,11 +7,11 @@
 		"Movement plays the imported walk cycle",
 		"Hangar overlays freeze walking while preserving the visible city",
 		"Reactivation preserves avatar position",
-		"F near the central vortex starts the flight",
+		"F near the central vortex opens the real planet map",
 		"F near the hangar opens the fleet picker",
 		"Leaving the city stops 3D rendering"
 	],
 	"failures": [],
 	"renderer": "forward_plus",
-	"scope": "Native Blender GLB, skeletal animation, actual input motion, modal freeze and F portal/terminal. Does not claim full gameplay or stable frame rate."
+	"scope": "Native Blender GLB, skeletal animation, actual input motion, modal freeze and F planet-map/terminal. Does not claim full gameplay or stable frame rate."
 }

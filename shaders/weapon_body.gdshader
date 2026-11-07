@@ -29,7 +29,7 @@ void fragment(){
   trim=exp(-abs(p.x+.21)*35.)*step(abs(p.y),.3)+step(.42,abs(p.y))*.45;
   if(variant>.25) trim+=pow(max(0.,cos(p.x*23.)),12.)*.4*step(abs(p.y),.25);
  }else if(style==4){
-  float r=length(p); d=r-(.63+variant*.04*cos(atan(p.y,p.x)*6.));
+  float r=length(p); d=r-(.58+.065*cos(atan(p.y,p.x)*4.+seed*4.));
   core=exp(-r*6.); trim=exp(-abs(r-.46)*50.)*.7+exp(-abs(p.y)*32.)*.4;
  }else if(style==6){
   d=abs(p.y)*.8+abs(p.x)*.24-.22;
@@ -37,6 +37,7 @@ void fragment(){
  }else if(style==7){
   d=max(length(p)-.81,-(length(p-vec2(.38,-.12))-.69));
   if(variant>.75) d=min(d,max(abs(p.x)*.7+abs(p.y)*.5-.20,-p.x));
+  surface=1.;
   core=exp(-abs(length(p)-.75)*48.); trim=exp(-abs(length(p)-.59)*45.)*.6;
  }else if(style==8 || style==9){
   float h=hexagon(p,.68); d=h;
@@ -59,11 +60,13 @@ void fragment(){
  }
  float aa=max(fwidth(d),.012); float mask=1.-smoothstep(-aa,aa,d);
  float bevel=1.-smoothstep(-.11,-.015,d);
+ float specular=pow(max(0.,dot(normalize(p+vec2(.001)),normalize(vec2(-.56,.83)))),10.)*smoothstep(-.08,.18,d);
  vec3 energy=mix(tint.rgb*.68,vec3(1.),clamp(core*.8+trim*.5,0.,.9));
  vec3 metal=mix(vec3(.06,.10,.17),vec3(.48,.64,.78),clamp(.58-p.y*.6,0.,1.));
  metal=mix(metal,tint.rgb,clamp(trim+core,.0,.85));
+ metal+=vec3(.55,.72,.82)*specular*.42;
  vec3 color=mix(energy,metal,surface);
- color+=tint.rgb*bevel*.4+vec3(core*.32);
+ color+=tint.rgb*bevel*.55+vec3(core*.46);
  float fade=min(1.,detail.z*12.);
  COLOR=vec4(color,mask*tint.a*fade);
 }

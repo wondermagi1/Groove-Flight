@@ -1,0 +1,5 @@
+{
+	"checks": 144,
+	"failures": [],
+	"scope": "Pure production scheduling of every active weapon for eight seconds; separate UID scheduling, 1-second deadlines, fixed voices, damage conservation and pure snapshot/clone behavior."
+}

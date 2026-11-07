@@ -11,6 +11,44 @@ The two paper effects retain their provided-project provenance and are not claim
 
 Reference links: https://kenney.nl/assets/sci-fi-sounds ; https://opengameart.org/content/rpg-sound-pack . These are provenance notes, not external instructions or account-contact requests.
 
+## Authorized Groove Core reference library
+
+`audio/library/groove_core/` is an intake and provenance library for audio and video recorded from the Groove Core Demo. The user states that the original author authorized direct use on 2026-11-02; supporting authorization should be stored in `audio/library/groove_core/authorization/`. This library is excluded from Godot imports by `.gdignore`; only explicitly promoted, cataloged derivatives may be copied into runtime audio folders and credited by exact filename.
+
+`audio/authorized/menu_theme.ogg` is a loudness-normalized runtime derivative of catalog item `music_menu` from the user-authorized Groove Core recordings. It plays on the title, hub, hangar and solar-map screens. Exact source, hash, processing label and source-video path are recorded in `audio/library/groove_core/catalog.json`. No unverified source attribution is inferred beyond the user's authorization statement.
+
+The following runtime derivatives were cut from the same authorized library and are now used by the live mixer or a dedicated music player:
+
+| Runtime file | Catalog source | Use |
+| --- | --- | --- |
+| `audio/authorized/weapon_ballistic_light.ogg` | `weapon_ballistic_volume_ramp` | light ballistic accent |
+| `audio/authorized/weapon_ballistic_medium.ogg` | `weapon_ballistic_volume_ramp` | medium ballistic accent |
+| `audio/authorized/weapon_ballistic_heavy.ogg` | `weapon_ballistic_volume_ramp` | heavy ballistic accent |
+| `audio/authorized/weapon_crude_shot.ogg` | `weapon_crude_fire` | pulse-family accent |
+| `audio/authorized/weapon_crude_fire_group_6s.wav` | `weapon_crude_fire` | direct 0.00-6.00s recording containing three 2-second strong-weak cycles |
+| `audio/authorized/weapon_ballistic_light_group.wav` | `weapon_ballistic_volume_ramp` | direct 0.58-8.06s light weapon group |
+| `audio/authorized/weapon_ballistic_medium_group.wav` | `weapon_ballistic_volume_ramp` | direct 20.08-27.56s medium weapon group |
+| `audio/authorized/weapon_ballistic_heavy_group.wav` | `weapon_ballistic_volume_ramp` | direct 33.08-40.94s heavy weapon group |
+| `audio/authorized/event_collision.ogg` | `events_enemy_collision` | player collision feedback |
+| `audio/authorized/event_shield.ogg` | `events_enemy_collision` | shield activation and block |
+| `audio/authorized/event_spawn.ogg` | `events_enemy_collision` | formation arrival |
+| `audio/authorized/thruster_dash.ogg` | `weapon_power_thruster` | dash launch |
+| `audio/authorized/uranus_amber_loop.ogg` | `music_uranus_amber` | shared combat/editor/shop background loop for all planets |
+
+Exact clip start, source hash and catalog variant labels are recorded in `audio/library/groove_core/catalog.json` and `audio/authorized/AUTHORIZED_SFX.json`. The canonical source-to-runtime table is `docs/AUDIO_SOURCE_MAP.md`; its machine-readable counterpart is `audio/library/groove_core/runtime_mapping.json`. The remaining synthesizer voices across all twelve families continue using the original 256 generated PCM weapon samples; all 288 voice files are listed in `audio/weapon_codex.json`.
+
+The four recorded-audio prototypes play four continuous PCM16 source groups. Each prototype has normal, rare and precious combat tiers that share the same source file, so quality changes projectile statistics without re-recording, pitch-shifting or internally segmenting the sound. The files contain no fades, gain changes, normalization, resampling or other processing. Their 32 event WAVs document measured source intervals used for fallback and analysis, while gameplay and the codex audition the same continuous group. Exact ranges and hashes are listed in `audio/weapon_codex.json` and `audio/library/groove_core/analysis/recorded-weapon-groups.json`.
+
 ## V11 generated event transients
 
 `scripts/event_mixer.gd` synthesizes original 22,050Hz PCM noise/tonal transients for normal, armor, elite and boss destruction. Fixed per-kind RNG seeds, filtered noise, exponential envelopes and short low-frequency partials are created locally at runtime. `docs/audio-v11/*.wav` are controlled stereo excerpts of this project’s own soundtrack. The assisted Mercury video includes existing credited impact samples. No audio was extracted from Groove Core. Human listening and physical-output latency calibration remain pending.
+
+## V17 gameplay feedback recording
+
+`authorized/feedback/*.wav`: five filtered PCM16 stereo excerpts from the user-supplied `C:/Users/GXR/Desktop/音频资源.mp4`, catalog ID `gameplay_feedback_audio`, under the library's user-confirmed authorization. Three low drums use22–700Hz filtering; shield/pickup excerpts use separate bands. Source windows, fixed gains, boundary fades and SHA256 are recorded in `library/groove_core/analysis/combat-feedback.json`. These are mixed-gameplay excerpts, not claimed as isolated original stems. The earlier `实机演示.mp4` contains digital silence and contributes no audio. No new synthetic drum is substituted for the recorded low feedback.
+
+## V19 sampled instruments
+
+`arsenal/notes/inst_*.wav`:96 offline-rendered instrument samples for the twelve user-selected weapons, from S. Christian Collins's GeneralUser GS2.0.3. Piano, snare/kick/tom, violin, alto sax, vibraphone, cello, steel guitar, synth strings and timpani are rendered at mono PCM16/22050Hz. Chain and split-beam samples add a small amount of the original procedural sound. Old recordings and synth WAVs are preserved.
+
+Source: https://www.schristiancollins.com/generaluser and the author's repository https://github.com/mrbumpy409/GeneralUser-GS . Offline renderer: https://github.com/schellingb/TinySoundFont (MIT). Both license texts are bundled in `audio/instruments/`. `audio/instruments/MANIFEST.json` records presets, source and renderer SHA256, original-note pitches, processing gains and every output hash. The SoundFont and build compiler are not required to run the game. Current fixed battle voices use index0; the other pitches are used only for explicit composition.

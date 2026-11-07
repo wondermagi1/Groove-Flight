@@ -1,0 +1,34 @@
+{
+  "version": "0.18.0-fixed-voices",
+  "checks": 716,
+  "failures": 0,
+  "tests": [
+    {
+      "test": "electronic-audio-logic",
+      "checks": 85,
+      "failures": 0
+    },
+    {
+      "test": "weapon-cycle",
+      "checks": 367,
+      "failures": 0
+    },
+    {
+      "test": "rhythm-feedback",
+      "checks": 40,
+      "failures": 0
+    },
+    {
+      "test": "composer-score",
+      "checks": 112,
+      "failures": 0
+    },
+    {
+      "test": "arsenal-combat",
+      "checks": 112,
+      "failures": 0
+    }
+  ],
+  "weapons_removed": 0,
+  "instrument_assets_replaced": false
+}

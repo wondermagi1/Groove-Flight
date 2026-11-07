@@ -1,6 +1,6 @@
 # V10 武器渲染验证
 
-2026-10-31，Windows、Godot4.7.2、RTX4060 Laptop。测试使用独立APPDATA与`--beatdrift-test`，未改写玩家草稿、战绩或设置。
+2026-10-31，Windows、Godot4.7.2、RTX4060 Laptop。测试使用独立APPDATA与`--grooveflight-test`，未改写玩家草稿、战绩或设置。
 
 | 检查 | 结果 | 范围 |
 | --- | ---: | --- |

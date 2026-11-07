@@ -1,6 +1,6 @@
-# 律航 V7 · 行星背景与机械巨构
+# Groove Flight V7 · 行星背景与机械巨构
 
-2026-10-30，Windows、Godot4.7.2、RTX4060 Laptop。测试使用`--beatdrift-test`，不写玩家设置与星球成绩。
+2026-10-30，Windows、Godot4.7.2、RTX4060 Laptop。测试使用`--grooveflight-test`，不写玩家设置与星球成绩。
 
 ## 本次实现
 

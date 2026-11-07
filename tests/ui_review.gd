@@ -27,7 +27,7 @@ func run() -> void:
 	back.pressed.emit(); await frames(4)
 	check(game.state=="combat" and not game.music.stream_paused,"actual save/back button safely resumes current run")
 	var result={"checks":checks,"failures":failures,"scope":"Actual interactive-title settings projectile, title return, separate direct-start combat settings fixture, particle toggles and master slider;720p; isolated profile, not a harbor departure or full run."}
-	FileAccess.open("res://tests/results-ui.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("BEATDRIFT_UI_REVIEW ",JSON.stringify(result))
+	FileAccess.open("res://tests/results-ui.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("GROOVE_FLIGHT_UI_REVIEW ",JSON.stringify(result))
 	game.music.stop(); current_scene=null; game.queue_free(); await frames(5)
 	# Audio playback disposal runs on the audio thread. Headless frame loops can
 	# finish five frames before its next mix; allow that retirement before exit.

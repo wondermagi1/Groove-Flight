@@ -88,9 +88,12 @@ def instrument(recipe, index, seed):
 
 def main():
     recipes = json.loads((ROOT / 'audio' / 'arsenal' / 'recipes.json').read_text(encoding='utf-8'))
-    assert len(recipes) == 32 and len({row['voice'] for row in recipes}) == 32
+    synthesized = [row for row in recipes if not row.get('recorded_audio', False)]
+    recorded = [row for row in recipes if row.get('recorded_audio', False)]
+    assert len(recipes) == 36 and len(synthesized) == 32 and len(recorded) == 4
+    assert len({row['voice'] for row in recipes}) == 36
     hashes = {}
-    for number, recipe in enumerate(recipes):
+    for number, recipe in enumerate(synthesized):
         seed = 1201 + number * 97
         for pitch in range(8):
             samples = instrument(recipe, pitch, seed)
@@ -111,9 +114,13 @@ def main():
             sound = carrier * np.minimum(time / .002, 1) * np.exp(-time / decay)
             sound *= np.minimum((time[-1] - time) / .03, 1).clip(0, 1)
             save(f'support_{category}_{pitch}', sound * .26)
-    report = {'weapons': len(recipes), 'pitched_weapon_samples': 256,
-              'percussion_samples': 32, 'rate': RATE, 'format': 'mono PCM16',
-              'unique_first_pitch_hashes': len(hashes), 'origin': 'Original procedural synthesis'}
+    report = {'weapons': len(recipes), 'synthesized_weapons': len(synthesized),
+              'recorded_audio_weapons': len(recorded), 'weapon_sample_files': 288,
+              'synthesized_pitched_samples': 256, 'recorded_event_slices': 32,
+              'recorded_transposition': False, 'percussion_samples': 32,
+              'rate': RATE, 'format': 'mono PCM16',
+              'unique_synthesized_first_pitch_hashes': len(hashes),
+              'origin': '32 original procedural synthesis instruments plus 4 authorized recorded-audio event groups'}
     (ROOT / 'audio' / 'arsenal' / 'generation_report.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
     print(json.dumps(report))
 

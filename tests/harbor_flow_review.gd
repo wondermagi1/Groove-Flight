@@ -107,7 +107,7 @@ func run() -> void:
 	check(game.state == "title" and not hub.visible and not hub.active and is_instance_valid(game.ui.title_flight), "return to title removes the 3D world and restores the playable menu")
 	var result := {"checks": checks, "failures": failures, "renderer": RenderingServer.get_current_rendering_method(), "scope": "Real main-scene title shot, 3D HUD, walking, fleet choices, settings freeze, actual F input and native combat departure. Portal position and results screen are explicit assisted fixtures; no completed run or stable-FPS claim."}
 	FileAccess.open("res://tests/results-harbor-flow.json", FileAccess.WRITE).store_string(JSON.stringify(result, "\t"))
-	print("BEATDRIFT_HARBOR_FLOW_REVIEW ", JSON.stringify(result))
+	print("GROOVE_FLIGHT_HARBOR_FLOW_REVIEW ", JSON.stringify(result))
 	game.music.stop()
 	game.music.stream = null
 	for voice in game.voices:

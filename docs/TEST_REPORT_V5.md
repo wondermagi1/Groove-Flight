@@ -1,6 +1,6 @@
-# 律航 V5 · 自由作曲验证
+# Groove Flight V5 · 自由作曲验证
 
-2026-10-30，Windows、Godot4.7.2、RTX4060 Laptop。使用`--beatdrift-test`隔离玩家设置、草稿及星球成绩。谱例全部为原创测试音符，未用现成歌曲替代测试。
+2026-10-30，Windows、Godot4.7.2、RTX4060 Laptop。使用`--grooveflight-test`隔离玩家设置、草稿及星球成绩。谱例全部为原创测试音符，未用现成歌曲替代测试。
 
 ## 已执行检查
 

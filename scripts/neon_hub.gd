@@ -269,11 +269,56 @@ func _build_avatar() -> void:
 	if source:
 		pilot_visual = source.instantiate()
 		avatar.add_child(pilot_visual)
+		_decorate_pilot_visual(pilot_visual)
 		animation = _find_animation(pilot_visual)
 		if animation:
 			for name in animation.get_animation_list():
 				animation.get_animation(name).loop_mode = Animation.LOOP_LINEAR
 			_play_animation("Idle")
+
+func _pilot_material(color: Color,metal: float,emission: float=0.) -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.albedo_color = color
+	material.metallic = metal
+	material.roughness = .30
+	if emission > 0.:
+		material.emission_enabled = true
+		material.emission = color
+		material.emission_energy_multiplier = emission
+	return material
+
+func _pilot_box(parent: Node3D,name_value: String,size_value: Vector3,at: Vector3,material: Material,rotation_value: Vector3=Vector3.ZERO) -> void:
+	var part := MeshInstance3D.new()
+	part.name = name_value
+	var box := BoxMesh.new()
+	box.size = size_value
+	part.mesh = box
+	part.position = at
+	part.rotation = rotation_value
+	part.material_override = material
+	parent.add_child(part)
+
+func _decorate_pilot_visual(root: Node3D) -> void:
+	# Runtime equipment keeps the supplied GLB editable while adding a readable
+	# silhouette and aviation-material detail in the city camera.
+	if root.find_child("FlightHarness_L",true,false) != null:
+		return
+	var ceramic := _pilot_material(Color("a9c3d3"),.55)
+	var graphite := _pilot_material(Color("172536"),.40)
+	var cyan := _pilot_material(Color("4ae3ff"),.20,2.0)
+	var amber := _pilot_material(Color("ffb45d"),.35,1.2)
+	_pilot_box(root,"FlightHarness_L",Vector3(.036,.34,.032),Vector3(-.115,1.22,.205),ceramic,Vector3(0,0,-.08))
+	_pilot_box(root,"FlightHarness_R",Vector3(.036,.34,.032),Vector3(.115,1.22,.205),ceramic,Vector3(0,0,.08))
+	_pilot_box(root,"DorsalPowerCore",Vector3(.25,.30,.115),Vector3(0,1.28,-.205),graphite)
+	_pilot_box(root,"DorsalCoreLight",Vector3(.075,.18,.018),Vector3(0,1.29,-.269),cyan)
+	_pilot_box(root,"HelmetCrest",Vector3(.040,.13,.23),Vector3(0,2.02,.015),ceramic,Vector3(.12,0,0))
+	_pilot_box(root,"HelmetCrestLight",Vector3(.048,.025,.16),Vector3(0,2.075,.025),cyan,Vector3(.12,0,0))
+	_pilot_box(root,"CommAntenna",Vector3(.024,.27,.024),Vector3(.185,2.00,-.02),graphite,Vector3(0,0,-.14))
+	_pilot_box(root,"CommAntennaTip",Vector3(.048,.038,.048),Vector3(.205,2.13,-.02),amber)
+	for side in [-1.,1.]:
+		_pilot_box(root,"ShoulderBeacon_"+str(side),Vector3(.052,.085,.052),Vector3(side*.305,1.50,.04),cyan)
+	_pilot_box(root,"ChestFlightRecorder",Vector3(.12,.07,.026),Vector3(0,1.42,.207),graphite)
+	_pilot_box(root,"ChestStatus",Vector3(.073,.025,.012),Vector3(0,1.435,.225),amber)
 
 func _find_animation(node: Node) -> AnimationPlayer:
 	if node is AnimationPlayer: return node

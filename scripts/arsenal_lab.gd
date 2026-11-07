@@ -8,6 +8,7 @@ var active: bool=false
 var paused: bool=false
 var loop_bar: bool=false
 var target_layout: int=0
+var show_ranges: bool=false
 var sample_path: int=-1
 var trial_kind: String=""
 var comparison: String=""
@@ -23,18 +24,35 @@ func ensure_ready() -> void:
 	arena.set_physics_process(false); arena.set_process_unhandled_input(false); arena.set_process(false)
 	arena.ui.root_control.hide(); arena.camera.enabled=true; arena.camera.position_smoothing_enabled=false
 	arena.camera.zoom=Vector2.ONE*.72; arena.player=Vector2.ZERO; arena.camera.position=Vector2(0,-180)
-	arena.music._cache=source_game.standard_music._cache
-	source_game.standard_music.prepared.connect(_prepared)
+	arena.music._cache=source_game.standard_music._cache.duplicate()
+	arena.music._cache_order=source_game.standard_music._cache_order.duplicate()
+	arena.music.prepared.connect(_prepared)
 func activate() -> void:
 	ensure_ready(); arena.mixer.set_process(true); arena.fx.set_process(true); active=true; viewport.render_target_update_mode=SubViewport.UPDATE_ALWAYS
+	arena.preview_show_ranges=show_ranges
 	sync()
+func begin_preview(kind: String="") -> void:
+	ensure_ready()
+	if not kind.is_empty():
+		trial_kind=kind
+		sample_path=-1
+		signature=""
+	paused=false
+	if not active:
+		activate()
+	else:
+		sync()
 func sync() -> void:
 	if not active: return
 	var candidate=source_game.loadout.clone()
+	candidate.phrase_offsets.clear()
 	comparison=""
 	if sample_path>=0:
 		candidate.set_starters([])
-		for placement in source_game.PATHS.PATHS[sample_path].layout: candidate.add_module(str(placement[0]),int(placement[1]))
+		for placement in source_game.PATHS.PATHS[sample_path].layout:
+			var member=source_game.C.item(str(placement[0]))
+			if str(member.get("category",""))=="weapon" and not source_game.C.is_weapon_audio_ready(str(placement[0])): continue
+			candidate.add_module(str(placement[0]),int(placement[1]))
 		comparison="蓝图演示 不授予装备"
 	elif not trial_kind.is_empty():
 		var uid=candidate.add_module(trial_kind)
@@ -49,20 +67,26 @@ func sync() -> void:
 	if key==signature: return
 	signature=key; arena.music.hold(true); arena.set_process(false)
 	arena.loadout=candidate; arena.selected_ship=source_game.selected_ship; arena.selected_pilot=source_game.selected_pilot
+	arena.preview_show_ranges=show_ranges
 	arena.refresh_loadout_stats(); arena.receipt.reset(); arena.rng.seed=421119
 	arena.music.track_mutes=source_game.standard_music.track_mutes.duplicate()
 	arena.music.backing_gain=source_game.standard_music.backing_gain; arena.music.weapon_gain=source_game.standard_music.weapon_gain
+	arena.music.groove_gain=source_game.standard_music.groove_gain
 	arena.music.volume_db=source_game.standard_music.volume_db-7.
 	set_targets(target_layout); status="准备当前配装音频…"
-	if source_game.standard_music.has_prepared(arena.loadout): _prepared(key)
-	else: source_game.standard_music.prepare(arena.loadout)
+	if arena.music.has_prepared(arena.loadout): _prepared(key)
+	else: arena.music.prepare(arena.loadout)
 func _prepared(key: String) -> void:
 	if not active or key!=signature: return
 	arena.music.begin(arena.loadout); replay(); status="实战同源 · 无收益试射"
 func replay() -> void:
+	if not active:
+		begin_preview(trial_kind)
+		return
 	if not is_instance_valid(arena) or arena.music.stream==null: return
 	arena.bullets.clear(); arena.pending_triggers.clear(); arena.pending_projectiles.clear(); arena.root_budgets.clear()
-	arena.music.play(14.); arena.music.timeline=14.; arena.music._previous_raw=14.; arena.music.loop_count=0; arena.music.last_step=55
+	arena.weapon_beat_state.clear()
+	arena.music.play(0.); arena.music.timeline=0.; arena.music._previous_raw=0.; arena.music.loop_count=0; arena.music.last_step=-1
 	arena.music._running=true; arena.state="combat"; arena.music.hold(paused); arena.set_process(not paused)
 func set_targets(layout: int) -> void:
 	target_layout=layout
@@ -80,9 +104,12 @@ func set_targets(layout: int) -> void:
 		target.radius=125. if layout==2 else 23.
 	arena.rebuild_spatial()
 func toggle_pause() -> void:
+	if not active:
+		begin_preview(trial_kind)
+		return
 	paused=not paused; arena.music.hold(paused); arena.set_process(not paused)
 func toggle_track(track: int,solo: bool=false) -> void:
-	for i in range(3):
+	for i in range(source_game.loadout.active_tracks):
 		if solo: source_game.standard_music.track_mutes[i]=i!=track
 		elif i==track: source_game.standard_music.track_mutes[i]=not bool(source_game.standard_music.track_mutes[i])
 	signature=""; sync()
@@ -100,10 +127,14 @@ func _process(delta: float) -> void:
 	sync_elapsed+=delta
 	if sync_elapsed>=.15: sync_elapsed=0.; sync()
 	if is_instance_valid(arena):
-		if loop_bar and arena.music.timeline>=16.: replay()
+		if loop_bar and arena.music.timeline>=1.: replay()
 		for target in arena.enemies: target.hp=target.max_hp
 
 func select_sample(index: int) -> void:
-	sample_path=index-1; trial_kind=""; signature=""; sync()
+	sample_path=index-1; trial_kind=""; signature=""; begin_preview()
 func try_item(kind: String) -> void:
-	trial_kind=kind; sample_path=-1; signature=""; sync()
+	var row=source_game.C.item(kind)
+	if str(row.get("category",""))=="weapon" and not source_game.C.is_weapon_audio_ready(kind):
+		status="该武器音源正在重构，暂不可试装"
+		return
+	trial_kind=kind; sample_path=-1; signature=""; begin_preview(kind)

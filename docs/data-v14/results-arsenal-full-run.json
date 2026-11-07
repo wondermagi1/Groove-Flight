@@ -1,0 +1,1185 @@
+{
+	"after5s_max_error": 0.0126196176757816,
+	"arrangements": [
+		{
+			"dust": 293,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "mod_pulse_3",
+					"level": 1,
+					"uid": 7
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				-1,
+				3,
+				3,
+				4,
+				-1,
+				-1,
+				-1,
+				5,
+				5,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 1
+		},
+		{
+			"dust": 732,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "mod_pulse_3",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_laser_bar",
+					"level": 1,
+					"uid": 9
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				9,
+				3,
+				3,
+				4,
+				8,
+				8,
+				-1,
+				5,
+				5,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 2
+		},
+		{
+			"dust": 1609,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "mod_pulse_3",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_laser_bar",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "mod_orbit_1",
+					"level": 1,
+					"uid": 11
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				9,
+				3,
+				3,
+				4,
+				8,
+				8,
+				11,
+				5,
+				5,
+				10,
+				10,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 3
+		},
+		{
+			"dust": 2626,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "mod_pulse_3",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_laser_bar",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "mod_orbit_1",
+					"level": 1,
+					"uid": 11
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 12
+				},
+				{
+					"kind": "r_return_finale",
+					"level": 1,
+					"uid": 13
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				9,
+				3,
+				3,
+				4,
+				8,
+				8,
+				11,
+				5,
+				5,
+				10,
+				10,
+				12,
+				13,
+				13,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 4
+		},
+		{
+			"dust": 3938,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "mod_pulse_3",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_laser_bar",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "mod_orbit_1",
+					"level": 1,
+					"uid": 11
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 12
+				},
+				{
+					"kind": "r_return_finale",
+					"level": 1,
+					"uid": 13
+				},
+				{
+					"kind": "pulse_needle",
+					"level": 1,
+					"uid": 14
+				},
+				{
+					"kind": "mod_beam_2",
+					"level": 1,
+					"uid": 15
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				9,
+				3,
+				3,
+				4,
+				8,
+				8,
+				11,
+				5,
+				5,
+				10,
+				10,
+				12,
+				13,
+				13,
+				14,
+				14,
+				15,
+				-1,
+				-1
+			],
+			"wave": 5
+		},
+		{
+			"dust": 5402,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "mod_pulse_3",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_laser_bar",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "mod_orbit_1",
+					"level": 1,
+					"uid": 11
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 12
+				},
+				{
+					"kind": "r_return_finale",
+					"level": 1,
+					"uid": 13
+				},
+				{
+					"kind": "pulse_needle",
+					"level": 1,
+					"uid": 14
+				},
+				{
+					"kind": "mod_beam_2",
+					"level": 1,
+					"uid": 15
+				},
+				{
+					"kind": "recorded_crude",
+					"level": 1,
+					"uid": 16
+				},
+				{
+					"kind": "mod_beam_4",
+					"level": 1,
+					"uid": 17
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				9,
+				3,
+				3,
+				4,
+				8,
+				8,
+				11,
+				5,
+				5,
+				10,
+				10,
+				12,
+				13,
+				13,
+				14,
+				14,
+				15,
+				16,
+				16
+			],
+			"wave": 6
+		},
+		{
+			"dust": 7126,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "mod_pulse_3",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_laser_bar",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "mod_orbit_1",
+					"level": 1,
+					"uid": 11
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 12
+				},
+				{
+					"kind": "r_return_finale",
+					"level": 1,
+					"uid": 13
+				},
+				{
+					"kind": "pulse_needle",
+					"level": 1,
+					"uid": 14
+				},
+				{
+					"kind": "mod_beam_2",
+					"level": 1,
+					"uid": 15
+				},
+				{
+					"kind": "recorded_crude",
+					"level": 1,
+					"uid": 16
+				},
+				{
+					"kind": "mod_beam_4",
+					"level": 1,
+					"uid": 17
+				},
+				{
+					"kind": "scatter_heavy",
+					"level": 1,
+					"uid": 18
+				},
+				{
+					"kind": "chain_fork",
+					"level": 1,
+					"uid": 19
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				9,
+				3,
+				3,
+				4,
+				8,
+				8,
+				11,
+				5,
+				5,
+				10,
+				10,
+				12,
+				13,
+				13,
+				14,
+				14,
+				15,
+				16,
+				16
+			],
+			"wave": 7
+		},
+		{
+			"dust": 9234,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "mod_pulse_3",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_laser_bar",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "mod_orbit_1",
+					"level": 1,
+					"uid": 11
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 12
+				},
+				{
+					"kind": "r_return_finale",
+					"level": 1,
+					"uid": 13
+				},
+				{
+					"kind": "pulse_needle",
+					"level": 1,
+					"uid": 14
+				},
+				{
+					"kind": "mod_beam_2",
+					"level": 1,
+					"uid": 15
+				},
+				{
+					"kind": "recorded_crude",
+					"level": 1,
+					"uid": 16
+				},
+				{
+					"kind": "mod_beam_4",
+					"level": 1,
+					"uid": 17
+				},
+				{
+					"kind": "scatter_heavy",
+					"level": 1,
+					"uid": 18
+				},
+				{
+					"kind": "chain_fork",
+					"level": 1,
+					"uid": 19
+				},
+				{
+					"kind": "flame_spark",
+					"level": 1,
+					"uid": 20
+				},
+				{
+					"kind": "r_fugue",
+					"level": 1,
+					"uid": 21
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				9,
+				3,
+				3,
+				4,
+				8,
+				8,
+				11,
+				5,
+				5,
+				10,
+				10,
+				12,
+				13,
+				13,
+				14,
+				14,
+				15,
+				16,
+				16
+			],
+			"wave": 8
+		},
+		{
+			"dust": 11634,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "mod_pulse_3",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_laser_bar",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "mod_orbit_1",
+					"level": 1,
+					"uid": 11
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 12
+				},
+				{
+					"kind": "r_return_finale",
+					"level": 1,
+					"uid": 13
+				},
+				{
+					"kind": "pulse_needle",
+					"level": 1,
+					"uid": 14
+				},
+				{
+					"kind": "mod_beam_2",
+					"level": 1,
+					"uid": 15
+				},
+				{
+					"kind": "recorded_crude",
+					"level": 1,
+					"uid": 16
+				},
+				{
+					"kind": "mod_beam_4",
+					"level": 1,
+					"uid": 17
+				},
+				{
+					"kind": "scatter_heavy",
+					"level": 1,
+					"uid": 18
+				},
+				{
+					"kind": "chain_fork",
+					"level": 1,
+					"uid": 19
+				},
+				{
+					"kind": "flame_spark",
+					"level": 1,
+					"uid": 20
+				},
+				{
+					"kind": "r_fugue",
+					"level": 1,
+					"uid": 21
+				},
+				{
+					"kind": "missile_swarm",
+					"level": 1,
+					"uid": 22
+				},
+				{
+					"kind": "scatter_prism",
+					"level": 1,
+					"uid": 23
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				9,
+				3,
+				3,
+				4,
+				8,
+				8,
+				11,
+				5,
+				5,
+				10,
+				10,
+				12,
+				13,
+				13,
+				14,
+				14,
+				15,
+				16,
+				16
+			],
+			"wave": 9
+		}
+	],
+	"checks": 94,
+	"elapsed_wall_seconds": 435.346,
+	"failures": [],
+	"first5s_max_error": 0.0712599885556102,
+	"kills": 7077,
+	"max_compile_msec": 5595.088,
+	"music_seconds": 357.001878512695,
+	"observed_weapon_events": 6383,
+	"peak_bullets": 201,
+	"peak_enemies": 347,
+	"peak_hostile_bullets": 375,
+	"purchases": [
+		{
+			"kind": "orbit",
+			"price": 24,
+			"slot": 3,
+			"uid": 6,
+			"wave": 1
+		},
+		{
+			"kind": "mod_pulse_3",
+			"price": 17,
+			"slot": 1,
+			"uid": 7,
+			"wave": 1
+		},
+		{
+			"kind": "nova",
+			"price": 23,
+			"slot": 9,
+			"uid": 8,
+			"wave": 2
+		},
+		{
+			"kind": "r_laser_bar",
+			"price": 21,
+			"slot": 5,
+			"uid": 9,
+			"wave": 2
+		},
+		{
+			"kind": "beam",
+			"price": 21,
+			"slot": 14,
+			"uid": 10,
+			"wave": 3
+		},
+		{
+			"kind": "mod_orbit_1",
+			"price": 15,
+			"slot": 11,
+			"uid": 11,
+			"wave": 3
+		},
+		{
+			"kind": "boomerang",
+			"price": 22,
+			"slot": 16,
+			"uid": 12,
+			"wave": 4
+		},
+		{
+			"kind": "r_return_finale",
+			"price": 27,
+			"slot": 17,
+			"uid": 13,
+			"wave": 4
+		},
+		{
+			"kind": "pulse_needle",
+			"price": 26,
+			"slot": 19,
+			"uid": 14,
+			"wave": 5
+		},
+		{
+			"kind": "mod_beam_2",
+			"price": 20,
+			"slot": 21,
+			"uid": 15,
+			"wave": 5
+		},
+		{
+			"kind": "recorded_crude",
+			"price": 35,
+			"slot": 22,
+			"uid": 16,
+			"wave": 6
+		},
+		{
+			"kind": "mod_beam_4",
+			"price": 17,
+			"slot": -1,
+			"uid": 17,
+			"wave": 6
+		},
+		{
+			"kind": "scatter_heavy",
+			"price": 36,
+			"slot": -1,
+			"uid": 18,
+			"wave": 7
+		},
+		{
+			"kind": "chain_fork",
+			"price": 40,
+			"slot": -1,
+			"uid": 19,
+			"wave": 7
+		},
+		{
+			"kind": "flame_spark",
+			"price": 36,
+			"slot": -1,
+			"uid": 20,
+			"wave": 8
+		},
+		{
+			"kind": "r_fugue",
+			"price": 31,
+			"slot": -1,
+			"uid": 21,
+			"wave": 8
+		},
+		{
+			"kind": "missile_swarm",
+			"price": 38,
+			"slot": -1,
+			"uid": 22,
+			"wave": 9
+		},
+		{
+			"kind": "scatter_prism",
+			"price": 38,
+			"slot": -1,
+			"uid": 23,
+			"wave": 9
+		}
+	],
+	"scope": "Complete ten-wave Uranus route on production native128-second score/durations, native fleets/hits/Boss/victory, nine six-offer shops using real purchase/continue signals and equipment drop handlers. Assistance: invulnerability, steering, automatic overload. No seeking, skips, injected kills or HP reduction. Not human difficulty or listening acceptance.",
+	"score": 7198,
+	"shops": 9,
+	"timing_max_error_all": 0.0712599885556102,
+	"total_spawned": 8139,
+	"waves": {
+		"1": {
+			"dust": 0,
+			"equipped": 5,
+			"modules": 5,
+			"start": 0.0
+		},
+		"10": {
+			"dust": 11634,
+			"equipped": 16,
+			"modules": 23,
+			"start": 324.113304946289
+		},
+		"2": {
+			"dust": 293,
+			"equipped": 7,
+			"modules": 7,
+			"start": 28.0632773186035
+		},
+		"3": {
+			"dust": 732,
+			"equipped": 9,
+			"modules": 9,
+			"start": 58.0834297407227
+		},
+		"4": {
+			"dust": 1609,
+			"equipped": 11,
+			"modules": 11,
+			"start": 90.0107304462891
+		},
+		"5": {
+			"dust": 2626,
+			"equipped": 13,
+			"modules": 13,
+			"start": 124.021453004883
+		},
+		"6": {
+			"dust": 3938,
+			"equipped": 15,
+			"modules": 15,
+			"start": 160.086246910645
+		},
+		"7": {
+			"dust": 5402,
+			"equipped": 16,
+			"modules": 17,
+			"start": 198.102401192871
+		},
+		"8": {
+			"dust": 7126,
+			"equipped": 16,
+			"modules": 19,
+			"start": 238.078411669434
+		},
+		"9": {
+			"dust": 9234,
+			"equipped": 16,
+			"modules": 21,
+			"start": 280.073925771484
+		}
+	},
+	"weapon_damage": {
+		"beam": 65138.1306225022,
+		"boomerang": 24186.8134126243,
+		"nova": 28353.6168281246,
+		"orbit": 2928.18445862497,
+		"overload": 200023.133562,
+		"pulse": 52530.2775023701,
+		"pulse_needle": 41976.7900110005,
+		"recorded_crude": 19280.9301676252,
+		"scatter": 8895.84426787482
+	}
+}

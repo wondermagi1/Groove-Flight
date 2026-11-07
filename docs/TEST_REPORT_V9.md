@@ -1,6 +1,6 @@
-# 律航 V9 · 多声部音乐与武器验证
+# Groove Flight V9 · 多声部音乐与武器验证
 
-2026-10-30，Windows、Godot4.7.2、RTX4060 Laptop。测试使用`--beatdrift-test`和独立APPDATA；未写入真实玩家乐谱、设置或战绩。音频素材为测试程序原创合成的旋律、和弦与瞬态。
+2026-10-30，Windows、Godot4.7.2、RTX4060 Laptop。测试使用`--grooveflight-test`和独立APPDATA；未写入真实玩家乐谱、设置或战绩。音频素材为测试程序原创合成的旋律、和弦与瞬态。
 
 | 检查 | 结果 | 范围 |
 | --- | ---: | --- |

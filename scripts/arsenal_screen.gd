@@ -25,10 +25,10 @@ var tick: float = 0.0
 var rebuild_pending: bool = false
 var step_cells: Array[Control] = []
 var step_cards: Array[Control] = []
+var step_lights: Array[Control] = []
 var panel_rects: Dictionary = {}
 var inventory_drop
 var font: SystemFont
-var charge_bar_serial: int = -1
 var lab_status: Label
 var lab_mutes: Array=[]
 
@@ -45,8 +45,6 @@ class ModuleCard:
 	var sold: bool = false
 	var small: bool = false
 	var flight_compact: bool = false
-	var charge_bars: int = 1
-	var charge_progress: float = 0.0
 	var selected: bool = false
 	func _ready() -> void:
 		focus_mode = Control.FOCUS_NONE
@@ -84,26 +82,23 @@ class ModuleCard:
 		preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		preview.small = true
 		preview.theme = screen.theme
-		screen.decorate_card(preview, row.color, true)
+		screen.decorate_card(preview, DATA.quality_color(row), true)
 		set_drag_preview(preview)
-		return {"beatdrift_module": module_uid}
+		return {"grooveflight_module": module_uid}
 	func _drop_target(position_value: Vector2) -> int:
 		if slot_index < 0: return -1
 		var width: int = maxi(1, int(DATA.item(item_id).get("width", 1)))
 		return slot_index + clampi(int(position_value.x / maxf(slot_stride, 1.0)), 0, width - 1)
 	func _can_drop_data(position_value: Vector2, data: Variant) -> bool:
-		return screen != null and data is Dictionary and data.has("beatdrift_module") and screen.can_drop(int(data.beatdrift_module), _drop_target(position_value))
+		return screen != null and data is Dictionary and data.has("grooveflight_module") and screen.can_drop(int(data.grooveflight_module), _drop_target(position_value))
 	func _drop_data(position_value: Vector2, data: Variant) -> void:
-		screen.drop_module(int(data.beatdrift_module), _drop_target(position_value))
+		screen.drop_module(int(data.grooveflight_module), _drop_target(position_value))
 	func _draw() -> void:
 		var row: Dictionary = DATA.item(item_id)
 		if row.is_empty(): return
-		var accent: Color = row.color
+		var accent: Color = DATA.quality_color(row)
 		if flight_compact:
 			ART.draw_icon(self, Rect2(Vector2(8, 1), Vector2(size.x - 16, size.y - 4)), item_id)
-			if str(row.category) == "weapon":
-				draw_line(Vector2(5, size.y - 3), Vector2(size.x - 5, size.y - 3), Color(accent, 0.18), 1.0)
-				draw_line(Vector2(5, size.y - 3), Vector2(5 + (size.x - 10) * charge_progress, size.y - 3), Color(accent, 0.8), 1.5)
 			if item_level > 1:
 				draw_string(get_theme_font("font"), Vector2(size.x - 15, 12), str(item_level), HORIZONTAL_ALIGNMENT_LEFT, 12, 10, Color(accent, 0.9))
 			return
@@ -123,8 +118,13 @@ class ModuleCard:
 		if small:
 			draw_string(card_font, Vector2(size.x - 26.0, 18.0), str(item_level), HORIZONTAL_ALIGNMENT_LEFT, 20.0, 13, Color(accent, 0.9))
 		else:
-			var rarity: int = clampi(int(row.rarity), 0, 3)
-			draw_string(card_font, Vector2(11.0, 24.0), RARITIES[rarity] + " / " + str(row.width) + " 格", HORIZONTAL_ALIGNMENT_LEFT, size.x - 22.0, 15, RARITY_COLORS[rarity])
+			draw_string(card_font, Vector2(11.0, 24.0), DATA.quality_name(row) + " / " + str(row.width) + " 格", HORIZONTAL_ALIGNMENT_LEFT, size.x - 22.0, 15, DATA.quality_color(row))
+			if row.has("quality"):
+				var stats_now=screen.game.loadout.stats() if screen!=null and screen.game!=null else {}
+				var attr_points=int(round(float(stats_now.get(str(row.attr),0.))))
+				var attr_name={"ballistic":"实弹","energy":"能量","power":"动力","support":"支援"}.get(str(row.attr),str(row.attr))
+				var formula="发射 %d [%d+%s %d×%.1f]"%[int(row.count)+roundi(attr_points*float(row.get("attribute_count_scale",0.))),int(row.count),attr_name,attr_points,float(row.get("attribute_count_scale",0.))]
+				draw_string(card_font,Vector2(11.0,size.y-36.0),formula,HORIZONTAL_ALIGNMENT_LEFT,size.x-22.0,13,Color(DATA.quality_color(row),.9))
 			draw_string(card_font, Vector2(11.0, size.y - 17.0), "已售出" if sold else "✦ %d  ·  购买" % price, HORIZONTAL_ALIGNMENT_LEFT, size.x - 22.0, 18, Color("6c7d96") if sold else accent)
 		if selected:
 			draw_line(Vector2(10.0, 1.0), Vector2(size.x - 10.0, 1.0), accent, 2.0, true)
@@ -137,17 +137,29 @@ class StepCell:
 		focus_mode = Control.FOCUS_NONE
 		pressed.connect(func(): screen.click_slot(slot_index, -1))
 	func _can_drop_data(_position: Vector2, data: Variant) -> bool:
-		return data is Dictionary and data.has("beatdrift_module") and screen.can_drop(int(data.beatdrift_module), slot_index)
+		return data is Dictionary and data.has("grooveflight_module") and screen.can_drop(int(data.grooveflight_module), slot_index)
 	func _drop_data(_position: Vector2, data: Variant) -> void:
-		screen.drop_module(int(data.beatdrift_module), slot_index)
+		screen.drop_module(int(data.grooveflight_module), slot_index)
+
+class StepLight:
+	extends Control
+	var active: bool = false
+	func _ready() -> void:
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+	func set_active(value: bool) -> void:
+		if active == value: return
+		active = value
+		queue_redraw()
+	func _draw() -> void:
+		draw_circle(size * .5, 4.5 if active else 2.6, Color("f6fbff") if active else Color("30465a"))
 
 class InventoryDrop:
 	extends ScrollContainer
 	var screen
 	func _can_drop_data(_position: Vector2, data: Variant) -> bool:
-		return data is Dictionary and data.has("beatdrift_module") and screen.can_drop(int(data.beatdrift_module), -1)
+		return data is Dictionary and data.has("grooveflight_module") and screen.can_drop(int(data.grooveflight_module), -1)
 	func _drop_data(_position: Vector2, data: Variant) -> void:
-		screen.drop_module(int(data.beatdrift_module), -1)
+		screen.drop_module(int(data.grooveflight_module), -1)
 
 class DetailIllustration:
 	extends Control
@@ -225,6 +237,7 @@ func refresh() -> void:
 	stat_labels.clear()
 	step_cells.clear()
 	step_cards.clear()
+	step_lights.clear()
 	detail_panel = null
 	editor_hint = null
 	panel_rects.clear()
@@ -246,7 +259,6 @@ func refresh() -> void:
 		var flight_width: float = minf(780.0, sequence_width)
 		var flight_height: float = minf(128.0, view.y * 0.15)
 		panel_rects.sequencer = Rect2(sequence_x + (sequence_width - flight_width) * 0.5, view.y - flight_height - 18.0, flight_width, flight_height)
-	charge_bar_serial = -1
 	panel_rects.buffs = Rect2(view.x - right_width - 22.0, top, right_width, minf(630.0, view.y - top - 22.0))
 	if mode != "combat":
 		var shade := ColorRect.new()
@@ -318,11 +330,20 @@ func _build_top(view: Vector2) -> void:
 	all_button.name = "ToggleAllPanels"
 	toggles.add_child(all_button)
 	if mode != "combat":
+		var codex_button=_button("音色图鉴",open_weapon_codex,Color("8edfda"),34)
+		codex_button.name="WeaponCodexOpen"
+		codex_button.tooltip_text="查看全部36件武器的实际音源、八音样本和节奏型"
+		toggles.add_child(codex_button)
+	if mode != "combat":
 		var resume := _button("继续下一波 →" if mode == "shop" else "应用并返回  /  TAB", _resume, Color("94f0d6"), 47)
 		resume.name = "ArsenalContinue"
 		resume.position = Vector2(view.x - 247.0, 24)
 		resume.size.x = 222.0
-		resume.disabled = game.loadout.equipped_weapons() == 0
+		var pending_boons = game.get("rewards")
+		if pending_boons == null: pending_boons=[]
+		var pending_choice=game.get("reward_taken")
+		if pending_choice==null: pending_choice=true
+		resume.disabled = game.loadout.equipped_weapons() == 0 or (mode=="shop" and not pending_boons.is_empty() and not bool(pending_choice))
 		content.add_child(resume)
 		var hint := _label("拖动编排 · 右键卸下 · 同类同级可合成", 17, Color("7790aa"))
 		hint.position = Vector2(maxf(680.0, view.x - 650.0), 79)
@@ -334,6 +355,8 @@ func _toggle_panel(key: String) -> void:
 func _toggle_all() -> void:
 	game.toggle_all_panels()
 	_queue_rebuild()
+func open_weapon_codex() -> void:
+	game.open_weapon_codex()
 func _resume() -> void:
 	if mode == "shop": game.continue_wave()
 	else: game.close_editor()
@@ -404,7 +427,7 @@ func _card(module: Dictionary, at: int = -1) -> ModuleCard:
 	result.slot_index = at
 	result.small = true
 	result.selected = game.selected_uid == result.module_uid
-	decorate_card(result, DATA.item(result.item_id).get("color", Color("91b8cf")), result.selected)
+	decorate_card(result, DATA.color(result.item_id), result.selected)
 	return result
 
 func _build_inventory(rect: Rect2) -> void:
@@ -463,7 +486,7 @@ func _build_sequencer(rect: Rect2) -> void:
 		content.add_child(panel)
 		panel.add_child(rows_area)
 	else:
-		var column := _panel(rect, "三轨音序", "每轨 8 格 · 每格半拍 · 宽卡只在首格触发")
+		var column := _panel(rect, "三轨音序", "每轨8格 · 每格0.125秒 · 一轮1秒")
 		rows_area.custom_minimum_size.y = 188.0 if rect.size.y > 270.0 else 148.0
 		rows_area.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		column.add_child(rows_area)
@@ -471,14 +494,15 @@ func _build_sequencer(rect: Rect2) -> void:
 	var left_offset: float = 15.0 if compact_flight else 12.0
 	var row_gap: float = 4.0 if compact_flight else 6.0
 	var cell_width: float = (rect.size.x - (32.0 if compact_flight else 58.0) - gap * 7.0) / 8.0
-	var row_height: float = (rect.size.y - 16.0 - row_gap * 2.0) / 3.0 if compact_flight else (60.0 if rect.size.y > 270.0 else 46.0)
+	var row_count: int = game.loadout.active_tracks
+	var row_height: float = (rect.size.y - 16.0 - row_gap * float(row_count - 1)) / float(row_count) if compact_flight else (60.0 if rect.size.y > 270.0 else 46.0)
 	var stride: float = cell_width + gap
 	if compact_flight:
-		for track in range(3):
+		for track in range(row_count):
 			var track_label := _label(char(65 + track), 10, Color("607b90"))
 			track_label.position = Vector2(0, float(track) * (row_height + row_gap) + row_height * 0.5 - 7)
 			rows_area.add_child(track_label)
-	for at in range(game.loadout.slots.size()):
+	for at in range(game.loadout.active_tracks*8):
 		var track: int = int(at / 8)
 		var cell := StepCell.new()
 		cell.screen = self; cell.slot_index = at
@@ -492,7 +516,13 @@ func _build_sequencer(rect: Rect2) -> void:
 		cell.add_theme_stylebox_override("hover", _box(Color("192b38"), Color("70b6c4"), 4, 1))
 		rows_area.add_child(cell)
 		step_cells.append(cell)
-	for at in range(game.loadout.slots.size()):
+		var light:=StepLight.new()
+		light.position=Vector2(cell_width*.5-4.,row_height-10.)
+		light.size=Vector2(8.,8.)
+		light.name="StepLight_%02d"%at
+		cell.add_child(light)
+		step_lights.append(light)
+	for at in range(game.loadout.active_tracks*8):
 		var uid: int = int(game.loadout.slots[at])
 		if uid < 0 or game.loadout.slots.find(uid) != at: continue
 		var module: Dictionary = game.loadout.find(uid)
@@ -516,6 +546,11 @@ func _build_buffs(rect: Rect2) -> void:
 		var module: Dictionary = game.loadout.find(uid)
 		if not module.is_empty() and DATA.item(str(module.kind)).get("category", "weapon") != "weapon": buffs.append(module)
 	var column := _panel(rect, "已装备增益  %d" % buffs.size(), "只计算装入音序的模块")
+	var boon_text: Array=game.loadout.boon_summary() if game.loadout.has_method("boon_summary") else []
+	if not boon_text.is_empty():
+		var boon_banner=_label("清波强化 · "+" · ".join(boon_text),15,Color("e7c88d"))
+		boon_banner.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+		column.add_child(boon_banner)
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -561,10 +596,29 @@ func _build_shop(rect: Rect2) -> void:
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	content.add_child(scroll)
 	var area := Control.new()
-	area.custom_minimum_size = Vector2(rect.size.x - reserved - 8.0, (height + gap) * 3.0 - gap)
+	var boons = game.get("rewards")
+	if boons == null: boons=[]
+	var already_chosen=game.get("reward_taken")
+	if already_chosen==null: already_chosen=true
+	var boon_height: float=142. if not boons.is_empty() else 0.
+	area.custom_minimum_size = Vector2(rect.size.x - reserved - 8.0, boon_height+(height + gap) * 3.0 - gap)
 	area.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(area)
 	width = (rect.size.x - reserved - gap - 16.0) / float(columns)
+	if not boons.is_empty():
+		var boon_title=_label("清波强化 · 三选一" if not bool(already_chosen) else "清波强化 · 已选择",20,Color("e7c88d"))
+		boon_title.position=Vector2(2,0); area.add_child(boon_title)
+		var boon_width=(area.custom_minimum_size.x-gap*2.)/3.
+		for index in range(mini(3,boons.size())):
+			var boon: Dictionary=boons[index]
+			var callback=game.choose_boon.bind(index) if game.has_method("choose_boon") else func(): pass
+			var button=_button(str(boon.get("title",boon.get("name","强化")))+"\n"+str(boon.get("detail","")),callback,Color("e7c88d"),92.)
+			button.name="WaveBoon_%d"%index
+			button.position=Vector2(index*(boon_width+gap),28.)
+			button.size=Vector2(boon_width,104.)
+			button.add_theme_font_size_override("font_size",14)
+			button.disabled=bool(already_chosen) or not game.has_method("choose_boon")
+			area.add_child(button)
 	for index in range(game.shop_offers.size()):
 		var offer: Dictionary = game.shop_offers[index]
 		var row: Dictionary = DATA.item(str(offer.id))
@@ -574,12 +628,12 @@ func _build_shop(rect: Rect2) -> void:
 		card.sold = bool(offer.sold)
 		card.name = "ShopOffer_%d" % index
 		card.position = Vector2(float(index % columns) * (width + gap), float(index / columns) * (height + gap))
-		card.position.y+=27.
+		card.position.y+=27.+boon_height
 		card.size = Vector2(width, height-28.)
 		var lock_button=_button("已锁定" if bool(offer.get("locked",false)) else "锁定",game.toggle_offer_lock.bind(index),Color("e7c88d"),24.)
 		lock_button.name="ShopLock_%d"%index; lock_button.position=card.position-Vector2(0,27); lock_button.size=Vector2(width,25.); lock_button.disabled=bool(offer.sold); area.add_child(lock_button)
 		card.disabled = card.sold or game.dust < card.price or game.loadout.modules.size() >= 64
-		decorate_card(card, row.get("color", Color("91b1c5")))
+		decorate_card(card, DATA.quality_color(row))
 		area.add_child(card)
 
 func _build_inspector(view: Vector2, center_x: float, center_width: float, top: float, bottom_height: float) -> void:
@@ -665,9 +719,8 @@ func _update_detail() -> void:
 		detail_panel.visible = false
 		return
 	detail_panel.visible = true
-	var rarity: int = clampi(int(row.rarity), 0, 3)
 	_detail_text(str(row.name), 27, Color("f0f6ff"))
-	_detail_text("%s  /  %s  /  占 %d 格" % [RARITIES[rarity], CATEGORY_NAMES.get(str(row.category), "模块"), int(row.width)], 16, RARITY_COLORS[rarity])
+	_detail_text("//%s  /  %s  /  占 %d 格" % [DATA.quality_name(row), CATEGORY_NAMES.get(str(row.category), "模块"), int(row.width)], 16, DATA.quality_color(row))
 	var illustration := DetailIllustration.new()
 	illustration.item_id = str(row.id)
 	illustration.item_level = int(game.loadout.find(preview_uid).get("level", 1))
@@ -681,7 +734,13 @@ func _update_detail() -> void:
 		var serial: int = maxi(0, floori(float(game.music.timeline) / 2.0)) * 8 + maxi(0, head) % 8
 		var actual: Dictionary = game.loadout.item_stats(preview_uid, serial) if not module.is_empty() else row
 		_detail_text("所在拍预览 · 第 %d 格" % (head % 8 + 1) if head >= 0 else "基础参数", 18, row.color)
+		if row.has("quality"):
+			var stats_now=game.loadout.stats()
+			var attr_points=int(round(float(stats_now.get(str(row.attr),0.))))
+			var attr_scale=float(row.get("attribute_count_scale",0.))
+			_detail_text("发射 %d  [%d + %s %d × %.1f]\n颗子弹" % [int(actual.get("count",row.get("count",1))),int(row.get("count",1)),_stat_name(str(row.attr)),attr_points,attr_scale],20,DATA.quality_color(row))
 		_detail_text("单发伤害 %.1f  ·  弹丸 %d\n穿透 %d  ·  速度 %.0f\n爆破半径 %.0f  ·  %d 小节充能" % [float(actual.get("damage", row.get("damage", 0.0))), int(actual.get("count", row.get("count", 1))), int(actual.get("pierce", row.get("pierce", 0))), float(actual.get("speed", row.get("speed", 0.0))), float(actual.get("explosion", row.get("explosion", 0.0))), int(actual.get("charge", row.get("charge", 1)))], 18)
+		_detail_text("固定音色 · 白点经过时播放一次\n同种武器各自发声，可错位重奏\n充能 %d 轮；声音保持固定，充能仍限制弹体"%int(actual.get("charge",1)),16,Color("e7c78d"))
 		if not actual.get("calculation",{}).is_empty():
 			var f: Dictionary=actual.calculation
 			_detail_text("计算明细\n基础 %.1f × 舰体 %.2f × 等级 %.2f\n× 属性 %.2f × 单发倍率 %.2f × 改装 %.2f"%[f.base_damage,f.ship_multiplier,f.level_multiplier,f.attribute_multiplier,f.damage_multiplier,f.mod_multiplier],16)
@@ -721,7 +780,7 @@ func _update_detail() -> void:
 				actions.add_child(_button("卸下", drop_module.bind(preview_uid, -1), Color("92adca"), 37))
 			_detail_text("合成需要另一个同类、同级模块；最高 Lv.4。", 16, Color("7189a5"))
 	if module.is_empty() and editable() and is_instance_valid(game.get("lab")):
-		detail_controls.add_child(_button("试装此卡 不购买",game.lab.try_item.bind(str(row.id)),Color("91dcd4"),34))
+		detail_controls.add_child(_button("试听此卡 / 不购买",game.lab.try_item.bind(str(row.id)),Color("91dcd4"),34))
 	_add_detail_close()
 
 func _add_detail_close() -> void:
@@ -803,10 +862,17 @@ func _short_number(value: float) -> String:
 	return "%.1fk" % (value / 1000.0) if value >= 10000.0 else str(roundi(value))
 func _process(delta: float) -> void:
 	if game == null or is_queued_for_deletion(): return
+	_update_sequence_cursor()
 	tick += delta
 	if tick < 0.15: return
 	tick = 0.0
 	_update_live()
+func _update_sequence_cursor() -> void:
+	var step: int = int(game.music.timeline / 0.125) % 8 if game.music != null else -1
+	for cell in step_cells:
+		if is_instance_valid(cell): cell.modulate = Color("a8e9e7") if cell.slot_index % 8 == step and mode == "combat" else Color.WHITE
+	for index in range(step_lights.size()):
+		if is_instance_valid(step_lights[index]): step_lights[index].set_active(index % 8 == step)
 func _update_live() -> void:
 	for index in range(lab_mutes.size()):
 		if is_instance_valid(lab_mutes[index]): lab_mutes[index].text=("静音 " if bool(game.standard_music.track_mutes[index]) else "有声 ")+char(65+index)
@@ -817,25 +883,15 @@ func _update_live() -> void:
 		var stats: Dictionary = game.loadout.stats()
 		for key in stat_labels:
 			if is_instance_valid(stat_labels[key]): stat_labels[key].text = _format_stat(str(key), float(stats.get(key, 0.0)))
-	var step: int = int(game.music.timeline / 0.25) % 8 if game.music != null else -1
-	for cell in step_cells:
-		if is_instance_valid(cell): cell.modulate = Color("a8e9e7") if cell.slot_index % 8 == step and mode == "combat" else Color.WHITE
+	var step: int = int(game.music.timeline / 0.125) % 8 if game.music != null else -1
 	for card in step_cards:
 		if is_instance_valid(card):
 			card.modulate = Color("c8faff") if card.slot_index % 8 == step and mode == "combat" else Color.WHITE
-			if mode == "combat" and game.music != null:
-				var bar: int = int(game.music.timeline / 2.0)
-				if bar != charge_bar_serial:
-					var actual: Dictionary = game.loadout.item_stats(card.module_uid, bar * 8 + card.slot_index % 8)
-					card.charge_bars = maxi(1, int(actual.get("charge", 1)))
-				card.charge_progress = fposmod(float(game.music.timeline) + 2.0 - float(card.slot_index % 8) * 0.25, 2.0 * card.charge_bars) / (2.0 * card.charge_bars)
-				card.queue_redraw()
-	if game.music != null: charge_bar_serial = int(game.music.timeline / 2.0)
 
 func _build_lab(rect: Rect2) -> void:
 	lab_mutes.clear()
 	if game.get("is_preview")==true or not game.has_method("ensure_lab"): return
-	game.ensure_lab(); game.lab.activate()
+	game.ensure_lab(); game.lab.ensure_ready()
 	var column=_panel(rect,"配装试射")
 	column.add_theme_constant_override("separation",3)
 	var presets=OptionButton.new(); presets.add_item("当前配装")
@@ -851,24 +907,30 @@ func _build_lab(rect: Rect2) -> void:
 	var targets=OptionButton.new(); targets.add_item("纵列"); targets.add_item("矩阵"); targets.add_item("巨物靶")
 	targets.select(game.lab.target_layout); targets.item_selected.connect(game.lab.set_targets); controls.add_child(targets)
 	var tracks=HBoxContainer.new(); tracks.add_theme_constant_override("separation",4); column.add_child(tracks)
-	for i in range(3):
+	for i in range(game.loadout.active_tracks):
 		var mute=_button(("静音 " if bool(game.standard_music.track_mutes[i]) else "有声 ")+char(65+i),game.lab.toggle_track.bind(i),Color("a9bde0"),25)
 		mute.tooltip_text="左键切换静音，右键独奏此轨。只改变声音。"
 		mute.gui_input.connect(func(event):
 			if event is InputEventMouseButton and event.pressed and event.button_index==MOUSE_BUTTON_RIGHT: game.lab.toggle_track(i,true))
 		tracks.add_child(mute); lab_mutes.append(mute)
 	var options=HBoxContainer.new(); options.add_theme_constant_override("separation",4); column.add_child(options)
-	var loop=CheckButton.new(); loop.text="循环一小节"; loop.button_pressed=game.lab.loop_bar
+	var loop=CheckButton.new(); loop.text="循环一轮"; loop.button_pressed=game.lab.loop_bar
 	loop.add_theme_font_size_override("font_size",13); loop.toggled.connect(func(value): game.lab.loop_bar=value); options.add_child(loop)
+	var ranges=CheckButton.new(); ranges.name="LabRanges"; ranges.text="显示射程"; ranges.button_pressed=game.lab.show_ranges
+	ranges.add_theme_font_size_override("font_size",13)
+	ranges.toggled.connect(func(value):
+		game.lab.show_ranges=value; game.lab.arena.preview_show_ranges=value; game.lab.arena.queue_redraw()
+		lab_status.text="青/金/紫线：A/B/C轨实际射程；仅试射显示" if value else "静音只影响声音")
+	options.add_child(ranges)
 	var solo=OptionButton.new(); solo.add_item("全部轨道")
-	for index in range(3): solo.add_item("独奏 "+char(65+index))
+	for index in range(game.loadout.active_tracks): solo.add_item("独奏 "+char(65+index))
 	solo.add_theme_font_size_override("font_size",13)
 	solo.item_selected.connect(func(index):
 		if index==0:
 			game.standard_music.track_mutes=[false,false,false]; game.lab.signature=""; game.lab.sync()
 		else: game.lab.toggle_track(index-1,true))
 	options.add_child(solo)
-	lab_status=_label("静音只影响声音",13,Color("6d899f")); lab_status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; column.add_child(lab_status)
+	lab_status=_label("试听默认关闭；点击“试听此卡”“播放”或“重播”后才发声。" if not bool(game.lab.active) else "试听播放中；可暂停或关闭详情。",13,Color("6d899f")); lab_status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; column.add_child(lab_status)
 	for bar in [controls,tracks]:
 		for control in bar.get_children():
 			if control is Button:

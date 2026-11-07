@@ -1,0 +1,17 @@
+{
+	"checks": 62,
+	"facts": {
+		"atlas_variants": 41,
+		"battle_projectiles": 186,
+		"dense_render_update_median_ms": 7.701,
+		"dense_render_update_p95_ms": 9.028,
+		"renderer": "forward_plus"
+	},
+	"failures": [
+		"actual GPU readback contains a visible weapon / recorded_medium_legend",
+		"actual GPU readback contains a visible weapon / recorded_heavy",
+		"actual GPU readback contains a visible weapon / recorded_heavy_rare",
+		"actual GPU readback contains a visible weapon / recorded_heavy_legend"
+	],
+	"scope": "Actual GPU readback of36weapons and5effect modes;1200static instances/culling/reduced setting;visual budgets/expiry; production firing, impact, explosion and title lifecycle. Render-update frame samples are not full-combat GPU benchmarks or human art acceptance."
+}

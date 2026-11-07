@@ -8,13 +8,15 @@ if not exist "%GODOT_EXE%" (
   exit /b 1
 )
 rem Scan changed assets on every launch, including newly updated city GLBs.
-"%GODOT_EXE%" --headless --editor --path "%~dp0." --import --quit --log-file "%TEMP%\BeatDrift-import.log"
+"%GODOT_EXE%" --headless --editor --path "%~dp0." --import --quit --log-file "%TEMP%\GrooveFlight-import.log"
 if errorlevel 1 (
-  echo Asset import failed. See %%TEMP%%\BeatDrift-import.log
+  echo Asset import failed. See %%TEMP%%\GrooveFlight-import.log
   pause
   exit /b 1
 )
-if /I "%BEATDRIFT_RENDERER%"=="compatibility" (
+set "RENDERER=%GROOVE_FLIGHT_RENDERER%"
+if not defined RENDERER set "RENDERER=%BEATDRIFT_RENDERER%"
+if /I "%RENDERER%"=="compatibility" (
   start "" "%GODOT_EXE%" --rendering-method gl_compatibility --path "%~dp0."
 ) else (
   start "" "%GODOT_EXE%" --path "%~dp0."

@@ -1,6 +1,6 @@
-# 律航 V11 · 配装、音乐与火力样板
+# Groove Flight V11 · 配装、音乐与火力样板
 
-基线 V10 `344c1d7`；交付整理日期 2026-11-02。工程仍为独立的 BeatDrift。运行 `Play.cmd`，编辑 `Open_Editor.cmd`。本次以水星为完整样板，其他星球已接入新组件，但没有完成八星真人平衡验收。
+基线 V10 `344c1d7`；交付整理日期 2026-11-02。工程仍为独立的 Groove Flight。运行 `Play.cmd`，编辑 `Open_Editor.cmd`。本次以水星为完整样板，其他星球已接入新组件，但没有完成八星真人平衡验收。
 
 ## 直接体验
 
@@ -44,6 +44,6 @@
 
 原有设置、逐星成绩及自定义曲谱路径不变，新选项使用默认值。240件装备ID不变，显示“弹丸倍率”更名“单发伤害倍率”，底层仍为 `bullet_multiplier`，不会把同一倍率另乘弹数。八条空间规则的效果改变，旧配装仍能加载，但应重新查看详情。
 
-分支 `codex/v11-harmonic-expedition`；V10回退标签 `beatdrift-v10-before-harmonic`。需要同时查看旧版本时，可在仓库运行 `git worktree add ../BeatDrift-V10 beatdrift-v10-before-harmonic`。独立副本运行前请备份 `%APPDATA%/BeatDriftPrototype`，旧引擎不会理解全部新设置。原工程不需要重置或删除。
+分支 `codex/v11-harmonic-expedition`；V10回退标签 `beatdrift-v10-before-harmonic`。需要同时查看旧版本时，可在仓库运行 `git worktree add ../GrooveFlight-V10 beatdrift-v10-before-harmonic`。独立副本运行前请备份 `%APPDATA%/BeatDriftPrototype`，旧引擎不会理解全部新设置。原工程不需要重置或删除。
 
-测试全部带 `--beatdrift-test`，使用隔离APPDATA，不覆盖玩家数据。本仓库未配置远程，本次保留本地提交。
+测试全部带 `--grooveflight-test`，使用隔离APPDATA，不覆盖玩家数据。本仓库未配置远程，本次保留本地提交。

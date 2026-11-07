@@ -3,7 +3,7 @@ extends RefCounted
 ## input note; optional newly composed accompaniment is explicitly named.
 const IDS=["auto","lead","bass","harmony","pad","accent","kick","snare","hat"]
 const NAMES={"auto":"自动 / 原音色","lead":"主旋律","bass":"低音","harmony":"和弦","pad":"长音铺底","accent":"装饰音","kick":"底鼓","snare":"军鼓","hat":"踩镲"}
-const WEAPONS={"lead":"boomerang","bass":"rail","harmony":"nova","pad":"orbit","accent":"chain","kick":"missile","snare":"scatter","hat":"pulse_needle"}
+const WEAPONS={"lead":"pulse_needle","bass":"rail","harmony":"nova","pad":"beam_split","accent":"chain","kick":"missile","snare":"scatter","hat":"pulse_needle"}
 const GAINS={"lead":.78,"bass":.65,"harmony":.48,"pad":.36,"accent":.60,"kick":.63,"snare":.38,"hat":.22}
 const PANS={"lead":0.,"bass":0.,"harmony":-.28,"pad":.25,"accent":.20,"kick":0.,"snare":-.08,"hat":.28}
 static func is_drum(role: String) -> bool: return role in ["kick","snare","hat"]

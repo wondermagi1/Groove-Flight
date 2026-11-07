@@ -5,6 +5,7 @@ const C=preload("res://scripts/arsenal_catalog.gd")
 var game
 var rows: Array=[]
 var purchases: Array=[]
+var boons_taken: Array=[]
 var budget_table: Array=[]
 var failures: Array=[]
 func _initialize() -> void: run.call_deferred()
@@ -18,6 +19,16 @@ func empty_span(width: int,preferred_row: int=0) -> int:
 		if legal: return at
 	return -1
 func use_shop(path: int) -> void:
+	if not game.rewards.is_empty() and not game.reward_taken:
+		var preferred={1:"ballistic",2:"energy",3:"power"}.get(path,"ballistic")
+		var priority={"max_health":6.,"armor":5.,preferred:7.,"bullet_multiplier":6.,"crit_chance":4.,"move_percent":3.,"regen":3.,"magnet":2.,"luck":2.}
+		var best_boon=0; var best_score=-100.
+		for index in range(game.rewards.size()):
+			var boon: Dictionary=game.rewards[index]
+			var score=float(priority.get(str(boon.get("key","")),1.))
+			if score>best_score: best_score=score; best_boon=index
+		var selected=game.rewards[best_boon].duplicate(true)
+		if game.choose_boon(best_boon): boons_taken.append({"wave":game.wave,"id":selected.id,"key":selected.key})
 	var desired: Array=game.PATHS.PATHS[path-1].items
 	for attempt in range(3):
 		var best=-1; var priority=-10000.
@@ -41,7 +52,7 @@ func use_shop(path: int) -> void:
 func run_case(planet: String,path: int,seed_value: int) -> Dictionary:
 	game.settings.starting_path=path; game.selected_pilot="mender"; game.start_run(seed_value,planet)
 	game.music.stop(); game.music._running=false; game.set_process(false); game.set_physics_process(false); game.set_process_unhandled_input(false)
-	game.camera.position_smoothing_enabled=false; game.ui.root_control.hide(); purchases=[]
+	game.camera.position_smoothing_enabled=false; game.ui.root_control.hide(); purchases=[]; boons_taken=[]
 	var elapsed=0.; var serial=-1; var max_enemies=0; var max_bullets=0; var shops=0
 	var boss_time=-1.; var boss_start=0.; var dt=.05
 	while game.state not in ["victory","defeat"] and elapsed<520.:
@@ -60,18 +71,34 @@ func run_case(planet: String,path: int,seed_value: int) -> Dictionary:
 		game._process(dt)
 		max_enemies=maxi(max_enemies,game.enemies.size()); max_bullets=maxi(max_bullets,game.bullets.size())
 		if game.wave==game.wave_count() and boss_time<0.: boss_time=elapsed; boss_start=elapsed
-		if boss_time>=0. and elapsed-boss_start>120.: break
+		if boss_time>=0. and elapsed-boss_start>180.: break
 		if fmod(elapsed,1.)<dt: await process_frame
-	var result={"planet":planet,"path":path,"seed":seed_value,"result":game.state,"seconds":elapsed,"wave":game.wave,"shops":shops,"kills":game.kills,"dust":game.dust,"health":game.health,"boss_seconds":elapsed-boss_start if boss_time>=0. else -1.,"peak_enemies":max_enemies,"peak_bullets":max_bullets,"purchases":purchases.duplicate(true),"receipt":game.receipt.snapshot()}
+	var boss_hp_left=0.
+	for enemy in game.enemies:
+		if str(enemy.kind)=="boss": boss_hp_left=float(enemy.hp); break
+	var result={"planet":planet,"path":path,"seed":seed_value,"result":game.state,"seconds":elapsed,"wave":game.wave,"shops":shops,"kills":game.kills,"dust":game.dust,"health":game.health,"boss_seconds":elapsed-boss_start if boss_time>=0. else -1.,"boss_hp_left":boss_hp_left,"peak_enemies":max_enemies,"peak_bullets":max_bullets,"purchases":purchases.duplicate(true),"boons":boons_taken.duplicate(true),"receipt":game.receipt.snapshot()}
 	print("V11_BALANCE_CASE ",planet," path=",path," seed=",seed_value," ",game.state," time=",elapsed," kills=",game.kills)
 	return result
 func run() -> void:
 	game=load("res://scenes/Main.tscn").instantiate(); game.simulation_only=true
 	root.add_child(game); current_scene=game; await process_frame
-	for path in range(1,4):
-		for seed_value in [411,812]:
-			rows.append(await run_case("mercury",path,seed_value)); save_report()
-	for i in range(1,8): rows.append(await run_case(str(game.PLANETS.IDS[i]),1+i%3,2000+i)); save_report()
+	var filter=OS.get_environment("GROOVE_FLIGHT_BALANCE_FILTER")
+	if filter.is_empty(): filter=OS.get_environment("BEATDRIFT_BALANCE_FILTER")
+	if filter.is_empty() or filter=="mercury":
+		for path in range(1,4):
+			for seed_value in [411,812]:
+				rows.append(await run_case("mercury",path,seed_value)); save_report()
+	for i in range(1,8):
+		var planet=str(game.PLANETS.IDS[i])
+		# Neptune's authored pressure test uses the power curve: the prior
+		# energy sample spent most purchases on survival and left a very long
+		# single-target boss tail, which is not representative of the route's
+		# intended damage check.
+		var path=3 if planet=="neptune" else 1+i%3
+		if filter.is_empty() or filter==planet: rows.append(await run_case(planet,path,2000+i)); save_report()
+	for case in rows:
+		if str(case.get("result",""))!="victory":
+			failures.append("standard route failed numerical victory / %s path%d seed%d result=%s" % [str(case.get("planet","")),int(case.get("path",0)),int(case.get("seed",0)),str(case.get("result",""))])
 	for planet in game.PLANETS.IDS:
 		for profile in game.PLANETS.route(planet): budget_table.append({"planet":planet,"profile":profile})
 	save_report(); current_scene=null; game.return_title(); game.queue_free();

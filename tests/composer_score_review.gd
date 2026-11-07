@@ -13,6 +13,8 @@ func _initialize() -> void:
 	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"Pure score/editor transactions, boundedJSONsave/load, actualSMF0/1 byte fixtures/runningstatus/chords/sustain/tempo handling/corruptinput, MIDIandJSONroundtrip, sharedschedule. No audio or UI/nativeflight acceptance."}
 	FileAccess.open("res://tests/results-composer-score.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("COMPOSER_SCORE_REVIEW ",JSON.stringify(result))
 	quit(0 if failures.is_empty() else 1)
+func instrument(preferred: String,fallback: String) -> String:
+	return preferred if SCORE.DATA.is_weapon_audio_ready(preferred) else fallback
 func model_checks() -> void:
 	var score=SCORE.new()
 	check(score.validate().ok and score.tracks.size()==3 and score.note_count()>40 and score.title.contains("原创"),"new composer contains a valid authored demo instead of copied commercial notes")
@@ -32,7 +34,7 @@ func model_checks() -> void:
 	check(not score.set_bars(7) and score.bars==8 and not score.set_bpm(39) and not score.set_bpm(241),"shortening cannot erase notes and BPM limits are enforced")
 	check(score.remove_note(0,tail) and not score.remove_note(0,tail) and score.set_bars(1),"removal is idempotent and shortening succeeds once tail notes are removed")
 	check(not score.remove_track(0),"the last editable track cannot be deleted")
-	for i in range(7): check(score.add_track("beam","声部%d"%i)>=0,"bounded track creation / "+str(i))
+	for i in range(7): check(score.add_track(instrument("recorded_ballistic","beam"),"声部%d"%i)>=0,"bounded track creation / "+str(i))
 	check(score.add_track("pulse")<0 and score.add_track("unknown")<0 and score.tracks.size()==8,"track and instrument limits preserve a valid project")
 	check(score.remove_track(7) and score.tracks.size()==7 and score.validate().ok,"removing a legal track preserves remaining ownership")
 	score.empty(); check(score.set_bars(256) and score.duration_seconds()==512. and not score.set_bpm(40) and score.bpm==120.,"ten-minute limit also applies to tempo changes on long compositions")
@@ -72,14 +74,14 @@ func serialization_checks() -> void:
 func schedule_checks() -> void:
 	var score=SCORE.new(); score.empty(); score.bars=2
 	var a=score.add_note(0,.5,61,1.25,37); var b=score.add_note(0,.5,68,.5,111)
-	var track=score.add_track("rail","重音"); score.tracks[track].pan=-.5; score.tracks[track].volume=.35
+	var track=score.add_track(instrument("recorded_ballistic","beam"),"重音"); score.tracks[track].pan=-.5; score.tracks[track].volume=.35
 	var c=score.add_note(track,4.,48,2.,96)
 	var before=JSON.stringify(score.to_dict()); var first=score.schedule(2)
 	check(first.size()==2 and first[0].pitch==61 and first[0].duration==.625 and first[0].velocity==37,"same-step chords preserve exact chromatic pitch, duration and velocity")
 	check(first[0].note_id==a and first[1].note_id==b and score.schedule(0).is_empty(),"rests remain rests and shared note identities drive dispatch")
 	check(score.schedule(34)==first.map(func(event): var changed=event.duplicate(); changed.serial=34; return changed),"looping derives from score length without advancing hidden mutable state")
 	var third=score.schedule(16)
-	check(third.size()==1 and third[0].note_id==c and third[0].pan==-.5 and third[0].volume==.35 and third[0].voice=="rail","sound and battle event carries per-track instrument and mix")
+	check(third.size()==1 and third[0].note_id==c and third[0].pan==-.5 and third[0].volume==.35 and third[0].voice==instrument("recorded_ballistic","beam"),"sound and battle event carries per-track instrument and mix")
 	var from_steps: Array=[]
 	for serial in range(score.step_count()): from_steps.append_array(score.schedule(serial))
 	check(from_steps==score.all_events() and JSON.stringify(score.to_dict())==before,"linear whole-song events agree with pure per-step scheduling")
@@ -100,7 +102,7 @@ func midi_checks() -> void:
 	var track=PackedByteArray([0,0xff,0x51,3,7,0xa1,0x20,0,0xc0,8,0,0x90,60,80,0,64,100,96,60,0,0,64,0,0,0xff,0x2f,0])
 	var parsed=MIDI.read_bytes(smf(track))
 	check(parsed.ok and parsed.score.bpm==120. and parsed.score.tracks.size()==1,"real format0 header/program/running-status fixture parses")
-	check(parsed.score.tracks[0].weapon=="chain" and parsed.score.tracks[0].notes.size()==2,"General MIDI program maps to a usable weapon voice")
+	check(parsed.score.tracks[0].weapon=="chain" and parsed.score.tracks[0].notes.size()==2,"General MIDI program maps to an active weapon voice")
 	var notes=parsed.score.tracks[0].notes
 	check(notes[0].pitch==60 and notes[1].pitch==64 and notes[0].duration==1. and notes[0].velocity==80 and notes[1].velocity==100,"polyphonic note lengths/velocities survive real note-on-zero terminations")
 	var tempo90=PackedByteArray([0,0xff,0x51,3,0x0a,0x2c,0x2b,0,0xff,0x2f,0])
@@ -127,10 +129,10 @@ func midi_checks() -> void:
 	for corrupt in [PackedByteArray(),PackedByteArray([1,2,3]),smf(PackedByteArray([0,60,90])),smf(PackedByteArray([0x81,0x81,0x81,0x81,0])),smf(PackedByteArray([0,0xff,0x51,4,1])),smf(PackedByteArray([0,0x90,128,90]))]:
 		check(not MIDI.read_bytes(corrupt).ok,"malformed/truncated/running-status/varint MIDI returns a failure")
 	check(not MIDI.read_bytes(smf(track,0)).ok and not MIDI.read_bytes(smf(track,0xe728)).ok,"invalid PPQN and unsupported SMPTE clocks do not produce misleading timing")
-	var score=SCORE.new(); score.tracks[0].weapon="missile_swarm"; score.tracks[0].pan=.25; score.tracks[1].mute=true
+	var score=SCORE.new(); score.tracks[0].weapon=instrument("recorded_crude_rare","pulse_needle"); score.tracks[0].pan=.25; score.tracks[1].mute=true
 	var written=MIDI.write_bytes(score.to_dict()); var reread=MIDI.read_bytes(written.bytes)
 	check(written.ok and reread.ok and reread.score.tracks.size()==3 and reread.score.bars==8,"format1 MIDI roundtrip keeps three musical parts and trailing rests")
-	check(reread.score.tracks[0].weapon=="missile_swarm" and reread.score.tracks[0].pan==.25 and reread.score.tracks[1].mute,"optional own-file metadata preserves weapon and mix across our MIDI roundtrip")
+	check(reread.score.tracks[0].weapon==instrument("recorded_crude_rare","pulse_needle") and reread.score.tracks[0].pan==.25 and reread.score.tracks[1].mute,"optional own-file metadata preserves the active instrument and mix across our MIDI roundtrip")
 	var path="res://work/composer-tests/roundtrip.mid"; check(score.export_midi(path).ok,"MIDI exporter writes a real playable SMF file")
 	var copy=SCORE.new(); copy.empty(); check(copy.import_midi(path).ok and copy.note_count()==score.note_count(),"file import populates the editable model rather than merely starting an audio recording")
 	var before=JSON.stringify(copy.to_dict()); FileAccess.open("res://work/composer-tests/bad.mid",FileAccess.WRITE).store_buffer(PackedByteArray([77,84,104,100]))
@@ -140,7 +142,7 @@ func random_roundtrips() -> void:
 	var random=RandomNumberGenerator.new(); random.seed=20261030
 	for trial in range(20):
 		var score=SCORE.new(); score.empty(); score.title="随机夹具 %d"%trial; score.set_bars(4+trial%8); score.set_bpm(60.+trial*7.)
-		for i in range(2): score.add_track(["rail","beam","pulse"][i],"声部%d"%i)
+		for i in range(2): score.add_track([instrument("recorded_crude","pulse"),instrument("recorded_ballistic","beam")][i],"声部%d"%i)
 		for i in range(50):
 			var beat=roundi(random.randf_range(0.,float(score.bars*4)-2.)*4.)/4.
 			score.add_note(random.randi_range(0,2),beat,random.randi_range(24,108),.25*random.randi_range(1,8),random.randi_range(1,127))

@@ -1,0 +1,125 @@
+{
+  "schema": 1,
+  "authorization": "User confirms original-author permission; see audio/library/groove_core/AUTHORIZATION.md",
+  "clips": [
+    {
+      "id": "menu_theme",
+      "file": "res://audio/authorized/menu_theme.ogg",
+      "source_catalog_id": "music_menu",
+      "role": "title_hub_hangar_solar_bgm"
+    },
+    {
+      "id": "crude_shot",
+      "file": "res://audio/authorized/weapon_crude_shot.ogg",
+      "source_catalog_id": "weapon_crude_fire",
+      "source_seconds": 3.05,
+      "source_active_end_seconds": 3.66,
+      "role": "pulse weapon strong accent"
+    },
+    {
+      "id": "collision",
+      "file": "res://audio/authorized/event_collision.ogg",
+      "source_catalog_id": "events_enemy_collision",
+      "source_seconds": 4.95,
+      "role": "player collision / enemy damage heavy impact thud"
+    },
+    {
+      "id": "shield",
+      "file": "res://audio/authorized/event_shield.ogg",
+      "source_catalog_id": "events_enemy_collision",
+      "source_seconds": 9.9,
+      "role": "shield activation and impact"
+    },
+    {
+      "id": "enemy_spawn",
+      "file": "res://audio/authorized/event_spawn.ogg",
+      "source_catalog_id": "events_enemy_collision",
+      "source_seconds": 19.05,
+      "role": "formation warp entrance"
+    },
+    {
+      "id": "dash_thruster",
+      "file": "res://audio/authorized/thruster_dash.ogg",
+      "source_catalog_id": "weapon_power_thruster",
+      "source_seconds": 0.65,
+      "role": "dash launch"
+    },
+    {
+      "id": "crude_fire_group",
+      "file": "res://audio/authorized/weapon_crude_fire_group_6s.wav",
+      "source_catalog_id": "weapon_crude_fire",
+      "source_seconds": 0.0,
+      "source_end_seconds": 6.0,
+      "role": "three strong-weak cycles; direct PCM16 source slice"
+    },
+    {
+      "id": "ballistic_cycle_16s",
+      "file": "res://audio/authorized/weapon_ballistic_cycle_16s.wav",
+      "source_catalog_id": "weapon_ballistic_volume_ramp",
+      "source_seconds": 0.58,
+      "source_end_seconds": 16.58,
+      "role": "single complete sixteen-second recorded weapon cycle shared by normal/rare/precious tiers"
+    },
+    {
+      "id": "uranus_amber",
+      "file": "res://audio/authorized/uranus_amber_loop.ogg",
+      "source_catalog_id": "music_uranus_amber",
+      "source_seconds": 0.32,
+      "source_end_seconds": 20.32,
+      "loop_seconds": 20.0,
+      "bpm": 120,
+      "bars": 10,
+      "role": "shared combat/editor/shop background loop for all planets"
+    },
+    {
+      "id": "feedback_kill_low_strong",
+      "file": "res://audio/authorized/feedback/kill_low_strong.wav",
+      "source_catalog_id": "gameplay_feedback_audio",
+      "source_seconds": 11.45,
+      "source_end_seconds": 11.82,
+      "role": "kill_low_strong",
+      "processing": "Butterworth3 bandpass 22-700Hz; 2ms attack/14ms release boundary fades; fixed gain 4.045007; no pitch/time change",
+      "sha256": "7d396a080eee88161e4c724e4980736bc1a4be970b01e9708b0d1ec60e5c2716"
+    },
+    {
+      "id": "feedback_kill_low_soft",
+      "file": "res://audio/authorized/feedback/kill_low_soft.wav",
+      "source_catalog_id": "gameplay_feedback_audio",
+      "source_seconds": 17.27,
+      "source_end_seconds": 17.62,
+      "role": "kill_low_soft",
+      "processing": "Butterworth3 bandpass 22-700Hz; 2ms attack/14ms release boundary fades; fixed gain 4.045007; no pitch/time change",
+      "sha256": "b28abeffc74e8812c13cdde6a7559f7be4aaf0c7a7b6f3e4e7bb52752ddc7acd"
+    },
+    {
+      "id": "feedback_kill_low_round",
+      "file": "res://audio/authorized/feedback/kill_low_round.wav",
+      "source_catalog_id": "gameplay_feedback_audio",
+      "source_seconds": 16.41,
+      "source_end_seconds": 16.7,
+      "role": "kill_low_round",
+      "processing": "Butterworth3 bandpass 22-700Hz; 2ms attack/14ms release boundary fades; fixed gain 4.045007; no pitch/time change",
+      "sha256": "0310dd22d776670a59d04c67e9d436a06d70a8f01dedf591b6dadc6d15f9ddfd"
+    },
+    {
+      "id": "feedback_shield_impact",
+      "file": "res://audio/authorized/feedback/shield_impact.wav",
+      "source_catalog_id": "gameplay_feedback_audio",
+      "source_seconds": 23.48,
+      "source_end_seconds": 23.73,
+      "role": "shield_impact",
+      "processing": "Butterworth3 bandpass 380-4500Hz; 2ms attack/14ms release boundary fades; fixed gain 4.928875; no pitch/time change",
+      "sha256": "435c96a18b5db3bf0682391192a5545b7fb536e33593a67f164cd13ffb0fdcab"
+    },
+    {
+      "id": "feedback_pickup_coin",
+      "file": "res://audio/authorized/feedback/pickup_coin.wav",
+      "source_catalog_id": "gameplay_feedback_audio",
+      "source_seconds": 6.685,
+      "source_end_seconds": 6.845,
+      "role": "pickup_coin",
+      "processing": "Butterworth3 bandpass 3000-9500Hz; 2ms attack/14ms release boundary fades; fixed gain 7.692835; no pitch/time change",
+      "sha256": "cb11675ea2078cdaae6bd34d3e0626e8b3a05b71d0a827625f1b0787deeb3b46"
+    }
+  ]
+}

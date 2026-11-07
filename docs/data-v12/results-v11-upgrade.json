@@ -1,0 +1,97 @@
+{
+	"checks": 1290,
+	"facts": {
+		"bosses": [
+			{
+				"bullets": 12,
+				"motif": "钻臂扫掘",
+				"planet": "mercury",
+				"ram": false,
+				"warnings": 2
+			},
+			{
+				"bullets": 36,
+				"motif": "硫云风扇",
+				"planet": "venus",
+				"ram": false,
+				"warnings": 1
+			},
+			{
+				"bullets": 6,
+				"motif": "护航闸门",
+				"planet": "earth",
+				"ram": false,
+				"warnings": 4
+			},
+			{
+				"bullets": 10,
+				"motif": "冲城钻锋",
+				"planet": "mars",
+				"ram": true,
+				"warnings": 1
+			},
+			{
+				"bullets": 96,
+				"motif": "风暴双螺旋",
+				"planet": "jupiter",
+				"ram": false,
+				"warnings": 0
+			},
+			{
+				"bullets": 47,
+				"motif": "星环缺口",
+				"planet": "saturn",
+				"ram": false,
+				"warnings": 1
+			},
+			{
+				"bullets": 29,
+				"motif": "极轴栅格",
+				"planet": "uranus",
+				"ram": false,
+				"warnings": 0
+			},
+			{
+				"bullets": 21,
+				"motif": "终潮回响",
+				"planet": "neptune",
+				"ram": false,
+				"warnings": 4
+			}
+		],
+		"formations": [
+			{
+				"phase": "列阵",
+				"position": "(0.0, -690.0)",
+				"style": "vanguard"
+			},
+			{
+				"phase": "列阵",
+				"position": "(29.59241, -690.0)",
+				"style": "wedge"
+			},
+			{
+				"phase": "列阵",
+				"position": "(-26.98515, -693.7098)",
+				"style": "crescent"
+			},
+			{
+				"phase": "列阵",
+				"position": "(-86.10889, -690.0)",
+				"style": "twin_column"
+			},
+			{
+				"phase": "列阵",
+				"position": "(-86.10889, -690.0)",
+				"style": "braided_columns"
+			},
+			{
+				"phase": "列阵",
+				"position": "(-45.9649, -701.1899)",
+				"style": "constellation"
+			}
+		]
+	},
+	"failures": [],
+	"scope": "Real production trajectory, receipts, microtime, retained formations, eight boss motifs, lock transactions and isolated native preview. Controlled fixtures; no claim of human balancing or listening."
+}

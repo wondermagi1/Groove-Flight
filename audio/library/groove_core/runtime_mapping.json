@@ -1,0 +1,240 @@
+{
+  "schema": 1,
+  "source_game": "Groove Core Demo",
+  "target_game": "Groove Flight",
+  "updated_at": "2026-11-04",
+  "source_records": 9,
+  "sources_used_at_runtime": 7,
+  "runtime_clip_count": 30,
+  "items": [
+    {
+      "catalog_id": "music_menu",
+      "groove_core_use": "菜单背景音乐",
+      "source_file": "audio/library/groove_core/raw/music_menu/菜单背景音乐.mp4.mp3",
+      "source_sha256": "28d231694c0172ba3d267b344869fb5f75ab48694926f572e47d81797c698b4a",
+      "processing": "ffmpeg PCM16 48kHz stereo; loudness normalized to about -18 LUFS; OGG Vorbis q6",
+      "groove_flight_use": "标题页、霓虹港、机库与星球航图背景音乐",
+      "runtime_files": [
+        "audio/authorized/menu_theme.ogg"
+      ],
+      "source_windows": [
+        {
+          "start_seconds": 0.0,
+          "end_seconds": 224.8,
+          "use": "full menu theme"
+        }
+      ],
+      "status": "runtime"
+    },
+    {
+      "catalog_id": "events_enemy_collision",
+      "groove_core_use": "敌机撞击、我方护盾与敌机生成声音",
+      "source_file": "audio/library/groove_core/raw/events_enemy_collision/敌机撞击 我方产生护盾声音 和敌机生成的声音.mp3",
+      "source_sha256": "d90f1029aaef12250335b9cb2397fa6e815e64cce6c856871945ed8607b1416d",
+      "processing": "源音频提取为 48kHz WAV，再按瞬态截取三个短音效",
+      "groove_flight_use": "玩家碰撞、敌机受击重低频重击、3秒无敌护盾触发与敌机编队跃迁入场",
+      "runtime_files": [
+        "audio/authorized/event_collision.ogg",
+        "audio/authorized/event_shield.ogg",
+        "audio/authorized/event_spawn.ogg"
+      ],
+      "source_windows": [
+        {
+          "start_seconds": 4.95,
+          "end_seconds": 5.5,
+          "use": "collision"
+        },
+        {
+          "start_seconds": 9.9,
+          "end_seconds": 10.62,
+          "use": "shield"
+        },
+        {
+          "start_seconds": 19.05,
+          "end_seconds": 19.87,
+          "use": "enemy spawn"
+        }
+      ],
+      "status": "runtime"
+    },
+    {
+      "catalog_id": "weapon_power_thruster",
+      "groove_core_use": "动力武器与推进器参考片段",
+      "source_file": "audio/library/groove_core/raw/weapon_power_thruster/动力 推进器.mp4",
+      "source_sha256": "18f9403c4003693f8ee45f8c659fa7a2d9ccb19bc897cd7d4b9ec35e5e32c721",
+      "processing": "ffmpeg PCM16 48kHz stereo; 0.65秒推进瞬态截取; OGG Vorbis",
+      "groove_flight_use": "玩家冲刺推进器",
+      "runtime_files": [
+        "audio/authorized/thruster_dash.ogg"
+      ],
+      "source_windows": [
+        {
+          "start_seconds": 0.65,
+          "end_seconds": 1.25,
+          "use": "dash thrust"
+        }
+      ],
+      "status": "runtime"
+    },
+    {
+      "catalog_id": "music_uranus_amber",
+      "groove_core_use": "天王星关卡安泊尔背景音乐",
+      "source_file": "audio/library/groove_core/raw/music_uranus_amber/天王星关卡 安泊尔背景音乐.mp4",
+      "source_sha256": "ea73b72e3a463887454b63127408ece6f17ee9ea0568086c5ee087c50a8fc6a4",
+      "processing": "0.32-20.32秒；10小节120 BPM；首尾8ms淡化；约-19 LUFS；48kHz双声道；OGG Vorbis q5",
+      "groove_flight_use": "所有星球共用的战斗、编辑器与波间商店背景音乐；暂停和编辑器保持当前位置，离开关卡状态时停止",
+      "runtime_files": [
+        "audio/authorized/uranus_amber_loop.ogg"
+      ],
+      "source_windows": [
+        {
+          "start_seconds": 0.32,
+          "end_seconds": 20.32,
+          "use": "ten-bar 120 BPM combat loop"
+        }
+      ],
+      "status": "runtime"
+    },
+    {
+      "catalog_id": "weapon_crude_fire",
+      "groove_core_use": "粗制火弹武器与弹道音效",
+      "source_file": "audio/library/groove_core/raw/weapon_crude_fire/武器粗制火弹音效.mp4",
+      "source_sha256": "060a1fbd92599e8b0a30f24a729893df8ee0ede37f7238d8aa52ac39776d826d",
+      "processing": "全段分析检出2.000秒强-弱周期；武器原声组直接截取0.00-6.00秒连续区间为PCM16运行WAV，包含3个2秒周期共6声；不做淡化、增益、归一化、重采样、内部分段或变调",
+      "groove_flight_use": "录音武器“裂响火弹”的2秒强-弱周期",
+      "runtime_files": [
+        "audio/authorized/weapon_crude_shot.ogg",
+        "audio/authorized/weapon_crude_fire_group_6s.wav",
+        "audio/arsenal/notes/rec_crude_0.wav",
+        "audio/arsenal/notes/rec_crude_1.wav",
+        "audio/arsenal/notes/rec_crude_2.wav",
+        "audio/arsenal/notes/rec_crude_3.wav",
+        "audio/arsenal/notes/rec_crude_4.wav",
+        "audio/arsenal/notes/rec_crude_5.wav",
+        "audio/arsenal/notes/rec_crude_6.wav",
+        "audio/arsenal/notes/rec_crude_7.wav"
+      ],
+      "source_windows": [
+        {
+          "start_seconds": 0.0,
+          "end_seconds": 6.0,
+          "use": "three two-second strong-weak cycles; direct runtime PCM16 slice"
+        },
+        {
+          "start_seconds": 0.08,
+          "end_seconds": 3.66,
+          "use": "first four weapon samples"
+        },
+        {
+          "start_seconds": 4.08,
+          "end_seconds": 7.66,
+          "use": "next four weapon samples"
+        }
+      ],
+      "status": "runtime"
+    },
+    {
+      "catalog_id": "weapon_ballistic_volume_ramp",
+      "groove_core_use": "实弹武器由轻到重的连续音效参考",
+      "source_file": "audio/library/groove_core/raw/weapon_ballistic_volume_ramp/武器实弹的 音乐声音（由轻到重）.mp4",
+      "source_sha256": "9cae3735d3781f263bda7cb32f011147ada3b5d96a2038e9ab00db2733ef572e",
+      "processing": "全段52个有效事件，主导周期1.000秒；统一截取0.58-16.58秒的完整十六秒周期为单个PCM16原声组，不做淡化、增益、归一化、重采样、内部分段或变调",
+      "groove_flight_use": "录音武器“实弹连奏炮”的普通/稀有/珍贵三档共用同一原声组；原先按轻中重拆出的三件武器合并为一个原型",
+      "runtime_files": [
+        "audio/authorized/weapon_ballistic_cycle_16s.wav",
+        "audio/arsenal/notes/rec_ballistic_0.wav",
+        "audio/arsenal/notes/rec_ballistic_1.wav",
+        "audio/arsenal/notes/rec_ballistic_2.wav",
+        "audio/arsenal/notes/rec_ballistic_3.wav",
+        "audio/arsenal/notes/rec_ballistic_4.wav",
+        "audio/arsenal/notes/rec_ballistic_5.wav",
+        "audio/arsenal/notes/rec_ballistic_6.wav",
+        "audio/arsenal/notes/rec_ballistic_7.wav"
+      ],
+      "source_windows": [
+        {
+          "start_seconds": 0.58,
+          "end_seconds": 16.58,
+          "use": "complete sixteen-second weapon cycle shared by all three quality tiers"
+        },
+        {
+          "start_seconds": 0.58,
+          "end_seconds": 8.06,
+          "use": "eight event samples used only for fallback/provenance"
+        }
+      ],
+      "status": "runtime"
+    },
+    {
+      "catalog_id": "music_title",
+      "groove_core_use": "主页面背景音乐短段",
+      "source_file": "audio/library/groove_core/raw/music_title/主页面背景音乐.mp4",
+      "source_sha256": "cb2aa77876bd7c56aa99f9fc9897f8651fb00cc46f75ba09127d809097aafee2",
+      "processing": "保留为分析参考；与music_menu在118.84秒处高度重合",
+      "groove_flight_use": "不重复加载；标题页直接使用同源的music_menu运行版",
+      "runtime_files": [],
+      "source_windows": [
+        {
+          "start_seconds": 9.34,
+          "end_seconds": 38.24,
+          "use": "source-only excerpt; duplicates music_menu"
+        }
+      ],
+      "status": "source-only duplicate excerpt"
+    },
+    {
+      "catalog_id": "gameplay_feedback_demo",
+      "groove_core_use": "实机反馈录屏",
+      "source_file": "audio/library/groove_core/raw/gameplay_feedback_demo/实机演示.mp4",
+      "source_sha256": "21c20440041b05f02b15d4bcd5912353f8939e6409fe24aecd7913aa75317e64",
+      "processing": "完整提取后确认全零，不作音效来源",
+      "groove_flight_use": "仅画面参考",
+      "runtime_files": [],
+      "source_windows": [],
+      "status": "silent_reference"
+    },
+    {
+      "catalog_id": "gameplay_feedback_audio",
+      "groove_core_use": "实机反馈录屏",
+      "source_file": "audio/library/groove_core/raw/gameplay_feedback_audio/音频资源.mp4",
+      "source_sha256": "a12d5ed55c3f1ef5155fcebba18c9053e9687e89c77080a18901900314f849e9",
+      "processing": "Butterworth3 bandpass 22-700Hz; 2ms attack/14ms release boundary fades; fixed gain 4.045007; no pitch/time change; Butterworth3 bandpass 380-4500Hz; 2ms attack/14ms release boundary fades; fixed gain 4.928875; no pitch/time change; Butterworth3 bandpass 3000-9500Hz; 2ms attack/14ms release boundary fades; fixed gain 7.692835; no pitch/time change",
+      "groove_flight_use": "死亡低鼓、玩家受击护盾与拾取金币",
+      "runtime_files": [
+        "audio/authorized/feedback/kill_low_strong.wav",
+        "audio/authorized/feedback/kill_low_soft.wav",
+        "audio/authorized/feedback/kill_low_round.wav",
+        "audio/authorized/feedback/shield_impact.wav",
+        "audio/authorized/feedback/pickup_coin.wav"
+      ],
+      "source_windows": [
+        {
+          "start_seconds": 11.45,
+          "end_seconds": 11.82,
+          "use": "kill_low_strong"
+        },
+        {
+          "start_seconds": 17.27,
+          "end_seconds": 17.62,
+          "use": "kill_low_soft"
+        },
+        {
+          "start_seconds": 16.41,
+          "end_seconds": 16.7,
+          "use": "kill_low_round"
+        },
+        {
+          "start_seconds": 23.48,
+          "end_seconds": 23.73,
+          "use": "shield_impact"
+        },
+        {
+          "start_seconds": 6.685,
+          "end_seconds": 6.845,
+          "use": "pickup_coin"
+        }
+      ],
+      "status": "runtime"
+    }
+  ]
+}

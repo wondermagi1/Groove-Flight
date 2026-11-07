@@ -1,0 +1,9 @@
+{
+	"checks": 112,
+	"facts": {
+		"demo_notes": 60,
+		"midi_bytes": 994
+	},
+	"failures": [],
+	"scope": "Pure score/editor transactions, boundedJSONsave/load, actualSMF0/1 byte fixtures/runningstatus/chords/sustain/tempo handling/corruptinput, MIDIandJSONroundtrip, sharedschedule. No audio or UI/nativeflight acceptance."
+}

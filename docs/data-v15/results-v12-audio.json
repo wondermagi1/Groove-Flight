@@ -1,0 +1,29 @@
+{
+	"checks": 41,
+	"facts": {
+		"after": {
+			"path": "res://docs/audio-v12/rhythm-v12.wav",
+			"peak": 19532,
+			"rms": 3847.77545408175,
+			"seconds": 8.0
+		},
+		"authorized_clips": 14,
+		"before": {
+			"path": "res://docs/audio-v12/rhythm-before.wav",
+			"peak": 19532,
+			"rms": 3847.77545408175,
+			"seconds": 8.0
+		},
+		"corrected_crude_peak": 21118,
+		"kill_fill": {
+			"path": "res://docs/audio-v12/kill-drum-fill.wav",
+			"peak": 11137,
+			"seconds": 2.4
+		},
+		"mapped_runtime_files": 46,
+		"source_mapping_items": 7,
+		"uranus_loop_seconds": 20.0
+	},
+	"failures": [],
+	"scope": "Short excerpts rendered by the production native synthesizer and production kill transient samples, plus direct PCM16 recorded weapon groups and the ten-bar Uranus loop in their live players. Before/after uses the same loadout; listening preference still requires human review."
+}

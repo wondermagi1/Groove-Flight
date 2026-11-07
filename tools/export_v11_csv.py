@@ -11,7 +11,7 @@ def text(v):return json.dumps(v,ensure_ascii=False) if isinstance(v,(dict,list))
 def main():
     data=json.loads((DEST/'tables.json').read_text(encoding='utf-8'))
     items=data['catalog'];lookup={x['id']:x for x in items}
-    emit('equipment-240.csv',[{**{k:text(v) for k,v in x.items()},'source':'Original BeatDrift catalog; 8 trajectory rules upgraded in V11','caps':'level4; rule scaling 1+.35*(level-1); see protocol'} for x in items])
+    emit('equipment-240.csv',[{**{k:text(v) for k,v in x.items()},'source':'Original Groove Flight catalog; 8 trajectory rules upgraded in V11','caps':'level4; rule scaling 1+.35*(level-1); see protocol'} for x in items])
     emit('weapons-32.csv',[{**{k:text(v) for k,v in x.items()},'source':f"audio/arsenal/notes/{x['voice']}_0..7.wav",'interval_seconds':x['charge']*2,'pan_A_B_C':'-0.46 / 0 / +0.46','hit_feedback':'family body + impact sparks / local blast when explosion>0','gate_seconds':x['life'],'caps':'beam12 / chain8,links32 / others96'} for x in items if x['category']=='weapon'])
     emit('planet-waves-67.csv',[{'planet':x['planet'],'wave':x['wave'],**x['profile'],**x['combat'],'role_counts_out_of_20':text(x['role_counts_out_of_20']),'boss_motif':x['boss_motif']} for x in data['routes']])
     emit('build-layouts.csv',[{'path':b['path']['name'],'ID':id,'name':lookup[id]['name'],'track':'ABC'[at//8],'head_from_1':at%8+1,'width':lookup[id]['width'],'price':lookup[id]['cost'],'rules':text(lookup[id]['rules'])} for b in data['builds'] for id,at in b['path']['layout']])

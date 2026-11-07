@@ -1,5 +1,5 @@
 {
-	"checks": 100,
+	"checks": 120,
 	"facts": {
 		"weapon_impacts": {
 			"beam": {
@@ -50,6 +50,12 @@
 				"family": "chain",
 				"pitch": 0
 			},
+			"crown_orbit": {
+				"count": 12,
+				"damage": 16.0,
+				"family": "orbit",
+				"pitch": 0
+			},
 			"drone": {
 				"count": 2,
 				"damage": 20.0,
@@ -78,6 +84,12 @@
 				"count": 3,
 				"damage": 39.0,
 				"family": "flame",
+				"pitch": 0
+			},
+			"gilded_helix": {
+				"count": 24,
+				"damage": 26.0,
+				"family": "nova",
 				"pitch": 0
 			},
 			"mine": {
@@ -156,7 +168,7 @@
 				"count": 1,
 				"damage": 27.0,
 				"family": "pulse",
-				"pitch": 7
+				"pitch": 0
 			},
 			"pulse_ribbon": {
 				"count": 6,
@@ -176,6 +188,48 @@
 				"family": "rail",
 				"pitch": 0
 			},
+			"recorded_ballistic": {
+				"count": 3,
+				"damage": 33.0,
+				"family": "pulse",
+				"pitch": 0
+			},
+			"recorded_ballistic_legend": {
+				"count": 11,
+				"damage": 363.0,
+				"family": "pulse",
+				"pitch": 0
+			},
+			"recorded_ballistic_rare": {
+				"count": 6,
+				"damage": 108.899999999965,
+				"family": "pulse",
+				"pitch": 0
+			},
+			"recorded_crude": {
+				"count": 2,
+				"damage": 30.0,
+				"family": "pulse",
+				"pitch": 0
+			},
+			"recorded_crude_legend": {
+				"count": 10,
+				"damage": 450.0,
+				"family": "pulse",
+				"pitch": 0
+			},
+			"recorded_crude_rare": {
+				"count": 5,
+				"damage": 123.75,
+				"family": "pulse",
+				"pitch": 0
+			},
+			"recorded_heavy": {
+				"count": 1,
+				"damage": 88.0,
+				"family": "rail",
+				"pitch": 0
+			},
 			"scatter": {
 				"count": 5,
 				"damage": 28.0,
@@ -189,13 +243,19 @@
 				"pitch": 0
 			},
 			"scatter_prism": {
-				"count": 7,
-				"damage": 55.0,
+				"count": 12,
+				"damage": 19.2500000000146,
 				"family": "scatter",
+				"pitch": 0
+			},
+			"weave_cross": {
+				"count": 32,
+				"damage": 38.4000000000233,
+				"family": "pulse",
 				"pitch": 0
 			}
 		}
 	},
 	"failures": [],
-	"scope": "Production methods under controlled position/time/high-HP fixtures:32weapon impacts, projectiles, attributes,7procs, inventory/shop currency callbacks. Native full-route timing/audio and human balance are separate."
+	"scope": "Production methods under controlled position/time/high-HP fixtures:36weapon impacts, projectiles, attributes,7procs, inventory/shop currency callbacks. Native full-route timing/audio and human balance are separate."
 }

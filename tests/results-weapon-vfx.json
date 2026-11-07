@@ -1,12 +1,12 @@
 {
-	"checks": 50,
+	"checks": 62,
 	"facts": {
-		"atlas_variants": 31,
-		"battle_projectiles": 109,
-		"dense_render_update_median_ms": 4.997,
-		"dense_render_update_p95_ms": 5.092,
+		"atlas_variants": 44,
+		"battle_projectiles": 186,
+		"dense_render_update_median_ms": 11.156,
+		"dense_render_update_p95_ms": 13.994,
 		"renderer": "forward_plus"
 	},
 	"failures": [],
-	"scope": "Actual GPU readback of32weapons and5effect modes;1200static instances/culling/reduced setting;visual budgets/expiry; production firing, impact, explosion and title lifecycle. Render-update frame samples are not full-combat GPU benchmarks or human art acceptance."
+	"scope": "Actual GPU readback of44weapon quality entries and5effect modes;1200static instances/culling/reduced setting;visual budgets/expiry; production firing, impact, explosion and title lifecycle. Render-update frame samples are not full-combat GPU benchmarks or human art acceptance."
 }

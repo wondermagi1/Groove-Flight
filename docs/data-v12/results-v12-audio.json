@@ -1,0 +1,24 @@
+{
+	"checks": 9,
+	"facts": {
+		"after": {
+			"path": "res://docs/audio-v12/rhythm-v12.wav",
+			"peak": 10082,
+			"rms": 1421.21723069536,
+			"seconds": 8.0
+		},
+		"before": {
+			"path": "res://docs/audio-v12/rhythm-before.wav",
+			"peak": 8263,
+			"rms": 1233.14280388955,
+			"seconds": 8.0
+		},
+		"kill_fill": {
+			"path": "res://docs/audio-v12/kill-drum-fill.wav",
+			"peak": 11137,
+			"seconds": 2.4
+		}
+	},
+	"failures": [],
+	"scope": "Short excerpts rendered by the production native synthesizer and production kill transient samples. Before/after uses the same loadout; listening preference still requires human review."
+}

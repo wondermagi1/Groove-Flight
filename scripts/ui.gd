@@ -84,8 +84,8 @@ func title_screen() -> void:
 	var content=VBoxContainer.new(); content.position=view*Vector2(.10,.09 if compact else .12)
 	content.custom_minimum_size.x=minf(424,view.x*.35); content.add_theme_constant_override("separation",9 if compact else 13); root_control.add_child(content)
 	content.add_child(label("S E Q U E N C E   /   S U R V I V E",14 if compact else 17,Color("6c9dab")))
-	content.add_child(label("BEATDRIFT",55 if compact else 80))
-	content.add_child(label("律 航",25 if compact else 32,Color("b4c4db")))
+	content.add_child(label("GROOVE FLIGHT",55 if compact else 80))
+	content.add_child(label("节拍飞行",25 if compact else 32,Color("b4c4db")))
 	content.add_child(label("把武器排进节拍，把深空打成合奏。",17 if compact else 21,Color("8598b4")))
 	var spacer=Control.new(); spacer.custom_minimum_size.y=15 if compact else 27; content.add_child(spacer)
 	var entries=[
@@ -93,8 +93,9 @@ func title_screen() -> void:
 		["solar","星球航图","02",Color("83cafa")],
 		["composer","自由作曲","03",Color("ac9cf5")],
 		["hangar","机库与驾驶员","04",Color("b1b9fa")],
-		["settings","设置","05",Color("8fa9c1")],
-		["quit","退出","06",Color("71839a")]]
+		["codex","武器音色图鉴","05",Color("8edfda")],
+		["settings","设置","06",Color("8fa9c1")],
+		["quit","退出","07",Color("71839a")]]
 	for entry in entries:
 		var id: String=entry[0]
 		var row=Button.new(); row.name="TitleEntry"+id.capitalize(); row.text=entry[1]
@@ -168,7 +169,7 @@ func hud(include_arsenal: bool=true) -> void:
 	if include_arsenal and not game.free_music_run: arsenal_screen("combat")
 func update_hud() -> void:
 	if not is_instance_valid(wave_label): return
-	wave_label.text="乐谱试飞" if game.free_music_run else "%s %02d/%02d"%[PLANETS.planet(game.active_planet).name,game.wave,game.wave_count()]
+	wave_label.text="乐谱试飞" if game.free_music_run else "%s%s %02d/%02d"%["棱镜灾变 · " if game.difficulty>0 else "",PLANETS.planet(game.active_planet).name,game.wave,game.wave_count()]
 	var remaining=maxf(0,float(game.wave_profile().seconds)-(game.music.timeline-game.wave_start))
 	timer_label.text=("%02d:%02d"%[int(game.music.timeline)/60,int(game.music.timeline)%60]) if game.free_music_run else ("BOSS" if game.wave==game.wave_count() else ("清场" if remaining<=0 else str(int(ceil(remaining)))))
 	health_label.text="无敌练习 · 不计战绩" if game.free_music_run else "生命  %.1f / %d"%[game.health,game.loadout.max_health]
@@ -207,7 +208,7 @@ func settings_screen() -> void:
 	var scroll=ScrollContainer.new(); scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED; scroll.custom_minimum_size.y=height-104.; shell.add_child(scroll)
 	var content=VBoxContainer.new(); content.size_flags_horizontal=Control.SIZE_EXPAND_FILL; content.add_theme_constant_override("separation",12); scroll.add_child(content)
 	section_title(content,"设置","全屏跟随显示器原生分辨率。F11 可切换全屏。")
-	for item in [["master","总音量"],["music","乐曲总线"],["sfx","拾取 / 命中音效"],["backing","底层伴奏"],["weapons","武器声部"]]:
+	for item in [["master","总音量"],["music","乐曲总线"],["sfx","拾取 / 命中音效"],["weapons","武器声部"]]:
 		var heading=label(item[1]+"  %d%%"%int(float(game.settings[item[0]])*100),19); content.add_child(heading)
 		var slider=HSlider.new(); slider.min_value=0; slider.max_value=1; slider.step=.01; slider.value=game.settings[item[0]]
 		slider.value_changed.connect(func(value):game.settings[item[0]]=value; heading.text=item[1]+"  %d%%"%int(value*100); game.apply_audio()); content.add_child(slider)
@@ -251,6 +252,8 @@ func results_screen() -> void:
 	content.add_child(label("击破 %d   /   得分 %d   /   最佳 %d"%[game.kills,game.score,game.best],24))
 	content.add_child(label("抵达第 %d 波  /  完成 %d 次节拍触发"%[game.wave,game.actual_steps],18,Color("95a8bf")))
 	content.add_child(label("种子 %d / 承伤 %.1f / %s"%[game.run_seed,game.receipt.received,game.receipt.death_reason if game.state=="defeat" else "奖励已确认 音乐正在收尾"],17,Color("93abbc")))
+	var boons: Array=game.loadout.boon_summary()
+	if not boons.is_empty(): content.add_child(label("清波强化  "+" · ".join(boons),17,Color("e7c88d")))
 	for wave_record in game.receipt.waves:
 		content.add_child(label("第%d波 %.1f秒 / 生成%d / 撤退%d / 星屑%d"%[wave_record.wave,wave_record.seconds,wave_record.spawned,wave_record.retreated,wave_record.dust],16,Color("829bb2")))
 	var kinds=game.weapon_damage.keys(); kinds.sort_custom(func(a,b):return game.weapon_damage[a]>game.weapon_damage[b])

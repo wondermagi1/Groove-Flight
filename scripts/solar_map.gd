@@ -161,7 +161,7 @@ func _build_stars() -> void:
 
 func _build_interface() -> void:
 	title_label=_label("航图 / SOLAR ROUTES",31); title_label.position=Vector2(30,26); add_child(title_label)
-	subtitle_label=_label("选择一颗星球，把下一场远征排进你的节拍。",18,Color("7f96b2")); subtitle_label.position=Vector2(32,73); add_child(subtitle_label)
+	subtitle_label=_label("选择一颗星球与难度协议，把下一场远征排进你的节拍。",18,Color("7f96b2")); subtitle_label.position=Vector2(32,73); add_child(subtitle_label)
 	var return_state=game.get("solar_return_state")
 	back_button=_button("返回标题" if return_state=="title" else "返回霓光港",_back,Color("a0b0c9")); back_button.name="SolarBack"; add_child(back_button)
 	reset_button=_button("复位视角",reset_camera,Color("7f9cb9")); reset_button.name="ResetSolarCamera"; add_child(reset_button)
@@ -206,8 +206,15 @@ func _detail(value: String,font_size: int=19,color: Color=Color("a7b9cd")) -> La
 	var label_value=_label(value,font_size,color); label_value.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; detail_content.add_child(label_value); return label_value
 func _refresh_selection() -> void:
 	if not is_instance_valid(detail_content): return
-	var id=_selected_id(); var row=DATA.planet(id); var combat=DATA.combat(id); var route=DATA.route(id); var record=_record(id)
-	for child in detail_content.get_children(): child.hide(); child.queue_free()
+	var id=_selected_id(); var row=DATA.planet(id)
+	var difficulty=clampi(int(game.settings.get("difficulty",0)),0,1)
+	var combat=DATA.combat(id,difficulty); var route=DATA.route(id,difficulty); var record=_record(id)
+	# Detach immediately before adding the new panel contents. Queueing alone
+	# leaves renamed duplicates alive for the frame, so controls such as the
+	# difficulty selector lose their stable node names.
+	for child in detail_content.get_children():
+		detail_content.remove_child(child)
+		child.queue_free()
 	_detail("%02d  /  PLANET"%(int(row.index)+1),14,row.color)
 	_detail(str(row.name),38,Color("f1f7ff")); _detail(str(row.subtitle),18,row.color)
 	_detail("●".repeat(int(row.threat))+"  威胁 %d / 8"%int(row.threat),18,row.color)
@@ -215,6 +222,17 @@ func _refresh_selection() -> void:
 	var rule=_label("航线强度",17,Color("6b819c")); detail_content.add_child(rule)
 	_detail("%d 波  ·  %d 次补给"%[route.size(),route.size()-1],21,Color("e2edf9"))
 	_detail("末波上限 逐波递增\n敌机耐久 ×%.2f\n敌弹速度 ×%.2f\n接触 / 弹幕伤害 %.1f\n最终旗舰耐久 %s"%[combat.hp_scale,combat.bullet_speed,combat.damage,_number(float(combat.boss_hp))],18)
+	_detail("难度协议",17,Color("8fb7c5"))
+	var difficulty_box=OptionButton.new(); difficulty_box.name="DifficultyProtocol"; difficulty_box.custom_minimum_size.y=40
+	difficulty_box.add_item("标准航线")
+	difficulty_box.add_item("棱镜灾变 · 高压")
+	difficulty_box.select(difficulty)
+	difficulty_box.item_selected.connect(func(index):game.settings.difficulty=index; game.save_settings(); _refresh_selection.call_deferred())
+	detail_content.add_child(difficulty_box)
+	if difficulty>0:
+		_detail("敌机耐久 ×1.18 · Boss耐久 ×1.30 · 伤害 ×1.14\n编队预算 ×1.18 · 额外精英 · 环形/双螺旋入场",16,Color("ff9f91"))
+	else:
+		_detail("标准数值曲线；外圈仍逐步增加耐久、弹速与编队压力。",16,Color("89a9c0"))
 	_detail("最终旗舰  /  "+str(row.bossname),18,row.color)
 	_detail(str(row.hint),18,Color("b9cfdf"))
 	_detail("起始节律",17,Color("8fb7c5"))
@@ -229,8 +247,10 @@ func _refresh_selection() -> void:
 		_detail("✓ 航线已突破  %d 次"%clears,19,Color("9de3b7"))
 		_detail("最高分 %d  ·  最快 %.1f 秒"%[int(record.get("best_score",0)),float(record.get("best_time",0))],16,Color("8ea8bc"))
 	else: _detail("首次远征" if attempts==0 else "已尝试 %d 次，等待突破"%attempts,17,Color("8ea8bc"))
+	if int(record.get("hard_clears",0))>0:
+		_detail("棱镜灾变突破 %d 次 · 最高 %d" % [int(record.get("hard_clears",0)),int(record.get("hard_best_score",0))],16,Color("ffab92"))
 	summary_label.text=FLEET.ship(str(game.selected_ship)).name+" / "+FLEET.pilot(str(game.selected_pilot)).name
-	launch_button.text="前往%s →"%str(row.name)
+	launch_button.text=("进入高压 · %s →" if difficulty>0 else "前往%s →")%str(row.name)
 	for key in planet_buttons:
 		var selected=key==id; var accent: Color=DATA.planet(key).color
 		planet_buttons[key].add_theme_stylebox_override("normal",_box(Color(accent,.15) if selected else Color("0b1320"),Color(accent,.85 if selected else .20),9))

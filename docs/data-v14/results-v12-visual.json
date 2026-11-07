@@ -1,0 +1,20 @@
+{
+	"checks": 27,
+	"failures": [],
+	"images": [
+		"res://docs/screenshots/v12-formation-command.png",
+		"res://docs/screenshots/v12-formation-broken.png",
+		"res://docs/screenshots/v12-shop-ranges-1080p.png",
+		"res://docs/screenshots/v12-shop-growth-720p.png",
+		"res://docs/screenshots/v12-salvo-trails.png",
+		"res://docs/screenshots/v12-salvo-and-chain-kills.png",
+		"res://docs/screenshots/v12-shield-impact.png",
+		"res://docs/screenshots/v12-overload-burst.png",
+		"res://docs/screenshots/v12-flight-streams.png",
+		"res://docs/screenshots/v12-blade-flight.png",
+		"res://docs/screenshots/v12-enemy-entry.png",
+		"res://docs/screenshots/v12-enemy-roster.png",
+		"res://docs/screenshots/v12-fleet-manta-rime.png"
+	],
+	"scope": "Controlled 1920x1080 and 720p GPU readback. Formation, shop growth/ranges, combat VFX, flight trails, blades and expanded fleet. Not a human playthrough or balance claim."
+}

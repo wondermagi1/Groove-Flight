@@ -47,7 +47,9 @@ func note_name(pitch: int) -> String:
 	return ["C","C♯","D","E♭","E","F","F♯","G","A♭","A","B♭","B"][posmod(pitch,12)]+str(floori(float(pitch)/12.)-1)
 func _valid_weapon(id: String) -> bool:
 	var row=DATA.item(id)
-	return not row.is_empty() and str(row.category)=="weapon"
+	return not row.is_empty() and str(row.category)=="weapon" and DATA.is_weapon_audio_ready(id)
+func _temporary_weapon_for(old_id: String) -> String:
+	return DATA.remap_weapon(old_id)
 func _new_track(weapon: String,name_value: String) -> Dictionary:
 	var result={"id":next_track_id,"name":name_value if not name_value.strip_edges().is_empty() else "声部 %d"%next_track_id,"weapon":weapon,"volume":.8,"pan":0.,"mute":false,"solo":false,"notes":[]}
 	next_track_id+=1
@@ -145,6 +147,13 @@ func from_dict(data: Variant) -> Dictionary:
 	# Build a candidate without invoking _init/reset_demo recursively.
 	var old_title=title; var old_bpm=bpm; var old_bars=bars; var old_tracks=tracks
 	title=str(data.title); bpm=float(data.bpm); bars=int(data.bars); tracks=data.tracks.duplicate(true)
+	for track in tracks:
+		if not track is Dictionary: continue
+		var weapon_id=str(track.get("weapon",""))
+		var catalog_row=DATA.item(weapon_id)
+		if not DATA.remap_weapon(weapon_id).is_empty() and not DATA.is_weapon_audio_ready(weapon_id):
+			track.weapon=_temporary_weapon_for(weapon_id)
+			track.role="auto"
 	var result=validate()
 	if not result.ok:
 		title=old_title; bpm=old_bpm; bars=old_bars; tracks=old_tracks

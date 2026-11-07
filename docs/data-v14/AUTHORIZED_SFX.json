@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "authorization": "User confirms original-author permission; see audio/library/groove_core/AUTHORIZATION.md",
+  "clips": [
+    {"id":"menu_theme","file":"res://audio/authorized/menu_theme.ogg","source_catalog_id":"music_menu","role":"title_hub_hangar_solar_bgm"},
+    {"id":"ballistic_light","file":"res://audio/authorized/weapon_ballistic_light.ogg","source_catalog_id":"weapon_ballistic_volume_ramp","source_seconds":0.60,"source_active_end_seconds":0.98,"role":"light ballistic weapon accent"},
+    {"id":"ballistic_medium","file":"res://audio/authorized/weapon_ballistic_medium.ogg","source_catalog_id":"weapon_ballistic_volume_ramp","source_seconds":22.10,"source_active_end_seconds":22.48,"role":"medium ballistic weapon accent"},
+    {"id":"ballistic_heavy","file":"res://audio/authorized/weapon_ballistic_heavy.ogg","source_catalog_id":"weapon_ballistic_volume_ramp","source_seconds":47.10,"source_active_end_seconds":47.86,"role":"heavy ballistic weapon accent"},
+    {"id":"crude_shot","file":"res://audio/authorized/weapon_crude_shot.ogg","source_catalog_id":"weapon_crude_fire","source_seconds":3.05,"source_active_end_seconds":3.66,"role":"pulse weapon strong accent"},
+    {"id":"collision","file":"res://audio/authorized/event_collision.ogg","source_catalog_id":"events_enemy_collision","source_seconds":4.95,"role":"player collision hit"},
+    {"id":"shield","file":"res://audio/authorized/event_shield.ogg","source_catalog_id":"events_enemy_collision","source_seconds":9.90,"role":"shield activation and impact"},
+    {"id":"enemy_spawn","file":"res://audio/authorized/event_spawn.ogg","source_catalog_id":"events_enemy_collision","source_seconds":19.05,"role":"formation warp entrance"},
+    {"id":"dash_thruster","file":"res://audio/authorized/thruster_dash.ogg","source_catalog_id":"weapon_power_thruster","source_seconds":0.65,"role":"dash launch"},
+    {"id":"crude_fire_group","file":"res://audio/authorized/weapon_crude_fire_group.wav","source_catalog_id":"weapon_crude_fire","source_seconds":0.0,"source_end_seconds":7.0,"role":"unsegmented recorded weapon group; direct PCM16 source slice"},
+    {"id":"ballistic_light_group","file":"res://audio/authorized/weapon_ballistic_light_group.wav","source_catalog_id":"weapon_ballistic_volume_ramp","source_seconds":0.58,"source_end_seconds":8.06,"role":"recorded_light direct eight-event group; no segmentation or pitch processing"},
+    {"id":"ballistic_medium_group","file":"res://audio/authorized/weapon_ballistic_medium_group.wav","source_catalog_id":"weapon_ballistic_volume_ramp","source_seconds":20.08,"source_end_seconds":27.56,"role":"recorded_medium direct eight-event group; no segmentation or pitch processing"},
+    {"id":"ballistic_heavy_group","file":"res://audio/authorized/weapon_ballistic_heavy_group.wav","source_catalog_id":"weapon_ballistic_volume_ramp","source_seconds":33.08,"source_end_seconds":40.94,"role":"recorded_heavy direct eight-event group; no segmentation or pitch processing"},
+    {"id":"uranus_amber","file":"res://audio/authorized/uranus_amber_loop.ogg","source_catalog_id":"music_uranus_amber","source_seconds":0.32,"source_end_seconds":20.32,"loop_seconds":20.0,"bpm":120,"bars":10,"role":"uranus combat and shop background loop"}
+  ]
+}

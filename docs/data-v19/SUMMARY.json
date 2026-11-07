@@ -1,0 +1,39 @@
+{
+  "version": "0.19.0-twelve-instruments",
+  "active_weapons": 12,
+  "instrument_samples": 96,
+  "checks": 867,
+  "failures": 0,
+  "tests": [
+    {
+      "test": "selected-weapons",
+      "checks": 412,
+      "failures": 0
+    },
+    {
+      "test": "weapon-cycle",
+      "checks": 144,
+      "failures": 0
+    },
+    {
+      "test": "composer-score",
+      "checks": 112,
+      "failures": 0
+    },
+    {
+      "test": "arsenal-combat",
+      "checks": 114,
+      "failures": 0
+    },
+    {
+      "test": "electronic-audio-logic",
+      "checks": 45,
+      "failures": 0
+    },
+    {
+      "test": "rhythm-feedback",
+      "checks": 40,
+      "failures": 0
+    }
+  ]
+}

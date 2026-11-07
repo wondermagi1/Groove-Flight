@@ -7,12 +7,16 @@ class MockGame:
 	var selected_pilot := "echo"
 	var launched := false
 	var configured := false
+	var mapped := false
 	func start_run() -> void:
 		launched = true
 		state = "combat"
 	func open_hangar() -> void:
 		configured = true
 		state = "hangar"
+	func open_solar_map() -> void:
+		mapped = true
+		state = "solar"
 
 var failures: Array[String] = []
 var checks: Array[String] = []
@@ -69,7 +73,7 @@ func run() -> void:
 	hub.interact_cooldown=0.0
 	var interact:=InputEventKey.new(); interact.pressed=true; interact.keycode=KEY_F
 	hub._unhandled_input(interact)
-	check(mock.launched and mock.state=="combat","F near the central vortex starts the flight")
+	check(mock.mapped and mock.state=="solar","F near the central vortex opens the real planet map")
 	mock.state="hub"
 	hub.avatar.position=Vector3(10.2,.03,12)
 	hub.interact_cooldown=0.0
@@ -82,9 +86,9 @@ func run() -> void:
 	await shot("13-neon-harbor-pilot")
 	hub.deactivate()
 	check(not hub.visible and hub.viewport.render_target_update_mode==SubViewport.UPDATE_DISABLED,"Leaving the city stops 3D rendering")
-	var result={"checks":checks,"failures":failures,"renderer":RenderingServer.get_current_rendering_method(),"scope":"Native Blender GLB, skeletal animation, actual input motion, modal freeze and F portal/terminal. Does not claim full gameplay or stable frame rate."}
+	var result={"checks":checks,"failures":failures,"renderer":RenderingServer.get_current_rendering_method(),"scope":"Native Blender GLB, skeletal animation, actual input motion, modal freeze and F planet-map/terminal. Does not claim full gameplay or stable frame rate."}
 	FileAccess.open("res://tests/results-neon-hub.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
-	print("BEATDRIFT_NEON_HUB_REVIEW ",JSON.stringify(result))
+	print("GROOVE_FLIGHT_NEON_HUB_REVIEW ",JSON.stringify(result))
 	hub.queue_free()
 	await frames(4)
 	quit(0 if failures.is_empty() else 1)

@@ -1,6 +1,6 @@
-# 《音序核心》公开玩法研究与《律航》v2参考
+# 《音序核心》公开玩法研究与《Groove Flight》v2参考
 
-研究日期：2026-10-28。参考来源包括Steam官方商店、官方开发公告、开发者日志，以及用户提供的本地Demo清单。研究未启动、解包或提取参考游戏资源，也没有读取到其游戏逻辑源码。本报告的建议参数属于《律航》，不代表参考游戏的内部数值。
+研究日期：2026-10-28。参考来源包括Steam官方商店、官方开发公告、开发者日志，以及用户提供的本地Demo清单。研究未启动、解包或提取参考游戏资源，也没有读取到其游戏逻辑源码。本报告的建议参数属于《Groove Flight》，不代表参考游戏的内部数值。
 
 ## 1. 已证实的核心玩法
 
@@ -35,7 +35,7 @@ Demo具备购买、刷新、合并升级、回收和库存；新补丁支持在�
 
 ### 视觉与声音的节制
 
-v0.6.27缩短精英/Boss死亡闪光、修改范围攻击预警、增加飞船位置高亮；v0.6.29.1增加降低Bloom选项，并降低某爆炸道具的亮度提升。这些改动说明强烈反馈仍需服务可读性。对应《律航》应保持白色主机、敌弹和场景之间的对比，避免用长时间闪白、大片烟雾制造假繁华。[v0.6.27](https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1847286114027555)、[v0.6.29.1](https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1847920302230675)
+v0.6.27缩短精英/Boss死亡闪光、修改范围攻击预警、增加飞船位置高亮；v0.6.29.1增加降低Bloom选项，并降低某爆炸道具的亮度提升。这些改动说明强烈反馈仍需服务可读性。对应《Groove Flight》应保持白色主机、敌弹和场景之间的对比，避免用长时间闪白、大片烟雾制造假繁华。[v0.6.27](https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1847286114027555)、[v0.6.29.1](https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1847920302230675)
 
 ## 2. 本地安装目录只读核对
 
@@ -51,7 +51,7 @@ v0.6.27缩短精英/Boss死亡闪光、修改范围攻击预警、增加飞船�
 
 依据为安装目录已有的`Manifest_UFSFiles_Win64.txt`和`Manifest_NonUFSFiles_Win64.txt`，只读文本清单。没有解包`.pak/.utoc/.ucas`、提取模型/音效、反编译或改写安装文件。Engine目录的插件名不作为实际玩法证据。
 
-## 3. 对《律航》v2的具体落地建议
+## 3. 对《Groove Flight》v2的具体落地建议
 
 以下均是我们的设计，不是参考游戏复刻数据。
 

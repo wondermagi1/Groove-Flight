@@ -1,24 +1,24 @@
 {
-	"checks": 1468,
+	"checks": 1564,
 	"facts": {
 		"catalog": {
 			"core": 16,
 			"defense": 40,
 			"mod": 72,
 			"rhythm": 80,
-			"weapon": 32
+			"weapon": 44
 		},
 		"guaranteed_weapon_shops": 240,
 		"luck_sample": {
-			"luck100_rarity_sum": 4246,
+			"luck100_rarity_sum": 4174,
 			"offers_each": 2400,
-			"ordinary_rarity_sum": 3243
+			"ordinary_rarity_sum": 3134
 		},
 		"randomized_operations": 1600,
 		"weapons": {
 			"beam": {
 				"charge": 1,
-				"events": 64,
+				"events": 256,
 				"first_serial": 0,
 				"motif": [
 					0,
@@ -33,7 +33,7 @@
 			},
 			"beam_lance": {
 				"charge": 8,
-				"events": 8,
+				"events": 32,
 				"first_serial": 56,
 				"motif": [
 					0,
@@ -48,7 +48,7 @@
 			},
 			"beam_split": {
 				"charge": 1,
-				"events": 64,
+				"events": 256,
 				"first_serial": 0,
 				"motif": [
 					0,
@@ -63,7 +63,7 @@
 			},
 			"boomerang": {
 				"charge": 1,
-				"events": 64,
+				"events": 256,
 				"first_serial": 0,
 				"motif": [
 					0,
@@ -78,7 +78,7 @@
 			},
 			"boomerang_crescent": {
 				"charge": 2,
-				"events": 32,
+				"events": 128,
 				"first_serial": 8,
 				"motif": [
 					0,
@@ -93,7 +93,7 @@
 			},
 			"boomerang_ricochet": {
 				"charge": 2,
-				"events": 32,
+				"events": 128,
 				"first_serial": 8,
 				"motif": [
 					0,
@@ -108,7 +108,7 @@
 			},
 			"chain": {
 				"charge": 1,
-				"events": 64,
+				"events": 256,
 				"first_serial": 0,
 				"motif": [
 					0,
@@ -123,7 +123,7 @@
 			},
 			"chain_fork": {
 				"charge": 4,
-				"events": 16,
+				"events": 64,
 				"first_serial": 24,
 				"motif": [
 					0,
@@ -138,7 +138,7 @@
 			},
 			"drone": {
 				"charge": 2,
-				"events": 32,
+				"events": 128,
 				"first_serial": 8,
 				"motif": [
 					0,
@@ -153,7 +153,7 @@
 			},
 			"drone_sentry": {
 				"charge": 4,
-				"events": 16,
+				"events": 64,
 				"first_serial": 24,
 				"motif": [
 					0,
@@ -168,7 +168,7 @@
 			},
 			"flame": {
 				"charge": 1,
-				"events": 64,
+				"events": 256,
 				"first_serial": 0,
 				"motif": [
 					0,
@@ -183,7 +183,7 @@
 			},
 			"flame_cone": {
 				"charge": 2,
-				"events": 32,
+				"events": 128,
 				"first_serial": 8,
 				"motif": [
 					0,
@@ -198,7 +198,7 @@
 			},
 			"flame_spark": {
 				"charge": 1,
-				"events": 64,
+				"events": 256,
 				"first_serial": 0,
 				"motif": [
 					0,
@@ -213,7 +213,7 @@
 			},
 			"mine": {
 				"charge": 2,
-				"events": 32,
+				"events": 128,
 				"first_serial": 8,
 				"motif": [
 					0,
@@ -228,7 +228,7 @@
 			},
 			"mine_anchor": {
 				"charge": 4,
-				"events": 16,
+				"events": 64,
 				"first_serial": 24,
 				"motif": [
 					0,
@@ -243,7 +243,7 @@
 			},
 			"mine_cluster": {
 				"charge": 4,
-				"events": 16,
+				"events": 64,
 				"first_serial": 24,
 				"motif": [
 					0,
@@ -258,7 +258,7 @@
 			},
 			"missile": {
 				"charge": 1,
-				"events": 64,
+				"events": 256,
 				"first_serial": 0,
 				"motif": [
 					0,
@@ -273,7 +273,7 @@
 			},
 			"missile_siege": {
 				"charge": 8,
-				"events": 8,
+				"events": 32,
 				"first_serial": 56,
 				"motif": [
 					0,
@@ -288,7 +288,7 @@
 			},
 			"missile_swarm": {
 				"charge": 2,
-				"events": 32,
+				"events": 128,
 				"first_serial": 8,
 				"motif": [
 					0,
@@ -303,7 +303,7 @@
 			},
 			"nova": {
 				"charge": 1,
-				"events": 64,
+				"events": 256,
 				"first_serial": 0,
 				"motif": [
 					0,
@@ -318,7 +318,7 @@
 			},
 			"nova_spiral": {
 				"charge": 2,
-				"events": 32,
+				"events": 128,
 				"first_serial": 8,
 				"motif": [
 					0,
@@ -333,7 +333,7 @@
 			},
 			"orbit": {
 				"charge": 2,
-				"events": 32,
+				"events": 128,
 				"first_serial": 8,
 				"motif": [
 					0,
@@ -348,7 +348,7 @@
 			},
 			"orbit_binary": {
 				"charge": 2,
-				"events": 32,
+				"events": 128,
 				"first_serial": 8,
 				"motif": [
 					0,
@@ -363,7 +363,7 @@
 			},
 			"orbit_lattice": {
 				"charge": 4,
-				"events": 16,
+				"events": 64,
 				"first_serial": 24,
 				"motif": [
 					0,
@@ -378,7 +378,7 @@
 			},
 			"pulse": {
 				"charge": 1,
-				"events": 64,
+				"events": 256,
 				"first_serial": 0,
 				"motif": [
 					0,
@@ -393,7 +393,7 @@
 			},
 			"pulse_needle": {
 				"charge": 1,
-				"events": 64,
+				"events": 256,
 				"first_serial": 0,
 				"motif": [
 					7,
@@ -408,7 +408,7 @@
 			},
 			"pulse_ribbon": {
 				"charge": 1,
-				"events": 64,
+				"events": 256,
 				"first_serial": 0,
 				"motif": [
 					0,
@@ -423,7 +423,7 @@
 			},
 			"rail": {
 				"charge": 2,
-				"events": 32,
+				"events": 128,
 				"first_serial": 8,
 				"motif": [
 					0,
@@ -438,7 +438,7 @@
 			},
 			"rail_horizon": {
 				"charge": 8,
-				"events": 8,
+				"events": 32,
 				"first_serial": 56,
 				"motif": [
 					0,
@@ -451,9 +451,189 @@
 					7
 				]
 			},
+			"recorded_crude": {
+				"charge": 1,
+				"events": 256,
+				"first_serial": 0,
+				"motif": [
+					0,
+					1,
+					2,
+					3,
+					4,
+					5,
+					6,
+					7
+				]
+			},
+			"recorded_crude_legend": {
+				"charge": 1,
+				"events": 256,
+				"first_serial": 0,
+				"motif": [
+					0,
+					1,
+					2,
+					3,
+					4,
+					5,
+					6,
+					7
+				]
+			},
+			"recorded_crude_rare": {
+				"charge": 1,
+				"events": 256,
+				"first_serial": 0,
+				"motif": [
+					0,
+					1,
+					2,
+					3,
+					4,
+					5,
+					6,
+					7
+				]
+			},
+			"recorded_heavy": {
+				"charge": 1,
+				"events": 256,
+				"first_serial": 0,
+				"motif": [
+					3,
+					4,
+					5,
+					6,
+					7,
+					0,
+					1,
+					2
+				]
+			},
+			"recorded_heavy_legend": {
+				"charge": 1,
+				"events": 256,
+				"first_serial": 0,
+				"motif": [
+					3,
+					4,
+					5,
+					6,
+					7,
+					0,
+					1,
+					2
+				]
+			},
+			"recorded_heavy_rare": {
+				"charge": 1,
+				"events": 256,
+				"first_serial": 0,
+				"motif": [
+					3,
+					4,
+					5,
+					6,
+					7,
+					0,
+					1,
+					2
+				]
+			},
+			"recorded_light": {
+				"charge": 1,
+				"events": 256,
+				"first_serial": 0,
+				"motif": [
+					1,
+					2,
+					3,
+					4,
+					5,
+					6,
+					7,
+					0
+				]
+			},
+			"recorded_light_legend": {
+				"charge": 1,
+				"events": 256,
+				"first_serial": 0,
+				"motif": [
+					1,
+					2,
+					3,
+					4,
+					5,
+					6,
+					7,
+					0
+				]
+			},
+			"recorded_light_rare": {
+				"charge": 1,
+				"events": 256,
+				"first_serial": 0,
+				"motif": [
+					1,
+					2,
+					3,
+					4,
+					5,
+					6,
+					7,
+					0
+				]
+			},
+			"recorded_medium": {
+				"charge": 1,
+				"events": 256,
+				"first_serial": 0,
+				"motif": [
+					2,
+					3,
+					4,
+					5,
+					6,
+					7,
+					0,
+					1
+				]
+			},
+			"recorded_medium_legend": {
+				"charge": 1,
+				"events": 256,
+				"first_serial": 0,
+				"motif": [
+					2,
+					3,
+					4,
+					5,
+					6,
+					7,
+					0,
+					1
+				]
+			},
+			"recorded_medium_rare": {
+				"charge": 1,
+				"events": 256,
+				"first_serial": 0,
+				"motif": [
+					2,
+					3,
+					4,
+					5,
+					6,
+					7,
+					0,
+					1
+				]
+			},
 			"scatter": {
 				"charge": 1,
-				"events": 64,
+				"events": 256,
 				"first_serial": 0,
 				"motif": [
 					0,
@@ -468,7 +648,7 @@
 			},
 			"scatter_heavy": {
 				"charge": 2,
-				"events": 32,
+				"events": 128,
 				"first_serial": 8,
 				"motif": [
 					0,
@@ -483,7 +663,7 @@
 			},
 			"scatter_prism": {
 				"charge": 2,
-				"events": 32,
+				"events": 128,
 				"first_serial": 8,
 				"motif": [
 					0,

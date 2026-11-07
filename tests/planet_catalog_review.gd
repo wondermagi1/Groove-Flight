@@ -2,8 +2,8 @@ extends SceneTree
 ## Pure route-data checks; does not play eight worlds or assess human difficulty.
 const PLANETS=preload("res://scripts/planet_catalog.gd")
 const FORMATION=preload("res://scripts/wave_plan.gd")
-const VALID_FORMATIONS=["vanguard","wedge","crescent","twin_column","clusters","cross_wedge","broken_arc","braided_columns","constellation"]
-const VALID_ENEMIES=["mote","armor","shooter","dart","splitter","sentinel"]
+const VALID_FORMATIONS=["vanguard","wedge","crescent","twin_column","clusters","cross_wedge","broken_arc","braided_columns","constellation","prism_ring","dual_spiral"]
+const VALID_ENEMIES=["mote","armor","shooter","dart","splitter","sentinel","lance","mirror"]
 var checks=0
 var failures: Array[String]=[]
 func check(ok: bool,message: String) -> void:
@@ -54,6 +54,13 @@ func _initialize() -> void:
 			if not previous.is_empty(): check(float(scale[key])>float(previous[key]),"strictly increasing combat pressure and rewards / "+id+":"+key)
 		check(scale.accent==row.color and scale.sky_tint is Color and scale.planet_style==index,"arena theme binds selected planet / "+id)
 		check(elites>=1 and elites<=2,"bounded elite appointments / "+id)
+		var hard_route=PLANETS.route(id,1); var hard_scale=PLANETS.combat(id,1)
+		check(hard_route.size()==waves.size() and hard_scale.boss_hp>scale.boss_hp and hard_scale.damage>scale.damage,"high difficulty raises real combat pressure / "+id)
+		var normal_budget=0; var hard_budget=0; var hard_elites=0; var radial=false
+		for wave in range(waves.size()-1):
+			normal_budget+=int(waves[wave].budget); hard_budget+=int(hard_route[wave].budget); hard_elites+=int(hard_route[wave].elite)
+			radial=radial or str(hard_route[wave].formation) in ["prism_ring","dual_spiral"]
+		check(hard_budget>normal_budget and hard_elites>elites and radial,"high difficulty expands fleets, elites and curated entry geometry / "+id)
 		previous=scale
 		facts.append({"id":id,"waves":waves.size(),"survival_seconds":total_seconds,"planned_normal_units":total_budget,"elites":elites,"combat":scale.duplicate()})
 	check(PLANETS.planet("unknown").id=="mercury" and PLANETS.route("unknown")==PLANETS.route("mercury") and PLANETS.combat("unknown")==PLANETS.combat("mercury"),"unknown IDs resolve to a playable first planet")
@@ -63,6 +70,9 @@ func _initialize() -> void:
 	for ordinal in range(100): opening[PLANETS.kind("mercury",0,ordinal)]=true; mid[PLANETS.kind("mercury",2,ordinal)]=true
 	check(opening.has("mote") and opening.has("armor") and opening.size()==2,"Mercury first wave teaches simple pursuers before ranged threats")
 	check(mid.has("dart") and mid.has("shooter") and not mid.has("splitter") and not mid.has("sentinel"),"Mercury adds dashers/ranged without advanced-role overload")
+	var late_roles: Dictionary={}
+	for ordinal in range(120): late_roles[PLANETS.kind("neptune",7,ordinal,1)]=true
+	check(late_roles.has("lance") and late_roles.has("mirror"),"high-difficulty late route introduces both detailed specialist roles")
 	var result={"checks":checks,"failures":failures,"routes":facts,"scope":"Eight authored planet catalogs/routes/role mixes and monotonic combat scalars, deterministic pure data and48unit spawn geometry. Does not certify actual planet selection, eight full native clears, difficulty or artistic quality."}
 	FileAccess.open("res://tests/results-planet-catalog.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	print("PLANET_CATALOG_REVIEW ",JSON.stringify({"checks":checks,"failures":failures,"planets":facts.size()}))

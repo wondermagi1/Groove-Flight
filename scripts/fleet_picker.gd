@@ -48,6 +48,11 @@ class FleetCard extends Button:
 		if selected:
 			draw_circle(Vector2(size.x - 17.0, 17.0), 4.0, accent)
 			draw_line(Vector2(13.0, 0.0), Vector2(size.x - 13.0, 0.0), accent, 3.0, true)
+		# Shared material strip and miniature lamps turn each tile into an
+		# inspection bay while keeping the actual selectable hit area unchanged.
+		draw_line(Vector2(16.0, size.y - 53.0), Vector2(size.x - 16.0, size.y - 53.0), Color(accent, .16), 1.0, true)
+		for lamp in range(3):
+			draw_circle(Vector2(20.0 + lamp * 9.0, 19.0 + lamp % 2 * 3.0), 1.8, Color(accent, .32 + lamp * .12))
 
 class HangarBackdrop extends Control:
 	func _draw() -> void:

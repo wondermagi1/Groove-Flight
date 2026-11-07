@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "rule": "The runtime sound is one continuous file from the source recording. Four-beat gameplay timing does not split or transpose the recording.",
+  "groups": [
+    {
+      "voice": "rec_crude",
+      "catalog_id": "weapon_crude_fire",
+      "source_file": "audio/library/groove_core/working/weapon_crude_fire/extracted_audio.wav",
+      "source_start_seconds": 0.0,
+      "source_end_seconds": 6.0,
+      "runtime_file": "audio/authorized/weapon_crude_fire_group_6s.wav",
+      "processing": "direct PCM16 slice only; no fades, gain, normalization, resampling, segmentation or pitch processing",
+      "duration_seconds": 6.0,
+      "peak_dbfs": -8.316,
+      "rms_dbfs": -30.378,
+      "waveform": "audio/library/groove_core/analysis/weapon_crude_fire/crude-fire-full-0-6s-waveform.png",
+      "pcm_samples_identical_to_source": true,
+      "detected_sound_count": 6,
+      "onset_offsets_seconds": [
+        0.0,
+        1.0,
+        2.0,
+        3.0,
+        4.0,
+        4.98
+      ],
+      "onset_grid_error_ms": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        20.0
+      ],
+      "max_onset_grid_error_ms": 20.0
+    },
+    {
+      "voice": "rec_ballistic",
+      "catalog_id": "weapon_ballistic_volume_ramp",
+      "source_file": "audio/library/groove_core/working/weapon_ballistic_volume_ramp/extracted_audio.wav",
+      "source_start_seconds": 0.58,
+      "source_end_seconds": 16.58,
+      "runtime_file": "audio/authorized/weapon_ballistic_cycle_16s.wav",
+      "processing": "direct PCM16 slice only; no fades, gain, normalization, resampling, segmentation or pitch processing",
+      "duration_seconds": 16.0,
+      "peak_dbfs": -8.938,
+      "rms_dbfs": -30.372,
+      "waveform": "audio/library/groove_core/analysis/weapon_ballistic_volume_ramp/ballistic-sixteen-second-cycle-waveform.png",
+      "pcm_samples_identical_to_source": true,
+      "detected_sound_count": 16,
+      "onset_offsets_seconds": [
+        0.0,
+        1.06,
+        2.0,
+        3.0,
+        4.0,
+        5.0,
+        6.0,
+        7.0,
+        8.0,
+        9.0,
+        10.0,
+        11.0,
+        12.0,
+        13.0,
+        14.0,
+        15.02
+      ],
+      "onset_grid_error_ms": [
+        0.0,
+        60.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        20.0
+      ],
+      "max_onset_grid_error_ms": 60.0
+    }
+  ]
+}

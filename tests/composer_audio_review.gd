@@ -72,7 +72,7 @@ func run() -> void:
 	check(energy(pcm,1)>1. and energy(pcm,0)<.000001,"hard-right pan actually silences the left channel")
 	score.tracks[0].pan=0.; score.tracks[0].mute=true; recording=player.compile(score); pcm=recording.data
 	check(player.score_events.is_empty() and energy(pcm)==0. and energy(pcm,1)==0.,"muting a track removes its notes from audio and gameplay manifest")
-	score.tracks[0].mute=false; score.add_track("beam","chord"); score.add_note(1,0.,67,1.,70); score.tracks[1].solo=true
+	score.tracks[0].mute=false; score.add_track("recorded_ballistic","chord"); score.add_note(1,0.,67,1.,70); score.tracks[1].solo=true
 	recording=player.compile(score)
 	check(player.score_events.size()==1 and player.score_events[0].track==1,"solo selection applies equally to music and event output")
 	score=fixture(); var note=score.add_note(0,.5,60,.5,40); recording=player.compile(score); var soft=recording.data
@@ -84,17 +84,21 @@ func run() -> void:
 	score=fixture(); score.set_bpm(80.); score.add_note(0,0.,60,1.,90); recording=player.compile(score)
 	check(recording.loop_end==66150 and is_equal_approx(player.step_duration,.1875),"BPM changes native PCM length and sixteenth deadlines together")
 	var timbres: Dictionary={}; var pitch_results: Dictionary={}
-	for row in DATA.weapons():
+	for row in DATA.playable_weapons():
 		check(player.audition(str(row.id),60),"weapon can audition an absolute-pitch note / "+str(row.id))
 		var active=player._audition_players[(player._audition_index-1)%2]; var sample: PackedByteArray=active.stream.data
 		timbres[hash(sample)]=true; active.stop()
-	check(timbres.size()==32,"all32weapon instruments produce different authored PCM")
-	for weapon in ["pulse","missile","pulse_needle","orbit"]:
-		for midi in [60,69]:
-			player.audition(weapon,midi); var voice=player._audition_players[(player._audition_index-1)%2]
-			var measured=peak_pitch(voice.stream.data); voice.stop()
-			pitch_results[weapon+str(midi)]=measured
-			check(measured==midi,"weapon octave preset cannot transpose the requested MIDI pitch / %s:%d"%[weapon,midi])
+	check(timbres.size()==2,"two recorded weapon prototypes remain available in the composer")
+	check(not player.audition("pulse",60) and not player.audition("beam",60),"placeholder-synth weapons cannot be auditioned")
+	player.audition("recorded_ballistic",60)
+	var recorded_voice=player._audition_players[(player._audition_index-1)%2]
+	var recorded_path="res://audio/arsenal/notes/rec_ballistic_3.wav"
+	var recorded_source: AudioStreamWAV=null
+	if FileAccess.file_exists(ProjectSettings.globalize_path(recorded_path)) and ClassDB.class_has_method("AudioStreamWAV","load_from_file"):
+		recorded_source=AudioStreamWAV.load_from_file(ProjectSettings.globalize_path(recorded_path))
+	elif ResourceLoader.exists(recorded_path): recorded_source=load(recorded_path) as AudioStreamWAV
+	check(recorded_source!=null and recorded_voice.stream.data==recorded_source.data,"recorded-audio weapon audition loads the authorized WAV sample itself")
+	recorded_voice.stop()
 	facts.pitch_results=pitch_results
 	score=fixture(); score.add_note(0,0.,60,.5,90); score.add_note(0,2.,64,.5,90)
 	var before=Time.get_ticks_usec(); check(player.begin(score,true),"native loop request is accepted")
@@ -124,7 +128,7 @@ func run() -> void:
 	check(player.timeline>1.,"native playback resumes after a paused seek")
 	player.stop_song(); notes_seen.clear()
 	check(player.begin(score,false) and await wait_prepared(),"one-shot score is accepted")
-	await create_timer(2.2).timeout
+	await create_timer(2.5).timeout
 	check(finished_count==1 and not player.running and not player.playing and is_equal_approx(player.timeline,2.),"one-shot song emits completion when its actual stream ends")
 	player.stop_song()
 	var path=ProjectSettings.globalize_path("res://work/composer-export.wav")
@@ -139,6 +143,6 @@ func run() -> void:
 	await frames(2); var count=started_count; player.stop_song()
 	await create_timer(.3).timeout; await frames()
 	check(not player.compiling and not player.running and not player.playing and started_count==count,"cancelled worker cannot resurrect stopped audio")
-	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"Original score fixtures: stereoPCM/BPM/gates/pan/velocity/mute/solo,32distinct weapon synths with absoluteMIDI pitch, pure schedule manifest, worker cancellation, real native loop/pause/seek/one-shot, asynchronous WAV file/header/overwrite. No copied song, human listening or complete battle claim."}
+	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"Original score fixtures: stereoPCM/BPM/gates/pan/velocity/mute/solo, two active recorded weapon voices, disabled placeholder synths, pure schedule manifest, worker cancellation, real native loop/pause/seek/one-shot, asynchronous WAV file/header/overwrite. No copied song, human listening or complete battle claim."}
 	FileAccess.open("res://tests/results-composer-audio.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("COMPOSER_AUDIO_REVIEW ",JSON.stringify(result))
 	player.stop_song(); player.stream=null; await create_timer(.2).timeout; player.queue_free(); await frames(); quit(0 if failures.is_empty() else 1)

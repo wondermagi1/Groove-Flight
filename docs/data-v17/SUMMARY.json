@@ -1,0 +1,29 @@
+{
+  "version": "0.17.0-independent-groove",
+  "checks": 631,
+  "failures": 0,
+  "tests": [
+    {
+      "test": "weapon-cycle",
+      "checks": 367,
+      "failures": 0
+    },
+    {
+      "test": "rhythm-feedback",
+      "checks": 40,
+      "failures": 0
+    },
+    {
+      "test": "composer-score",
+      "checks": 112,
+      "failures": 0
+    },
+    {
+      "test": "arsenal-combat",
+      "checks": 112,
+      "failures": 0
+    }
+  ],
+  "native_fixture_max_deadline_error_seconds": 0.004609011225099824,
+  "scope": "Targeted regression, native8-second battle and4-second shop preview, not a full-route balance or human listening acceptance."
+}

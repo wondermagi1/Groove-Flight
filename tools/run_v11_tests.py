@@ -9,12 +9,13 @@ movie='--movie' in sys.argv
 forward='--forward' in sys.argv
 for name in [x for x in sys.argv[1:] if x not in ['--gpu','--movie','--forward']]:
  env=os.environ.copy();env['APPDATA']=str(root/'tests'/('profile-v11-'+name))
- args=[str(engine)]+(['--rendering-method','forward_plus' if forward else 'gl_compatibility','--position','-4000,-2000','--resolution','1920x1080','--windowed'] if gpu else ['--headless'])+['--path',str(root),'--script','res://tests/'+name+'.gd','--','--beatdrift-test']
+ args=[str(engine)]+(['--rendering-method','forward_plus' if forward else 'gl_compatibility','--position','-4000,-2000','--resolution','1920x1080','--windowed'] if gpu else ['--headless'])+['--path',str(root),'--script','res://tests/'+name+'.gd','--','--grooveflight-test']
  if movie and name=='v11_native_sample': args[1:1]=['--write-movie',str(root/'work/v11-final-native.avi'),'--fixed-fps','30']
  start=time.time()
  try:
   with (work/(name+'.live.log')).open('w',encoding='utf-8') as live:
-   p=subprocess.run(args,env=env,stdout=live,stderr=subprocess.STDOUT,text=True,encoding='utf-8',errors='replace',timeout=900 if name=='v11_native_sample' else 240)
+   long_run=name in ['v11_native_sample','arsenal_full_run','planet_native_run']
+   p=subprocess.run(args,env=env,stdout=live,stderr=subprocess.STDOUT,text=True,encoding='utf-8',errors='replace',timeout=900 if long_run else 240)
   log=(work/(name+'.live.log')).read_text(encoding='utf-8',errors='replace')
   (work/(name+'.log')).write_text(log,encoding='utf-8')
   print(name,'EXIT',p.returncode,'%.1fs'%(time.time()-start),flush=True)

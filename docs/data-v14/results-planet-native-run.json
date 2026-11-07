@@ -1,0 +1,591 @@
+{
+	"after5s_max_error": 0.0110796142578096,
+	"arrangements": [
+		{
+			"dust": 19,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "recorded_crude",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_support_ostinato",
+					"level": 1,
+					"uid": 7
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				-1,
+				3,
+				3,
+				4,
+				-1,
+				-1,
+				-1,
+				5,
+				5,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 1
+		},
+		{
+			"dust": 76,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "recorded_crude",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_support_ostinato",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "drone",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "mod_nova_1",
+					"level": 1,
+					"uid": 9
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				9,
+				3,
+				3,
+				4,
+				8,
+				8,
+				-1,
+				5,
+				5,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 2
+		},
+		{
+			"dust": 171,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "recorded_crude",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_support_ostinato",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "drone",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "mod_nova_1",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "flame",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "mod_drone_4",
+					"level": 1,
+					"uid": 11
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				9,
+				3,
+				3,
+				4,
+				8,
+				8,
+				10,
+				5,
+				5,
+				11,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 3
+		},
+		{
+			"dust": 306,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "recorded_crude",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_support_ostinato",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "drone",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "mod_nova_1",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "flame",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "mod_drone_4",
+					"level": 1,
+					"uid": 11
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 12
+				},
+				{
+					"kind": "mine",
+					"level": 1,
+					"uid": 13
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				9,
+				3,
+				3,
+				4,
+				8,
+				8,
+				10,
+				5,
+				5,
+				11,
+				12,
+				13,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 4
+		},
+		{
+			"dust": 471,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "recorded_crude",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_support_ostinato",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "drone",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "mod_nova_1",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "flame",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "mod_drone_4",
+					"level": 1,
+					"uid": 11
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 12
+				},
+				{
+					"kind": "mine",
+					"level": 1,
+					"uid": 13
+				},
+				{
+					"kind": "recorded_medium",
+					"level": 1,
+					"uid": 14
+				},
+				{
+					"kind": "mod_flame_4",
+					"level": 1,
+					"uid": 15
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				9,
+				3,
+				3,
+				4,
+				8,
+				8,
+				10,
+				5,
+				5,
+				11,
+				12,
+				13,
+				14,
+				14,
+				15,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 5
+		}
+	],
+	"boss_max_hp": 3000.0,
+	"checks": 69,
+	"elapsed_wall_seconds": 178.747,
+	"failures": [],
+	"first5s_max_error": 0.00586798855561018,
+	"kills": 700,
+	"max_compile_msec": 4675.149,
+	"max_timing_error": 0.0110796142578096,
+	"music_seconds": 137.82520869458,
+	"observed_weapon_events": 2173,
+	"peak_bullets": 201,
+	"peak_enemies": 99,
+	"peak_hostile_bullets": 16,
+	"planet": "mercury",
+	"purchases": [
+		{
+			"kind": "recorded_crude",
+			"price": 31,
+			"slot": 3,
+			"uid": 6,
+			"wave": 1
+		},
+		{
+			"kind": "r_support_ostinato",
+			"price": 20,
+			"slot": 1,
+			"uid": 7,
+			"wave": 1
+		},
+		{
+			"kind": "drone",
+			"price": 26,
+			"slot": 9,
+			"uid": 8,
+			"wave": 2
+		},
+		{
+			"kind": "mod_nova_1",
+			"price": 14,
+			"slot": 5,
+			"uid": 9,
+			"wave": 2
+		},
+		{
+			"kind": "flame",
+			"price": 16,
+			"slot": 11,
+			"uid": 10,
+			"wave": 3
+		},
+		{
+			"kind": "mod_drone_4",
+			"price": 16,
+			"slot": 14,
+			"uid": 11,
+			"wave": 3
+		},
+		{
+			"kind": "scatter",
+			"price": 15,
+			"slot": 15,
+			"uid": 12,
+			"wave": 4
+		},
+		{
+			"kind": "mine",
+			"price": 24,
+			"slot": 16,
+			"uid": 13,
+			"wave": 4
+		},
+		{
+			"kind": "recorded_medium",
+			"price": 42,
+			"slot": 17,
+			"uid": 14,
+			"wave": 5
+		},
+		{
+			"kind": "mod_flame_4",
+			"price": 17,
+			"slot": 19,
+			"uid": 15,
+			"wave": 5
+		}
+	],
+	"record": {
+		"attempts": 1,
+		"best_score": 810,
+		"best_time": 137.82520869458,
+		"clears": 1,
+		"hard_attempts": 0,
+		"hard_best_score": 0,
+		"hard_best_time": 0.0,
+		"hard_clears": 0,
+		"last_result": "clear"
+	},
+	"scope": "Complete Mercury six-wave route at production timings/native128-second music, five real shops/purchases/equipment drops/continue signals and actual3000HPBoss phase2/victory/progress record. Assistance: invulnerability, steering, automatic overload only. No enemy HP reduction, injected kills, music seeking or wave/time skips. No claim of eight full planet clears or human difficulty acceptance.",
+	"score": 810,
+	"shops": 5,
+	"total_spawned": 756,
+	"waves": {
+		"1": {
+			"dust": 0,
+			"equipped": 5,
+			"modules": 5,
+			"start": 0.0
+		},
+		"2": {
+			"dust": 19,
+			"equipped": 7,
+			"modules": 7,
+			"start": 20.0386371422119
+		},
+		"3": {
+			"dust": 76,
+			"equipped": 9,
+			"modules": 9,
+			"start": 42.0990083879395
+		},
+		"4": {
+			"dust": 171,
+			"equipped": 11,
+			"modules": 11,
+			"start": 66.1148941665039
+		},
+		"5": {
+			"dust": 306,
+			"equipped": 13,
+			"modules": 13,
+			"start": 92.0897304814453
+		},
+		"6": {
+			"dust": 471,
+			"equipped": 15,
+			"modules": 15,
+			"start": 120.10180748877
+		}
+	},
+	"weapon_damage": {
+		"beam": 1067.488,
+		"drone": 1771.793625,
+		"flame": 53.44,
+		"mine": 4.224,
+		"nova": 1699.52975,
+		"overload": 5001.84275,
+		"pulse": 4352.694125,
+		"recorded_crude": 3355.58999999999,
+		"recorded_medium": 589.884,
+		"scatter": 1765.94675
+	}
+}

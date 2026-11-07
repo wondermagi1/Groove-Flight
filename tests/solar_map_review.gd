@@ -11,6 +11,7 @@ class Fixture:
 	var selected_planet="earth"
 	var selected_ship="hex"
 	var selected_pilot="echo"
+	var settings={"starting_path":0,"difficulty":0}
 	var planet_records={"mercury":{"clears":1,"best_score":372,"best_time":201.3}}
 	var solar_return_state="title"
 	var departures=0
@@ -18,6 +19,7 @@ class Fixture:
 	func select_planet(id: String) -> bool:
 		if not DATA.IDS.has(id): return false
 		selected_planet=id; return true
+	func save_settings() -> void: pass
 	func planet_record(id: String) -> Dictionary: return planet_records.get(id,{})
 	func is_planet_unlocked(_id: String) -> bool: return true
 	func launch_selected_planet() -> void: departures+=1
@@ -56,6 +58,19 @@ func run() -> void:
 	screen._stage_input(released_motion)
 	check(not screen.right_drag and is_equal_approx(screen.camera_yaw,yaw_before),"releasing right drag outside the diagram cannot leave camera rotation stuck")
 	screen.choose_planet("jupiter"); await frames(); await snapshot("v4-solar-final-1080p")
+	var protocol: OptionButton=null
+	var option_names: Array[String]=[]
+	for node in screen.detail_content.find_children("*","OptionButton",true,false):
+		option_names.append(str(node.name))
+		if str(node.name).begins_with("DifficultyProtocol"): protocol=node; break
+	var normal_boss=float(DATA.combat("jupiter",0).boss_hp)
+	check(protocol!=null,"planet details expose a persistent difficulty protocol / "+",".join(option_names))
+	if protocol!=null:
+		protocol.select(1); protocol.item_selected.emit(1); await frames(5)
+		var hard=DATA.combat("jupiter",1); var hard_route=DATA.route("jupiter",1)
+		check(fixture.settings.difficulty==1 and float(hard.boss_hp)>normal_boss and hard_route.any(func(row): return str(row.formation) in ["prism_ring","dual_spiral"]),"high difficulty changes real combat scaling and adds radial entry formations")
+		check(screen.launch_button.text.contains("高压"),"high difficulty is explicit on the launch action")
+		await snapshot("v4-solar-hard-1080p")
 	screen.get_node("LaunchPlanet").pressed.emit(); check(fixture.departures==1,"launch button calls the game departure API")
 	root.size=Vector2i(1280,720); await frames(12)
 	# canvas_items stretches the1920×1080 design viewport into a1280×720

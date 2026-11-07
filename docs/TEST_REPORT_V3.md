@@ -1,6 +1,6 @@
-# 律航 V3 · 装备与旋律版本验证
+# Groove Flight V3 · 装备与旋律版本验证
 
-日期：2026-10-29。Windows、Godot4.7.2、NVIDIA RTX4060 Laptop。测试均携带`--beatdrift-test`，跳过玩家设置读写；没有读取或修改《折界》《三途试炼》的进度。V1、V2记录保留在`TEST_REPORT_V1.md`和`TEST_REPORT_V2.md`。
+日期：2026-10-29。Windows、Godot4.7.2、NVIDIA RTX4060 Laptop。测试均携带`--grooveflight-test`，跳过玩家设置读写；没有读取或修改《折界》《三途试炼》的进度。V1、V2记录保留在`TEST_REPORT_V1.md`和`TEST_REPORT_V2.md`。
 
 ## 当前自动检查
 
@@ -48,6 +48,6 @@ Boss由实际武器击破并进入过半血二阶段；128秒音乐循环超过�
 
 ## 复现入口
 
-在工程根目录使用Godot4.7.2，先导入资源。运行模型/战斗检查可添加`--headless`；音频、UI图像和整局检查使用`--rendering-method gl_compatibility`。统一附加`-- --beatdrift-test`。原生十波检查约7分钟。
+在工程根目录使用Godot4.7.2，先导入资源。运行模型/战斗检查可添加`--headless`；音频、UI图像和整局检查使用`--rendering-method gl_compatibility`。统一附加`-- --grooveflight-test`。原生十波检查约7分钟。
 
 当前测试脚本为上述五个`arsenal_*review.gd`/`arsenal_full_run.gd`。原`prototype_review.gd`/`full_run.gd`保留V1/V2行为断言供历史版本复现，不应作为三轨V3的现行验收脚本；完整旧版可在本地Git提交85ed646恢复。

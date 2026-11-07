@@ -10,7 +10,7 @@ OUT = ROOT / 'assets/city'
 SOURCE = ROOT / 'source_art/city'
 OUT.mkdir(parents=True, exist_ok=True)
 SOURCE.mkdir(parents=True, exist_ok=True)
-scene = bpy.data.scenes.new('BEATDRIFT_Original_Pilot')
+scene = bpy.data.scenes.new('GROOVE_FLIGHT_Original_Pilot')
 bpy.context.window.scene = scene
 meshes = []
 
@@ -65,6 +65,18 @@ def limb(name,a,b,r,material,bone):
 ellipsoid('Flight jacket torso',(0,0,1.23),(.27,.16,.35),'suit','spine')
 block('Breast plate',(0,-.145,1.34),(.40,.08,.31),'white','spine',.06)
 block('Chest cyan instrument',(0,-.196,1.37),(.13,.025,.065),'cyan','spine',.01)
+block('Chest flight recorder',(0,-.215,1.42),(.12,.026,.07),'dark','spine',.008)
+block('Chest amber status',(0,-.232,1.435),(.073,.012,.025),'amber','spine',.004)
+for side,suffix in ((-1,'L'),(1,'R')):
+    block('Flight harness '+suffix,(side*.115,-.205,1.22),(.036,.032,.34),'white','spine',.008)
+block('Dorsal power core',(0,.205,1.28),(.25,.115,.30),'dark','spine',.025)
+block('Dorsal core light',(0,.269,1.29),(.075,.018,.18),'cyan','spine',.008)
+block('Helmet crest',(0,-.015,2.02),(.040,.23,.13),'white','head',.012)
+block('Helmet crest light',(0,-.025,2.075),(.048,.16,.025),'cyan','head',.006)
+block('Comm antenna',(-.185,.02,2.00),(.024,.024,.27),'dark','head',.005)
+block('Comm antenna tip',(-.205,.02,2.13),(.048,.048,.038),'amber','head',.008)
+for side in (-1,1):
+    block('Shoulder beacon',(side*.305,-.04,1.50),(.052,.052,.085),'cyan','spine',.012)
 block('Waist utility belt',(0,0,.96),(.46,.34,.10),'dark','root')
 for side in (-1,1):
     block('Belt field pouch',(side*.25,-.035,.92),(.10,.16,.17),'white','root')
@@ -140,4 +152,4 @@ bpy.context.view_layer.objects.active=rig
 bpy.ops.export_scene.gltf(filepath=str(OUT/'pilot.glb'),export_format='GLB',use_selection=True,
     export_apply=True,export_animations=True,export_animation_mode='NLA_TRACKS',export_skins=True)
 bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE/'pilot.blend'),copy=True)
-print('BEATDRIFT_PILOT_BUILT',json.dumps({'parts':len(meshes),'bones':len(specs),'animations':['Walk','Idle']}),flush=True)
+print('GROOVE_FLIGHT_PILOT_BUILT',json.dumps({'parts':len(meshes),'bones':len(specs),'animations':['Walk','Idle']}),flush=True)

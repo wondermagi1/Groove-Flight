@@ -20,7 +20,7 @@ func run() -> void:
 	catalog_contracts(); layout_transactions(); merge_and_market(); stat_and_scope_contracts(); schedule_contracts(); randomized_transactions()
 	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"Pure model fixtures: catalog schema, atomic placement/merge/shop, equipped-only bonuses, conditional scopes, charge/repeat/echo/motif schedule and512-step repeat. Does not certify production damage/audio/UI or human balance."}
 	FileAccess.open("res://tests/results-arsenal-loadout.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
-	print("BEATDRIFT_ARSENAL_LOADOUT ",JSON.stringify(result)); quit(0 if failures.is_empty() else 1)
+	print("GROOVE_FLIGHT_ARSENAL_LOADOUT ",JSON.stringify(result)); quit(0 if failures.is_empty() else 1)
 func catalog_contracts() -> void:
 	var counts: Dictionary={}; var ids: Dictionary={}; var families: Dictionary={}; var voices: Dictionary={}; var used_keys: Dictionary={}
 	for row in C.rows():
@@ -34,8 +34,8 @@ func catalog_contracts() -> void:
 		if row.category=="weapon":
 			families[row.family]=true; voices[row.voice]=true
 			check(int(row.charge) in [1,2,4,8] and int(row.count)>0,"weapon charge powers / "+str(row.id))
-	check(counts=={"weapon":32,"mod":72,"rhythm":80,"defense":40,"core":16},"240 independent catalogue records in promised categories")
-	check(families.size()==12 and voices.size()==32,"32 voices across12 mechanical families")
+	check(counts=={"weapon":38,"mod":72,"rhythm":80,"defense":40,"core":16},"246 independent catalogue records in promised categories")
+	check(families.size()==12 and voices.size()==34,"34 voices across12 mechanical families")
 	for key in L.STAT_KEYS: check(used_keys.has("stat:"+key),"catalog actually uses stat key / "+key)
 	for key in L.WEAPON_KEYS: check(used_keys.has("weapon:"+key),"catalog actually uses weapon key / "+key)
 	for key in L.BEAT_KEYS: check(used_keys.has("beat:"+key),"catalog actually uses beat key / "+key)
@@ -154,19 +154,20 @@ func schedule_contracts() -> void:
 	for row in C.weapons():
 		value.set_starters([]); var uid=value.add_module(str(row.id),0); var emitted: Array=[]; var before=snapshot(value)
 		for serial in range(512):
-			var events=only_weapon(value.schedule(serial),uid)
+			var events=only_weapon(value.schedule(serial),uid).filter(func(event): return not bool(event.get("cadence_light",false)))
 			for event in events: emitted.append({"serial":serial,"pitch":int(event.pitch),"damage":float(event.damage)})
-		var expected=64/int(row.charge)
+		var expected=(64/int(row.charge))*4
 		check(emitted.size()==expected,"charged weapon emits exact count over128seconds / "+str(row.id))
 		check(not emitted.is_empty() and emitted[0].serial==(int(row.charge)-1)*8,"charge first firing occurs on required bar / "+str(row.id))
 		var pitches: Array=[]
-		for i in range(mini(8,emitted.size())): pitches.append(emitted[i].pitch)
+		for event in emitted:
+			if int(event.serial)%8==0 and pitches.size()<8: pitches.append(int(event.pitch))
 		check(pitches==row.melody,"weapon advances its independent motif only when it fires / "+str(row.id))
 		unique_melodies[str(pitches)]=true
 		check(snapshot(value)==before and musical_payload(value.schedule(0))==musical_payload(value.schedule(512)),"schedule is pure and512-step-periodic / "+str(row.id))
 		check(value.trigger(1).is_empty() if int(row.width)>1 else true,"wide item tail never emits duplicate event / "+str(row.id))
 		timings[row.id]={"charge":row.charge,"events":emitted.size(),"first_serial":emitted[0].serial,"motif":pitches}
-	check(unique_melodies.size()==32,"all32 weapons have different eight-note motifs")
+	check(unique_melodies.size()==34,"base weapon voices retain34 distinct eight-note motifs across38 quality entries")
 	facts.weapons=timings
 	value.set_starters([]); var uid=value.add_module("rail",0); value.add_module("r_rush",4)
 	check(value.schedule(0).any(func(event): return int(event.uid)==uid),"charge-reduction item changes actual first-bar firing")
@@ -175,14 +176,17 @@ func schedule_contracts() -> void:
 	check(repeated.size()==2 and repeated[0].pitch==repeated[1].pitch and repeated[0].angle!=repeated[1].angle,"repeat emits second attack/note event with controlled angle offset")
 	value.set_starters([]); value.add_module("pulse",3); value.echo_repeat=true
 	var original=only_weapon(value.schedule(3)); var echo=only_weapon(value.schedule(7))
-	check(original.size()==1 and echo.size()==1 and echo[0].pilot=="echo" and is_equal_approx(echo[0].damage,original[0].damage*.5) and echo[0].pitch==original[0].pitch,"echo repeats first weapon's actual pitch and half damage on final step")
+	var echo_only=echo.filter(func(event): return event.get("pilot","")=="echo")
+	check(original.size()==1 and echo_only.size()==1 and is_equal_approx(echo_only[0].damage,original[0].damage*.5) and echo_only[0].pitch==original[0].pitch,"echo repeats first weapon's actual pitch and half damage on final step")
 	value.set_starters([]); value.add_module("pulse",0); value.add_module("r_downbeat",3); original=only_weapon(value.schedule(0)); echo=only_weapon(value.schedule(7))
-	check(is_equal_approx(echo[0].damage,original[0].damage*.5),"echo retains original downbeat conditions instead of recalculating as final-step damage")
+	echo_only=echo.filter(func(event): return event.get("pilot","")=="echo")
+	check(echo_only.size()==1 and is_equal_approx(echo_only[0].damage,original[0].damage*.5),"echo retains original downbeat conditions instead of recalculating as final-step damage")
 	value.set_starters([]); value.add_module("rail",0)
 	check(only_weapon(value.schedule(7)).is_empty() and only_weapon(value.schedule(15)).size()==1,"echo never fires a weapon from a still-charging bar")
 	value.echo_repeat=false; value.set_starters([]); value.add_module("d_medkit",0); value.add_module("pulse",2)
 	var support=value.schedule(0)
-	check(support.size()==1 and support[0].family=="support" and support[0].damage==0. and support[0].voice=="","support sound event does not masquerade as weapon damage")
+	var support_only=support.filter(func(event): return event.family=="support")
+	check(support_only.size()==1 and support_only[0].damage==0. and support_only[0].voice=="","support sound event does not masquerade as weapon damage")
 	value.set_starters([]); value.set_fleet({"health":14,"damage_scale":1.18,"ballistic":10},{"id":"echo"}); value.set_starters(["pulse"])
 	check(value.stats().max_health==14 and is_equal_approx(value.trigger(0).damage,9.*1.18*1.10) and value.echo_repeat,"ship/pilot sources survive setting starters and alter real scheduled weapon event")
 func randomized_transactions() -> void:

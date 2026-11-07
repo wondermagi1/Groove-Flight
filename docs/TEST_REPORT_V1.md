@@ -1,6 +1,6 @@
 # First playable verification
 
-2026-10-28, Windows, Godot4.7.2, OpenGL Compatibility, NVIDIA RTX4060 Laptop GPU. Test data uses isolated APPDATA with `--beatdrift-test`; formal player settings and older games are untouched.
+2026-10-28, Windows, Godot4.7.2, OpenGL Compatibility, NVIDIA RTX4060 Laptop GPU. Test data uses isolated APPDATA with `--grooveflight-test`; formal player settings and older games are untouched.
 
 ## Native full run
 

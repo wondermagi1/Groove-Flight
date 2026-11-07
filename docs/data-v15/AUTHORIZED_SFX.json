@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "authorization": "User confirms original-author permission; see audio/library/groove_core/AUTHORIZATION.md",
+  "clips": [
+    {"id":"menu_theme","file":"res://audio/authorized/menu_theme.ogg","source_catalog_id":"music_menu","role":"title_hub_hangar_solar_bgm"},
+    {"id":"crude_shot","file":"res://audio/authorized/weapon_crude_shot.ogg","source_catalog_id":"weapon_crude_fire","source_seconds":3.05,"source_active_end_seconds":3.66,"role":"pulse weapon strong accent"},
+    {"id":"collision","file":"res://audio/authorized/event_collision.ogg","source_catalog_id":"events_enemy_collision","source_seconds":4.95,"role":"player collision / enemy damage heavy impact thud"},
+    {"id":"shield","file":"res://audio/authorized/event_shield.ogg","source_catalog_id":"events_enemy_collision","source_seconds":9.90,"role":"shield activation and impact"},
+    {"id":"enemy_spawn","file":"res://audio/authorized/event_spawn.ogg","source_catalog_id":"events_enemy_collision","source_seconds":19.05,"role":"formation warp entrance"},
+    {"id":"dash_thruster","file":"res://audio/authorized/thruster_dash.ogg","source_catalog_id":"weapon_power_thruster","source_seconds":0.65,"role":"dash launch"},
+    {"id":"crude_fire_group","file":"res://audio/authorized/weapon_crude_fire_group_6s.wav","source_catalog_id":"weapon_crude_fire","source_seconds":0.0,"source_end_seconds":6.0,"role":"three strong-weak cycles; direct PCM16 source slice"},
+    {"id":"ballistic_cycle_16s","file":"res://audio/authorized/weapon_ballistic_cycle_16s.wav","source_catalog_id":"weapon_ballistic_volume_ramp","source_seconds":0.58,"source_end_seconds":16.58,"role":"single complete sixteen-second recorded weapon cycle shared by normal/rare/precious tiers"},
+    {"id":"uranus_amber","file":"res://audio/authorized/uranus_amber_loop.ogg","source_catalog_id":"music_uranus_amber","source_seconds":0.32,"source_end_seconds":20.32,"loop_seconds":20.0,"bpm":120,"bars":10,"role":"shared combat/editor/shop background loop for all planets"}
+  ]
+}

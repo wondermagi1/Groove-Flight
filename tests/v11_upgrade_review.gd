@@ -86,6 +86,20 @@ func trajectory_tests() -> void:
 	check(game.bullets.size()==3 and game.pending_projectiles.is_empty(),"deferred logical shots re-enter when capacity is released")
 func formation_tests() -> void:
 	var evidence: Array=[]
+	var squad=MOTION.new_group(Vector2(0,-1000),Vector2.UP,"wedge",0.,0)
+	var leader={"uid":100,"at":Vector2(0,-900),"speed":140.,"angle":0.}
+	var follower={"uid":101,"at":Vector2(46,-900),"speed":140.,"angle":0.}
+	MOTION.attach(leader,Vector2(0,-1000),Vector2.UP,"wedge",0,0.,0,squad,true)
+	MOTION.attach(follower,Vector2(0,-1000),Vector2.UP,"wedge",1,0.,0,squad,false)
+	MOTION.update(follower,2.,.02,Vector2.ZERO)
+	check(MOTION.break_rank(leader,2.),"destroying a marked formation lead triggers a real tactical state change")
+	var before=follower.at
+	MOTION.update(follower,2.02,.02,Vector2.ZERO)
+	check(follower.formation_phase=="失序" and squad.leader_lost,"survivors immediately enter a visible disorder phase")
+	check(follower.at.distance_to(before)<=140.*1.4*.02+.001,"tactical disorder remains continuous instead of teleporting")
+	for i in range(120): MOTION.update(follower,2.02+i*.02,.02,Vector2.ZERO)
+	check(follower.formation_phase not in ["失序","重整"] and not bool(squad.leader_lost),"survivors recover into their retained formation after the break")
+	check(int(squad.break_count)==1,"a dead formation lead cannot retrigger its loss event")
 	for style in ["vanguard","wedge","crescent","twin_column","braided_columns","constellation"]:
 		var enemy={"at":Vector2(0,-900),"speed":140.,"angle":0.}
 		MOTION.attach(enemy,Vector2(0,-1000),Vector2.UP,style,0,0.,0)
@@ -125,6 +139,10 @@ func market_tests() -> void:
 func lab_tests() -> void:
 	fixture(); game.state="reward"; game.ui.refresh(); await frames(4)
 	check(is_instance_valid(game.lab) and game.lab.active,"shop opens a persistent playable sandbox")
+	var range_toggle=game.ui.arsenal.content.find_child("LabRanges",true,false) as CheckButton
+	check(range_toggle!=null,"shop exposes a dedicated range-overlay control")
+	range_toggle.button_pressed=true; await frames()
+	check(game.lab.show_ranges and game.lab.arena.preview_show_ranges,"range overlay uses the persistent preview arena")
 	var original=JSON.stringify([game.loadout.modules,game.loadout.slots,game.rng.state,game.dust,game.planet_records,game.receipt.snapshot()])
 	game.lab.select_sample(1)
 	for i in range(800):

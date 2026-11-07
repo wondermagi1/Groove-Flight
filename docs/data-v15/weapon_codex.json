@@ -1,0 +1,3252 @@
+{
+	"beat_seconds": 0.5,
+	"generated_at": "2026-11-04",
+	"sample_file_count": 288,
+	"schema": 1,
+	"scope": "All 38 weapon quality entries use their live sample voices. Two recorded prototypes expose 6 normal/rare/precious tiers that share two unsegmented authorized PCM16 groups; 32 placeholder-synth weapons remain archived but disabled in production.",
+	"weapon_count": 38,
+	"weapons": [
+		{
+			"attr": "ballistic",
+			"cadence": {
+				"label": "匀速四连",
+				"pitches": [
+					0,
+					0,
+					0,
+					0
+				],
+				"scales": [
+					0.25,
+					0.25,
+					0.25,
+					0.25
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 1,
+			"family": "pulse",
+			"id": "pulse",
+			"name": "脉冲机炮",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "crude_shot",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 15568,
+					"path": "res://audio/arsenal/notes/pulse_0.wav",
+					"pitch": 0,
+					"sha256": "de2e63d3bfba0c00584e11bb6cbf72ac7204e043d1771c8e545cc0db2ef4bd87"
+				},
+				{
+					"bytes": 15568,
+					"path": "res://audio/arsenal/notes/pulse_1.wav",
+					"pitch": 1,
+					"sha256": "2469f0385afacfbd3f50309239ddd5c471130a548c4ec3d098ae46f5011abdd3"
+				},
+				{
+					"bytes": 15568,
+					"path": "res://audio/arsenal/notes/pulse_2.wav",
+					"pitch": 2,
+					"sha256": "cac5f6dfd9f748558de1dd9b889e7fe076e1dd052a7d0ea293244f37bbc23468"
+				},
+				{
+					"bytes": 15568,
+					"path": "res://audio/arsenal/notes/pulse_3.wav",
+					"pitch": 3,
+					"sha256": "6bade0f99260ae8c3c4caeb5933dcc01c05877e5393679f3b1fa73c07d6ce72d"
+				},
+				{
+					"bytes": 15568,
+					"path": "res://audio/arsenal/notes/pulse_4.wav",
+					"pitch": 4,
+					"sha256": "a6acde1f88d4d7d0e3f9f0cb9d7bbda61e65595003f179ba3e1ac629286eedda"
+				},
+				{
+					"bytes": 15568,
+					"path": "res://audio/arsenal/notes/pulse_5.wav",
+					"pitch": 5,
+					"sha256": "39fcd8fdce4a186e27ee1d384accceb49016205ae4ce5437b16b054c2c8fe197"
+				},
+				{
+					"bytes": 15568,
+					"path": "res://audio/arsenal/notes/pulse_6.wav",
+					"pitch": 6,
+					"sha256": "9b582d4acfdec109c6567d22078ad7a1ffa7c56a9a7b4b1df06beea99bdae602"
+				},
+				{
+					"bytes": 15568,
+					"path": "res://audio/arsenal/notes/pulse_7.wav",
+					"pitch": 7,
+					"sha256": "491bcb7c2849aa6ab1372f7361577287b66eda16812a2c759ac14761db3b823b"
+				}
+			],
+			"voice": "pulse",
+			"width": 1
+		},
+		{
+			"attr": "ballistic",
+			"cadence": {
+				"label": "重-轻-轻-轻",
+				"pitches": [
+					0,
+					2,
+					3,
+					1
+				],
+				"scales": [
+					0.46,
+					0.18,
+					0.18,
+					0.18
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 1,
+			"family": "scatter",
+			"id": "scatter",
+			"name": "星砂霰弹",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "ballistic_volume_ramp",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 21212,
+					"path": "res://audio/arsenal/notes/scatter_0.wav",
+					"pitch": 0,
+					"sha256": "2e9afaf4f646c5d66e6edd86db7160b1f1e440619a53ec09134e08f734b12d5f"
+				},
+				{
+					"bytes": 21212,
+					"path": "res://audio/arsenal/notes/scatter_1.wav",
+					"pitch": 1,
+					"sha256": "c3cdb814ecf1831517449d5dd9dcd3cf0dfc3a3f6cb25d6e797f1a350052db7b"
+				},
+				{
+					"bytes": 21212,
+					"path": "res://audio/arsenal/notes/scatter_2.wav",
+					"pitch": 2,
+					"sha256": "8848466d49f4f799db0323fa9bf3abb01d7b7cee07f7322b82813cc4bbb545f4"
+				},
+				{
+					"bytes": 21212,
+					"path": "res://audio/arsenal/notes/scatter_3.wav",
+					"pitch": 3,
+					"sha256": "cad84a6952746d8c1ded50ab2a51961d4436979eba8474d696e44eaf559cb082"
+				},
+				{
+					"bytes": 21212,
+					"path": "res://audio/arsenal/notes/scatter_4.wav",
+					"pitch": 4,
+					"sha256": "25f12ead3e5d8e03e9c820f2a88f6642625d5da60ea9882c7fbc9b2f3bb8639e"
+				},
+				{
+					"bytes": 21212,
+					"path": "res://audio/arsenal/notes/scatter_5.wav",
+					"pitch": 5,
+					"sha256": "190324cb44c32274dd426a265eef6691be7c668edde853602461e1ce9d3908c5"
+				},
+				{
+					"bytes": 21212,
+					"path": "res://audio/arsenal/notes/scatter_6.wav",
+					"pitch": 6,
+					"sha256": "9519644c4dd738718b566c8f054f44b1aaa065d93a53400af36eddd0fafce719"
+				},
+				{
+					"bytes": 21212,
+					"path": "res://audio/arsenal/notes/scatter_7.wav",
+					"pitch": 7,
+					"sha256": "e71cb27f6c2e3822805273f7e768809021d86757a6cce8d9af2b67cd168ba63b"
+				}
+			],
+			"voice": "scatter",
+			"width": 1
+		},
+		{
+			"attr": "energy",
+			"cadence": {
+				"label": "渐强",
+				"pitches": [
+					0,
+					1,
+					2,
+					3
+				],
+				"scales": [
+					0.12,
+					0.2,
+					0.28,
+					0.4
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 1,
+			"family": "beam",
+			"id": "beam",
+			"name": "棱镜光束",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "synthesized_weapon_voice",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 45202,
+					"path": "res://audio/arsenal/notes/beam_0.wav",
+					"pitch": 0,
+					"sha256": "a8df362f18432a5909978e3a9ba79251b2b9fa28479384b0ba057087dfbe5663"
+				},
+				{
+					"bytes": 45202,
+					"path": "res://audio/arsenal/notes/beam_1.wav",
+					"pitch": 1,
+					"sha256": "a7dc1da02ba5131753bce3d50a0c52a20a51f737d7b913b07845f3f07d9537a2"
+				},
+				{
+					"bytes": 45202,
+					"path": "res://audio/arsenal/notes/beam_2.wav",
+					"pitch": 2,
+					"sha256": "3711edf87397bb8261b4eab5bcf9ce48af8516738b5d99be0f9ffa5bc412e547"
+				},
+				{
+					"bytes": 45202,
+					"path": "res://audio/arsenal/notes/beam_3.wav",
+					"pitch": 3,
+					"sha256": "42bea33b3250714f42e3781221f5b16aedbcab8d86b8441fa393ea1f95d6caee"
+				},
+				{
+					"bytes": 45202,
+					"path": "res://audio/arsenal/notes/beam_4.wav",
+					"pitch": 4,
+					"sha256": "123c307e5c4e8a7c53b143e605ebf586d846a7da667b37e3b4880cd8ee3bfc41"
+				},
+				{
+					"bytes": 45202,
+					"path": "res://audio/arsenal/notes/beam_5.wav",
+					"pitch": 5,
+					"sha256": "044de5848710114790a6b48ccaa75f88987cb51639089aad7b3d088ab892ac33"
+				},
+				{
+					"bytes": 45202,
+					"path": "res://audio/arsenal/notes/beam_6.wav",
+					"pitch": 6,
+					"sha256": "f961e9e26f4972c097ece6aa2b74d5af7b72abd5fa820fe1442bc721b07c3cba"
+				},
+				{
+					"bytes": 45202,
+					"path": "res://audio/arsenal/notes/beam_7.wav",
+					"pitch": 7,
+					"sha256": "ce4ff86c3fee37807df3567d0b46136b59b65ce7c32dda2ea2c512990ff1b110"
+				}
+			],
+			"voice": "beam",
+			"width": 2
+		},
+		{
+			"attr": "power",
+			"cadence": {
+				"label": "重-轻-轻-轻",
+				"pitches": [
+					0,
+					2,
+					3,
+					1
+				],
+				"scales": [
+					0.46,
+					0.18,
+					0.18,
+					0.18
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 1,
+			"family": "missile",
+			"id": "missile",
+			"name": "彗星导弹",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "synthesized_weapon_voice",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 36736,
+					"path": "res://audio/arsenal/notes/missile_0.wav",
+					"pitch": 0,
+					"sha256": "74e50ff362881331675b709934da7a0ba3973e015c6bc701ddb7a2734faf2375"
+				},
+				{
+					"bytes": 36736,
+					"path": "res://audio/arsenal/notes/missile_1.wav",
+					"pitch": 1,
+					"sha256": "7d43f29b261d7b85d633492a5753b17832611200bbe7951ac4103d2842d81d6e"
+				},
+				{
+					"bytes": 36736,
+					"path": "res://audio/arsenal/notes/missile_2.wav",
+					"pitch": 2,
+					"sha256": "88e378276bd2efd25e18886aded0c7337a05f20ef3b069d413cd5ffe5216f27b"
+				},
+				{
+					"bytes": 36736,
+					"path": "res://audio/arsenal/notes/missile_3.wav",
+					"pitch": 3,
+					"sha256": "4723c190e366bc15c23cdc777f36a13db60dcbcd96e04692c716680cf72f1846"
+				},
+				{
+					"bytes": 36736,
+					"path": "res://audio/arsenal/notes/missile_4.wav",
+					"pitch": 4,
+					"sha256": "8b13fe585a2cec588fc0b5330e346e32f48d638df592545167d713ca8bd374d7"
+				},
+				{
+					"bytes": 36736,
+					"path": "res://audio/arsenal/notes/missile_5.wav",
+					"pitch": 5,
+					"sha256": "9cc64998d746ce4262a43df3eea25ab715a6cf6ab6621f946dffbb355f5be35b"
+				},
+				{
+					"bytes": 36736,
+					"path": "res://audio/arsenal/notes/missile_6.wav",
+					"pitch": 6,
+					"sha256": "a96b2474bdd80b63210254b6d58a686d138d6f56c1382367277cf17873e8a5b2"
+				},
+				{
+					"bytes": 36736,
+					"path": "res://audio/arsenal/notes/missile_7.wav",
+					"pitch": 7,
+					"sha256": "8759185505ae41519fe4cfada1e56b26fbb272431caa9ca7620b2c78f472a466"
+				}
+			],
+			"voice": "missile",
+			"width": 2
+		},
+		{
+			"attr": "energy",
+			"cadence": {
+				"label": "轻-重-轻-重",
+				"pitches": [
+					0,
+					2,
+					1,
+					3
+				],
+				"scales": [
+					0.18,
+					0.32,
+					0.18,
+					0.32
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 1,
+			"family": "nova",
+			"id": "nova",
+			"name": "新星环炮",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "synthesized_weapon_voice",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 32502,
+					"path": "res://audio/arsenal/notes/nova_0.wav",
+					"pitch": 0,
+					"sha256": "8bb0debaa4908947bf757c2b3ea80e9052f0367b2131b0fc8aa00e9d49333162"
+				},
+				{
+					"bytes": 32502,
+					"path": "res://audio/arsenal/notes/nova_1.wav",
+					"pitch": 1,
+					"sha256": "6df35d735512a5553e214073ef91d0afd43bb69a0149956bbc9300e4176ad2b8"
+				},
+				{
+					"bytes": 32502,
+					"path": "res://audio/arsenal/notes/nova_2.wav",
+					"pitch": 2,
+					"sha256": "c95307f0c9cdfdce842a27ce364cccd41f8685c4682595a3b589f1b343f2e835"
+				},
+				{
+					"bytes": 32502,
+					"path": "res://audio/arsenal/notes/nova_3.wav",
+					"pitch": 3,
+					"sha256": "2bdfa9ffbf6c5f6e721ef2bed2a2e1157b00aa8a20a2d850cfb5e32a9f85af2d"
+				},
+				{
+					"bytes": 32502,
+					"path": "res://audio/arsenal/notes/nova_4.wav",
+					"pitch": 4,
+					"sha256": "300313ec83a45e80a7fcc804dd3fc36239d7fd7a624091fac145279d65fa4f60"
+				},
+				{
+					"bytes": 32502,
+					"path": "res://audio/arsenal/notes/nova_5.wav",
+					"pitch": 5,
+					"sha256": "8449e17785d54709d849ade4e622a4280d791b28a97cabc7e673ad7b03f02476"
+				},
+				{
+					"bytes": 32502,
+					"path": "res://audio/arsenal/notes/nova_6.wav",
+					"pitch": 6,
+					"sha256": "ca5d873796ffdd1589c225afa985918764c9c83beaf0f8b2f45beb624710833a"
+				},
+				{
+					"bytes": 32502,
+					"path": "res://audio/arsenal/notes/nova_7.wav",
+					"pitch": 7,
+					"sha256": "40c46d540c5e3e81eec91cacea873053a11086bbe0824225de1559c82485c576"
+				}
+			],
+			"voice": "nova",
+			"width": 2
+		},
+		{
+			"attr": "energy",
+			"cadence": {
+				"label": "渐强",
+				"pitches": [
+					0,
+					1,
+					2,
+					3
+				],
+				"scales": [
+					0.12,
+					0.2,
+					0.28,
+					0.4
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 1,
+			"family": "chain",
+			"id": "chain",
+			"name": "跃迁电弧",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "synthesized_weapon_voice",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 25446,
+					"path": "res://audio/arsenal/notes/chain_0.wav",
+					"pitch": 0,
+					"sha256": "98155e24924eabbc53e59ee29c3e3e5df7f8a6d2dc65560cc3906c7e87d7f386"
+				},
+				{
+					"bytes": 25446,
+					"path": "res://audio/arsenal/notes/chain_1.wav",
+					"pitch": 1,
+					"sha256": "609fc45f1575eb91d7eabc031bcd31d216d457818ee1ec43e849e1349ed27808"
+				},
+				{
+					"bytes": 25446,
+					"path": "res://audio/arsenal/notes/chain_2.wav",
+					"pitch": 2,
+					"sha256": "878390c9ea3db32b302294d5f63e6d89b616efd420779ae899ef1266258f35e8"
+				},
+				{
+					"bytes": 25446,
+					"path": "res://audio/arsenal/notes/chain_3.wav",
+					"pitch": 3,
+					"sha256": "b39831335774350323d1bc38e99590ccdcb18b7b203e73947808bf051ac5f622"
+				},
+				{
+					"bytes": 25446,
+					"path": "res://audio/arsenal/notes/chain_4.wav",
+					"pitch": 4,
+					"sha256": "6155d570c514bea4d1b3e68d4bcc175568f36e71cf0b0298146bfac715c6cc48"
+				},
+				{
+					"bytes": 25446,
+					"path": "res://audio/arsenal/notes/chain_5.wav",
+					"pitch": 5,
+					"sha256": "580d5b98e8703d1a367048c99a3428205dff0bc5a87f6557180f69e08556e7e1"
+				},
+				{
+					"bytes": 25446,
+					"path": "res://audio/arsenal/notes/chain_6.wav",
+					"pitch": 6,
+					"sha256": "adbe6ec7b6a5997296c6dd79ab06bb037a1e7cc3a6fbd2fab41b268af2d10c74"
+				},
+				{
+					"bytes": 25446,
+					"path": "res://audio/arsenal/notes/chain_7.wav",
+					"pitch": 7,
+					"sha256": "32f26d1d49085dabdada39c0b97460ee081c329ba5654fc636338b96a3a9aa44"
+				}
+			],
+			"voice": "chain",
+			"width": 2
+		},
+		{
+			"attr": "ballistic",
+			"cadence": {
+				"label": "重-轻-轻-轻",
+				"pitches": [
+					0,
+					2,
+					3,
+					1
+				],
+				"scales": [
+					0.46,
+					0.18,
+					0.18,
+					0.18
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 2,
+			"family": "rail",
+			"id": "rail",
+			"name": "苍穹轨炮",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "ballistic_volume_ramp",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 29680,
+					"path": "res://audio/arsenal/notes/rail_0.wav",
+					"pitch": 0,
+					"sha256": "f894f3ef79c04492eee1f9362885c4e0423ae101e900a2ee8035dc88561fdb2b"
+				},
+				{
+					"bytes": 29680,
+					"path": "res://audio/arsenal/notes/rail_1.wav",
+					"pitch": 1,
+					"sha256": "8ff78a678d24f392856a04f794e014f99d1011bfbc4efb5eb189b8f8dd3333b0"
+				},
+				{
+					"bytes": 29680,
+					"path": "res://audio/arsenal/notes/rail_2.wav",
+					"pitch": 2,
+					"sha256": "fe250ab4cb692a7bbce449352e4c07478b09cda7331f6715d13063a927bcee60"
+				},
+				{
+					"bytes": 29680,
+					"path": "res://audio/arsenal/notes/rail_3.wav",
+					"pitch": 3,
+					"sha256": "2ccc6efed2a0d233ae3b84f28c6300a53bc27edfdf8218d3801b93b73d897925"
+				},
+				{
+					"bytes": 29680,
+					"path": "res://audio/arsenal/notes/rail_4.wav",
+					"pitch": 4,
+					"sha256": "be0cfc04cdf8ea0a1f792eeef59452700bcdc7b8f451b6ae8f6d4b6499e43579"
+				},
+				{
+					"bytes": 29680,
+					"path": "res://audio/arsenal/notes/rail_5.wav",
+					"pitch": 5,
+					"sha256": "cfd6b67338d5f32cc9b212abb65e25d72b8194c932ce6d1b0767bdd8f6123ae0"
+				},
+				{
+					"bytes": 29680,
+					"path": "res://audio/arsenal/notes/rail_6.wav",
+					"pitch": 6,
+					"sha256": "c09a47dcdb9c5136f394a1315cb2fdbd74d678bea1965474dc696a388e3e875f"
+				},
+				{
+					"bytes": 29680,
+					"path": "res://audio/arsenal/notes/rail_7.wav",
+					"pitch": 7,
+					"sha256": "dc45dbfba9508b8199f36927e018e3c3963d4f4f859e369dd204b5c407ea4c46"
+				}
+			],
+			"voice": "rail",
+			"width": 2
+		},
+		{
+			"attr": "ballistic",
+			"cadence": {
+				"label": "强-弱-强-弱",
+				"pitches": [
+					0,
+					2,
+					1,
+					3
+				],
+				"scales": [
+					0.32,
+					0.18,
+					0.32,
+					0.18
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 1,
+			"family": "boomerang",
+			"id": "boomerang",
+			"name": "回锋弯月",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "ballistic_volume_ramp",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 48024,
+					"path": "res://audio/arsenal/notes/boomerang_0.wav",
+					"pitch": 0,
+					"sha256": "e3e4cf85a787513cb40e557df56f757fc9d7ebfba4974ab98ed7a8a0df1f3534"
+				},
+				{
+					"bytes": 48024,
+					"path": "res://audio/arsenal/notes/boomerang_1.wav",
+					"pitch": 1,
+					"sha256": "fc383362c5b22553c60bc76e078f634848849579b7cbc2fb9bbadd3e351fc520"
+				},
+				{
+					"bytes": 48024,
+					"path": "res://audio/arsenal/notes/boomerang_2.wav",
+					"pitch": 2,
+					"sha256": "65e4911f13d3f10e3d29c7234af92fea3c6dadece1bdbb5383fcfde96675ad04"
+				},
+				{
+					"bytes": 48024,
+					"path": "res://audio/arsenal/notes/boomerang_3.wav",
+					"pitch": 3,
+					"sha256": "de4f287ab4ada05c563169b43be786d454cb4acf99218076819a599b3936c86f"
+				},
+				{
+					"bytes": 48024,
+					"path": "res://audio/arsenal/notes/boomerang_4.wav",
+					"pitch": 4,
+					"sha256": "be30b4b14c2a2b810ac6265721889b912a6f02e3ed3b123f03d8a5634f46597c"
+				},
+				{
+					"bytes": 48024,
+					"path": "res://audio/arsenal/notes/boomerang_5.wav",
+					"pitch": 5,
+					"sha256": "8777be236aded4ee869964abaaa3bd66f7ea37b34df0d28095e3f30cfe83ec57"
+				},
+				{
+					"bytes": 48024,
+					"path": "res://audio/arsenal/notes/boomerang_6.wav",
+					"pitch": 6,
+					"sha256": "8f2533e35ccb9d8d513dbcd04e5d65294d47c403982f8ccdd97a5f5b4a860cb3"
+				},
+				{
+					"bytes": 48024,
+					"path": "res://audio/arsenal/notes/boomerang_7.wav",
+					"pitch": 7,
+					"sha256": "d3cb4fe1b0cfaf2ac39fcc7daa388aada865df2b1a40c6a1118def6c8215aa3f"
+				}
+			],
+			"voice": "boomerang",
+			"width": 1
+		},
+		{
+			"attr": "support",
+			"cadence": {
+				"label": "匀速四连",
+				"pitches": [
+					0,
+					0,
+					0,
+					0
+				],
+				"scales": [
+					0.25,
+					0.25,
+					0.25,
+					0.25
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 2,
+			"family": "orbit",
+			"id": "orbit",
+			"name": "轨道护卫",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "synthesized_weapon_voice",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 59314,
+					"path": "res://audio/arsenal/notes/orbit_0.wav",
+					"pitch": 0,
+					"sha256": "cada4d9ace6b6a9c46b0a9998ca042cd46268815b830c6e8c4b7664f355a8835"
+				},
+				{
+					"bytes": 59314,
+					"path": "res://audio/arsenal/notes/orbit_1.wav",
+					"pitch": 1,
+					"sha256": "c18cebe80d92b567488f22c8b54805f8c4dd5d2d5129f73dbe884fe93bec6e18"
+				},
+				{
+					"bytes": 59314,
+					"path": "res://audio/arsenal/notes/orbit_2.wav",
+					"pitch": 2,
+					"sha256": "08af68f9c6950092898c24e63d559deacc0dff11d8fa4c1d90923767315f44db"
+				},
+				{
+					"bytes": 59314,
+					"path": "res://audio/arsenal/notes/orbit_3.wav",
+					"pitch": 3,
+					"sha256": "188d1e6c58a7e79409f9e2f4f1b108ed4d2b31f4863e513a2d861e56d36f2283"
+				},
+				{
+					"bytes": 59314,
+					"path": "res://audio/arsenal/notes/orbit_4.wav",
+					"pitch": 4,
+					"sha256": "a7c2a8936b5e2f9397fffb4dd29d639b1abc824dc82cdd6a1d801b690c541c74"
+				},
+				{
+					"bytes": 59314,
+					"path": "res://audio/arsenal/notes/orbit_5.wav",
+					"pitch": 5,
+					"sha256": "a3fe2450c7942593e722b7d55fe996613ce580312008499d21707bffd28e6bf1"
+				},
+				{
+					"bytes": 59314,
+					"path": "res://audio/arsenal/notes/orbit_6.wav",
+					"pitch": 6,
+					"sha256": "ac83a5859e29e88aa879567a1a2d4ef6499e5cabcd2e6e4020bb53a955a1605f"
+				},
+				{
+					"bytes": 59314,
+					"path": "res://audio/arsenal/notes/orbit_7.wav",
+					"pitch": 7,
+					"sha256": "533ef852ae7be2caea620a00592ce9d687e1722182febe39c2f6f5980dd39fc6"
+				}
+			],
+			"voice": "orbit",
+			"width": 2
+		},
+		{
+			"attr": "power",
+			"cadence": {
+				"label": "重-轻-轻-轻",
+				"pitches": [
+					0,
+					2,
+					3,
+					1
+				],
+				"scales": [
+					0.46,
+					0.18,
+					0.18,
+					0.18
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 2,
+			"family": "mine",
+			"id": "mine",
+			"name": "引力雷荚",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "ballistic_volume_ramp",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 40968,
+					"path": "res://audio/arsenal/notes/mine_0.wav",
+					"pitch": 0,
+					"sha256": "53d3a83fda86739f7f5ad9c8132c0fb0bcb922ccee8ec69a423642f320fbf787"
+				},
+				{
+					"bytes": 40968,
+					"path": "res://audio/arsenal/notes/mine_1.wav",
+					"pitch": 1,
+					"sha256": "cbf15d54e51d5ea5cecdd0d040718b0682e1f286be3095fb9743d39587434881"
+				},
+				{
+					"bytes": 40968,
+					"path": "res://audio/arsenal/notes/mine_2.wav",
+					"pitch": 2,
+					"sha256": "0a2da03b5ac77aa92d738baaa16e4499c939a5b3df3284605318089e065cd2b5"
+				},
+				{
+					"bytes": 40968,
+					"path": "res://audio/arsenal/notes/mine_3.wav",
+					"pitch": 3,
+					"sha256": "ebb5eef4523764512afba5a66844a9c01b42dcbc526085092e8ef66824a3fd6d"
+				},
+				{
+					"bytes": 40968,
+					"path": "res://audio/arsenal/notes/mine_4.wav",
+					"pitch": 4,
+					"sha256": "fa8fe4e7e0f0f5270085470ecf98a98792c7554dbb8cf1c199fbc90bf2d8be94"
+				},
+				{
+					"bytes": 40968,
+					"path": "res://audio/arsenal/notes/mine_5.wav",
+					"pitch": 5,
+					"sha256": "812fdfc5955a36a98900ebaaf3af01efb123fb41c541679926a568b174287427"
+				},
+				{
+					"bytes": 40968,
+					"path": "res://audio/arsenal/notes/mine_6.wav",
+					"pitch": 6,
+					"sha256": "abf853d596ced63abdcc387000e37349cfb917f93de7044f8993ae2635d0340b"
+				},
+				{
+					"bytes": 40968,
+					"path": "res://audio/arsenal/notes/mine_7.wav",
+					"pitch": 7,
+					"sha256": "c8ce77dc447358e3f3aa4ce198132b11abc809e7442abdb7511567d30afd3bae"
+				}
+			],
+			"voice": "mine",
+			"width": 1
+		},
+		{
+			"attr": "power",
+			"cadence": {
+				"label": "渐强",
+				"pitches": [
+					0,
+					1,
+					2,
+					3
+				],
+				"scales": [
+					0.12,
+					0.2,
+					0.28,
+					0.4
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 1,
+			"family": "flame",
+			"id": "flame",
+			"name": "灼羽喷流",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "synthesized_weapon_voice",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 35324,
+					"path": "res://audio/arsenal/notes/flame_0.wav",
+					"pitch": 0,
+					"sha256": "c6bbecf5400fc274ca8b829c6bddf6d18aaa61c8102bebdfbd8116fd495c8297"
+				},
+				{
+					"bytes": 35324,
+					"path": "res://audio/arsenal/notes/flame_1.wav",
+					"pitch": 1,
+					"sha256": "1520edad196018b3f2c1fff61d573a6ad6a8b457b4b41116dae6b6a9a66c53fe"
+				},
+				{
+					"bytes": 35324,
+					"path": "res://audio/arsenal/notes/flame_2.wav",
+					"pitch": 2,
+					"sha256": "079911fddf2c0925cfa529134ba6fb593001f66acc513578ff89829fc80074a0"
+				},
+				{
+					"bytes": 35324,
+					"path": "res://audio/arsenal/notes/flame_3.wav",
+					"pitch": 3,
+					"sha256": "96cb807ee5f6fd3f20fd9a65ecb18fe9b096c64f825e51ce039d36d5ae05cc5b"
+				},
+				{
+					"bytes": 35324,
+					"path": "res://audio/arsenal/notes/flame_4.wav",
+					"pitch": 4,
+					"sha256": "c753f50bba7c6bad8db22f4070ca9e7a2c558b8b71d4c5c5ac154629717cf188"
+				},
+				{
+					"bytes": 35324,
+					"path": "res://audio/arsenal/notes/flame_5.wav",
+					"pitch": 5,
+					"sha256": "92700baee084f326c89c0acdee697b823c42c5d0f1462f4836fcd8392fa847aa"
+				},
+				{
+					"bytes": 35324,
+					"path": "res://audio/arsenal/notes/flame_6.wav",
+					"pitch": 6,
+					"sha256": "9f75f4ba4b225c8891c20ba936159d36dad5f2aa80709a57a41dcc35b386b479"
+				},
+				{
+					"bytes": 35324,
+					"path": "res://audio/arsenal/notes/flame_7.wav",
+					"pitch": 7,
+					"sha256": "3c9582ecdaa8e66df490e143028fd8f16edc6cefed35a22c0a24e09d28a112a6"
+				}
+			],
+			"voice": "flame",
+			"width": 1
+		},
+		{
+			"attr": "support",
+			"cadence": {
+				"label": "匀速四连",
+				"pitches": [
+					0,
+					0,
+					0,
+					0
+				],
+				"scales": [
+					0.25,
+					0.25,
+					0.25,
+					0.25
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 2,
+			"family": "drone",
+			"id": "drone",
+			"name": "蜂群侦击机",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "synthesized_weapon_voice",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 22624,
+					"path": "res://audio/arsenal/notes/drone_0.wav",
+					"pitch": 0,
+					"sha256": "b8ce3b4d69cba57608fd43ec39a65113892c97401cdb6bd731865d47993a9b46"
+				},
+				{
+					"bytes": 22624,
+					"path": "res://audio/arsenal/notes/drone_1.wav",
+					"pitch": 1,
+					"sha256": "aeabd25f558198092b080f9375e09b026d27fdeb8fb0966e086a8f46f09362b3"
+				},
+				{
+					"bytes": 22624,
+					"path": "res://audio/arsenal/notes/drone_2.wav",
+					"pitch": 2,
+					"sha256": "993564f65950a1bea4cff27ef5f79675c6484fecde412425c3fc59cd6801c617"
+				},
+				{
+					"bytes": 22624,
+					"path": "res://audio/arsenal/notes/drone_3.wav",
+					"pitch": 3,
+					"sha256": "dcf44885c216aab34fbaf88a1f1cc60a6655f33ee4ec1d2d13a6f7a4dc5f8f70"
+				},
+				{
+					"bytes": 22624,
+					"path": "res://audio/arsenal/notes/drone_4.wav",
+					"pitch": 4,
+					"sha256": "0898eca64fb7de823771dc361b1c1acb44e2b958961436bf65417f6afab30474"
+				},
+				{
+					"bytes": 22624,
+					"path": "res://audio/arsenal/notes/drone_5.wav",
+					"pitch": 5,
+					"sha256": "b26314c4dc4f486d36ef65d8c4793db08e8492058dac7d941d432a6c6610dfdf"
+				},
+				{
+					"bytes": 22624,
+					"path": "res://audio/arsenal/notes/drone_6.wav",
+					"pitch": 6,
+					"sha256": "8330622c9f5a8a67a94f7101bf3a44776296bd1e560f1a1a2d6d40b5186525f6"
+				},
+				{
+					"bytes": 22624,
+					"path": "res://audio/arsenal/notes/drone_7.wav",
+					"pitch": 7,
+					"sha256": "2731442ce9bebf89ed5203dcfb419ccd4afd466451900a6ee200e1d9f8a29947"
+				}
+			],
+			"voice": "drone",
+			"width": 2
+		},
+		{
+			"attr": "ballistic",
+			"cadence": {
+				"label": "匀速四连",
+				"pitches": [
+					0,
+					0,
+					0,
+					0
+				],
+				"scales": [
+					0.25,
+					0.25,
+					0.25,
+					0.25
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 1,
+			"family": "pulse",
+			"id": "pulse_ribbon",
+			"name": "白矢连射器",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "crude_shot",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 10628,
+					"path": "res://audio/arsenal/notes/pulse_ribbon_0.wav",
+					"pitch": 0,
+					"sha256": "125d0512b21d030476ea3eda11c1b5d8b3f31ed269fa0516554a141ba5a0acd2"
+				},
+				{
+					"bytes": 10628,
+					"path": "res://audio/arsenal/notes/pulse_ribbon_1.wav",
+					"pitch": 1,
+					"sha256": "d846cf99a5fc2c0263ac607e0e86c819a1f7d5c21b987f14419c85b59aa506e8"
+				},
+				{
+					"bytes": 10628,
+					"path": "res://audio/arsenal/notes/pulse_ribbon_2.wav",
+					"pitch": 2,
+					"sha256": "df7b1eed8cd1558e77a8d93835f14072823947a43d52d327e2a06defd12ad307"
+				},
+				{
+					"bytes": 10628,
+					"path": "res://audio/arsenal/notes/pulse_ribbon_3.wav",
+					"pitch": 3,
+					"sha256": "e6e0f6fc7f9231eb23bba55a0d9a9a5ae4c48e4b6822ca775d6210cd73dd19dc"
+				},
+				{
+					"bytes": 10628,
+					"path": "res://audio/arsenal/notes/pulse_ribbon_4.wav",
+					"pitch": 4,
+					"sha256": "9469b29c87bf25f3cce80655efafe084da613fbdb5c5da136c009b4d5ce2fdd4"
+				},
+				{
+					"bytes": 10628,
+					"path": "res://audio/arsenal/notes/pulse_ribbon_5.wav",
+					"pitch": 5,
+					"sha256": "f8f1b77bd84407b06a156b33a6e5cf85b70f8c77e3dc2ad664395563d07ff581"
+				},
+				{
+					"bytes": 10628,
+					"path": "res://audio/arsenal/notes/pulse_ribbon_6.wav",
+					"pitch": 6,
+					"sha256": "d8374646428acb241f948dd0ce2608f8d24b5ddcfb21aaba7a118fbc3e331fcb"
+				},
+				{
+					"bytes": 10628,
+					"path": "res://audio/arsenal/notes/pulse_ribbon_7.wav",
+					"pitch": 7,
+					"sha256": "a06471f7f53a11856220079e7993c41093343377c1d47bf83db9cc163fc1c078"
+				}
+			],
+			"voice": "pulse_ribbon",
+			"width": 2
+		},
+		{
+			"attr": "ballistic",
+			"cadence": {
+				"label": "匀速四连",
+				"pitches": [
+					0,
+					0,
+					0,
+					0
+				],
+				"scales": [
+					0.25,
+					0.25,
+					0.25,
+					0.25
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 1,
+			"family": "pulse",
+			"id": "pulse_needle",
+			"name": "星针狙击器",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "crude_shot",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 16978,
+					"path": "res://audio/arsenal/notes/pulse_needle_0.wav",
+					"pitch": 0,
+					"sha256": "18238eaa7d2b4b4c886e302e051a404cc8f94aa40d751c729ef2a4c7bd2e1f5e"
+				},
+				{
+					"bytes": 16978,
+					"path": "res://audio/arsenal/notes/pulse_needle_1.wav",
+					"pitch": 1,
+					"sha256": "53e27cd8677b07b3eb78ee598fe874b9d3ec559b339f37511e70fcd618f44293"
+				},
+				{
+					"bytes": 16978,
+					"path": "res://audio/arsenal/notes/pulse_needle_2.wav",
+					"pitch": 2,
+					"sha256": "0fef8754a4e998269c2e0b90e94443f29702a397d0f9cdc03ff39905a1b1f8de"
+				},
+				{
+					"bytes": 16978,
+					"path": "res://audio/arsenal/notes/pulse_needle_3.wav",
+					"pitch": 3,
+					"sha256": "e33a8cbe98b7ec13953b40258a20d5d8df31bb6a7361c08458a9f345e4c4092f"
+				},
+				{
+					"bytes": 16978,
+					"path": "res://audio/arsenal/notes/pulse_needle_4.wav",
+					"pitch": 4,
+					"sha256": "1ce22a03ffa6be3160d3d7ecaf469b73eee68e96d1d04780aaeb5cee3778d583"
+				},
+				{
+					"bytes": 16978,
+					"path": "res://audio/arsenal/notes/pulse_needle_5.wav",
+					"pitch": 5,
+					"sha256": "8cbef94881af7b7f6e7392c07b039769118c8d1c8248cd9f153447eb061f9ec2"
+				},
+				{
+					"bytes": 16978,
+					"path": "res://audio/arsenal/notes/pulse_needle_6.wav",
+					"pitch": 6,
+					"sha256": "296471e72191a2bcff5e8122392ff72ff90751f895bee7a99a02d832575a1ba7"
+				},
+				{
+					"bytes": 16978,
+					"path": "res://audio/arsenal/notes/pulse_needle_7.wav",
+					"pitch": 7,
+					"sha256": "a5839f516ae7c3687da2e2cc8b3403c8a5fa294c0ebbd3021eb22cf521538d1b"
+				}
+			],
+			"voice": "pulse_needle",
+			"width": 2
+		},
+		{
+			"attr": "ballistic",
+			"cadence": {
+				"label": "重-轻-轻-轻",
+				"pitches": [
+					0,
+					2,
+					3,
+					1
+				],
+				"scales": [
+					0.46,
+					0.18,
+					0.18,
+					0.18
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 2,
+			"family": "scatter",
+			"id": "scatter_prism",
+			"name": "七彩折光匣",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "ballistic_volume_ramp",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 26856,
+					"path": "res://audio/arsenal/notes/scatter_prism_0.wav",
+					"pitch": 0,
+					"sha256": "fc228c408e34d8fbf209e48a25e271dc2af3e182d02508b206f11ece1361a72a"
+				},
+				{
+					"bytes": 26856,
+					"path": "res://audio/arsenal/notes/scatter_prism_1.wav",
+					"pitch": 1,
+					"sha256": "dc189d831d748b8921a918714a46b2d8f19ea0e1a58ffbe6525a90bb38eeb664"
+				},
+				{
+					"bytes": 26856,
+					"path": "res://audio/arsenal/notes/scatter_prism_2.wav",
+					"pitch": 2,
+					"sha256": "d55f4e80c905c2261d4d36c4e0b3483ba06b02db4131704b1ece86485a33d3d2"
+				},
+				{
+					"bytes": 26856,
+					"path": "res://audio/arsenal/notes/scatter_prism_3.wav",
+					"pitch": 3,
+					"sha256": "02b69a69b84b216651c7167b32ab00945b3085fb5a6ddb3c54b798e89eb7609c"
+				},
+				{
+					"bytes": 26856,
+					"path": "res://audio/arsenal/notes/scatter_prism_4.wav",
+					"pitch": 4,
+					"sha256": "125d029491569e07bd26cc5102973523a3d8bc1e0a30b99ee5b29a7a188591c4"
+				},
+				{
+					"bytes": 26856,
+					"path": "res://audio/arsenal/notes/scatter_prism_5.wav",
+					"pitch": 5,
+					"sha256": "f48e54c676796abc8c91876ab47c129082e94f38799b42de3c5bc5e881e77229"
+				},
+				{
+					"bytes": 26856,
+					"path": "res://audio/arsenal/notes/scatter_prism_6.wav",
+					"pitch": 6,
+					"sha256": "b5d3eec756bff75eb663421ed2088855c73432eb352827e20d9269c5c26c8847"
+				},
+				{
+					"bytes": 26856,
+					"path": "res://audio/arsenal/notes/scatter_prism_7.wav",
+					"pitch": 7,
+					"sha256": "9a117f553b89116f599bf4351db7b8740f8c2e100ad07f53cd60a1573574d058"
+				}
+			],
+			"voice": "scatter_prism",
+			"width": 2
+		},
+		{
+			"attr": "ballistic",
+			"cadence": {
+				"label": "重-轻-轻-轻",
+				"pitches": [
+					0,
+					2,
+					3,
+					1
+				],
+				"scales": [
+					0.46,
+					0.18,
+					0.18,
+					0.18
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 2,
+			"family": "scatter",
+			"id": "scatter_heavy",
+			"name": "碎陨重霰炮",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "ballistic_volume_ramp",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 33912,
+					"path": "res://audio/arsenal/notes/scatter_heavy_0.wav",
+					"pitch": 0,
+					"sha256": "60f545ffb6b244fc713d6e7a3b024e23b08166398c0ee0caa7a98b4fa805d980"
+				},
+				{
+					"bytes": 33912,
+					"path": "res://audio/arsenal/notes/scatter_heavy_1.wav",
+					"pitch": 1,
+					"sha256": "13fc264745db54e5737147016f7050a4c28f741813e5e14efd817d6c10e6ff87"
+				},
+				{
+					"bytes": 33912,
+					"path": "res://audio/arsenal/notes/scatter_heavy_2.wav",
+					"pitch": 2,
+					"sha256": "288e98740bb5a5b4144624046af8e51d32c62cfd3da49a9444a10ecaf6065f2a"
+				},
+				{
+					"bytes": 33912,
+					"path": "res://audio/arsenal/notes/scatter_heavy_3.wav",
+					"pitch": 3,
+					"sha256": "47930635f7f9d2b12526c8edfc01ccd2ac6ffef98a980fb331d4b559d7ee06d8"
+				},
+				{
+					"bytes": 33912,
+					"path": "res://audio/arsenal/notes/scatter_heavy_4.wav",
+					"pitch": 4,
+					"sha256": "efd40c956f0c9bd173146bbbda84cfb3ba6bce3f34d5e5c23576a1f88118e88b"
+				},
+				{
+					"bytes": 33912,
+					"path": "res://audio/arsenal/notes/scatter_heavy_5.wav",
+					"pitch": 5,
+					"sha256": "199e02caeb11e2d6978ca256e6b2484f2e49134986024d9f4e53250957457c7f"
+				},
+				{
+					"bytes": 33912,
+					"path": "res://audio/arsenal/notes/scatter_heavy_6.wav",
+					"pitch": 6,
+					"sha256": "fd30c12ed0ba9db8d50d589c729bb8f3a3f0486363ec5f24f91a51e5775a6f24"
+				},
+				{
+					"bytes": 33912,
+					"path": "res://audio/arsenal/notes/scatter_heavy_7.wav",
+					"pitch": 7,
+					"sha256": "2252f3b61c1c5d157a1a3eb5f12db4b5f2fbd25ef1ceb55a859c5bfb5e9ba407"
+				}
+			],
+			"voice": "scatter_heavy",
+			"width": 2
+		},
+		{
+			"attr": "energy",
+			"cadence": {
+				"label": "渐强",
+				"pitches": [
+					0,
+					1,
+					2,
+					3
+				],
+				"scales": [
+					0.12,
+					0.2,
+					0.28,
+					0.4
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 1,
+			"family": "beam",
+			"id": "beam_split",
+			"name": "双生棱镜",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "synthesized_weapon_voice",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 55080,
+					"path": "res://audio/arsenal/notes/beam_split_0.wav",
+					"pitch": 0,
+					"sha256": "c91643104ed262a8b50da85aaddddace26f30e19da782c2af6df05db29ebd5c3"
+				},
+				{
+					"bytes": 55080,
+					"path": "res://audio/arsenal/notes/beam_split_1.wav",
+					"pitch": 1,
+					"sha256": "687e1c614d5d4e3d3d319b1a1989bb77f75f17e55eac11e602a768ef30263f07"
+				},
+				{
+					"bytes": 55080,
+					"path": "res://audio/arsenal/notes/beam_split_2.wav",
+					"pitch": 2,
+					"sha256": "4fb2902bfa10ab09aebb69eb7b7869e0e1a61b912ca844b49557a29aeda83c55"
+				},
+				{
+					"bytes": 55080,
+					"path": "res://audio/arsenal/notes/beam_split_3.wav",
+					"pitch": 3,
+					"sha256": "13f8338844c8b50de618dfb95b9bd23ec611b41823e9c0a27ddac06bea196ce4"
+				},
+				{
+					"bytes": 55080,
+					"path": "res://audio/arsenal/notes/beam_split_4.wav",
+					"pitch": 4,
+					"sha256": "1ca6affecc187903c72a3b29d578139aee22aab5bba20d34a26e677ee15be28f"
+				},
+				{
+					"bytes": 55080,
+					"path": "res://audio/arsenal/notes/beam_split_5.wav",
+					"pitch": 5,
+					"sha256": "e18598b93675cf299719338549231e168f272407fc8ec6d2cc2ded19cf92202b"
+				},
+				{
+					"bytes": 55080,
+					"path": "res://audio/arsenal/notes/beam_split_6.wav",
+					"pitch": 6,
+					"sha256": "d44ae2409827d171121bbdf0c4a7de7bfb6207c7cda35c17ccc5fce06a1a429d"
+				},
+				{
+					"bytes": 55080,
+					"path": "res://audio/arsenal/notes/beam_split_7.wav",
+					"pitch": 7,
+					"sha256": "6cf08fdb8fa05b7848aaf9da8095be9973f602e4e2945fde3126ae8921064a90"
+				}
+			],
+			"voice": "beam_split",
+			"width": 2
+		},
+		{
+			"attr": "energy",
+			"cadence": {
+				"label": "渐强",
+				"pitches": [
+					0,
+					1,
+					2,
+					3
+				],
+				"scales": [
+					0.12,
+					0.2,
+					0.28,
+					0.4
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 8,
+			"family": "beam",
+			"id": "beam_lance",
+			"name": "极昼光矛",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "synthesized_weapon_voice",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/beam_lance_0.wav",
+					"pitch": 0,
+					"sha256": "d5b87fa5f3df33a4424bfe22c7b4085c3d1aeb43976a1581b4d6e21b73f0327e"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/beam_lance_1.wav",
+					"pitch": 1,
+					"sha256": "b905994baeb5fd2c90c8fcd142396333c95291e8c390226aca21d48dda0ec18c"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/beam_lance_2.wav",
+					"pitch": 2,
+					"sha256": "dfad5836ae2cf58dbcae00f2e0622de70effa5a638c4cc5a8484758a5436c97f"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/beam_lance_3.wav",
+					"pitch": 3,
+					"sha256": "27ae32f01b8de1e63e3c220c7635bfe3b7bf4b257c5e58f14b5e890eccfe4cc7"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/beam_lance_4.wav",
+					"pitch": 4,
+					"sha256": "1f26dc590cbf7df05440ad3fb24aef3b78570eab8ad7adfb70c6cdff0505f965"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/beam_lance_5.wav",
+					"pitch": 5,
+					"sha256": "8d6d28fcb7eed8d476076f7d1985c24b0d2b7ef1a69a7d8af9711ef4da28bd0e"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/beam_lance_6.wav",
+					"pitch": 6,
+					"sha256": "34be6d782a38cddfb424fdcdea395f3721cf1f6def0c99deca371139bfb15666"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/beam_lance_7.wav",
+					"pitch": 7,
+					"sha256": "6d1173877e4d2a51a129077ee1c057a16a751e655c87a416d1275f9c10cc514c"
+				}
+			],
+			"voice": "beam_lance",
+			"width": 3
+		},
+		{
+			"attr": "power",
+			"cadence": {
+				"label": "重-轻-轻-轻",
+				"pitches": [
+					0,
+					2,
+					3,
+					1
+				],
+				"scales": [
+					0.46,
+					0.18,
+					0.18,
+					0.18
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 2,
+			"family": "missile",
+			"id": "missile_swarm",
+			"name": "萤火蜂巢",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "synthesized_weapon_voice",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 25446,
+					"path": "res://audio/arsenal/notes/missile_swarm_0.wav",
+					"pitch": 0,
+					"sha256": "557b2b03dd2f8dbed1ebd095abdfccc492a82abb28706cf4eff2572f7956e0d6"
+				},
+				{
+					"bytes": 25446,
+					"path": "res://audio/arsenal/notes/missile_swarm_1.wav",
+					"pitch": 1,
+					"sha256": "a726d0d7e085331ca588d213526b4e31f6254d2a7df096779216af068c949e2c"
+				},
+				{
+					"bytes": 25446,
+					"path": "res://audio/arsenal/notes/missile_swarm_2.wav",
+					"pitch": 2,
+					"sha256": "c8aa1076ff67a1b4201f0e7e2cfd81f9f1b6d04faf438e7b6a211ab7caeb76a2"
+				},
+				{
+					"bytes": 25446,
+					"path": "res://audio/arsenal/notes/missile_swarm_3.wav",
+					"pitch": 3,
+					"sha256": "a9619772c758ba6d2750af9a430bb2b795f8a10eee67c898a5aeae172957217c"
+				},
+				{
+					"bytes": 25446,
+					"path": "res://audio/arsenal/notes/missile_swarm_4.wav",
+					"pitch": 4,
+					"sha256": "db4b3e634ab180046308dfc2367484afd1ec078d8a546b660a982991f2b7e4e6"
+				},
+				{
+					"bytes": 25446,
+					"path": "res://audio/arsenal/notes/missile_swarm_5.wav",
+					"pitch": 5,
+					"sha256": "eda145269b78aa17fae8a75cb163b2356b4ec8bd9d80dfc420d520ee47b0c96b"
+				},
+				{
+					"bytes": 25446,
+					"path": "res://audio/arsenal/notes/missile_swarm_6.wav",
+					"pitch": 6,
+					"sha256": "b8b1a6cd92bcdb27882e98796046d0cea7a6b20c276252721750072fdad49c7e"
+				},
+				{
+					"bytes": 25446,
+					"path": "res://audio/arsenal/notes/missile_swarm_7.wav",
+					"pitch": 7,
+					"sha256": "d528edd77452907d8560ff6ce486856d6cbe656bb4db8e12b641a9c31d899f4f"
+				}
+			],
+			"voice": "missile_swarm",
+			"width": 2
+		},
+		{
+			"attr": "power",
+			"cadence": {
+				"label": "重-轻-轻-轻",
+				"pitches": [
+					0,
+					2,
+					3,
+					1
+				],
+				"scales": [
+					0.46,
+					0.18,
+					0.18,
+					0.18
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 8,
+			"family": "missile",
+			"id": "missile_siege",
+			"name": "破晓攻城弹",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "synthesized_weapon_voice",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/missile_siege_0.wav",
+					"pitch": 0,
+					"sha256": "0a2d7b35c34bfe8b766460a35608a1e3d9d2edf7147b46bf230d6effedcdc8cb"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/missile_siege_1.wav",
+					"pitch": 1,
+					"sha256": "7254749484b6aff5992a79fd7a6fc889bbf3bfeb296473ccf21c7a80dc05def4"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/missile_siege_2.wav",
+					"pitch": 2,
+					"sha256": "681de4ae8ec2e22d45300c3cbc690bd161b26275d173edfe1fc4bc8db126cabd"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/missile_siege_3.wav",
+					"pitch": 3,
+					"sha256": "95f84fcfb66b69a846b7fc42a7000ff13c15b233fe7082bb8b9495c4d0929c5b"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/missile_siege_4.wav",
+					"pitch": 4,
+					"sha256": "7c256b1eba0dbc1468e9d73444df15b00a8d0afee612b56f9f46168d1dc75fb7"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/missile_siege_5.wav",
+					"pitch": 5,
+					"sha256": "6b92d614a631a09f95df50e2a36be1771ec4de6808708ec10ac333c5949e5f3b"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/missile_siege_6.wav",
+					"pitch": 6,
+					"sha256": "dd9d4699cabe2984e48c025959c221ed8d46d0672053563cebe7013ad10a8311"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/missile_siege_7.wav",
+					"pitch": 7,
+					"sha256": "6b1a9393b73d3fa97ce1307bde77313442c8689d670d7eaaa135ae11a537adec"
+				}
+			],
+			"voice": "missile_siege",
+			"width": 3
+		},
+		{
+			"attr": "energy",
+			"cadence": {
+				"label": "轻-重-轻-重",
+				"pitches": [
+					0,
+					2,
+					1,
+					3
+				],
+				"scales": [
+					0.18,
+					0.32,
+					0.18,
+					0.32
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 2,
+			"family": "nova",
+			"id": "nova_spiral",
+			"name": "螺旋星冕",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "synthesized_weapon_voice",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 43792,
+					"path": "res://audio/arsenal/notes/nova_spiral_0.wav",
+					"pitch": 0,
+					"sha256": "cd17646bddb2f4f0215eae4890413abfe8194a742bd366dc850031c618f6f464"
+				},
+				{
+					"bytes": 43792,
+					"path": "res://audio/arsenal/notes/nova_spiral_1.wav",
+					"pitch": 1,
+					"sha256": "4454edd11d11ec9acdab2f483342a0bbad78873ec57571e98c8397e73d65714c"
+				},
+				{
+					"bytes": 43792,
+					"path": "res://audio/arsenal/notes/nova_spiral_2.wav",
+					"pitch": 2,
+					"sha256": "2928c1cd62cfc73e8030597d1b276958e355976250922bd59cce441a1fce44bb"
+				},
+				{
+					"bytes": 43792,
+					"path": "res://audio/arsenal/notes/nova_spiral_3.wav",
+					"pitch": 3,
+					"sha256": "a43d412e582fb063580830f114ac308b2c44298a8aeb0dc3767c37d951bcd4b7"
+				},
+				{
+					"bytes": 43792,
+					"path": "res://audio/arsenal/notes/nova_spiral_4.wav",
+					"pitch": 4,
+					"sha256": "07105c51c6edecf1a5f40c92b328236ca24c0bbf6c5e4b1bb236a1926aa1a95e"
+				},
+				{
+					"bytes": 43792,
+					"path": "res://audio/arsenal/notes/nova_spiral_5.wav",
+					"pitch": 5,
+					"sha256": "639f0eeccff9e8f758631555d4d9b45031e64783c7843a6521e5b74799d8d54f"
+				},
+				{
+					"bytes": 43792,
+					"path": "res://audio/arsenal/notes/nova_spiral_6.wav",
+					"pitch": 6,
+					"sha256": "6cdc0728074964654e0e37ef22aaed07c2981e7a188401244220274ce5effe8b"
+				},
+				{
+					"bytes": 43792,
+					"path": "res://audio/arsenal/notes/nova_spiral_7.wav",
+					"pitch": 7,
+					"sha256": "c85990558b54d3ec7b22aa283f49f98a5fe72e15d38ae94b3c7e262906fbbda2"
+				}
+			],
+			"voice": "nova_spiral",
+			"width": 3
+		},
+		{
+			"attr": "energy",
+			"cadence": {
+				"label": "渐强",
+				"pitches": [
+					0,
+					1,
+					2,
+					3
+				],
+				"scales": [
+					0.12,
+					0.2,
+					0.28,
+					0.4
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 4,
+			"family": "chain",
+			"id": "chain_fork",
+			"name": "雷树分岔器",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "synthesized_weapon_voice",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 36736,
+					"path": "res://audio/arsenal/notes/chain_fork_0.wav",
+					"pitch": 0,
+					"sha256": "ba9633413d9b78b9d60565aaebbc8feb1449a925899c3e0f5276f2f68aab6dba"
+				},
+				{
+					"bytes": 36736,
+					"path": "res://audio/arsenal/notes/chain_fork_1.wav",
+					"pitch": 1,
+					"sha256": "d5e2c11e4a446eef908974f7d08d3c2b52964565651a37bee8c64002df290129"
+				},
+				{
+					"bytes": 36736,
+					"path": "res://audio/arsenal/notes/chain_fork_2.wav",
+					"pitch": 2,
+					"sha256": "1e348ff229684f7e4e7fd006caea66b27de82d94bb9ca674db65f95dd1926efa"
+				},
+				{
+					"bytes": 36736,
+					"path": "res://audio/arsenal/notes/chain_fork_3.wav",
+					"pitch": 3,
+					"sha256": "2eb650a494a5b497278b273c49bd03b78739c328ed45274e202afe0b4d274bef"
+				},
+				{
+					"bytes": 36736,
+					"path": "res://audio/arsenal/notes/chain_fork_4.wav",
+					"pitch": 4,
+					"sha256": "b3e2fbe0b6a22bcd989ab698c2576bb73db8f6d7c81b14549694b75fe45b55d8"
+				},
+				{
+					"bytes": 36736,
+					"path": "res://audio/arsenal/notes/chain_fork_5.wav",
+					"pitch": 5,
+					"sha256": "2803b8f9f48ef8e1a237d112547abfb1145894539c01b14e44cd2bfae6ecb378"
+				},
+				{
+					"bytes": 36736,
+					"path": "res://audio/arsenal/notes/chain_fork_6.wav",
+					"pitch": 6,
+					"sha256": "1b2f5b2132b199842abd19af24ef3b06aaee895cfa7975727a309e047297c20d"
+				},
+				{
+					"bytes": 36736,
+					"path": "res://audio/arsenal/notes/chain_fork_7.wav",
+					"pitch": 7,
+					"sha256": "0ab69095875d510d0d1516dd7216119b4bdfafc840c0237684f4660c3575dcff"
+				}
+			],
+			"voice": "chain_fork",
+			"width": 3
+		},
+		{
+			"attr": "ballistic",
+			"cadence": {
+				"label": "重-轻-轻-轻",
+				"pitches": [
+					0,
+					2,
+					3,
+					1
+				],
+				"scales": [
+					0.46,
+					0.18,
+					0.18,
+					0.18
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 8,
+			"family": "rail",
+			"id": "rail_horizon",
+			"name": "地平线终奏",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "ballistic_volume_ramp",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/rail_horizon_0.wav",
+					"pitch": 0,
+					"sha256": "f57d82dc7b31bcc7bb7851ab2c34810a9fe5e1b2c35523d412db986cee7c6600"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/rail_horizon_1.wav",
+					"pitch": 1,
+					"sha256": "d8e9ac0259c761afbd55cdde7b40577f52fa57db50361498fd23bbc18ad261fe"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/rail_horizon_2.wav",
+					"pitch": 2,
+					"sha256": "021473708b209f9f6c8c6acad1a087d24f8193c182c947e3d92c6664dcec9680"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/rail_horizon_3.wav",
+					"pitch": 3,
+					"sha256": "8ebb80286fbf05629caf968e2121a0ced6614ab0504b83bf9be52830253487f6"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/rail_horizon_4.wav",
+					"pitch": 4,
+					"sha256": "c562b90e682e9e4a0bccba31d4c484ee68b3ececd08d9b3203b601343a407d38"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/rail_horizon_5.wav",
+					"pitch": 5,
+					"sha256": "24697080f20c43f24f4e74a7447ab923464b844ed1834c2e5c76d029452225d4"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/rail_horizon_6.wav",
+					"pitch": 6,
+					"sha256": "30a60e49da61ff38eed65ddd98f349f6d5d20895a8aaac271afb67bf0082bbe8"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/rail_horizon_7.wav",
+					"pitch": 7,
+					"sha256": "d8ad031b9ac5eecc7a4551cc9814d73a562b9ecd1ba5c907318db711955ba01b"
+				}
+			],
+			"voice": "rail_horizon",
+			"width": 3
+		},
+		{
+			"attr": "ballistic",
+			"cadence": {
+				"label": "强-弱-强-弱",
+				"pitches": [
+					0,
+					2,
+					1,
+					3
+				],
+				"scales": [
+					0.32,
+					0.18,
+					0.32,
+					0.18
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 2,
+			"family": "boomerang",
+			"id": "boomerang_crescent",
+			"name": "双月交响刃",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "ballistic_volume_ramp",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 63548,
+					"path": "res://audio/arsenal/notes/boomerang_crescent_0.wav",
+					"pitch": 0,
+					"sha256": "6233813c6b4d1a665c91ecd895d83b972405e9afecdce21bba8154bd40be0ae4"
+				},
+				{
+					"bytes": 63548,
+					"path": "res://audio/arsenal/notes/boomerang_crescent_1.wav",
+					"pitch": 1,
+					"sha256": "d788c29c0462342fff13d0e20586087c149429f010b68b433a88683895ce2ef4"
+				},
+				{
+					"bytes": 63548,
+					"path": "res://audio/arsenal/notes/boomerang_crescent_2.wav",
+					"pitch": 2,
+					"sha256": "5b66a250d037274565a5345e5a1c5270b196ce7df1889093f89b1f5d09dffea6"
+				},
+				{
+					"bytes": 63548,
+					"path": "res://audio/arsenal/notes/boomerang_crescent_3.wav",
+					"pitch": 3,
+					"sha256": "b173d85aafba6815d54924042da59598ad44291396482c57500eba8dad2c40fb"
+				},
+				{
+					"bytes": 63548,
+					"path": "res://audio/arsenal/notes/boomerang_crescent_4.wav",
+					"pitch": 4,
+					"sha256": "330d1a7989cdf17cbcce8f3314b79b511120ff96146d650e6ff7aa09cf7b8e60"
+				},
+				{
+					"bytes": 63548,
+					"path": "res://audio/arsenal/notes/boomerang_crescent_5.wav",
+					"pitch": 5,
+					"sha256": "9bb03c647d2ae33343b1946823a0a0b7b82e8ec9c9f4d1f21e9973d8677141ed"
+				},
+				{
+					"bytes": 63548,
+					"path": "res://audio/arsenal/notes/boomerang_crescent_6.wav",
+					"pitch": 6,
+					"sha256": "507ec9e8cbf3912ef5799d0a1ac78872ad735fbdbb4f0b975a826fae9b07b4b2"
+				},
+				{
+					"bytes": 63548,
+					"path": "res://audio/arsenal/notes/boomerang_crescent_7.wav",
+					"pitch": 7,
+					"sha256": "fb51408a97d77088748527005ea4b4dc47c76d56d648c31b47b54ca5748f732c"
+				}
+			],
+			"voice": "boomerang_crescent",
+			"width": 2
+		},
+		{
+			"attr": "ballistic",
+			"cadence": {
+				"label": "强-弱-强-弱",
+				"pitches": [
+					0,
+					2,
+					1,
+					3
+				],
+				"scales": [
+					0.32,
+					0.18,
+					0.32,
+					0.18
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 2,
+			"family": "boomerang",
+			"id": "boomerang_ricochet",
+			"name": "折返棱刀",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "ballistic_volume_ramp",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 39558,
+					"path": "res://audio/arsenal/notes/boomerang_ricochet_0.wav",
+					"pitch": 0,
+					"sha256": "764505159b9bc449adca20c4035c38f55c1925099e070a34342faaf39f4abcfb"
+				},
+				{
+					"bytes": 39558,
+					"path": "res://audio/arsenal/notes/boomerang_ricochet_1.wav",
+					"pitch": 1,
+					"sha256": "00bce306b24db68eb3e83a6d334ce4f7d591f97a0ba8b74fdfd561f0e615f4e4"
+				},
+				{
+					"bytes": 39558,
+					"path": "res://audio/arsenal/notes/boomerang_ricochet_2.wav",
+					"pitch": 2,
+					"sha256": "a7e5851d397706e30ba67e60f187f8d50afe3f868d35aa4ec04c3b0215508bb4"
+				},
+				{
+					"bytes": 39558,
+					"path": "res://audio/arsenal/notes/boomerang_ricochet_3.wav",
+					"pitch": 3,
+					"sha256": "cdadb17e82d24604c21298df62e0cff10dbd3cdafcae38369198b69e2c87abf4"
+				},
+				{
+					"bytes": 39558,
+					"path": "res://audio/arsenal/notes/boomerang_ricochet_4.wav",
+					"pitch": 4,
+					"sha256": "274468afca9200bb7ea99bae404f1aeb698443e8954cb4d1279b02f416f39bbb"
+				},
+				{
+					"bytes": 39558,
+					"path": "res://audio/arsenal/notes/boomerang_ricochet_5.wav",
+					"pitch": 5,
+					"sha256": "c38d484b47ff9e0de444e010c382569348059b24ad54847b0f46670af22ae656"
+				},
+				{
+					"bytes": 39558,
+					"path": "res://audio/arsenal/notes/boomerang_ricochet_6.wav",
+					"pitch": 6,
+					"sha256": "ad843caf4d5c0045d82b86de43636ae886db5db1fd1891e27b0a45b166378707"
+				},
+				{
+					"bytes": 39558,
+					"path": "res://audio/arsenal/notes/boomerang_ricochet_7.wav",
+					"pitch": 7,
+					"sha256": "d741efe25ee33c0e87ac940789ed478a29aa93a82850f14c53aef1f4e56c6dc6"
+				}
+			],
+			"voice": "boomerang_ricochet",
+			"width": 2
+		},
+		{
+			"attr": "support",
+			"cadence": {
+				"label": "匀速四连",
+				"pitches": [
+					0,
+					0,
+					0,
+					0
+				],
+				"scales": [
+					0.25,
+					0.25,
+					0.25,
+					0.25
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 4,
+			"family": "orbit",
+			"id": "orbit_lattice",
+			"name": "六边天穹",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "synthesized_weapon_voice",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/orbit_lattice_0.wav",
+					"pitch": 0,
+					"sha256": "2af70cd11757ec2b2b1a5863c67bb6dbbca72a961eba06750bf0d31b859399ab"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/orbit_lattice_1.wav",
+					"pitch": 1,
+					"sha256": "103df0670da59cee4b7b37b144dcedd671cf5e281a9061d8adb0f508f94a67f1"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/orbit_lattice_2.wav",
+					"pitch": 2,
+					"sha256": "c55bb8e2d3b552698a2b54095dfd4ccbb7d6b34a370245bd12b40dc88c4b5704"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/orbit_lattice_3.wav",
+					"pitch": 3,
+					"sha256": "18b569b76c80750f7a0b6cad3a2173e658784ef5a0b3c5b1d99ef09606133f02"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/orbit_lattice_4.wav",
+					"pitch": 4,
+					"sha256": "425bb0bc7e1784863f914cf42db1fc56a401c5d0fa35ca9b5c05365649bc35f8"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/orbit_lattice_5.wav",
+					"pitch": 5,
+					"sha256": "5556b8faef49297ad1e3cf2d01238d308dcb9c2c5b61fd6a7bf089f1617a8d61"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/orbit_lattice_6.wav",
+					"pitch": 6,
+					"sha256": "1ca0da101afbb696a7024a42b818c30d71a1b8331de3f8eff14eb56189d8379d"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/orbit_lattice_7.wav",
+					"pitch": 7,
+					"sha256": "9445b18a1c9f13299928cfebbb655f7bc680a3ea1e500ffd50929d1dc6100758"
+				}
+			],
+			"voice": "orbit_lattice",
+			"width": 3
+		},
+		{
+			"attr": "support",
+			"cadence": {
+				"label": "匀速四连",
+				"pitches": [
+					0,
+					0,
+					0,
+					0
+				],
+				"scales": [
+					0.25,
+					0.25,
+					0.25,
+					0.25
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 2,
+			"family": "orbit",
+			"id": "orbit_binary",
+			"name": "双星近卫",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "synthesized_weapon_voice",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 69192,
+					"path": "res://audio/arsenal/notes/orbit_binary_0.wav",
+					"pitch": 0,
+					"sha256": "e1edaedb588ea47fd22dc7b61ecf54a45b6578e86011fdd4d8a78fb012d0a985"
+				},
+				{
+					"bytes": 69192,
+					"path": "res://audio/arsenal/notes/orbit_binary_1.wav",
+					"pitch": 1,
+					"sha256": "f04b32e06344f84b29cd1351a4423d4deaa4525dfb2668c20983244a10ec2e6c"
+				},
+				{
+					"bytes": 69192,
+					"path": "res://audio/arsenal/notes/orbit_binary_2.wav",
+					"pitch": 2,
+					"sha256": "c8cc1a4b85daeb85ea57e234df35f3f63f204a9e8cb4b0c9cda136a6979a9a51"
+				},
+				{
+					"bytes": 69192,
+					"path": "res://audio/arsenal/notes/orbit_binary_3.wav",
+					"pitch": 3,
+					"sha256": "a9a8304744cfc1bcc7370fee1a148a39dc2fb1c0265e80d706822472cca149ed"
+				},
+				{
+					"bytes": 69192,
+					"path": "res://audio/arsenal/notes/orbit_binary_4.wav",
+					"pitch": 4,
+					"sha256": "fd1c4bf30f15cec7886ccc16be5c3a40ca5e87f5938e6dced2c51997ef177cc3"
+				},
+				{
+					"bytes": 69192,
+					"path": "res://audio/arsenal/notes/orbit_binary_5.wav",
+					"pitch": 5,
+					"sha256": "65c9f33c0fb6ba3785e7c31839912d355f8cf448eceff595c0ff2371db0a69ae"
+				},
+				{
+					"bytes": 69192,
+					"path": "res://audio/arsenal/notes/orbit_binary_6.wav",
+					"pitch": 6,
+					"sha256": "5ec270ff8372210aafbd0154f8779590662a6f3c7dd7c3b47336e0757154c400"
+				},
+				{
+					"bytes": 69192,
+					"path": "res://audio/arsenal/notes/orbit_binary_7.wav",
+					"pitch": 7,
+					"sha256": "744a1faa0e477b0ab2c2cb3dafee9f673d14d1e5303266ffe9e7b2a2f50151e3"
+				}
+			],
+			"voice": "orbit_binary",
+			"width": 2
+		},
+		{
+			"attr": "power",
+			"cadence": {
+				"label": "重-轻-轻-轻",
+				"pitches": [
+					0,
+					2,
+					3,
+					1
+				],
+				"scales": [
+					0.46,
+					0.18,
+					0.18,
+					0.18
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 4,
+			"family": "mine",
+			"id": "mine_cluster",
+			"name": "花簇雷阵",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "ballistic_volume_ramp",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 50848,
+					"path": "res://audio/arsenal/notes/mine_cluster_0.wav",
+					"pitch": 0,
+					"sha256": "fd6f12c0c4754a34c6efba9f88f6dee6190a2f531836dc6d8cd305414c4c140e"
+				},
+				{
+					"bytes": 50848,
+					"path": "res://audio/arsenal/notes/mine_cluster_1.wav",
+					"pitch": 1,
+					"sha256": "adca28730b5ef5eceddffd981b4cba35f79a680d5123243be0b569e5a2669b3c"
+				},
+				{
+					"bytes": 50848,
+					"path": "res://audio/arsenal/notes/mine_cluster_2.wav",
+					"pitch": 2,
+					"sha256": "d8c1418995e50d5bd49cdfa5342f7bef41b473dd57d0035d106b19234bfa8791"
+				},
+				{
+					"bytes": 50848,
+					"path": "res://audio/arsenal/notes/mine_cluster_3.wav",
+					"pitch": 3,
+					"sha256": "0e5988fd3c0b5f17c7adb825c2524e307765d760beadb1001430629fc6d36a2e"
+				},
+				{
+					"bytes": 50848,
+					"path": "res://audio/arsenal/notes/mine_cluster_4.wav",
+					"pitch": 4,
+					"sha256": "42b7c0dc3a9ec2dcd05fa2b5ab1dbc19ed009dcd768cf2ef4fdf846654fabd79"
+				},
+				{
+					"bytes": 50848,
+					"path": "res://audio/arsenal/notes/mine_cluster_5.wav",
+					"pitch": 5,
+					"sha256": "abc97205339769216ebf6f3722807a30c6a3c6bd88aa6360f56f1b6a53230172"
+				},
+				{
+					"bytes": 50848,
+					"path": "res://audio/arsenal/notes/mine_cluster_6.wav",
+					"pitch": 6,
+					"sha256": "ad2f852663eab80f94ef0d40fc9c9fd5ffc739b742a66be43b077cb175d6cf23"
+				},
+				{
+					"bytes": 50848,
+					"path": "res://audio/arsenal/notes/mine_cluster_7.wav",
+					"pitch": 7,
+					"sha256": "10e825fa8fcc581130b6fc3eaac7a51ab5caa7cf512075839f1604bc840399a7"
+				}
+			],
+			"voice": "mine_cluster",
+			"width": 2
+		},
+		{
+			"attr": "power",
+			"cadence": {
+				"label": "重-轻-轻-轻",
+				"pitches": [
+					0,
+					2,
+					3,
+					1
+				],
+				"scales": [
+					0.46,
+					0.18,
+					0.18,
+					0.18
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 4,
+			"family": "mine",
+			"id": "mine_anchor",
+			"name": "深井锚雷",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "ballistic_volume_ramp",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/mine_anchor_0.wav",
+					"pitch": 0,
+					"sha256": "75c25b452da3abde06b500c09c8a29aed3f928f10d5a9e65458a49fa9c535983"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/mine_anchor_1.wav",
+					"pitch": 1,
+					"sha256": "7e328744c760b536f2083a9658b08c089c110f08b54dcf972d515bc581ef9c71"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/mine_anchor_2.wav",
+					"pitch": 2,
+					"sha256": "f69b96b552955090f09118699b4150f692e7dad615ef8280d21e0266be99303b"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/mine_anchor_3.wav",
+					"pitch": 3,
+					"sha256": "132ee99ff73c904385187fb8980f8094a7f603b03cbcb8845c53bb9fbca651c8"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/mine_anchor_4.wav",
+					"pitch": 4,
+					"sha256": "04bcd44e5d58356719f64efd6298634286db7d90a22b6c3ca6c952bd190a5ec3"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/mine_anchor_5.wav",
+					"pitch": 5,
+					"sha256": "dce10e71163dda239273e47582792f69c0681389308b673abf51eff405149191"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/mine_anchor_6.wav",
+					"pitch": 6,
+					"sha256": "f4e0d96c7a401676d728bda749b8192477a755dde308a4154332f2fa95a6d311"
+				},
+				{
+					"bytes": 77220,
+					"path": "res://audio/arsenal/notes/mine_anchor_7.wav",
+					"pitch": 7,
+					"sha256": "994fe91dbe4a66bf866cf35263e47632b910638a4e7a7050963bd3e577fa8b4a"
+				}
+			],
+			"voice": "mine_anchor",
+			"width": 3
+		},
+		{
+			"attr": "power",
+			"cadence": {
+				"label": "渐强",
+				"pitches": [
+					0,
+					1,
+					2,
+					3
+				],
+				"scales": [
+					0.12,
+					0.2,
+					0.28,
+					0.4
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 2,
+			"family": "flame",
+			"id": "flame_cone",
+			"name": "日珥焰冠",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "synthesized_weapon_voice",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 57904,
+					"path": "res://audio/arsenal/notes/flame_cone_0.wav",
+					"pitch": 0,
+					"sha256": "8803b3f34f9ee7103cce7d9c93c9c6ae1c8330bbd376e3a2b1eabc3348ba64e6"
+				},
+				{
+					"bytes": 57904,
+					"path": "res://audio/arsenal/notes/flame_cone_1.wav",
+					"pitch": 1,
+					"sha256": "e24c76c578be5536c1f4e711df7008b0d83ea0dfd8d2368dfd1f58e90f2be57c"
+				},
+				{
+					"bytes": 57904,
+					"path": "res://audio/arsenal/notes/flame_cone_2.wav",
+					"pitch": 2,
+					"sha256": "92a63897dfa37f5b13aa90c630ca4b4450001438baa7b9a7fe3e18a5d58f8bbc"
+				},
+				{
+					"bytes": 57904,
+					"path": "res://audio/arsenal/notes/flame_cone_3.wav",
+					"pitch": 3,
+					"sha256": "07a9b9603749c12aab87fa59eb11ec34ffc507f10583598883926631fc04090c"
+				},
+				{
+					"bytes": 57904,
+					"path": "res://audio/arsenal/notes/flame_cone_4.wav",
+					"pitch": 4,
+					"sha256": "cc942a88e39c3fcdd909a01383ae2c767acdbd38e73a660fae1f749bd60942eb"
+				},
+				{
+					"bytes": 57904,
+					"path": "res://audio/arsenal/notes/flame_cone_5.wav",
+					"pitch": 5,
+					"sha256": "de26c213ed86215f99e9abffd894e8e06ea188f06940b9474065279c1cb8eb56"
+				},
+				{
+					"bytes": 57904,
+					"path": "res://audio/arsenal/notes/flame_cone_6.wav",
+					"pitch": 6,
+					"sha256": "ed8eed42ce72bb815d4dd688a80cfadb7ebbf410771cda2c229598de56859bdb"
+				},
+				{
+					"bytes": 57904,
+					"path": "res://audio/arsenal/notes/flame_cone_7.wav",
+					"pitch": 7,
+					"sha256": "755a2f4897901a10d1a9463993341af6e399f214d046e728339b69c449000638"
+				}
+			],
+			"voice": "flame_cone",
+			"width": 2
+		},
+		{
+			"attr": "power",
+			"cadence": {
+				"label": "渐强",
+				"pitches": [
+					0,
+					1,
+					2,
+					3
+				],
+				"scales": [
+					0.12,
+					0.2,
+					0.28,
+					0.4
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 1,
+			"family": "flame",
+			"id": "flame_spark",
+			"name": "余烬穿流",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "synthesized_weapon_voice",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 19800,
+					"path": "res://audio/arsenal/notes/flame_spark_0.wav",
+					"pitch": 0,
+					"sha256": "3917dd245bb7073ea0e500bd9b79588fd09e13db67d20b1fffe242ffad7745a9"
+				},
+				{
+					"bytes": 19800,
+					"path": "res://audio/arsenal/notes/flame_spark_1.wav",
+					"pitch": 1,
+					"sha256": "0d147899588853ac12404250bdf7c7a14f9a3474aed8db67b708df8f7190ef48"
+				},
+				{
+					"bytes": 19800,
+					"path": "res://audio/arsenal/notes/flame_spark_2.wav",
+					"pitch": 2,
+					"sha256": "0bb8518a38ae93601e980bb043a90bfdd9a9dc2e86394a46357f5f0595c6dc27"
+				},
+				{
+					"bytes": 19800,
+					"path": "res://audio/arsenal/notes/flame_spark_3.wav",
+					"pitch": 3,
+					"sha256": "9239fe5aca222a9f8020f667a6423bb6491b0f9d5ae8a7a1374743ce0f7b005e"
+				},
+				{
+					"bytes": 19800,
+					"path": "res://audio/arsenal/notes/flame_spark_4.wav",
+					"pitch": 4,
+					"sha256": "c56f21a42980e6b90f154a48cc7bbcdc94c01f8ef72c909e1a5ff972149f0558"
+				},
+				{
+					"bytes": 19800,
+					"path": "res://audio/arsenal/notes/flame_spark_5.wav",
+					"pitch": 5,
+					"sha256": "752b47748773dc89eee06c77cb81bb56723af6854aac2df458d88efc05d6e20b"
+				},
+				{
+					"bytes": 19800,
+					"path": "res://audio/arsenal/notes/flame_spark_6.wav",
+					"pitch": 6,
+					"sha256": "dbe16ef2ab0d5f2dae68902af4870e8dcda3166c7aa3b26d32f2e6a17e095a74"
+				},
+				{
+					"bytes": 19800,
+					"path": "res://audio/arsenal/notes/flame_spark_7.wav",
+					"pitch": 7,
+					"sha256": "0ea42653396f4def6951865d6e9c5be3fda54e2d5a011e1da3dc8a25f35fb5f8"
+				}
+			],
+			"voice": "flame_spark",
+			"width": 2
+		},
+		{
+			"attr": "support",
+			"cadence": {
+				"label": "匀速四连",
+				"pitches": [
+					0,
+					0,
+					0,
+					0
+				],
+				"scales": [
+					0.25,
+					0.25,
+					0.25,
+					0.25
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 4,
+			"family": "drone",
+			"id": "drone_sentry",
+			"name": "长夜哨兵",
+			"recorded_audio": false,
+			"recorded_source": "",
+			"reference_layer": "synthesized_weapon_voice",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 66370,
+					"path": "res://audio/arsenal/notes/drone_sentry_0.wav",
+					"pitch": 0,
+					"sha256": "a1725fafcfe40e6c7be0137af4aa02ca01986185889cf1d54c41254f9a98b95c"
+				},
+				{
+					"bytes": 66370,
+					"path": "res://audio/arsenal/notes/drone_sentry_1.wav",
+					"pitch": 1,
+					"sha256": "86e9d009e94fe8ab47f4d1aacf262002c734e8db6c6225a5be1fcfafabfc3c46"
+				},
+				{
+					"bytes": 66370,
+					"path": "res://audio/arsenal/notes/drone_sentry_2.wav",
+					"pitch": 2,
+					"sha256": "4bc14849c99dd452e9be322134bcef7bd2a82c68b43375792f07341c29538f3e"
+				},
+				{
+					"bytes": 66370,
+					"path": "res://audio/arsenal/notes/drone_sentry_3.wav",
+					"pitch": 3,
+					"sha256": "a93cf7aaa427680279205f4971b7622d31b6d3ecc23098c72d469e50e64ee555"
+				},
+				{
+					"bytes": 66370,
+					"path": "res://audio/arsenal/notes/drone_sentry_4.wav",
+					"pitch": 4,
+					"sha256": "20165fac95d945842b661eb92c42b1caf32daa539fe84097e781fe8a99d2cc60"
+				},
+				{
+					"bytes": 66370,
+					"path": "res://audio/arsenal/notes/drone_sentry_5.wav",
+					"pitch": 5,
+					"sha256": "bed3b65ca1995f7f2d9edae43d13e78473ee755f2a012b0562ca3b8fd55986e0"
+				},
+				{
+					"bytes": 66370,
+					"path": "res://audio/arsenal/notes/drone_sentry_6.wav",
+					"pitch": 6,
+					"sha256": "3441ccdd3e36ecec4067b404f65b88b96c63d6b20601a474aed9e40488506690"
+				},
+				{
+					"bytes": 66370,
+					"path": "res://audio/arsenal/notes/drone_sentry_7.wav",
+					"pitch": 7,
+					"sha256": "a67d3a87fc58f6f829fe29b03de65dbaf5fead71e8b2ad8c5936a99d06197d06"
+				}
+			],
+			"voice": "drone_sentry",
+			"width": 3
+		},
+		{
+			"id": "recorded_ballistic",
+			"name": "实弹连奏炮",
+			"family": "pulse",
+			"voice": "rec_ballistic",
+			"attr": "ballistic",
+			"charge_bars": 1,
+			"width": 2,
+			"recorded_audio": true,
+			"recorded_source": "weapon_ballistic_volume_ramp@0.58-16.58s complete sixteen-second weapon cycle",
+			"cadence": {
+				"label": "匀速四连",
+				"scales": [
+					0.25,
+					0.25,
+					0.25,
+					0.25
+				],
+				"pitches": [
+					0,
+					0,
+					0,
+					0
+				]
+			},
+			"cadence_total": 1.0,
+			"reference_layer": "ballistic_volume_ramp",
+			"sample_count": 8,
+			"samples": [
+				{
+					"pitch": 0,
+					"path": "res://audio/arsenal/notes/rec_ballistic_0.wav",
+					"bytes": 21246,
+					"sha256": "be26527003ba5f1d36c1cdbc616c7d2f7d166c37084eb6c5b76e53acefa58e8c"
+				},
+				{
+					"pitch": 1,
+					"path": "res://audio/arsenal/notes/rec_ballistic_1.wav",
+					"bytes": 18600,
+					"sha256": "11dff564b725df6cc323830aad1dc5b9f7f9a781a0a8b413a8998c1823e972de"
+				},
+				{
+					"pitch": 2,
+					"path": "res://audio/arsenal/notes/rec_ballistic_2.wav",
+					"bytes": 21246,
+					"sha256": "fa5e3089a2991d659b0142311f600ba10ebfdf58bf36431f5318ef3450eb27bd"
+				},
+				{
+					"pitch": 3,
+					"path": "res://audio/arsenal/notes/rec_ballistic_3.wav",
+					"bytes": 21246,
+					"sha256": "de9e9afd30601110490a24d6c16a25dc0a37c07b1fde379dca4f7b092a7ccef6"
+				},
+				{
+					"pitch": 4,
+					"path": "res://audio/arsenal/notes/rec_ballistic_4.wav",
+					"bytes": 21246,
+					"sha256": "e8fb48adfd63ad42561a855c428cacc6118400416e96e87b1bb36ee70b3c97ce"
+				},
+				{
+					"pitch": 5,
+					"path": "res://audio/arsenal/notes/rec_ballistic_5.wav",
+					"bytes": 21246,
+					"sha256": "02d4f65e4b8084d71479dfb6e9c92daba2e499941349eaa0a8a45e12ed1c3f55"
+				},
+				{
+					"pitch": 6,
+					"path": "res://audio/arsenal/notes/rec_ballistic_6.wav",
+					"bytes": 21246,
+					"sha256": "9de8e17fee182255dd7be89c84b28b2746cb69569a632ba09460915599a4240e"
+				},
+				{
+					"pitch": 7,
+					"path": "res://audio/arsenal/notes/rec_ballistic_7.wav",
+					"bytes": 21246,
+					"sha256": "b541b26afba9562dc232177661b36022a5b02b6d28e739cd6d9174a0dfd0f494"
+				}
+			],
+			"recorded_group": "res://audio/authorized/weapon_ballistic_cycle_16s.wav",
+			"recorded_group_start": 0.58,
+			"recorded_group_end": 16.58,
+			"recorded_group_processing": "direct PCM16 source slice; no segmentation or pitch processing",
+			"source_event_ranges": [
+				{
+					"start_seconds": 0.58,
+					"end_seconds": 1.06
+				},
+				{
+					"start_seconds": 1.64,
+					"end_seconds": 2.06
+				},
+				{
+					"start_seconds": 2.58,
+					"end_seconds": 3.06
+				},
+				{
+					"start_seconds": 3.58,
+					"end_seconds": 4.06
+				},
+				{
+					"start_seconds": 4.58,
+					"end_seconds": 5.06
+				},
+				{
+					"start_seconds": 5.58,
+					"end_seconds": 6.06
+				},
+				{
+					"start_seconds": 6.58,
+					"end_seconds": 7.06
+				},
+				{
+					"start_seconds": 7.58,
+					"end_seconds": 8.06
+				}
+			]
+		},
+		{
+			"id": "recorded_ballistic_rare",
+			"name": "实弹连奏炮",
+			"family": "pulse",
+			"voice": "rec_ballistic",
+			"attr": "ballistic",
+			"charge_bars": 1,
+			"width": 2,
+			"recorded_audio": true,
+			"recorded_source": "weapon_ballistic_volume_ramp@0.58-16.58s complete sixteen-second weapon cycle",
+			"cadence": {
+				"label": "匀速四连",
+				"scales": [
+					0.25,
+					0.25,
+					0.25,
+					0.25
+				],
+				"pitches": [
+					0,
+					0,
+					0,
+					0
+				]
+			},
+			"cadence_total": 1.0,
+			"reference_layer": "ballistic_volume_ramp",
+			"sample_count": 8,
+			"samples": [
+				{
+					"pitch": 0,
+					"path": "res://audio/arsenal/notes/rec_ballistic_0.wav",
+					"bytes": 21246,
+					"sha256": "be26527003ba5f1d36c1cdbc616c7d2f7d166c37084eb6c5b76e53acefa58e8c"
+				},
+				{
+					"pitch": 1,
+					"path": "res://audio/arsenal/notes/rec_ballistic_1.wav",
+					"bytes": 18600,
+					"sha256": "11dff564b725df6cc323830aad1dc5b9f7f9a781a0a8b413a8998c1823e972de"
+				},
+				{
+					"pitch": 2,
+					"path": "res://audio/arsenal/notes/rec_ballistic_2.wav",
+					"bytes": 21246,
+					"sha256": "fa5e3089a2991d659b0142311f600ba10ebfdf58bf36431f5318ef3450eb27bd"
+				},
+				{
+					"pitch": 3,
+					"path": "res://audio/arsenal/notes/rec_ballistic_3.wav",
+					"bytes": 21246,
+					"sha256": "de9e9afd30601110490a24d6c16a25dc0a37c07b1fde379dca4f7b092a7ccef6"
+				},
+				{
+					"pitch": 4,
+					"path": "res://audio/arsenal/notes/rec_ballistic_4.wav",
+					"bytes": 21246,
+					"sha256": "e8fb48adfd63ad42561a855c428cacc6118400416e96e87b1bb36ee70b3c97ce"
+				},
+				{
+					"pitch": 5,
+					"path": "res://audio/arsenal/notes/rec_ballistic_5.wav",
+					"bytes": 21246,
+					"sha256": "02d4f65e4b8084d71479dfb6e9c92daba2e499941349eaa0a8a45e12ed1c3f55"
+				},
+				{
+					"pitch": 6,
+					"path": "res://audio/arsenal/notes/rec_ballistic_6.wav",
+					"bytes": 21246,
+					"sha256": "9de8e17fee182255dd7be89c84b28b2746cb69569a632ba09460915599a4240e"
+				},
+				{
+					"pitch": 7,
+					"path": "res://audio/arsenal/notes/rec_ballistic_7.wav",
+					"bytes": 21246,
+					"sha256": "b541b26afba9562dc232177661b36022a5b02b6d28e739cd6d9174a0dfd0f494"
+				}
+			],
+			"recorded_group": "res://audio/authorized/weapon_ballistic_cycle_16s.wav",
+			"recorded_group_start": 0.58,
+			"recorded_group_end": 16.58,
+			"recorded_group_processing": "direct PCM16 source slice; no segmentation or pitch processing",
+			"source_event_ranges": [
+				{
+					"start_seconds": 0.58,
+					"end_seconds": 1.06
+				},
+				{
+					"start_seconds": 1.64,
+					"end_seconds": 2.06
+				},
+				{
+					"start_seconds": 2.58,
+					"end_seconds": 3.06
+				},
+				{
+					"start_seconds": 3.58,
+					"end_seconds": 4.06
+				},
+				{
+					"start_seconds": 4.58,
+					"end_seconds": 5.06
+				},
+				{
+					"start_seconds": 5.58,
+					"end_seconds": 6.06
+				},
+				{
+					"start_seconds": 6.58,
+					"end_seconds": 7.06
+				},
+				{
+					"start_seconds": 7.58,
+					"end_seconds": 8.06
+				}
+			],
+			"base_weapon_id": "recorded_ballistic",
+			"quality": 1,
+			"quality_name": "稀有"
+		},
+		{
+			"id": "recorded_ballistic_legend",
+			"name": "实弹连奏炮",
+			"family": "pulse",
+			"voice": "rec_ballistic",
+			"attr": "ballistic",
+			"charge_bars": 1,
+			"width": 2,
+			"recorded_audio": true,
+			"recorded_source": "weapon_ballistic_volume_ramp@0.58-16.58s complete sixteen-second weapon cycle",
+			"cadence": {
+				"label": "匀速四连",
+				"scales": [
+					0.25,
+					0.25,
+					0.25,
+					0.25
+				],
+				"pitches": [
+					0,
+					0,
+					0,
+					0
+				]
+			},
+			"cadence_total": 1.0,
+			"reference_layer": "ballistic_volume_ramp",
+			"sample_count": 8,
+			"samples": [
+				{
+					"pitch": 0,
+					"path": "res://audio/arsenal/notes/rec_ballistic_0.wav",
+					"bytes": 21246,
+					"sha256": "be26527003ba5f1d36c1cdbc616c7d2f7d166c37084eb6c5b76e53acefa58e8c"
+				},
+				{
+					"pitch": 1,
+					"path": "res://audio/arsenal/notes/rec_ballistic_1.wav",
+					"bytes": 18600,
+					"sha256": "11dff564b725df6cc323830aad1dc5b9f7f9a781a0a8b413a8998c1823e972de"
+				},
+				{
+					"pitch": 2,
+					"path": "res://audio/arsenal/notes/rec_ballistic_2.wav",
+					"bytes": 21246,
+					"sha256": "fa5e3089a2991d659b0142311f600ba10ebfdf58bf36431f5318ef3450eb27bd"
+				},
+				{
+					"pitch": 3,
+					"path": "res://audio/arsenal/notes/rec_ballistic_3.wav",
+					"bytes": 21246,
+					"sha256": "de9e9afd30601110490a24d6c16a25dc0a37c07b1fde379dca4f7b092a7ccef6"
+				},
+				{
+					"pitch": 4,
+					"path": "res://audio/arsenal/notes/rec_ballistic_4.wav",
+					"bytes": 21246,
+					"sha256": "e8fb48adfd63ad42561a855c428cacc6118400416e96e87b1bb36ee70b3c97ce"
+				},
+				{
+					"pitch": 5,
+					"path": "res://audio/arsenal/notes/rec_ballistic_5.wav",
+					"bytes": 21246,
+					"sha256": "02d4f65e4b8084d71479dfb6e9c92daba2e499941349eaa0a8a45e12ed1c3f55"
+				},
+				{
+					"pitch": 6,
+					"path": "res://audio/arsenal/notes/rec_ballistic_6.wav",
+					"bytes": 21246,
+					"sha256": "9de8e17fee182255dd7be89c84b28b2746cb69569a632ba09460915599a4240e"
+				},
+				{
+					"pitch": 7,
+					"path": "res://audio/arsenal/notes/rec_ballistic_7.wav",
+					"bytes": 21246,
+					"sha256": "b541b26afba9562dc232177661b36022a5b02b6d28e739cd6d9174a0dfd0f494"
+				}
+			],
+			"recorded_group": "res://audio/authorized/weapon_ballistic_cycle_16s.wav",
+			"recorded_group_start": 0.58,
+			"recorded_group_end": 16.58,
+			"recorded_group_processing": "direct PCM16 source slice; no segmentation or pitch processing",
+			"source_event_ranges": [
+				{
+					"start_seconds": 0.58,
+					"end_seconds": 1.06
+				},
+				{
+					"start_seconds": 1.64,
+					"end_seconds": 2.06
+				},
+				{
+					"start_seconds": 2.58,
+					"end_seconds": 3.06
+				},
+				{
+					"start_seconds": 3.58,
+					"end_seconds": 4.06
+				},
+				{
+					"start_seconds": 4.58,
+					"end_seconds": 5.06
+				},
+				{
+					"start_seconds": 5.58,
+					"end_seconds": 6.06
+				},
+				{
+					"start_seconds": 6.58,
+					"end_seconds": 7.06
+				},
+				{
+					"start_seconds": 7.58,
+					"end_seconds": 8.06
+				}
+			],
+			"base_weapon_id": "recorded_ballistic",
+			"quality": 2,
+			"quality_name": "珍贵"
+		},
+		{
+			"attr": "ballistic",
+			"cadence": {
+				"label": "强-弱-强-弱",
+				"pitches": [
+					0,
+					1,
+					2,
+					3
+				],
+				"scales": [
+					0.4,
+					0.1,
+					0.4,
+					0.1
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 1,
+			"family": "pulse",
+			"id": "recorded_crude",
+			"name": "裂响火弹",
+			"recorded_audio": true,
+			"recorded_source": "weapon_crude_fire@0.00-6.00s continuous three-cycle group",
+			"recorded_group": "res://audio/authorized/weapon_crude_fire_group_6s.wav",
+			"recorded_group_start": 0.0,
+			"recorded_group_end": 6.0,
+			"reference_layer": "crude_shot",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 11986,
+					"path": "res://audio/arsenal/notes/rec_crude_0.wav",
+					"pitch": 0,
+					"sha256": "072eb75c44aec990c039d2ff7a40a4fa3dbe68fcfa17df1d649c82d435561a40"
+				},
+				{
+					"bytes": 30508,
+					"path": "res://audio/arsenal/notes/rec_crude_1.wav",
+					"pitch": 1,
+					"sha256": "bafda0430b9131b81f85d42dc476c063d0c8b3b8cf290a6ec42e82b63802e8ba"
+				},
+				{
+					"bytes": 11986,
+					"path": "res://audio/arsenal/notes/rec_crude_2.wav",
+					"pitch": 2,
+					"sha256": "04dd0eddfad44aca71def88a2fc06f455206c480019c39d4b6ec370b5f26e0ad"
+				},
+				{
+					"bytes": 30508,
+					"path": "res://audio/arsenal/notes/rec_crude_3.wav",
+					"pitch": 3,
+					"sha256": "102872c288306003ac701f2a15b5a11b1e78e17d61b3925d52408033348339d6"
+				},
+				{
+					"bytes": 11986,
+					"path": "res://audio/arsenal/notes/rec_crude_4.wav",
+					"pitch": 4,
+					"sha256": "0cb13307b52f291e86e00a29097d79be2175dce477867134eeadc2fbd97e7763"
+				},
+				{
+					"bytes": 30948,
+					"path": "res://audio/arsenal/notes/rec_crude_5.wav",
+					"pitch": 5,
+					"sha256": "0e9e37b9ed83c61dfe1da1cee1996c0f7630011b48c81a90724710dfe67e18e9"
+				},
+				{
+					"bytes": 12426,
+					"path": "res://audio/arsenal/notes/rec_crude_6.wav",
+					"pitch": 6,
+					"sha256": "1e5aa61b791dc775f350b6a14ada0bd3c7aeacd7672d43edddb8a209fe50d19c"
+				},
+				{
+					"bytes": 30508,
+					"path": "res://audio/arsenal/notes/rec_crude_7.wav",
+					"pitch": 7,
+					"sha256": "53b81d1a4843cabebbb1f39feb3c2043d6447077cf78eac7a31ce6a414a29d28"
+				}
+			],
+			"voice": "rec_crude",
+			"width": 2,
+			"source_event_ranges": [
+				{
+					"start_seconds": 0.05,
+					"end_seconds": 0.32
+				},
+				{
+					"start_seconds": 1.05,
+					"end_seconds": 1.74
+				},
+				{
+					"start_seconds": 2.05,
+					"end_seconds": 2.32
+				},
+				{
+					"start_seconds": 3.05,
+					"end_seconds": 3.74
+				},
+				{
+					"start_seconds": 4.05,
+					"end_seconds": 4.32
+				},
+				{
+					"start_seconds": 5.04,
+					"end_seconds": 5.74
+				},
+				{
+					"start_seconds": 6.04,
+					"end_seconds": 6.32
+				},
+				{
+					"start_seconds": 7.05,
+					"end_seconds": 7.74
+				}
+			],
+			"recorded_group_processing": "direct PCM16 source slice; no segmentation or pitch processing"
+		},
+		{
+			"attr": "ballistic",
+			"cadence": {
+				"label": "强-弱-强-弱",
+				"pitches": [
+					0,
+					1,
+					2,
+					3
+				],
+				"scales": [
+					0.4,
+					0.1,
+					0.4,
+					0.1
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 1,
+			"family": "pulse",
+			"id": "recorded_crude_rare",
+			"name": "裂响火弹",
+			"recorded_audio": true,
+			"recorded_source": "weapon_crude_fire@0.00-6.00s continuous three-cycle group",
+			"recorded_group": "res://audio/authorized/weapon_crude_fire_group_6s.wav",
+			"recorded_group_start": 0.0,
+			"recorded_group_end": 6.0,
+			"reference_layer": "crude_shot",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 11986,
+					"path": "res://audio/arsenal/notes/rec_crude_0.wav",
+					"pitch": 0,
+					"sha256": "072eb75c44aec990c039d2ff7a40a4fa3dbe68fcfa17df1d649c82d435561a40"
+				},
+				{
+					"bytes": 30508,
+					"path": "res://audio/arsenal/notes/rec_crude_1.wav",
+					"pitch": 1,
+					"sha256": "bafda0430b9131b81f85d42dc476c063d0c8b3b8cf290a6ec42e82b63802e8ba"
+				},
+				{
+					"bytes": 11986,
+					"path": "res://audio/arsenal/notes/rec_crude_2.wav",
+					"pitch": 2,
+					"sha256": "04dd0eddfad44aca71def88a2fc06f455206c480019c39d4b6ec370b5f26e0ad"
+				},
+				{
+					"bytes": 30508,
+					"path": "res://audio/arsenal/notes/rec_crude_3.wav",
+					"pitch": 3,
+					"sha256": "102872c288306003ac701f2a15b5a11b1e78e17d61b3925d52408033348339d6"
+				},
+				{
+					"bytes": 11986,
+					"path": "res://audio/arsenal/notes/rec_crude_4.wav",
+					"pitch": 4,
+					"sha256": "0cb13307b52f291e86e00a29097d79be2175dce477867134eeadc2fbd97e7763"
+				},
+				{
+					"bytes": 30948,
+					"path": "res://audio/arsenal/notes/rec_crude_5.wav",
+					"pitch": 5,
+					"sha256": "0e9e37b9ed83c61dfe1da1cee1996c0f7630011b48c81a90724710dfe67e18e9"
+				},
+				{
+					"bytes": 12426,
+					"path": "res://audio/arsenal/notes/rec_crude_6.wav",
+					"pitch": 6,
+					"sha256": "1e5aa61b791dc775f350b6a14ada0bd3c7aeacd7672d43edddb8a209fe50d19c"
+				},
+				{
+					"bytes": 30508,
+					"path": "res://audio/arsenal/notes/rec_crude_7.wav",
+					"pitch": 7,
+					"sha256": "53b81d1a4843cabebbb1f39feb3c2043d6447077cf78eac7a31ce6a414a29d28"
+				}
+			],
+			"voice": "rec_crude",
+			"width": 2,
+			"source_event_ranges": [
+				{
+					"start_seconds": 0.05,
+					"end_seconds": 0.32
+				},
+				{
+					"start_seconds": 1.05,
+					"end_seconds": 1.74
+				},
+				{
+					"start_seconds": 2.05,
+					"end_seconds": 2.32
+				},
+				{
+					"start_seconds": 3.05,
+					"end_seconds": 3.74
+				},
+				{
+					"start_seconds": 4.05,
+					"end_seconds": 4.32
+				},
+				{
+					"start_seconds": 5.04,
+					"end_seconds": 5.74
+				},
+				{
+					"start_seconds": 6.04,
+					"end_seconds": 6.32
+				},
+				{
+					"start_seconds": 7.05,
+					"end_seconds": 7.74
+				}
+			],
+			"recorded_group_processing": "direct PCM16 source slice; no segmentation or pitch processing",
+			"base_weapon_id": "recorded_crude",
+			"quality": 1,
+			"quality_name": "稀有"
+		},
+		{
+			"attr": "ballistic",
+			"cadence": {
+				"label": "强-弱-强-弱",
+				"pitches": [
+					0,
+					1,
+					2,
+					3
+				],
+				"scales": [
+					0.4,
+					0.1,
+					0.4,
+					0.1
+				]
+			},
+			"cadence_total": 1.0,
+			"charge_bars": 1,
+			"family": "pulse",
+			"id": "recorded_crude_legend",
+			"name": "裂响火弹",
+			"recorded_audio": true,
+			"recorded_source": "weapon_crude_fire@0.00-6.00s continuous three-cycle group",
+			"recorded_group": "res://audio/authorized/weapon_crude_fire_group_6s.wav",
+			"recorded_group_start": 0.0,
+			"recorded_group_end": 6.0,
+			"reference_layer": "crude_shot",
+			"sample_count": 8,
+			"samples": [
+				{
+					"bytes": 11986,
+					"path": "res://audio/arsenal/notes/rec_crude_0.wav",
+					"pitch": 0,
+					"sha256": "072eb75c44aec990c039d2ff7a40a4fa3dbe68fcfa17df1d649c82d435561a40"
+				},
+				{
+					"bytes": 30508,
+					"path": "res://audio/arsenal/notes/rec_crude_1.wav",
+					"pitch": 1,
+					"sha256": "bafda0430b9131b81f85d42dc476c063d0c8b3b8cf290a6ec42e82b63802e8ba"
+				},
+				{
+					"bytes": 11986,
+					"path": "res://audio/arsenal/notes/rec_crude_2.wav",
+					"pitch": 2,
+					"sha256": "04dd0eddfad44aca71def88a2fc06f455206c480019c39d4b6ec370b5f26e0ad"
+				},
+				{
+					"bytes": 30508,
+					"path": "res://audio/arsenal/notes/rec_crude_3.wav",
+					"pitch": 3,
+					"sha256": "102872c288306003ac701f2a15b5a11b1e78e17d61b3925d52408033348339d6"
+				},
+				{
+					"bytes": 11986,
+					"path": "res://audio/arsenal/notes/rec_crude_4.wav",
+					"pitch": 4,
+					"sha256": "0cb13307b52f291e86e00a29097d79be2175dce477867134eeadc2fbd97e7763"
+				},
+				{
+					"bytes": 30948,
+					"path": "res://audio/arsenal/notes/rec_crude_5.wav",
+					"pitch": 5,
+					"sha256": "0e9e37b9ed83c61dfe1da1cee1996c0f7630011b48c81a90724710dfe67e18e9"
+				},
+				{
+					"bytes": 12426,
+					"path": "res://audio/arsenal/notes/rec_crude_6.wav",
+					"pitch": 6,
+					"sha256": "1e5aa61b791dc775f350b6a14ada0bd3c7aeacd7672d43edddb8a209fe50d19c"
+				},
+				{
+					"bytes": 30508,
+					"path": "res://audio/arsenal/notes/rec_crude_7.wav",
+					"pitch": 7,
+					"sha256": "53b81d1a4843cabebbb1f39feb3c2043d6447077cf78eac7a31ce6a414a29d28"
+				}
+			],
+			"voice": "rec_crude",
+			"width": 2,
+			"source_event_ranges": [
+				{
+					"start_seconds": 0.05,
+					"end_seconds": 0.32
+				},
+				{
+					"start_seconds": 1.05,
+					"end_seconds": 1.74
+				},
+				{
+					"start_seconds": 2.05,
+					"end_seconds": 2.32
+				},
+				{
+					"start_seconds": 3.05,
+					"end_seconds": 3.74
+				},
+				{
+					"start_seconds": 4.05,
+					"end_seconds": 4.32
+				},
+				{
+					"start_seconds": 5.04,
+					"end_seconds": 5.74
+				},
+				{
+					"start_seconds": 6.04,
+					"end_seconds": 6.32
+				},
+				{
+					"start_seconds": 7.05,
+					"end_seconds": 7.74
+				}
+			],
+			"recorded_group_processing": "direct PCM16 source slice; no segmentation or pitch processing",
+			"base_weapon_id": "recorded_crude",
+			"quality": 2,
+			"quality_name": "珍贵"
+		}
+	]
+}

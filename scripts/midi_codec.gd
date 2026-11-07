@@ -152,7 +152,10 @@ static func read_bytes(bytes: PackedByteArray) -> Dictionary:
 					group_by_channel[group_key]=groups.size()
 					var weapon=ROLES.WEAPONS[role] if ROLES.is_drum(role) else _weapon(int(programs.get(channel,0)))
 					var custom_weapon=DATA.item(str(custom.get("weapon","")))
-					if not custom_weapon.is_empty() and str(custom_weapon.category)=="weapon": weapon=str(custom_weapon.id)
+					if not custom_weapon.is_empty() and str(custom_weapon.category)=="weapon" and DATA.is_weapon_audio_ready(str(custom_weapon.id)): weapon=str(custom_weapon.id)
+					if not DATA.is_weapon_audio_ready(str(weapon)):
+						var mapped=DATA.remap_weapon(str(weapon))
+						weapon=mapped if not mapped.is_empty() else "pulse"
 					groups.append({"name":(track_name if not track_name.is_empty() else "MIDI声部 %d"%(groups.size()+1))+(" · "+str(ROLES.NAMES[role]) if channel==9 else ""),"weapon":weapon,"role":role,"notes":[],"volume":clampf(float(custom.get("volume",.8)),0.,1.) if custom.get("volume",.8) is float or custom.get("volume",.8) is int else .8,"pan":clampf(float(custom.get("pan",0.)),-1.,1.) if custom.get("pan",0.) is float or custom.get("pan",0.) is int else 0.,"mute":bool(custom.get("mute",false)),"solo":bool(custom.get("solo",false))})
 				started_notes+=1
 				if started_notes>MAX_NOTES: return _failure("旋律音符超过8192个，请先精简MIDI声部。")
@@ -213,7 +216,7 @@ static func _meta(delta: int,type: int,data: PackedByteArray) -> PackedByteArray
 static func write_bytes(score: Dictionary) -> Dictionary:
 	if not score.has("tracks") or not score.has("bpm") or float(score.bpm)<=0.: return _failure("乐谱字段损坏。")
 	var tempo=roundi(60000000./float(score.bpm)); var tempo_track=PackedByteArray()
-	tempo_track.append_array(_meta(0,0x03,str(score.get("title","BeatDrift")).to_utf8_buffer()))
+	tempo_track.append_array(_meta(0,0x03,str(score.get("title","Groove Flight")).to_utf8_buffer()))
 	tempo_track.append_array(_meta(0,0x51,PackedByteArray([(tempo>>16)&255,(tempo>>8)&255,tempo&255])))
 	tempo_track.append_array(_meta(0,0x58,PackedByteArray([4,2,24,8])))
 	tempo_track.append_array(_meta(int(score.get("bars",1))*4*PPQN,0x2f,PackedByteArray()))
@@ -247,7 +250,7 @@ static func atomic_write(path: String,bytes: PackedByteArray) -> Dictionary:
 	if path.strip_edges().is_empty() or path.get_file().is_empty(): return _failure("保存路径无效。")
 	var target=ProjectSettings.globalize_path(path)
 	if not target.is_absolute_path(): target=ProjectSettings.globalize_path("res://"+path)
-	var temporary=target+".beatdrift-%d.tmp"%Time.get_ticks_usec()
+	var temporary=target+".grooveflight-%d.tmp"%Time.get_ticks_usec()
 	# The temporary is in the same directory, so a successful rename replaces
 	# the old file in one filesystem operation. Failure never truncates it.
 	var file=FileAccess.open(temporary,FileAccess.WRITE)

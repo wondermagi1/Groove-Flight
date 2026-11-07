@@ -6,7 +6,31 @@ const FAMILY_NAMES=["机炮","霰弹","光束","导弹","环炮","电弧","轨�
 const COLORS=[Color("63e7df"),Color("ffc16b"),Color("ada2ff"),Color("ff86ab"),Color("91edbe"),Color("7fbcff"),Color("d3e7ff"),Color("cab2ff"),Color("80dfed"),Color("e0bb87"),Color("ff9672"),Color("b1dddb")]
 const ATTRS=["ballistic","ballistic","energy","power","energy","energy","ballistic","ballistic","support","power","power","support"]
 const RARITY_NAMES=["普通","稀有","史诗","传奇"]
+const QUALITY_NAMES=["普通","稀有","珍贵"]
+const QUALITY_COLORS=[Color("a7a7a7"),Color("59d96f"),Color("ef4ddd")]
+const DEFAULT_RECORDED_WEAPON_IDS=["recorded_crude","recorded_ballistic"]
+const RECORDED_WEAPONS_ENABLED=false
+const VISUALS=preload("res://scripts/weapon_visuals.gd")
+const ACTIVE_WEAPON_IDS=["pulse","scatter","beam","missile","nova","chain","rail","pulse_needle","scatter_prism","beam_split","rail_horizon","recorded_heavy","gilded_helix","weave_cross","crown_orbit"]
+const INSTRUMENTS={"pulse":"钢琴","scatter":"军鼓","beam":"小提琴","missile":"底鼓","nova":"中音萨克斯","chain":"颤音琴＋电子泛音","rail":"大提琴","pulse_needle":"钢弦吉他","scatter_prism":"低音通鼓","beam_split":"合成弦乐＋电子光芯","rail_horizon":"低音钢琴","recorded_heavy":"定音鼓"}
+const INSTRUMENT_ROOTS={"chain":72,"rail":48,"rail_horizon":36,"recorded_heavy":43}
+const PERCUSSION_IDS=["scatter","missile","scatter_prism"]
+const NEW_INSTRUMENTS={"gilded_helix":"长笛","weave_cross":"钢片琴","crown_orbit":"竖琴"}
+const LEGACY_WEAPON_ALIASES={"recorded_light":"pulse","recorded_medium":"scatter","recorded_heavy_rare":"recorded_heavy","recorded_heavy_legend":"recorded_heavy"}
+const RECORDED_QUALITY_PROFILES=[
+	{"suffix":"","rarity":0,"damage":1.,"count":0,"speed":1.,"pierce":0,"cost":1.,"attribute_scale":.5},
+	{"suffix":"_rare","rarity":1,"damage":1.65,"count":3,"speed":1.12,"pierce":1,"cost":1.75,"attribute_scale":.8},
+	{"suffix":"_legend","rarity":2,"damage":3.,"count":8,"speed":1.25,"pierce":3,"cost":2.8,"attribute_scale":1.5}
+]
 const CATEGORY_NAMES={"weapon":"武器","mod":"武器改件","rhythm":"节律组件","defense":"防御与生存","core":"核心"}
+const AUDIO_READY_WEAPON_IDS={
+	"recorded_crude":true,
+	"recorded_crude_rare":true,
+	"recorded_crude_legend":true,
+	"recorded_ballistic":true,
+	"recorded_ballistic_rare":true,
+	"recorded_ballistic_legend":true
+}
 # Scale-degree motifs are intentionally authored per weapon. Values address the
 # eight samples of its own instrument; the slot transposes the motif's start.
 const MELODIES=[
@@ -20,7 +44,8 @@ const MELODIES=[
 	[0,7,2,5,1,6,3,4], [0,2,0,3,0,5,0,7], [0,3,5,7,6,4,2,1],
 	[0,5,2,7,4,1,6,3], [0,2,5,0,3,6,1,4], [0,4,0,5,1,6,1,7],
 	[0,1,3,6,0,2,4,7], [0,0,2,0,0,5,0,7], [0,2,3,5,4,6,5,7],
-	[0,7,1,6,2,5,3,4], [0,3,1,4,2,5,3,6]
+	[0,7,1,6,2,5,3,4], [0,3,1,4,2,5,3,6],
+	[0,1,3,5,2,4,6,7], [0,0,1,3,4,3,6,7], [0,2,5,3,6,1,4,7], [0,0,4,2,6,4,7,3]
 ]
 static var _records: Array[Dictionary]=[]
 static var _lookup: Dictionary={}
@@ -36,10 +61,50 @@ static func weapons() -> Array[Dictionary]:
 	for data in rows():
 		if data.category=="weapon": result.append(data)
 	return result
+static func is_weapon_audio_ready(id: String) -> bool:
+	var row=item(id)
+	if row.is_empty() or str(row.get("category",""))!="weapon": return false
+	if bool(row.get("recorded_audio",false)): return RECORDED_WEAPONS_ENABLED and id in ACTIVE_WEAPON_IDS
+	return id in ACTIVE_WEAPON_IDS
+static func remap_weapon(id: String) -> String:
+	if is_weapon_audio_ready(id): return id
+	if LEGACY_WEAPON_ALIASES.has(id): return str(LEGACY_WEAPON_ALIASES[id])
+	var row=item(id)
+	if row.is_empty() or str(row.get("category",""))!="weapon": return ""
+	return {"pulse":"pulse","scatter":"scatter","beam":"beam","missile":"missile","nova":"nova","chain":"chain","rail":"rail","boomerang":"pulse_needle","orbit":"nova","mine":"missile","flame":"scatter","drone":"missile"}.get(str(row.family),"pulse")
+static func is_item_available(id: String) -> bool:
+	var row=item(id)
+	if row.is_empty(): return false
+	if str(row.category)=="weapon": return is_weapon_audio_ready(id)
+	if str(row.category)!="mod": return true
+	var available: Array=[]
+	for weapon_id in ACTIVE_WEAPON_IDS:
+		var family=str(item(weapon_id).get("family",""))
+		if family not in available: available.append(family)
+	for rule in row.get("rules",[]):
+		if str(rule.get("target",""))=="" or str(rule.get("target","")) in available: return true
+	return false
+static func quality_name(data: Dictionary) -> String:
+	var quality=int(data.get("quality",-1))
+	return QUALITY_NAMES[clampi(quality,0,QUALITY_NAMES.size()-1)] if quality>=0 else RARITY_NAMES[clampi(int(data.get("rarity",0)),0,3)]
+static func quality_color(data: Dictionary) -> Color:
+	var quality=int(data.get("quality",-1))
+	return QUALITY_COLORS[quality] if quality>=0 and quality<QUALITY_COLORS.size() else Color(data.get("color",Color("a4b7cf")))
+static func playable_weapons() -> Array[Dictionary]:
+	var result: Array[Dictionary]=[]
+	for data in weapons():
+		if is_weapon_audio_ready(str(data.id)): result.append(data)
+	return result
+static func recorded_weapon_ids_for_quality(quality: int) -> Array[String]:
+	var suffix=["","_rare","_legend"][clampi(quality,0,2)]
+	var result: Array[String]=[]
+	for base in DEFAULT_RECORDED_WEAPON_IDS: result.append(str(base)+str(suffix))
+	return result
 static func family_index(family: String) -> int: return maxi(0,FAMILIES.find(family))
 static func color(id: String) -> Color:
 	var data=item(id)
-	return data.get("color",Color("a4b7cf"))
+	if data.is_empty(): return Color("a4b7cf")
+	return quality_color(data)
 static func _rule(type: String,key: String,value: float,scope: String="all",target: String="",condition: String="always") -> Dictionary:
 	var r={"type":type,"key":key,"value":value,"scope":scope,"condition":condition}
 	if not target.is_empty(): r.target=target
@@ -54,7 +119,7 @@ static func _support(id: String,name: String,category: String,rarity: int,cost: 
 
 static func _build() -> void:
 	_build_weapons(); _build_mods(); _build_rhythm(); _build_defense(); _build_cores(); _upgrade_trajectories()
-	assert(_records.size()==240,"Arsenal must contain exactly 240 independent items")
+	assert(_records.size()==250,"Archived catalogue plus three spectacle weapons")
 
 static func _build_weapons() -> void:
 	# id, name, family, damage, count, speed, life, spread(rad), pierce,
@@ -74,7 +139,7 @@ static func _build_weapons() -> void:
 		["drone","蜂群侦击机","drone",10.,2,310.,4.0,.45,0,0.,2.3,0,2,2,1,25,"square",.16,.75,1,9.],
 		["pulse_ribbon","白矢连射器","pulse",5.5,6,1040.,1.9,.13,1,0.,0.,0,1,2,1,24,"square",.075,.55,1,-11.],
 		["pulse_needle","星针狙击器","pulse",27.,1,1500.,2.5,.01,4,0.,0.,0,1,2,1,24,"triangle",.12,1.9,2,1.],
-		["scatter_prism","七彩折光匣","scatter",11.,7,800.,1.4,1.10,1,0.,0.,0,2,2,2,32,"noise",.19,1.5,2,-4.],
+		["scatter_prism","七彩折光匣","scatter",77./12.,12,800.,1.4,.24,1,0.,0.,0,2,2,2,32,"noise",.19,1.5,2,-4.],
 		["scatter_heavy","碎陨重霰炮","scatter",22.,4,490.,1.05,.48,2,35.,0.,0,2,2,2,31,"square",.24,.9,-2,6.],
 		["beam_split","双生棱镜","beam",18.,2,1700.,.35,.26,10,0.,0.,0,1,2,2,32,"sine",.39,3.4,0,-13.],
 		["beam_lance","极昼光矛","beam",160.,1,2500.,.48,.015,28,50.,0.,0,8,3,3,48,"sine",.75,4.8,-1,4.],
@@ -91,18 +156,88 @@ static func _build_weapons() -> void:
 		["mine_anchor","深井锚雷","mine",120.,1,65.,7.5,.02,0,260.,0.,0,4,3,3,43,"sine",.81,2.7,-2,10.],
 		["flame_cone","日珥焰冠","flame",7.,10,430.,1.25,1.2,3,0.,0.,0,2,2,2,30,"noise",.41,1.3,0,16.],
 		["flame_spark","余烬穿流","flame",13.,3,950.,1.8,.24,5,35.,0.,0,1,2,2,31,"saw",.14,.45,2,-16.],
-		["drone_sentry","长夜哨兵","drone",24.,3,390.,6.0,.75,1,35.,3.5,0,4,3,2,36,"square",.47,1.65,-1,13.]
+		["drone_sentry","长夜哨兵","drone",24.,3,390.,6.0,.75,1,35.,3.5,0,4,3,2,36,"square",.47,1.65,-1,13.],
+		["recorded_crude","裂响火弹","pulse",15.,2,790.,1.7,.14,1,0.,0.,0,1,2,1,31,"noise",.17,.42,0,-4.],
+		["recorded_ballistic","实弹连奏炮","pulse",11.,3,900.,1.55,.12,1,0.,0.,0,1,2,1,34,"noise",.12,.38,0,0.],
+		["recorded_heavy","终压攻城铳","rail",88.,1,1900.,1.65,.018,14,90.,0.,0,1,3,3,52,"triangle",.42,2.5,-1,5.],
+		["gilded_helix","鎏金螺旋阵","nova",6.5,24,570.,2.0,TAU,1,0.,0.,0,2,3,2,42,"triangle",.22,.7,1,0.],
+		["weave_cross","虹织十字炮","pulse",4.8,32,740.,1.75,0.,1,0.,0.,0,2,3,3,54,"sine",.24,1.4,1,0.],
+		["crown_orbit","星冕回旋阵","orbit",8.,12,245.,3.0,TAU,3,0.,0.,0,2,3,2,44,"sine",.35,.4,1,0.]
 	]
+	var recorded_voices={"recorded_crude":"rec_crude","recorded_ballistic":"rec_ballistic"}
+	var recorded_sources={
+		"recorded_crude":"weapon_crude_fire@0.00-6.00s direct PCM16 group (three strong-weak cycles)",
+		"recorded_ballistic":"weapon_ballistic_volume_ramp@0.58-16.58s direct sixteen-second group"
+	}
 	for weapon_index in range(specs.size()):
 		var s: Array=specs[weapon_index]
 		var fi=family_index(s[2])
 		var data={"id":s[0],"name":s[1],"category":"weapon","family":s[2],"damage":s[3],"count":s[4],"speed":s[5],"life":s[6],"spread":s[7],"pierce":s[8],"explosion":s[9],"homing":s[10],"bounces":s[11],"charge":s[12],"width":s[13],"rarity":s[14],"cost":s[15],"voice":s[0],"color":COLORS[fi],"attr":ATTRS[fi],"tags":[FAMILY_NAMES[fi],"每%d小节"%s[12]],"rules":[],"timbre":{"wave":s[16],"decay":s[17],"fm":s[18],"octave":s[19],"detune":s[20]}}
-		data.melody=MELODIES[weapon_index].duplicate()
+		data.melody=MELODIES[weapon_index%MELODIES.size()].duplicate()
+		if recorded_voices.has(str(data.id)):
+			data.voice=str(recorded_voices[str(data.id)])
+			data.recorded_audio=true
+			data.audio_ready=true
+			data.base_weapon_id=str(data.id)
+			data.recorded_source=str(recorded_sources.get(str(data.id),"authorized Groove Core demo recording"))
+			data.melody={
+				"recorded_crude":[0,1,2,3,4,5,6,7],
+				"recorded_ballistic":[1,2,3,4,5,6,7,0]
+			}.get(str(data.id),[0,1,2,3,4,5,6,7])
+			data.tags.append("录音实装")
+			if str(data.id)=="recorded_crude": data.cadence_key="strike_pair"
+			var base=data.duplicate(true)
+			for quality in range(RECORDED_QUALITY_PROFILES.size()):
+				var profile: Dictionary=RECORDED_QUALITY_PROFILES[quality]
+				var tier=base.duplicate(true)
+				tier.id=str(base.id)+str(profile.suffix)
+				tier.base_weapon_id=str(base.id)
+				tier.quality=quality
+				tier.rarity=int(profile.rarity)
+				tier.damage=float(base.damage)*float(profile.damage)
+				tier.count=int(base.count)+int(profile.count)
+				tier.speed=float(base.speed)*float(profile.speed)
+				tier.pierce=int(base.pierce)+int(profile.pierce)
+				tier.cost=maxi(1,roundi(float(base.cost)*float(profile.cost)))
+				tier.attribute_count_scale=float(profile.attribute_scale)
+				tier.quality_name=QUALITY_NAMES[quality]
+				tier.quality_color=QUALITY_COLORS[quality]
+				tier.tags=base.tags.duplicate()
+				tier.tags.append("品质"+QUALITY_NAMES[quality])
+				tier.detail=weapon_description(tier)
+				_add(tier)
+			continue
+		else:
+			data.audio_ready=true
+			data.audio_status="original_synth"
+			data.tags.append("原创电子音色")
+		if str(data.id)=="scatter_prism":
+			data.emission="prism_cross"
+			data.tags.append("四向平行彩色光束")
+		data.active=str(data.id) in ACTIVE_WEAPON_IDS
+		if data.active:
+			data.voice="inst_"+str(data.id)
+			data.instrument_samples=true
+			data.instrument=str(NEW_INSTRUMENTS.get(str(data.id),INSTRUMENTS.get(str(data.id),"乐器")))
+			data.sample_root=72 if NEW_INSTRUMENTS.has(str(data.id)) else int(INSTRUMENT_ROOTS.get(str(data.id),60))
+			data.percussion=str(data.id) in PERCUSSION_IDS
+			data.audio_status="sampled_instrument"
+			if str(data.family)!="orbit": data.life*=1.3
+			data.visual=VISUALS.profile(str(data.id)).duplicate()
+			if data.visual.has("color"): data.color=data.visual.color
+			if NEW_INSTRUMENTS.has(str(data.id)): data.tags.append("舰队弹幕")
 		data.detail=weapon_description(data)
 		_add(data)
 
 static func weapon_description(data: Dictionary) -> String:
 	var parts: Array[String]=["每%d小节在所在拍触发"%int(data.charge),"单发伤害%s × %d"%[_number(data.damage),int(data.count)],"弹速%s / 寿命%s秒"%[_number(data.speed),_number(data.life)]]
+	if str(data.get("emission",""))=="prism_cross": parts.append("机头前方朝四个斜角同时发射彩色光束；基础每方向3道并排平行光束")
+	if str(data.id)=="gilded_helix": parts.append("金色羽状弹向四周展开并弯转，形成双层螺旋弹幕")
+	elif str(data.id)=="weave_cross": parts.append("四个方向同时射出彩色编织弹流，弹道左右交错")
+	elif str(data.id)=="crown_orbit": parts.append("十二枚星冕弹环绕战机形成三层防线，随战机移动")
+	if data.has("quality"):
+		parts.append("品质%s"%str(data.get("quality_name",QUALITY_NAMES[clampi(int(data.quality),0,2)])))
+		parts.append("发射 %d + %s属性 × %.1f 颗弹丸"%[int(data.count),{"ballistic":"实弹","energy":"能量","power":"动力","support":"支援"}.get(str(data.attr),str(data.attr)),float(data.get("attribute_count_scale",0.))])
 	if data.pierce>0: parts.append("穿透%d次"%int(data.pierce))
 	if data.explosion>0: parts.append("爆炸半径%s像素"%_number(data.explosion))
 	if data.homing>0: parts.append("追踪转向强度%s"%_number(data.homing))
@@ -110,7 +245,10 @@ static func weapon_description(data: Dictionary) -> String:
 	parts.append("占%d格；%s独立音色"%[int(data.width),str(data.voice)])
 	var motif: Array[String]=[]
 	for degree in data.get("melody",[]): motif.append(str(int(degree)+1))
-	parts.append("八音动机 "+"-".join(motif))
+	if bool(data.get("instrument_samples",false)): parts.append("固定乐器音色："+str(data.get("instrument","乐器"))+"；白点到格发声一次")
+	else: parts.append("历史八音素材 "+"-".join(motif))
+	if bool(data.get("recorded_audio",false)): parts.append("直接播放已授权连续原声组；四拍只分配伤害与触发")
+	elif not bool(data.get("audio_ready",false)): parts.append("电子占位音色暂时停用，等待录制音源替换")
 	return "；".join(parts)+"。"
 
 static func _build_mods() -> void:

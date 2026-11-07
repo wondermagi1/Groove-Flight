@@ -1,59 +1,55 @@
 {
+	"after5s_max_error": 0.0410000832313244,
 	"arrangements": [
 		{
-			"dust": 71,
+			"dust": 316,
 			"modules": [
 				{
-					"kind": "pulse",
+					"kind": "recorded_crude_legend",
 					"level": 1,
 					"uid": 1
 				},
 				{
-					"kind": "scatter",
+					"kind": "recorded_light_legend",
 					"level": 1,
 					"uid": 2
 				},
 				{
-					"kind": "beam",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 3
 				},
 				{
-					"kind": "pulse",
+					"kind": "recorded_heavy_legend",
 					"level": 1,
 					"uid": 4
 				},
 				{
-					"kind": "nova",
+					"kind": "recorded_medium_rare",
 					"level": 1,
 					"uid": 5
 				},
 				{
-					"kind": "boomerang",
+					"kind": "mod_scatter_1",
 					"level": 1,
 					"uid": 6
-				},
-				{
-					"kind": "r_copper_beat",
-					"level": 1,
-					"uid": 7
 				}
 			],
 			"slots": [
 				1,
-				6,
+				1,
 				2,
-				7,
-				-1,
+				2,
+				5,
+				5,
+				6,
 				-1,
 				3,
 				3,
 				4,
+				4,
+				4,
 				-1,
-				-1,
-				-1,
-				5,
-				5,
 				-1,
 				-1,
 				-1,
@@ -68,70 +64,65 @@
 			"wave": 1
 		},
 		{
-			"dust": 200,
+			"dust": 781,
 			"modules": [
 				{
-					"kind": "pulse",
+					"kind": "recorded_crude_legend",
 					"level": 1,
 					"uid": 1
 				},
 				{
-					"kind": "scatter",
+					"kind": "recorded_light_legend",
 					"level": 1,
 					"uid": 2
 				},
 				{
-					"kind": "beam",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 3
 				},
 				{
-					"kind": "pulse",
+					"kind": "recorded_heavy_legend",
 					"level": 1,
 					"uid": 4
 				},
 				{
-					"kind": "nova",
+					"kind": "recorded_medium_rare",
 					"level": 1,
 					"uid": 5
 				},
 				{
-					"kind": "boomerang",
+					"kind": "mod_scatter_1",
 					"level": 1,
 					"uid": 6
 				},
 				{
-					"kind": "r_copper_beat",
+					"kind": "recorded_light",
 					"level": 1,
 					"uid": 7
 				},
 				{
-					"kind": "mod_scatter_1",
+					"kind": "r_coda",
 					"level": 1,
 					"uid": 8
-				},
-				{
-					"kind": "r_bass_anchor",
-					"level": 1,
-					"uid": 9
 				}
 			],
 			"slots": [
 				1,
-				6,
+				1,
 				2,
-				7,
+				2,
+				5,
+				5,
+				6,
 				8,
-				9,
 				3,
 				3,
 				4,
-				-1,
-				-1,
-				-1,
-				5,
-				5,
-				-1,
+				4,
+				4,
+				7,
+				7,
 				-1,
 				-1,
 				-1,
@@ -145,81 +136,76 @@
 			"wave": 2
 		},
 		{
-			"dust": 378,
+			"dust": 1816,
 			"modules": [
 				{
-					"kind": "pulse",
+					"kind": "recorded_crude_legend",
 					"level": 1,
 					"uid": 1
 				},
 				{
-					"kind": "scatter",
+					"kind": "recorded_light_legend",
 					"level": 1,
 					"uid": 2
 				},
 				{
-					"kind": "beam",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 3
 				},
 				{
-					"kind": "pulse",
+					"kind": "recorded_heavy_legend",
 					"level": 1,
 					"uid": 4
 				},
 				{
-					"kind": "nova",
+					"kind": "recorded_medium_rare",
 					"level": 1,
 					"uid": 5
 				},
 				{
-					"kind": "boomerang",
+					"kind": "mod_scatter_1",
 					"level": 1,
 					"uid": 6
 				},
 				{
-					"kind": "r_copper_beat",
+					"kind": "recorded_light",
 					"level": 1,
 					"uid": 7
 				},
 				{
-					"kind": "mod_scatter_1",
+					"kind": "r_coda",
 					"level": 1,
 					"uid": 8
 				},
 				{
-					"kind": "r_bass_anchor",
+					"kind": "r_arc_bridge",
 					"level": 1,
 					"uid": 9
 				},
 				{
-					"kind": "mod_beam_2",
+					"kind": "recorded_heavy",
 					"level": 1,
 					"uid": 10
-				},
-				{
-					"kind": "r_opposites",
-					"level": 1,
-					"uid": 11
 				}
 			],
 			"slots": [
 				1,
-				6,
+				1,
 				2,
-				7,
+				2,
+				5,
+				5,
+				6,
 				8,
-				9,
 				3,
 				3,
 				4,
-				10,
-				11,
-				-1,
-				5,
-				5,
-				-1,
-				-1,
+				4,
+				4,
+				7,
+				7,
+				9,
 				-1,
 				-1,
 				-1,
@@ -232,91 +218,86 @@
 			"wave": 3
 		},
 		{
-			"dust": 649,
+			"dust": 3009,
 			"modules": [
 				{
-					"kind": "pulse",
+					"kind": "recorded_crude_legend",
 					"level": 1,
 					"uid": 1
 				},
 				{
-					"kind": "scatter",
+					"kind": "recorded_light_legend",
 					"level": 1,
 					"uid": 2
 				},
 				{
-					"kind": "beam",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 3
 				},
 				{
-					"kind": "pulse",
+					"kind": "recorded_heavy_legend",
 					"level": 1,
 					"uid": 4
 				},
 				{
-					"kind": "nova",
+					"kind": "recorded_medium_rare",
 					"level": 1,
 					"uid": 5
 				},
 				{
-					"kind": "boomerang",
+					"kind": "mod_scatter_1",
 					"level": 1,
 					"uid": 6
 				},
 				{
-					"kind": "r_copper_beat",
+					"kind": "recorded_light",
 					"level": 1,
 					"uid": 7
 				},
 				{
-					"kind": "mod_scatter_1",
+					"kind": "r_coda",
 					"level": 1,
 					"uid": 8
 				},
 				{
-					"kind": "r_bass_anchor",
+					"kind": "r_arc_bridge",
 					"level": 1,
 					"uid": 9
 				},
 				{
-					"kind": "mod_beam_2",
+					"kind": "recorded_heavy",
 					"level": 1,
 					"uid": 10
 				},
 				{
-					"kind": "r_opposites",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 11
 				},
 				{
-					"kind": "r_cross",
+					"kind": "r_satellite_clock",
 					"level": 1,
 					"uid": 12
-				},
-				{
-					"kind": "r_rest",
-					"level": 1,
-					"uid": 13
 				}
 			],
 			"slots": [
 				1,
-				6,
+				1,
 				2,
-				7,
+				2,
+				5,
+				5,
+				6,
 				8,
-				9,
 				3,
 				3,
 				4,
-				10,
-				11,
-				13,
-				5,
-				5,
-				12,
-				12,
+				4,
+				4,
+				7,
+				7,
+				9,
 				-1,
 				-1,
 				-1,
@@ -329,105 +310,100 @@
 			"wave": 4
 		},
 		{
-			"dust": 1026,
+			"dust": 4351,
 			"modules": [
 				{
-					"kind": "pulse",
+					"kind": "recorded_crude_legend",
 					"level": 1,
 					"uid": 1
 				},
 				{
-					"kind": "scatter",
+					"kind": "recorded_light_legend",
 					"level": 1,
 					"uid": 2
 				},
 				{
-					"kind": "beam",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 3
 				},
 				{
-					"kind": "pulse",
+					"kind": "recorded_heavy_legend",
 					"level": 1,
 					"uid": 4
 				},
 				{
-					"kind": "nova",
+					"kind": "recorded_medium_rare",
 					"level": 1,
 					"uid": 5
 				},
 				{
-					"kind": "boomerang",
+					"kind": "mod_scatter_1",
 					"level": 1,
 					"uid": 6
 				},
 				{
-					"kind": "r_copper_beat",
+					"kind": "recorded_light",
 					"level": 1,
 					"uid": 7
 				},
 				{
-					"kind": "mod_scatter_1",
+					"kind": "r_coda",
 					"level": 1,
 					"uid": 8
 				},
 				{
-					"kind": "r_bass_anchor",
+					"kind": "r_arc_bridge",
 					"level": 1,
 					"uid": 9
 				},
 				{
-					"kind": "mod_beam_2",
+					"kind": "recorded_heavy",
 					"level": 1,
 					"uid": 10
 				},
 				{
-					"kind": "r_opposites",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 11
 				},
 				{
-					"kind": "r_cross",
+					"kind": "r_satellite_clock",
 					"level": 1,
 					"uid": 12
 				},
 				{
-					"kind": "r_rest",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 13
 				},
 				{
-					"kind": "boomerang_ricochet",
+					"kind": "recorded_heavy_rare",
 					"level": 1,
 					"uid": 14
-				},
-				{
-					"kind": "r_drone_chorus",
-					"level": 1,
-					"uid": 15
 				}
 			],
 			"slots": [
 				1,
-				6,
+				1,
 				2,
-				7,
+				2,
+				5,
+				5,
+				6,
 				8,
-				9,
 				3,
 				3,
 				4,
-				10,
-				11,
-				13,
-				5,
-				5,
-				12,
-				12,
-				14,
-				14,
-				15,
-				15,
+				4,
+				4,
+				7,
+				7,
+				9,
+				-1,
+				-1,
+				-1,
+				-1,
 				-1,
 				-1,
 				-1,
@@ -436,747 +412,727 @@
 			"wave": 5
 		},
 		{
-			"dust": 1479,
+			"dust": 6220,
 			"modules": [
 				{
-					"kind": "pulse",
+					"kind": "recorded_crude_legend",
 					"level": 1,
 					"uid": 1
 				},
 				{
-					"kind": "scatter",
+					"kind": "recorded_light_legend",
 					"level": 1,
 					"uid": 2
 				},
 				{
-					"kind": "beam",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 3
 				},
 				{
-					"kind": "pulse",
+					"kind": "recorded_heavy_legend",
 					"level": 1,
 					"uid": 4
 				},
 				{
-					"kind": "nova",
+					"kind": "recorded_medium_rare",
 					"level": 1,
 					"uid": 5
 				},
 				{
-					"kind": "boomerang",
+					"kind": "mod_scatter_1",
 					"level": 1,
 					"uid": 6
 				},
 				{
-					"kind": "r_copper_beat",
+					"kind": "recorded_light",
 					"level": 1,
 					"uid": 7
 				},
 				{
-					"kind": "mod_scatter_1",
+					"kind": "r_coda",
 					"level": 1,
 					"uid": 8
 				},
 				{
-					"kind": "r_bass_anchor",
+					"kind": "r_arc_bridge",
 					"level": 1,
 					"uid": 9
 				},
 				{
-					"kind": "mod_beam_2",
+					"kind": "recorded_heavy",
 					"level": 1,
 					"uid": 10
 				},
 				{
-					"kind": "r_opposites",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 11
 				},
 				{
-					"kind": "r_cross",
+					"kind": "r_satellite_clock",
 					"level": 1,
 					"uid": 12
 				},
 				{
-					"kind": "r_rest",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 13
 				},
 				{
-					"kind": "boomerang_ricochet",
+					"kind": "recorded_heavy_rare",
 					"level": 1,
 					"uid": 14
 				},
 				{
-					"kind": "r_drone_chorus",
+					"kind": "recorded_light",
 					"level": 1,
 					"uid": 15
 				},
 				{
-					"kind": "nova_spiral",
+					"kind": "r_coda",
 					"level": 1,
 					"uid": 16
-				},
-				{
-					"kind": "mod_pulse_1",
-					"level": 1,
-					"uid": 17
 				}
 			],
 			"slots": [
 				1,
-				6,
+				1,
 				2,
-				7,
+				2,
+				5,
+				5,
+				6,
 				8,
-				9,
 				3,
 				3,
 				4,
-				10,
-				11,
-				13,
-				5,
-				5,
-				12,
-				12,
-				14,
-				14,
-				15,
-				15,
-				16,
-				16,
-				16,
-				17
+				4,
+				4,
+				7,
+				7,
+				9,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
 			],
 			"wave": 6
 		},
 		{
-			"dust": 2011,
+			"dust": 8259,
 			"modules": [
 				{
-					"kind": "pulse",
+					"kind": "recorded_crude_legend",
 					"level": 1,
 					"uid": 1
 				},
 				{
-					"kind": "scatter",
+					"kind": "recorded_light_legend",
 					"level": 1,
 					"uid": 2
 				},
 				{
-					"kind": "beam",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 3
 				},
 				{
-					"kind": "pulse",
+					"kind": "recorded_heavy_legend",
 					"level": 1,
 					"uid": 4
 				},
 				{
-					"kind": "nova",
+					"kind": "recorded_medium_rare",
 					"level": 1,
 					"uid": 5
 				},
 				{
-					"kind": "boomerang",
+					"kind": "mod_scatter_1",
 					"level": 1,
 					"uid": 6
 				},
 				{
-					"kind": "r_copper_beat",
+					"kind": "recorded_light",
 					"level": 1,
 					"uid": 7
 				},
 				{
-					"kind": "mod_scatter_1",
+					"kind": "r_coda",
 					"level": 1,
 					"uid": 8
 				},
 				{
-					"kind": "r_bass_anchor",
+					"kind": "r_arc_bridge",
 					"level": 1,
 					"uid": 9
 				},
 				{
-					"kind": "mod_beam_2",
+					"kind": "recorded_heavy",
 					"level": 1,
 					"uid": 10
 				},
 				{
-					"kind": "r_opposites",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 11
 				},
 				{
-					"kind": "r_cross",
+					"kind": "r_satellite_clock",
 					"level": 1,
 					"uid": 12
 				},
 				{
-					"kind": "r_rest",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 13
 				},
 				{
-					"kind": "boomerang_ricochet",
+					"kind": "recorded_heavy_rare",
 					"level": 1,
 					"uid": 14
 				},
 				{
-					"kind": "r_drone_chorus",
+					"kind": "recorded_light",
 					"level": 1,
 					"uid": 15
 				},
 				{
-					"kind": "nova_spiral",
+					"kind": "r_coda",
 					"level": 1,
 					"uid": 16
 				},
 				{
-					"kind": "mod_pulse_1",
+					"kind": "recorded_crude",
 					"level": 1,
 					"uid": 17
 				},
 				{
-					"kind": "flame_spark",
+					"kind": "mod_pulse_6",
 					"level": 1,
 					"uid": 18
-				},
-				{
-					"kind": "mod_beam_6",
-					"level": 1,
-					"uid": 19
 				}
 			],
 			"slots": [
 				1,
-				6,
+				1,
 				2,
-				7,
+				2,
+				5,
+				5,
+				6,
 				8,
-				9,
 				3,
 				3,
 				4,
-				10,
-				11,
-				13,
-				5,
-				5,
-				12,
-				12,
-				14,
-				14,
-				15,
-				15,
-				16,
-				16,
-				16,
-				17
+				4,
+				4,
+				7,
+				7,
+				9,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
 			],
 			"wave": 7
 		},
 		{
-			"dust": 2611,
+			"dust": 10597,
 			"modules": [
 				{
-					"kind": "pulse",
+					"kind": "recorded_crude_legend",
 					"level": 1,
 					"uid": 1
 				},
 				{
-					"kind": "scatter",
+					"kind": "recorded_light_legend",
 					"level": 1,
 					"uid": 2
 				},
 				{
-					"kind": "beam",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 3
 				},
 				{
-					"kind": "pulse",
+					"kind": "recorded_heavy_legend",
 					"level": 1,
 					"uid": 4
 				},
 				{
-					"kind": "nova",
+					"kind": "recorded_medium_rare",
 					"level": 1,
 					"uid": 5
 				},
 				{
-					"kind": "boomerang",
+					"kind": "mod_scatter_1",
 					"level": 1,
 					"uid": 6
 				},
 				{
-					"kind": "r_copper_beat",
+					"kind": "recorded_light",
 					"level": 1,
 					"uid": 7
 				},
 				{
-					"kind": "mod_scatter_1",
+					"kind": "r_coda",
 					"level": 1,
 					"uid": 8
 				},
 				{
-					"kind": "r_bass_anchor",
+					"kind": "r_arc_bridge",
 					"level": 1,
 					"uid": 9
 				},
 				{
-					"kind": "mod_beam_2",
+					"kind": "recorded_heavy",
 					"level": 1,
 					"uid": 10
 				},
 				{
-					"kind": "r_opposites",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 11
 				},
 				{
-					"kind": "r_cross",
+					"kind": "r_satellite_clock",
 					"level": 1,
 					"uid": 12
 				},
 				{
-					"kind": "r_rest",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 13
 				},
 				{
-					"kind": "boomerang_ricochet",
+					"kind": "recorded_heavy_rare",
 					"level": 1,
 					"uid": 14
 				},
 				{
-					"kind": "r_drone_chorus",
+					"kind": "recorded_light",
 					"level": 1,
 					"uid": 15
 				},
 				{
-					"kind": "nova_spiral",
+					"kind": "r_coda",
 					"level": 1,
 					"uid": 16
 				},
 				{
-					"kind": "mod_pulse_1",
+					"kind": "recorded_crude",
 					"level": 1,
 					"uid": 17
 				},
 				{
-					"kind": "flame_spark",
+					"kind": "mod_pulse_6",
 					"level": 1,
 					"uid": 18
 				},
 				{
-					"kind": "mod_beam_6",
+					"kind": "recorded_crude_legend",
 					"level": 1,
 					"uid": 19
 				},
 				{
-					"kind": "scatter_prism",
+					"kind": "mod_rail_6",
 					"level": 1,
 					"uid": 20
-				},
-				{
-					"kind": "chain_fork",
-					"level": 1,
-					"uid": 21
 				}
 			],
 			"slots": [
 				1,
-				6,
+				1,
 				2,
-				7,
+				2,
+				5,
+				5,
+				6,
 				8,
-				9,
 				3,
 				3,
 				4,
-				10,
-				11,
-				13,
-				5,
-				5,
-				12,
-				12,
-				14,
-				14,
-				15,
-				15,
-				16,
-				16,
-				16,
-				17
+				4,
+				4,
+				7,
+				7,
+				9,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
 			],
 			"wave": 8
 		},
 		{
-			"dust": 3255,
+			"dust": 13094,
 			"modules": [
 				{
-					"kind": "pulse",
+					"kind": "recorded_crude_legend",
 					"level": 1,
 					"uid": 1
 				},
 				{
-					"kind": "scatter",
+					"kind": "recorded_light_legend",
 					"level": 1,
 					"uid": 2
 				},
 				{
-					"kind": "beam",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 3
 				},
 				{
-					"kind": "pulse",
+					"kind": "recorded_heavy_legend",
 					"level": 1,
 					"uid": 4
 				},
 				{
-					"kind": "nova",
+					"kind": "recorded_medium_rare",
 					"level": 1,
 					"uid": 5
 				},
 				{
-					"kind": "boomerang",
+					"kind": "mod_scatter_1",
 					"level": 1,
 					"uid": 6
 				},
 				{
-					"kind": "r_copper_beat",
+					"kind": "recorded_light",
 					"level": 1,
 					"uid": 7
 				},
 				{
-					"kind": "mod_scatter_1",
+					"kind": "r_coda",
 					"level": 1,
 					"uid": 8
 				},
 				{
-					"kind": "r_bass_anchor",
+					"kind": "r_arc_bridge",
 					"level": 1,
 					"uid": 9
 				},
 				{
-					"kind": "mod_beam_2",
+					"kind": "recorded_heavy",
 					"level": 1,
 					"uid": 10
 				},
 				{
-					"kind": "r_opposites",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 11
 				},
 				{
-					"kind": "r_cross",
+					"kind": "r_satellite_clock",
 					"level": 1,
 					"uid": 12
 				},
 				{
-					"kind": "r_rest",
+					"kind": "recorded_medium_legend",
 					"level": 1,
 					"uid": 13
 				},
 				{
-					"kind": "boomerang_ricochet",
+					"kind": "recorded_heavy_rare",
 					"level": 1,
 					"uid": 14
 				},
 				{
-					"kind": "r_drone_chorus",
+					"kind": "recorded_light",
 					"level": 1,
 					"uid": 15
 				},
 				{
-					"kind": "nova_spiral",
+					"kind": "r_coda",
 					"level": 1,
 					"uid": 16
 				},
 				{
-					"kind": "mod_pulse_1",
+					"kind": "recorded_crude",
 					"level": 1,
 					"uid": 17
 				},
 				{
-					"kind": "flame_spark",
+					"kind": "mod_pulse_6",
 					"level": 1,
 					"uid": 18
 				},
 				{
-					"kind": "mod_beam_6",
+					"kind": "recorded_crude_legend",
 					"level": 1,
 					"uid": 19
 				},
 				{
-					"kind": "scatter_prism",
+					"kind": "mod_rail_6",
 					"level": 1,
 					"uid": 20
 				},
 				{
-					"kind": "chain_fork",
+					"kind": "recorded_medium",
 					"level": 1,
 					"uid": 21
 				},
 				{
-					"kind": "beam",
+					"kind": "r_arc_bridge",
 					"level": 1,
 					"uid": 22
-				},
-				{
-					"kind": "missile_swarm",
-					"level": 1,
-					"uid": 23
 				}
 			],
 			"slots": [
 				1,
-				6,
+				1,
 				2,
-				7,
+				2,
+				5,
+				5,
+				6,
 				8,
-				9,
 				3,
 				3,
 				4,
-				10,
-				11,
-				13,
-				5,
-				5,
-				12,
-				12,
-				14,
-				14,
-				15,
-				15,
-				16,
-				16,
-				16,
-				17
+				4,
+				4,
+				7,
+				7,
+				9,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
 			],
 			"wave": 9
 		}
 	],
-	"checks": 95,
-	"elapsed_wall_seconds": 415.907,
+	"checks": 88,
+	"elapsed_wall_seconds": 405.488,
 	"failures": [],
-	"kills": 3932,
-	"late_timing_max_error": 0.0309715383094584,
-	"max_compile_msec": 2097.326,
-	"music_seconds": 396.678881280619,
-	"observed_weapon_events": 1491,
-	"peak_bullets": 59,
-	"peak_enemies": 155,
-	"peak_hostile_bullets": 137,
+	"first5s_max_error": 0.0142935039466621,
+	"kills": 8323,
+	"max_compile_msec": 5690.22,
+	"music_seconds": 325.587684419169,
+	"observed_weapon_events": 2193,
+	"peak_bullets": 179,
+	"peak_enemies": 184,
+	"peak_hostile_bullets": 115,
 	"purchases": [
 		{
-			"kind": "boomerang",
-			"price": 20,
-			"slot": 1,
-			"uid": 6,
-			"wave": 1
-		},
-		{
-			"kind": "r_copper_beat",
-			"price": 19,
-			"slot": 3,
-			"uid": 7,
+			"kind": "recorded_medium_rare",
+			"price": 67,
+			"slot": 4,
+			"uid": 5,
 			"wave": 1
 		},
 		{
 			"kind": "mod_scatter_1",
 			"price": 14,
-			"slot": 4,
+			"slot": 6,
+			"uid": 6,
+			"wave": 1
+		},
+		{
+			"kind": "recorded_light",
+			"price": 34,
+			"slot": 13,
+			"uid": 7,
+			"wave": 2
+		},
+		{
+			"kind": "r_coda",
+			"price": 21,
+			"slot": 7,
 			"uid": 8,
 			"wave": 2
 		},
 		{
-			"kind": "r_bass_anchor",
-			"price": 17,
-			"slot": 5,
+			"kind": "r_arc_bridge",
+			"price": 23,
+			"slot": 15,
 			"uid": 9,
-			"wave": 2
+			"wave": 3
 		},
 		{
-			"kind": "mod_beam_2",
-			"price": 19,
-			"slot": 9,
+			"kind": "recorded_heavy",
+			"price": 55,
+			"slot": -1,
 			"uid": 10,
 			"wave": 3
 		},
 		{
-			"kind": "r_opposites",
-			"price": 21,
-			"slot": 10,
+			"kind": "recorded_medium_legend",
+			"price": 114,
+			"slot": -1,
 			"uid": 11,
-			"wave": 3
+			"wave": 4
 		},
 		{
-			"kind": "r_cross",
-			"price": 27,
-			"slot": 14,
+			"kind": "r_satellite_clock",
+			"price": 23,
+			"slot": -1,
 			"uid": 12,
 			"wave": 4
 		},
 		{
-			"kind": "r_rest",
-			"price": 23,
-			"slot": 11,
+			"kind": "recorded_medium_legend",
+			"price": 117,
+			"slot": -1,
 			"uid": 13,
-			"wave": 4
+			"wave": 5
 		},
 		{
-			"kind": "boomerang_ricochet",
-			"price": 34,
-			"slot": 16,
+			"kind": "recorded_heavy_rare",
+			"price": 100,
+			"slot": -1,
 			"uid": 14,
 			"wave": 5
 		},
 		{
-			"kind": "r_drone_chorus",
-			"price": 29,
-			"slot": 18,
+			"kind": "recorded_light",
+			"price": 37,
+			"slot": -1,
 			"uid": 15,
-			"wave": 5
+			"wave": 6
 		},
 		{
-			"kind": "nova_spiral",
-			"price": 39,
-			"slot": 20,
+			"kind": "r_coda",
+			"price": 23,
+			"slot": -1,
 			"uid": 16,
 			"wave": 6
 		},
 		{
-			"kind": "mod_pulse_1",
-			"price": 16,
-			"slot": 23,
+			"kind": "recorded_crude",
+			"price": 36,
+			"slot": -1,
 			"uid": 17,
-			"wave": 6
+			"wave": 7
 		},
 		{
-			"kind": "flame_spark",
-			"price": 36,
+			"kind": "mod_pulse_6",
+			"price": 28,
 			"slot": -1,
 			"uid": 18,
 			"wave": 7
 		},
 		{
-			"kind": "mod_beam_6",
-			"price": 28,
+			"kind": "recorded_crude_legend",
+			"price": 102,
 			"slot": -1,
 			"uid": 19,
-			"wave": 7
+			"wave": 8
 		},
 		{
-			"kind": "scatter_prism",
-			"price": 38,
+			"kind": "mod_rail_6",
+			"price": 28,
 			"slot": -1,
 			"uid": 20,
 			"wave": 8
 		},
 		{
-			"kind": "chain_fork",
-			"price": 41,
+			"kind": "recorded_medium",
+			"price": 46,
 			"slot": -1,
 			"uid": 21,
-			"wave": 8
+			"wave": 9
 		},
 		{
-			"kind": "beam",
-			"price": 24,
+			"kind": "r_arc_bridge",
+			"price": 26,
 			"slot": -1,
 			"uid": 22,
 			"wave": 9
-		},
-		{
-			"kind": "missile_swarm",
-			"price": 38,
-			"slot": -1,
-			"uid": 23,
-			"wave": 9
 		}
 	],
-	"scope": "Complete ten-wave route on production native128-second score/durations, native fleets/hits/Boss/victory, nine six-offer shops using real purchase/continue signals and equipment drop handlers. Assistance: invulnerability, steering, automatic overload. No seeking, skips, injected kills or HP reduction. Not human difficulty or listening acceptance.",
-	"score": 4053,
+	"scope": "Complete ten-wave Uranus route on production native128-second score/durations, native fleets/hits/Boss/victory, nine six-offer shops using real purchase/continue signals and equipment drop handlers. Assistance: invulnerability, steering, automatic overload. No seeking, skips, injected kills or HP reduction. Not human difficulty or listening acceptance.",
+	"score": 8444,
 	"shops": 9,
-	"total_spawned": 3989,
+	"timing_max_error_all": 0.0410000832313244,
+	"total_spawned": 8502,
 	"waves": {
 		"1": {
 			"dust": 0,
-			"equipped": 5,
-			"modules": 5,
-			"start": 0.0263699334198236
+			"equipped": 4,
+			"modules": 4,
+			"start": 0.0
 		},
 		"10": {
-			"dust": 3255,
-			"equipped": 17,
-			"modules": 23,
-			"start": 306.1048960991
+			"dust": 13094,
+			"equipped": 9,
+			"modules": 22,
+			"start": 324.119217971903
 		},
 		"2": {
-			"dust": 71,
-			"equipped": 7,
-			"modules": 7,
-			"start": 26.0632337194618
+			"dust": 316,
+			"equipped": 6,
+			"modules": 6,
+			"start": 28.1010009156288
 		},
 		"3": {
-			"dust": 200,
-			"equipped": 9,
-			"modules": 9,
-			"start": 54.0671241003212
+			"dust": 781,
+			"equipped": 8,
+			"modules": 8,
+			"start": 58.09861330662
 		},
 		"4": {
-			"dust": 378,
-			"equipped": 11,
-			"modules": 11,
-			"start": 84.0723461750282
+			"dust": 1816,
+			"equipped": 9,
+			"modules": 10,
+			"start": 90.101467514872
 		},
 		"5": {
-			"dust": 649,
-			"equipped": 13,
-			"modules": 13,
-			"start": 116.057943630106
+			"dust": 3009,
+			"equipped": 9,
+			"modules": 12,
+			"start": 124.099202440165
 		},
 		"6": {
-			"dust": 1026,
-			"equipped": 15,
-			"modules": 15,
-			"start": 150.074756339701
+			"dust": 4351,
+			"equipped": 9,
+			"modules": 14,
+			"start": 160.123278905497
 		},
 		"7": {
-			"dust": 1479,
-			"equipped": 17,
-			"modules": 17,
-			"start": 186.076602244364
+			"dust": 6220,
+			"equipped": 9,
+			"modules": 16,
+			"start": 198.120196589091
 		},
 		"8": {
-			"dust": 2011,
-			"equipped": 17,
-			"modules": 19,
-			"start": 224.091994866434
+			"dust": 8259,
+			"equipped": 9,
+			"modules": 18,
+			"start": 238.101461718974
 		},
 		"9": {
-			"dust": 2611,
-			"equipped": 17,
-			"modules": 21,
-			"start": 264.117630028178
+			"dust": 10597,
+			"equipped": 9,
+			"modules": 20,
+			"start": 280.1292719835
 		}
 	},
 	"weapon_damage": {
-		"beam": 4190.3153,
-		"boomerang": 11390.2293,
-		"boomerang_ricochet": 9180.46900000001,
-		"nova": 4915.66330000003,
-		"nova_spiral": 6031.04614999999,
-		"overload": 40403.1162999999,
-		"pulse": 19791.6857499998,
-		"scatter": 5202.56429999999
+		"overload": 10033.096265,
+		"recorded_crude_legend": 79673.7711975011,
+		"recorded_heavy_legend": 108686.089025001,
+		"recorded_light": 21883.7227825007,
+		"recorded_light_legend": 16239.9587750001,
+		"recorded_medium_legend": 158778.621485002,
+		"recorded_medium_rare": 117136.7885
 	}
 }

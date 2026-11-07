@@ -1,0 +1,57 @@
+{
+	"checks": 62,
+	"facts": {
+		"audio": {
+			"cell_seconds": 0.125,
+			"groove_frames": 176400,
+			"kill_hits": 4,
+			"recording_triggers": [
+				4,
+				4,
+				4,
+				4
+			],
+			"sequence_loop_seconds": 1.0,
+			"tracks": 2
+		},
+		"boons": {
+			"choices": [
+				"boon_magnet",
+				"boon_caliber",
+				"boon_regen"
+			],
+			"chosen": "boon_magnet",
+			"key": "magnet"
+		},
+		"fleet_growth": {
+			"pilot": "rime",
+			"shield": 3.0,
+			"ship": "manta"
+		},
+		"formation": {
+			"break_count": 1,
+			"leaders": 1,
+			"survivors": 39
+		},
+		"ranges": {
+			"show": true,
+			"weapons": 4
+		},
+		"recorded_group_lengths": [
+			7.0,
+			7.0,
+			7.0,
+			7.48,
+			7.48,
+			7.48,
+			7.48,
+			7.48,
+			7.48,
+			7.86,
+			7.86,
+			7.86
+		]
+	},
+	"failures": [],
+	"scope": "Production Main spawn/damage path, shared formation command state, isolated preview range toggle and campaign-state snapshot. Controlled fixture; no human balance or visual acceptance claim."
+}

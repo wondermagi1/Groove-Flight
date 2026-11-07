@@ -1,4 +1,4 @@
-"""Original BeatDrift city, authored in Blender. No downloaded or commercial assets.
+"""Original Groove Flight city, authored in Blender. No downloaded or commercial assets.
 
 Run through MCP with exec(compile(Path(__file__).read_text(), __file__, 'exec')),
 or blender --background --python tools/build_neon_city.py. Creates a NEW scene;
@@ -18,7 +18,7 @@ OUT.mkdir(parents=True, exist_ok=True)
 SOURCE.mkdir(parents=True, exist_ok=True)
 random.seed(4219)
 previous_scene = bpy.context.window.scene if bpy.context.window else bpy.context.scene
-scene = bpy.data.scenes.new("BEATDRIFT_Neon_City_Original")
+scene = bpy.data.scenes.new("GROOVE_FLIGHT_Neon_City_Original")
 if bpy.context.window:
     bpy.context.window.scene = scene
 else:
@@ -322,11 +322,11 @@ export_col.hide_viewport=True; export_col.hide_render=True
 bpy.ops.object.select_all(action="DESELECT")
 # Saving a copy keeps the current session's original filepath intact.
 bpy.ops.wm.save_as_mainfile(filepath=str(SOURCE/"neon_city.blend"),copy=True)
-manifest={"author":"BeatDrift original procedural Blender architecture", "blender":bpy.app.version_string,
+manifest={"author":"Groove Flight original procedural Blender architecture", "blender":bpy.app.version_string,
           "editable_meshes":len(objects),"export_meshes":len(export_objects),
           "vertices":sum(len(o.data.vertices) for o in export_objects),
           "triangles":sum(len(p.vertices)-2 for o in export_objects for p in o.data.polygons),
           "portal_world":[0,4.55,0],"hangar_terminal_world":[10.2,0,10.0],
           "generator":"tools/build_neon_city.py","external_assets":[],"seed":4219}
 (SOURCE/"manifest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding="utf-8")
-print("BEATDRIFT_CITY_BUILT",json.dumps(manifest,ensure_ascii=False))
+print("GROOVE_FLIGHT_CITY_BUILT",json.dumps(manifest,ensure_ascii=False))

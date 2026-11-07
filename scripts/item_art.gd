@@ -112,9 +112,14 @@ static func _weapon(canvas: CanvasItem,data: Dictionary,accent: Color,alpha: flo
 				var offset: Vector2=Vector2(index*7-5,index*12-6)
 				var points: Array=[]
 				for point in [Vector2(-35,-16),Vector2(-9,-5),Vector2(35,-23),Vector2(16,4),Vector2(-22,23),Vector2(-6,3)]: points.append(point+offset)
+				var shadow: Array=[]
+				for point in points: shadow.append(point+Vector2(2,3))
+				_poly(canvas,shadow,Color(DARK,alpha))
 				_poly(canvas,points,Color(LIGHT,alpha))
+				_poly(canvas,[offset+Vector2(-31,-13),offset+Vector2(-8,-4),offset+Vector2(25,-19),offset+Vector2(7,-4),offset+Vector2(-18,17),offset+Vector2(-3,3)],Color(STEEL,alpha))
 				canvas.draw_line(offset+Vector2(-26,-10),offset+Vector2(-8,-2),accent,3.,true)
 				canvas.draw_line(offset+Vector2(-8,-2),offset+Vector2(28,-18),accent,3.,true)
+				canvas.draw_line(offset+Vector2(-31,-14),offset+Vector2(23,-21),Color(Color.WHITE,alpha*.78),1.5,true)
 		"orbit":
 			canvas.draw_arc(Vector2.ZERO,27.,0.,TAU,48,Color(STEEL,alpha),3.,true)
 			canvas.draw_circle(Vector2.ZERO,11.,Color(EDGE,alpha))

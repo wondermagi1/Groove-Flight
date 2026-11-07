@@ -26,7 +26,7 @@ func run() -> void:
 	current_scene = game
 	await frames(8)
 	var title = game.ui.title_flight
-	check(is_instance_valid(title) and title.targets.size() == 4, "four real title entries are registered as projectile targets")
+	check(is_instance_valid(title) and title.targets.size() == 7, "seven real title entries are registered as projectile targets")
 	var initial: Vector2 = title.ship_at
 	Input.action_press("right")
 	await create_timer(0.20).timeout
@@ -41,11 +41,23 @@ func run() -> void:
 	game.close_settings()
 	await frames(6)
 	check(game.state == "title" and is_instance_valid(game.ui.title_flight), "settings return safely rebuilds an interactive title")
+	title = game.ui.title_flight
+	title.targets.codex.pressed.emit()
+	await create_timer(1.0).timeout
+	var codex=game.ui.root_control.get_node_or_null("WeaponCodex")
+	check(game.state=="weapon_codex" and is_instance_valid(codex) and not title.launched,"title codex opens in a modal state without consuming the interactive menu session")
+	check(not game.menu_music.playing,"opening the codex pauses the title background music for clear audition")
+	if is_instance_valid(codex):
+		var close=codex.get_node_or_null("WeaponCodexFrame/WeaponCodexClose") as Button
+		if close: close.pressed.emit()
+	await frames(4)
+	check(game.state=="title" and not is_instance_valid(codex),"closing the title codex restores the title without launching another entry")
+	check(game.menu_music.playing,"closing the codex restores the title background music")
 	game.start_run(8341)
+	game.ui.update_hud()
+	check(game.ui.wave_label.text == "水星 01/06", "combat HUD uses the current Mercury wave plan")
 	game.open_editor()
 	await frames(6)
-	game.ui.update_hud()
-	check(game.ui.wave_label.text == "WAVE 01 / 10", "combat HUD uses the actual wave plan instead of a six-wave label")
 	game.return_title()
 	await frames(5)
 	# Data fixtures inspect dense summary/selection layouts; they do not claim
@@ -54,10 +66,10 @@ func run() -> void:
 	game.ui.refresh()
 	await frames(8)
 	var picker = game.ui.root_control.get_node("FleetPicker")
-	check(picker.ship_cards.size() == 3 and picker.pilot_cards.size() == 3, "hangar presents three real ships and three pilot choices")
-	picker.ship_cards[1].pressed.emit()
-	picker.pilot_cards[2].pressed.emit()
-	check(game.selected_ship == "swift" and game.selected_pilot == "mender", "actual selection buttons update the next flight configuration")
+	check(picker.ship_cards.size() == 5 and picker.pilot_cards.size() == 5, "hangar presents five real ships and five pilot choices")
+	picker.ship_cards[4].pressed.emit()
+	picker.pilot_cards[4].pressed.emit()
+	check(game.selected_ship == "manta" and game.selected_pilot == "rime", "actual selection buttons update the next flight configuration")
 	await screenshot("10-fleet-picker-720p")
 	game.state = "victory"
 	game.wave = game.wave_count()
@@ -76,7 +88,7 @@ func run() -> void:
 	title = game.ui.title_flight
 	check(is_instance_valid(title) and title.ship_at.x > 1000.0, "resizing rebuilds the flight space at the new viewport dimensions")
 	await screenshot("09-interactive-title-1080p")
-	var result := {"checks": checks, "failures": failures, "scope": "Real interactive title movement, click-shot-impact settings flow, resize and ten-wave HUD. Additional selection/result data fixtures inspect button behavior and layout; not a city or complete flight test."}
+	var result := {"checks": checks, "failures": failures, "scope": "Real interactive title movement, click-shot-impact settings flow, resize and current Mercury HUD. Additional selection/result data fixtures inspect button behavior and layout; not a city or complete flight test."}
 	FileAccess.open("res://tests/results-title-hub.json", FileAccess.WRITE).store_string(JSON.stringify(result, "\t"))
 	print("TITLE_HUB_REVIEW ", JSON.stringify(result))
 	game.music.stop()

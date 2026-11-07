@@ -1,16 +1,16 @@
 extends RefCounted
 ## Original eight-planet routes. The miniature model uses diagrammatic scales;
-## encounter data is authored for BeatDrift, not extracted from another game.
+## encounter data is authored for Groove Flight, not extracted from another game.
 const IDS=["mercury","venus","earth","mars","jupiter","saturn","uranus","neptune"]
 const THEMES=["rocky","volcanic","ocean","desert","gas","ringed","ice","storm"]
 const WAVE_COUNTS=[6,7,8,8,9,9,10,10]
-const HP_SCALES=[1.0,1.18,1.40,1.68,2.05,2.45,2.90,3.40]
-const BOSS_HP=[3000.,5200.,6800.,8700.,11200.,14400.,18500.,24000.]
+const HP_SCALES=[1.0,1.18,1.38,1.62,1.92,2.22,2.55,2.90]
+const BOSS_HP=[3000.,5200.,6800.,8700.,10200.,11600.,13000.,14000.]
 const BOSS_RADII=[158.,166.,172.,178.,205.,200.,192.,214.]
 const MACHINE_TYPES=["日冕采掘体","硫云熔炉","轨道仲裁站","赤砂攻城堡","巨斑涡轮","星环歼灭器","极轴观测体","深潮终奏舰"]
-const SPEEDS=[1.0,1.04,1.08,1.12,1.17,1.21,1.25,1.30]
-const BULLET_SPEEDS=[1.0,1.04,1.08,1.12,1.17,1.23,1.29,1.35]
-const DAMAGES=[1.0,1.15,1.35,1.60,1.95,2.35,2.85,3.40]
+const SPEEDS=[1.0,1.04,1.08,1.11,1.15,1.18,1.21,1.24]
+const BULLET_SPEEDS=[1.0,1.04,1.08,1.11,1.15,1.19,1.23,1.27]
+const DAMAGES=[1.0,1.15,1.32,1.52,1.82,2.12,2.42,2.75]
 const DROP_SCALES=[1.0,1.08,1.18,1.30,1.43,1.58,1.75,1.95]
 const COLORS=[Color("d8b594"),Color("ffa667"),Color("66d7f5"),Color("ee876c"),Color("e2b085"),Color("e8d49a"),Color("8fe6e8"),Color("879cff")]
 const SKY_TINTS=[Color("66534c"),Color("85482e"),Color("285f88"),Color("773e40"),Color("735245"),Color("646143"),Color("356d76"),Color("353a80")]
@@ -21,8 +21,8 @@ const BUDGETS=[
 	[145,195,255,325,400,475,555],
 	[175,230,300,380,465,550,640,730],
 	[205,275,355,445,540,640,745,850],
-	[235,310,400,500,605,715,830,950,1080],
-	[270,355,455,565,685,810,940,1075,1220]
+	[235,310,400,500,605,715,830,930,1040],
+	[270,350,440,540,650,760,870,990,1110]
 ]
 const FORMATIONS=[
 	["vanguard","wedge","crescent","twin_column","broken_arc"],
@@ -50,11 +50,11 @@ const MIXES=[
 	["mote","mote","armor","mote","mote","dart","mote","armor","mote","shooter","mote","mote","armor","mote","dart","mote","mote","shooter","mote","armor"],
 	["mote","shooter","mote","armor","dart","mote","shooter","mote","splitter","mote","armor","shooter","mote","dart","mote","shooter","mote","armor","mote","splitter"],
 	["mote","armor","mote","shooter","mote","dart","armor","mote","splitter","mote","shooter","mote","dart","armor","mote","sentinel","mote","shooter","armor","mote"],
-	["armor","dart","mote","armor","dart","shooter","mote","armor","dart","splitter","armor","mote","dart","shooter","armor","mote","sentinel","dart","mote","armor"],
-	["dart","shooter","mote","dart","armor","sentinel","mote","shooter","dart","splitter","shooter","mote","sentinel","dart","armor","shooter","mote","dart","splitter","armor"],
-	["armor","sentinel","mote","armor","shooter","splitter","armor","mote","sentinel","dart","armor","shooter","mote","armor","sentinel","splitter","mote","shooter","armor","dart"],
-	["dart","splitter","mote","shooter","dart","sentinel","splitter","armor","dart","mote","shooter","dart","splitter","sentinel","mote","dart","armor","shooter","splitter","dart"],
-	["sentinel","shooter","armor","dart","splitter","shooter","mote","armor","sentinel","dart","shooter","splitter","armor","sentinel","mote","shooter","dart","splitter","armor","sentinel"]
+	["armor","dart","mote","armor","dart","shooter","mote","armor","dart","splitter","armor","mote","dart","shooter","armor","mote","lance","dart","mote","armor"],
+	["dart","lance","mote","dart","armor","sentinel","mote","shooter","dart","splitter","shooter","mote","mirror","dart","armor","shooter","mote","dart","splitter","armor"],
+	["armor","sentinel","mote","armor","lance","splitter","armor","mote","sentinel","dart","armor","shooter","mote","armor","mirror","splitter","mote","shooter","armor","dart"],
+	["dart","splitter","mote","shooter","dart","sentinel","splitter","armor","dart","mote","mirror","dart","splitter","sentinel","mote","lance","armor","shooter","splitter","dart"],
+	["mirror","shooter","armor","dart","splitter","shooter","lance","armor","sentinel","dart","shooter","splitter","armor","sentinel","mote","shooter","dart","splitter","lance","sentinel"]
 ]
 
 static func rows() -> Array[Dictionary]:
@@ -105,23 +105,35 @@ static func _index(id: String) -> int:
 static func planet(id: String) -> Dictionary:
 	return rows()[_index(id)]
 
-static func route(id: String) -> Array[Dictionary]:
+static func route(id: String,difficulty: int=0) -> Array[Dictionary]:
 	var index=_index(id)
+	var hard=clampi(difficulty,0,1)>0
 	var start_seconds=[20.,22.,24.,25.,26.,27.,28.,29.][index]
 	var result: Array[Dictionary]=[]
 	for wave in range(WAVE_COUNTS[index]-1):
 		# First elite arrives late in the opening route. Advanced planets keep
 		# additional elite beats without adding unbounded wave counts.
 		var elite=wave==3 or (index>=3 and wave==6)
-		result.append({"name":str(WAVE_NAMES[index][wave]),"seconds":start_seconds+2.*wave,"budget":int(BUDGETS[index][wave]),"elite":elite,"formation":str(FORMATIONS[index][wave])})
+		if hard: elite=elite or wave in [1,4,7]
+		var formation=str(FORMATIONS[index][wave])
+		formation=["battalion_grid","battalion_diamond","battalion_bands"][(wave+index)%3]
+		if hard:
+			if wave in [2,5,8]: formation="dual_spiral"
+			elif wave in [3,6,7]: formation="prism_ring"
+		var progression=float(wave)/maxf(1.,float(WAVE_COUNTS[index]-2))
+		var budget=int(round(float(BUDGETS[index][wave])*(2.2+.35*progression)*(1.18 if hard else 1.)))
+		result.append({"name":str(WAVE_NAMES[index][wave]),"seconds":start_seconds+2.*wave,"budget":budget,"elite":elite,"formation":formation,"difficulty":clampi(difficulty,0,1)})
 	result.append({"name":str(planet(id).bossname),"seconds":0.,"budget":0,"elite":false,"formation":"boss"})
 	return result
 
-static func combat(id: String) -> Dictionary:
+static func combat(id: String,difficulty: int=0) -> Dictionary:
 	var index=_index(id)
-	return {"hp_scale":float(HP_SCALES[index]),"boss_hp":float(BOSS_HP[index]),"enemy_speed":float(SPEEDS[index]),"bullet_speed":float(BULLET_SPEEDS[index]),"damage":float(DAMAGES[index]),"drop_scale":float(DROP_SCALES[index]),"accent":COLORS[index],"sky_tint":SKY_TINTS[index],"planet_style":index}
+	var tier=clampi(difficulty,0,1)
+	var multiplier=1. if tier==0 else 1.18
+	var boss_multiplier=1. if tier==0 else 1.30
+	return {"hp_scale":float(HP_SCALES[index])*multiplier,"boss_hp":float(BOSS_HP[index])*boss_multiplier,"enemy_speed":float(SPEEDS[index])*(1. if tier==0 else 1.05),"bullet_speed":float(BULLET_SPEEDS[index])*(1. if tier==0 else 1.08),"damage":float(DAMAGES[index])*(1. if tier==0 else 1.14),"drop_scale":float(DROP_SCALES[index])*(1. if tier==0 else 1.12),"difficulty":tier,"accent":COLORS[index],"sky_tint":SKY_TINTS[index],"planet_style":index}
 
-static func kind(id: String,wave: int,ordinal: int) -> String:
+static func kind(id: String,wave: int,ordinal: int,difficulty: int=0) -> String:
 	## Zero-based wave/ordinal; fixed planet+wave+ordinal always gives one role.
 	var index=_index(id)
 	var kind_value=str(MIXES[index][posmod(ordinal+wave*3,20)])
@@ -136,15 +148,19 @@ static func kind(id: String,wave: int,ordinal: int) -> String:
 		if kind_value=="splitter" and wave<2: return "mote"
 		if kind_value=="sentinel" and wave<3: return "mote"
 	elif index==3 and kind_value=="sentinel" and wave<2: return "mote"
+	if clampi(difficulty,0,1)>0:
+		if index>=2 and posmod(ordinal,11)==5: return "lance"
+		if index>=4 and posmod(ordinal,13)==8: return "mirror"
 	return kind_value
 
-static func wave_rules(id: String,wave: int) -> Dictionary:
-	var result=combat(id); var index=_index(id)
+static func wave_rules(id: String,wave: int,difficulty: int=0) -> Dictionary:
+	var result=combat(id,difficulty); var index=_index(id)
 	var progress=clampf(float(wave-1)/maxf(1.,float(WAVE_COUNTS[index]-2)),0.,1.)
 	# Advanced planets still start with a fresh loadout. Full threat is reached
 	# after their own shops, not imposed before the first purchase is possible.
-	result.hp_scale=1.+(float(result.hp_scale)-1.)*lerpf(.22,1.,progress)
-	result.damage=1.+(float(result.damage)-1.)*lerpf(.12,1.,progress)
-	result.enemy_speed=1.+(float(result.enemy_speed)-1.)*lerpf(.40,1.,progress)
-	result.bullet_speed=1.+(float(result.bullet_speed)-1.)*lerpf(.30,1.,progress)
+	var hard=clampi(difficulty,0,1)>0
+	result.hp_scale=1.+(float(result.hp_scale)-1.)*lerpf(.32 if hard else .22,1.,progress)
+	result.damage=1.+(float(result.damage)-1.)*lerpf(.24 if hard else .12,1.,progress)
+	result.enemy_speed=1.+(float(result.enemy_speed)-1.)*lerpf(.50 if hard else .40,1.,progress)
+	result.bullet_speed=1.+(float(result.bullet_speed)-1.)*lerpf(.42 if hard else .30,1.,progress)
 	return result

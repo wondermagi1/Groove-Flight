@@ -6,7 +6,7 @@
 
 ## v2 neon harbor / fleet verification
 
-2026-10-29, Windows, Godot4.7.2, NVIDIA RTX4060 Laptop GPU. Automated runs use an isolated profile and `--beatdrift-test`, without writing player settings or older-game saves. V1 history is in `TEST_REPORT_V1.md`.
+2026-10-29, Windows, Godot4.7.2, NVIDIA RTX4060 Laptop GPU. Automated runs use an isolated profile and `--grooveflight-test`, without writing player settings or older-game saves. V1 history is in `TEST_REPORT_V1.md`.
 
 ## Focused and integrated checks
 

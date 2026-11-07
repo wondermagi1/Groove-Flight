@@ -1,8 +1,8 @@
-"""Offline audio -> editable BeatDrift score.
+"""Offline audio -> editable Groove Flight score.
 
 Uses Spotify Basic Pitch's Apache-2.0 ONNX model. Window padding/overlap follows
 its published inference protocol (Spotify AB, 2022); note grouping, tempo
-estimation, editor quantization and process protocol below are BeatDrift code.
+estimation, editor quantization and process protocol below are Groove Flight code.
 No song recognition service, network calls or copyrighted fixture is used.
 """
 from pathlib import Path

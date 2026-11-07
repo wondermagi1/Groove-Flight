@@ -1,0 +1,34 @@
+{
+  "note": "Constructed listening samples, not a live game recording. Kill hits use the actual production feedback log; global preview gain only, original sample rates/pitches preserved.",
+  "source_result": "tests/results-rhythm-feedback.json",
+  "kill_log": [
+    {
+      "at": 0.0,
+      "pitch": 1.0,
+      "sample": "kill_low_strong",
+      "tail": false,
+      "volume": -8.45479697360804
+    },
+    {
+      "at": 0.13,
+      "pitch": 1.0,
+      "sample": "kill_low_soft",
+      "tail": true,
+      "volume": -8.5
+    },
+    {
+      "at": 0.26,
+      "pitch": 1.0,
+      "sample": "kill_low_round",
+      "tail": true,
+      "volume": -8.5
+    },
+    {
+      "at": 0.39,
+      "pitch": 1.0,
+      "sample": "kill_low_soft",
+      "tail": true,
+      "volume": -8.5
+    }
+  ]
+}

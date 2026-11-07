@@ -6,18 +6,55 @@ const CLOCK=preload("res://scripts/music_clock.gd")
 const PATHS=preload("res://scripts/build_paths.gd")
 const TRACKS=3
 const STEPS=8
+const SEQUENCE_STEP_SECONDS=.125
+const SEQUENCE_LOOP_SECONDS=1.
+const STARTER_WEAPON_LIMIT=2
+const COLORFUL_STARTER_WEAPONS=["scatter_prism","nova"]
 const INVENTORY_LIMIT=64
 const STAT_KEYS=["ballistic","energy","power","support","extra_projectiles","bullet_multiplier","crit_chance","crit_damage","max_health","regen","armor","move_percent","magnet","luck"]
+const CADENCE_PROFILES={
+	"steady":{"label":"匀速四连","scales":[.25,.25,.25,.25],"pitches":[0,0,0,0]},
+	"accent":{"label":"重-轻-轻-轻","scales":[.46,.18,.18,.18],"pitches":[0,2,3,1]},
+	"backbeat":{"label":"轻-重-轻-重","scales":[.18,.32,.18,.32],"pitches":[0,2,1,3]},
+	"swell":{"label":"渐强","scales":[.12,.20,.28,.40],"pitches":[0,1,2,3]},
+	"alternating":{"label":"强-弱-强-弱","scales":[.32,.18,.32,.18],"pitches":[0,2,1,3]},
+	"strike_pair":{"label":"强-弱","scales":[2./3.,1./3.],"pitches":[0,1],"beats":2}
+}
+const FIXED_SOUND_PROFILE={"label":"固定声音","scales":[1.],"pitches":[0],"beats":1}
+const FAMILY_CADENCE={
+	"pulse":"steady","scatter":"accent","beam":"swell","missile":"accent",
+	"nova":"backbeat","chain":"swell","rail":"accent","boomerang":"alternating",
+	"orbit":"steady","mine":"accent","flame":"swell","drone":"steady"
+}
 const WEAPON_KEYS=["damage_percent","count","pierce","speed_percent","range_percent","explosion","spread_percent","chain_count","homing","bounces"]
 const TRAJECTORY_KEYS=["split_count","accel_forward","accel_side","offset_forward","offset_side","turn_after","turn_deg","conduct","count_per_attribute","chain_per_attribute"]
 const BEAT_KEYS=["charge_reduce","repeat","rotate","streak","chord"]
 const EVENT_KEYS=["heal_bar","shield_dash","heal_pickup","explode_kill","charge_kill","missiles_dash","heal_kill"]
+const WAVE_BOONS=[
+	{"id":"boon_hull","name":"船体加固","key":"max_health","value":1.,"detail":"生命上限 +1，并立即恢复1生命","tag":"生存","color":Color("8ed7bf")},
+	{"id":"boon_armor","name":"复合装甲","key":"armor","value":.25,"detail":"装甲 +0.25，提高全部承伤减免","tag":"生存","color":Color("9dc9d7")},
+	{"id":"boon_thruster","name":"矢量推进","key":"move_percent","value":.035,"detail":"移动速度 +3.5%","tag":"机动","color":Color("83cafa")},
+	{"id":"boon_caliber","name":"口径校准","key":"bullet_multiplier","value":.04,"detail":"全部武器单发伤害 +4%","tag":"火力","color":Color("e7c88d")},
+	{"id":"boon_crit","name":"精密瞄具","key":"crit_chance","value":.015,"detail":"暴击率 +1.5%","tag":"火力","color":Color("ff9ab2")},
+	{"id":"boon_regen","name":"纳米修复","key":"regen","value":.012,"detail":"每秒再生 +0.012 生命","tag":"生存","color":Color("91edbe")},
+	{"id":"boon_magnet","name":"回收磁场","key":"magnet","value":.15,"detail":"拾取范围 +15%","tag":"经济","color":Color("b7d88e")},
+	{"id":"boon_luck","name":"航路直觉","key":"luck","value":1.5,"detail":"幸运 +1.5，改善补给品质","tag":"经济","color":Color("f2cd8a")},
+	{"id":"boon_ballistic","name":"弹道标定","key":"ballistic","value":3.,"detail":"弹道属性 +3","tag":"主属性","color":Color("63e7df")},
+	{"id":"boon_energy","name":"能量调谐","key":"energy","value":3.,"detail":"能量属性 +3","tag":"主属性","color":Color("ada2ff")},
+	{"id":"boon_power","name":"动力增幅","key":"power","value":3.,"detail":"动力属性 +3","tag":"主属性","color":Color("ffc16b")},
+	{"id":"boon_support","name":"支援协议","key":"support","value":3.,"detail":"支援属性 +3","tag":"主属性","color":Color("8ed7bf")}
+]
 var modules: Array=[]
 var slots: Array[int]=[]
 var perks: Dictionary={}
+var boons: Dictionary={}
 var next_uid: int=1
 var damage_scale: float=1.
 var echo_repeat: bool=false
+var active_tracks: int=TRACKS
+var audio_guard_enabled: bool=false
+var recorded_starter_quality: int=0
+var phrase_offsets: Dictionary={}
 var _base_health: int=10
 var _base_extra: int=0
 var _fleet_stats: Dictionary={}
@@ -35,9 +72,17 @@ func _init() -> void:
 
 func _row(id: String) -> Dictionary: return _catalog.get(id,{})
 func reset() -> void:
-	modules.clear(); slots.resize(TRACKS*STEPS); slots.fill(-1); perks.clear()
+	phrase_offsets.clear()
+	modules.clear(); slots.resize(TRACKS*STEPS); slots.fill(-1); perks.clear(); boons.clear()
 	next_uid=1; damage_scale=1.; echo_repeat=false; _base_health=10; _base_extra=0; _fleet_stats.clear()
-	set_starters(["pulse","scatter","beam","pulse","nova"])
+	if audio_guard_enabled: set_starters(COLORFUL_STARTER_WEAPONS)
+	else: set_starters(["pulse","scatter","beam","pulse","nova"])
+
+func configure_live_rules() -> void:
+	active_tracks=3
+	audio_guard_enabled=true
+	slots.resize(TRACKS*STEPS); slots.fill(-1)
+	set_starters(COLORFUL_STARTER_WEAPONS)
 
 func set_fleet(craft: Dictionary,pilot: Dictionary) -> void:
 	# Preserve inventory. A new run explicitly calls set_starters after this.
@@ -51,10 +96,25 @@ func set_fleet(craft: Dictionary,pilot: Dictionary) -> void:
 	_base_extra=maxi(0,int(craft.get("extra_projectiles",0)))
 
 func set_starters(kinds: Array) -> void:
+	phrase_offsets.clear()
 	modules.clear(); slots.fill(-1); next_uid=1
-	var preferred=[0,2,6,8,12,16,18,20]
-	for index in range(kinds.size()):
-		var uid=add_module(str(kinds[index]),-2)
+	var filtered: Array=[]
+	var playable_weapons=0
+	if audio_guard_enabled:
+		for kind in kinds:
+			var row=C.item(str(kind))
+			if str(row.get("category",""))!="weapon": filtered.append(str(kind))
+		for kind in COLORFUL_STARTER_WEAPONS:
+			filtered.append(str(kind))
+			playable_weapons+=1
+	else:
+		for kind in kinds:
+			var row=C.item(str(kind))
+			filtered.append(str(kind))
+			if str(row.get("category",""))=="weapon": playable_weapons+=1
+	var preferred=[0,8,2,16,4,12,6,14]
+	for index in range(filtered.size()):
+		var uid=add_module(str(filtered[index]),-2)
 		if uid<0: continue
 		var placed=false
 		if index<preferred.size(): placed=move_module(uid,int(preferred[index]))
@@ -75,6 +135,7 @@ func item_width(uid: int) -> int:
 
 func add_module(kind: String,at: int=-1) -> int:
 	if modules.size()>=INVENTORY_LIMIT or _row(kind).is_empty(): return -1
+	if audio_guard_enabled and not C.is_item_available(kind): return -1
 	if at>=slots.size(): return -1
 	var uid=next_uid
 	modules.append({"uid":uid,"kind":kind,"level":1})
@@ -91,6 +152,7 @@ func add_module(kind: String,at: int=-1) -> int:
 
 func _span_fits(board: Array,target: int,width: int,allowed_uid: int=-1) -> bool:
 	if target<0 or target>=board.size() or width<1 or width>3: return false
+	if floori(float(target)/STEPS)>=active_tracks: return false
 	if target%STEPS+width>STEPS or target+width>board.size(): return false
 	for at in range(target,target+width):
 		if int(board[at])>=0 and int(board[at])!=allowed_uid: return false
@@ -202,6 +264,9 @@ func _applies(source: Dictionary,uid: int,serial: int) -> bool:
 func _base_stats() -> Dictionary:
 	var result={"ballistic":0.,"energy":0.,"power":0.,"support":0.,"extra_projectiles":float(_base_extra),"bullet_multiplier":1.,"crit_chance":.05,"crit_damage":1.5,"max_health":float(_base_health),"regen":0.,"armor":0.,"move_percent":0.,"magnet":1.,"luck":0.}
 	for key in _fleet_stats: result[key]=float(_fleet_stats[key])
+	for boon in WAVE_BOONS:
+		var count=int(boons.get(str(boon.id),0))
+		if count>0: result[str(boon.key)]+=float(boon.value)*count
 	return result
 func _stats_for(uid: int,serial: int,sources: Array) -> Dictionary:
 	var result=_base_stats()
@@ -226,6 +291,12 @@ func stat_sources(key: String) -> Array[Dictionary]:
 		var rule: Dictionary=source.rule
 		if str(rule.get("type",""))!="stat" or str(rule.get("key",""))!=key: continue
 		result.append({"uid":source.uid,"name":source.name,"value":float(rule.get("value",0))*float(source.scale),"scope":str(rule.get("scope","all")),"condition":str(rule.get("condition","always")),"target":str(rule.get("target","")),"slot":source.slot,"level":source.level,"active":_applies(source,-1,-1)})
+	for index in range(WAVE_BOONS.size()):
+		var boon: Dictionary=WAVE_BOONS[index]
+		if str(boon.key)!=key: continue
+		var count=int(boons.get(str(boon.id),0))
+		if count>0:
+			result.append({"uid":-100-index,"name":"%s ×%d" % [str(boon.name),count],"value":float(boon.value)*count,"scope":"run","condition":"always","target":"","slot":-1,"level":1,"active":true})
 	return result
 
 func _events_for(uid: int,serial: int,sources: Array) -> Dictionary:
@@ -255,6 +326,16 @@ func _effective_charge(value: float) -> int:
 		if value>=float(allowed): return int(allowed)
 	return 1
 
+func _cadence_beats(row: Dictionary) -> int:
+	return 1 if str(row.get("category",""))=="weapon" else 0
+
+static func cadence_profile(family: String, override_key: String="") -> Dictionary:
+	var key=override_key if not override_key.is_empty() else str(FAMILY_CADENCE.get(family,"steady"))
+	return CADENCE_PROFILES.get(key,CADENCE_PROFILES.steady).duplicate(true)
+
+static func cadence_profile_for(row: Dictionary) -> Dictionary:
+	return FIXED_SOUND_PROFILE.duplicate(true)
+
 func _weapon_event(uid: int,serial: int,sources: Array) -> Dictionary:
 	var module=find(uid); var row=_row(str(module.get("kind",""))); var at=equipped_head(uid)
 	if module.is_empty() or row.is_empty() or at<0 or str(row.get("category",""))!="weapon": return {}
@@ -276,17 +357,17 @@ func _weapon_event(uid: int,serial: int,sources: Array) -> Dictionary:
 	var damage=float(row.get("damage",1))*damage_scale*(1.+.45*(int(module.level)-1))
 	damage*=maxf(.1,1.+float(attributes.get(attribute,0))/100.+float(attributes.power)/200.)
 	damage*=attributes.bullet_multiplier*maxf(.1,1.+weapon.damage_percent+(beat.streak if same else 0.))
-	var attribute_count=floori(maxf(0.,float(attributes.get(attribute,0.)))*float(trajectory.count_per_attribute))
+	var quality_attribute_scale=float(row.get("attribute_count_scale",0.))
+	var attribute_count=roundi(maxf(0.,float(attributes.get(attribute,0.)))*(quality_attribute_scale+float(trajectory.count_per_attribute)))
 	var extra=clampi(roundi(float(attributes.extra_projectiles)+weapon.count)+attribute_count,-80,80)
 	var bar=floori(float(maxi(0,serial))/STEPS)
-	var melody: Array=row.get("melody",[0,2,4,3,0,4,6,4])
-	# The melody advances when this charged weapon fires, not on silent bars.
-	# 64 bars (512 steps/128 seconds) contain a full eight-note motif even for
-	# charge8 weapons, so audio and combat share one finite repeatable schedule.
-	var note_number=maxi(0,floori(float(bar+1)/charge)-1)
-	var pitch=posmod(int(melody[note_number%melody.size()])+at%STEPS,STEPS)
+	# Battle slots control timing only. Each instrument uses its own fixed sample.
+	var pitch=0
 	var count_limit=8 if str(row.family)=="chain" else (12 if str(row.family)=="beam" else 96)
-	return {"uid":uid,"kind":str(row.id),"voice":str(row.get("voice",row.id)),"pitch":pitch,"family":str(row.family),"name":str(row.name),"category":"weapon","attr":attribute,"level":int(module.level),"width":int(row.width),"slot":at,"damage":clampf(damage,.1,100000.),"count":clampi(int(row.get("count",1))+extra,1,count_limit),"extra":extra,"pierce":clampi(int(row.get("pierce",0))+roundi(weapon.pierce),0,40),"speed":clampf(float(row.get("speed",700))*maxf(.1,1.+weapon.speed_percent),0.,3000.),"life":clampf(float(row.get("life",2))*maxf(.1,1.+weapon.range_percent),.1,30.),"spread":clampf(float(row.get("spread",0))*maxf(0.,1.+weapon.spread_percent),0.,TAU),"explosion":clampf(float(row.get("explosion",0))+weapon.explosion,0.,800.),"homing":clampf(float(row.get("homing",0))+weapon.homing,0.,20.),"bounces":clampi(int(row.get("bounces",0))+roundi(weapon.bounces),0,24),"chain_count":clampi(maxi(1,int(row.get("bounces",3)))+roundi(weapon.chain_count)+floori(maxf(0.,float(attributes.get(attribute,0.)))*float(trajectory.chain_per_attribute)),1,32),"chord":chord,"chord_power":clampf(beat.chord if chord else 0.,0.,5.),"repeat":clampi(roundi(beat.repeat),0,3),"repeat_index":0,"angle":deg_to_rad(fposmod(beat.rotate,360.)),"charge":charge,"charge_base":int(row.get("charge",1)),"eligible":posmod(bar+1,charge)==0,"crit_chance":attributes.crit_chance,"crit_damage":attributes.crit_damage,"stats":attributes,"events":_events_for(uid,serial,sources),"equipped":true,"trajectory":trajectory,"calculation":{"base_damage":float(row.damage),"ship_multiplier":damage_scale,"level_multiplier":1.+.45*(int(module.level)-1),"attribute_multiplier":maxf(.1,1.+float(attributes.get(attribute,0))/100.+float(attributes.power)/200.),"damage_multiplier":attributes.bullet_multiplier,"mod_multiplier":maxf(.1,1.+weapon.damage_percent+(beat.streak if same else 0.)),"attribute_count":attribute_count,"base_count":int(row.get("count",1)),"extra_count":extra,"count_cap":count_limit}}
+	var cadence_data=cadence_profile_for(row)
+	var cadence=int(cadence_data.get("beats",_cadence_beats(row)))
+	var cadence_step=0
+	return {"uid":uid,"kind":str(row.id),"voice":str(row.get("voice",row.id)),"pitch":pitch,"family":str(row.family),"name":str(row.name),"category":"weapon","attr":attribute,"level":int(module.level),"width":int(row.width),"slot":at,"damage":clampf(damage,.1,100000.),"count":clampi(int(row.get("count",1))+extra,1,count_limit),"extra":extra,"pierce":clampi(int(row.get("pierce",0))+roundi(weapon.pierce),0,40),"speed":clampf(float(row.get("speed",700))*maxf(.1,1.+weapon.speed_percent),0.,3000.),"life":clampf(float(row.get("life",2))*maxf(.1,1.+weapon.range_percent),.1,30.),"spread":clampf(float(row.get("spread",0))*maxf(0.,1.+weapon.spread_percent),0.,TAU),"explosion":clampf(float(row.get("explosion",0))+weapon.explosion,0.,800.),"homing":clampf(float(row.get("homing",0))+weapon.homing,0.,20.),"bounces":clampi(int(row.get("bounces",0))+roundi(weapon.bounces),0,24),"chain_count":clampi(maxi(1,int(row.get("bounces",3)))+roundi(weapon.chain_count)+floori(maxf(0.,float(attributes.get(attribute,0.)))*float(trajectory.chain_per_attribute)),1,32),"chord":chord,"chord_power":clampf(beat.chord if chord else 0.,0.,5.),"repeat":clampi(roundi(beat.repeat),0,3),"repeat_index":0,"angle":deg_to_rad(fposmod(beat.rotate,360.)),"charge":charge,"charge_base":int(row.get("charge",1)),"eligible":posmod(bar+1,charge)==0,"cadence_beats":cadence,"cadence_step":cadence_step,"cadence_scale":1.,"cadence_label":str(cadence_data.label),"cadence_profile":cadence_data,"cadence_light":false,"recorded_audio":bool(row.get("recorded_audio",false)),"recorded_source":str(row.get("recorded_source","")),"crit_chance":attributes.crit_chance,"crit_damage":attributes.crit_damage,"stats":attributes,"events":_events_for(uid,serial,sources),"equipped":true,"trajectory":trajectory,"calculation":{"base_damage":float(row.damage),"ship_multiplier":damage_scale,"level_multiplier":1.+.45*(int(module.level)-1),"attribute_multiplier":maxf(.1,1.+float(attributes.get(attribute,0))/100.+float(attributes.power)/200.),"damage_multiplier":attributes.bullet_multiplier,"mod_multiplier":maxf(.1,1.+weapon.damage_percent+(beat.streak if same else 0.)),"attribute_count":attribute_count,"base_count":int(row.get("count",1)),"extra_count":extra,"count_cap":count_limit}}
 
 func item_stats(uid: int,serial: int=0) -> Dictionary:
 	var module=find(uid)
@@ -306,33 +387,52 @@ func trigger(at: int) -> Dictionary:
 	if not is_head(at): return {}
 	return _weapon_event(slots[at],at%STEPS,_rules())
 
-func schedule(serial: int) -> Array[Dictionary]:
-	var result: Array[Dictionary]=[]; var sources=_rules(); var index=posmod(serial,STEPS)
+func schedule(serial: int, local_beats: Dictionary={}) -> Array[Dictionary]:
+	var result: Array[Dictionary]=[]
+	var sources=_rules()
+	var index=posmod(serial,STEPS)
 	var first: Dictionary={}
 	for at in heads():
-		var module=find(slots[at]); var row=_row(str(module.kind))
+		var module=find(slots[at])
+		var row=_row(str(module.kind))
+		if str(row.category)=="weapon" and first.is_empty():
+			first=_weapon_event(int(module.uid),serial-index+at%STEPS,sources)
+		if at%STEPS!=index:
+			continue
 		if str(row.category)=="weapon":
+			if audio_guard_enabled and not C.is_weapon_audio_ready(str(row.id)):
+				continue
 			var event=_weapon_event(int(module.uid),serial,sources)
-			# Echo repeats the first weapon's actual event in this bar, including
-			# the conditions/charge/pitch at its head. Evaluating it on step8 would
-			# incorrectly exchange downbeat bonuses for final-step bonuses.
-			if first.is_empty(): first=_weapon_event(int(module.uid),serial-index+at%STEPS,sources)
-			if at%STEPS!=index or not bool(event.eligible): continue
-			var repeats=int(event.repeat); event.repeat=0; event.repeat_count=repeats
+			event.cadence_step=0
+			event.cadence_beats=1
+			event.cadence_scale=1.
+			event.fixed_sound=true
+			if not bool(event.eligible):
+				event.damage=0.
+				event.count=0
+			event.cadence_light=not bool(event.eligible)
+			event.pitch=0
+			event.repeat=0
 			result.append(event)
-			for n in range(repeats):
-				var repeated=event.duplicate(true); repeated.repeat_index=n+1
-				repeated.offset_seconds=.25*float(n+1)/float(repeats+1)
-				repeated.angle=float(event.angle)+(.07 if n%2==0 else -.07)*float(1+floori(float(n)/2.))
-				result.append(repeated)
-		elif at%STEPS==index:
+		else:
 			result.append({"uid":int(module.uid),"kind":str(row.id),"voice":str(row.get("voice","")),"pitch":index,"family":"support","category":str(row.category),"name":str(row.name),"attr":str(row.attr),"level":int(module.level),"width":int(row.width),"slot":at,"damage":0.,"count":0,"extra":0,"pierce":0,"speed":0.,"life":0.,"spread":0.,"explosion":0.,"homing":0.,"bounces":0,"chain_count":0,"chord":false,"repeat":0,"repeat_index":0,"angle":0.,"charge":1,"eligible":true,"rules":row.get("rules",[]).duplicate(true),"events":_events_for(int(module.uid),serial,sources)})
 	if echo_repeat and index==7 and not first.is_empty() and bool(first.eligible):
-		var echo=first.duplicate(true); echo.damage=float(echo.damage)*.5; echo.repeat=0; echo.repeat_index=0; echo.repeat_count=0; echo.pilot="echo"; echo.source_slot=first.slot; echo.slot=7; echo.offset_seconds=0.
+		var echo=first.duplicate(true)
+		echo.damage=float(echo.damage)*.5
+		echo.cadence_scale=.5
+		echo.repeat=0
+		echo.repeat_index=0
+		echo.pilot="echo"
+		echo.source_slot=first.slot
+		echo.slot=7
+		echo.track=-1
 		result.append(echo)
-	for i in range(result.size()): result[i]=CLOCK.stamp(result[i],serial)
+	for i in range(result.size()):
+		result[i]=CLOCK.stamp(result[i],serial,SEQUENCE_STEP_SECONDS,120.,"arsenal",SEQUENCE_LOOP_SECONDS)
 	return result
-func advance_step(_index: int,serial: int) -> Array[Dictionary]: return schedule(serial)
+
+func advance_step(_index: int,serial: int,local_beats: Dictionary={}) -> Array[Dictionary]:
+	return schedule(serial,local_beats)
 
 func merge(uid: int) -> bool:
 	var chosen=find(uid)
@@ -356,7 +456,9 @@ func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[]) -> Array
 	var pool: Array=[]; var result: Array[Dictionary]=[]
 	var max_rarity=clampi(1+floori(float(maxi(wave,1)-1)/3.),1,3)
 	for row in C.rows():
-		if int(row.rarity)<=max_rarity and not excluded.has(str(row.id)): pool.append(row)
+		if int(row.rarity)<=max_rarity and not excluded.has(str(row.id)):
+			if audio_guard_enabled and not C.is_item_available(str(row.id)): continue
+			pool.append(row)
 	var luck=float(stats().luck)
 	var owned: Array=[]
 	for module in modules: owned.append(str(module.kind))
@@ -399,9 +501,39 @@ func reward_choices(rng: RandomNumberGenerator) -> Array:
 	for i in range(mini(3,shop.size())):
 		var row=_row(str(shop[i].id)); result.append({"type":"module","kind":str(row.id),"title":str(row.name),"detail":str(row.detail),"tag":"新装备","color":row.color})
 	return result
+
+func wave_boon_choices(rng: RandomNumberGenerator) -> Array[Dictionary]:
+	var pool: Array=WAVE_BOONS.duplicate(true)
+	for index in range(pool.size()-1,0,-1):
+		var swap=rng.randi_range(0,index)
+		var temporary=pool[index]; pool[index]=pool[swap]; pool[swap]=temporary
+	var result: Array[Dictionary]=[]
+	for index in range(mini(3,pool.size())):
+		var boon: Dictionary=pool[index].duplicate(true)
+		boon.type="boon"
+		boon.title=str(boon.name)
+		result.append(boon)
+	return result
+
+func add_boon(id: String) -> bool:
+	var found: Dictionary={}
+	for boon in WAVE_BOONS:
+		if str(boon.id)==id: found=boon; break
+	if found.is_empty(): return false
+	boons[id]=int(boons.get(id,0))+1
+	return true
+
+func boon_summary() -> Array[String]:
+	var result: Array[String]=[]
+	for boon in WAVE_BOONS:
+		var count=int(boons.get(str(boon.id),0))
+		if count>0: result.append("%s ×%d" % [str(boon.name),count])
+	return result
+
 func take(reward: Dictionary) -> bool:
 	match str(reward.get("type","")):
 		"module": return add_module(str(reward.get("kind","")))>=0
+		"boon": return add_boon(str(reward.get("id","")))
 		"upgrade":
 			var module=find(int(reward.get("uid",-1)))
 			if module.is_empty() or int(module.level)>=4: return false
@@ -411,8 +543,10 @@ func take(reward: Dictionary) -> bool:
 
 func clone():
 	var copy=get_script().new()
+	copy.phrase_offsets=phrase_offsets.duplicate(true)
 	copy.modules=modules.duplicate(true); copy.slots.assign(slots); copy.next_uid=next_uid
-	copy.perks=perks.duplicate(true); copy.damage_scale=damage_scale; copy.echo_repeat=echo_repeat
+	copy.perks=perks.duplicate(true); copy.boons=boons.duplicate(true); copy.damage_scale=damage_scale; copy.echo_repeat=echo_repeat
+	copy.active_tracks=active_tracks; copy.audio_guard_enabled=audio_guard_enabled; copy.recorded_starter_quality=recorded_starter_quality
 	copy._base_health=_base_health; copy._base_extra=_base_extra; copy._fleet_stats=_fleet_stats.duplicate(true)
 	return copy
 func rule_explanation(uid: int,serial: int) -> Array[String]:

@@ -168,7 +168,7 @@ func actual_main_flow() -> void:
 		await create_timer(.01).timeout
 	await create_timer(.2).timeout
 	var actual_screen=game.ui.arsenal
-	check(game.state=="combat" and actual_screen.mode=="combat" and actual_screen.stat_labels.is_empty() and actual_screen.step_cells.size()==24,"actual Main starts with compact three-track combat and optional panels hidden")
+	check(game.state=="combat" and actual_screen.mode=="combat" and actual_screen.stat_labels.is_empty() and actual_screen.step_cells.size()==16,"actual Main starts with compact two-track combat and optional panels hidden")
 	check(actual_screen.panel_rects.sequencer.size.y<=128.0 and actual_screen.panel_rects.sequencer.size.x<=780.0 and actual_screen.step_cards[0].flight_compact,"actual Main combat uses compact icon rows rather than the full workshop layout")
 	await main_snapshot("v3-combat-default-1080p")
 	var phase: float=game.music.timeline
@@ -189,8 +189,8 @@ func actual_main_flow() -> void:
 	merge_button.pressed.emit(); await frames()
 	check(game.loadout.find(uid).level==level_before+1 and game.editing_changed,"actual Main merge callback updates equipment and marks the soundtrack dirty")
 	game.ui.arsenal.drop_module(uid,-1); await frames()
-	game.ui.arsenal.drop_module(uid,16); await frames()
-	check(game.loadout.slots[16]==uid and game.loadout.valid(),"actual Main drag/drop routing unequips and equips on the third track atomically")
+	game.ui.arsenal.drop_module(uid,14); await frames()
+	check(game.loadout.slots[14]==uid and game.loadout.valid(),"actual Main drag/drop routing unequips and equips on the second track atomically")
 	game.ui.arsenal.inspect_module(uid); await frames()
 	await main_snapshot("v3-actual-editor-1080p")
 	game.close_editor(); await wait_resume(game)

@@ -1,12 +1,15 @@
 {
-	"checks": 328,
+	"checks": 452,
 	"facts": {
-		"compile_msec": 1375.81,
-		"max_native_error": 0.00601620395886915,
-		"pcm_peak_sampled": 9465,
-		"score_events": 168,
-		"weapon_files": 256
+		"compile_msec": 11037.573,
+		"fire_log_size": 22,
+		"max_native_error": 0.0340719885556102,
+		"native_playing": true,
+		"native_timeline": 4.10286089910889,
+		"pcm_peak_sampled": 21188,
+		"score_events": 1664,
+		"weapon_files": 352
 	},
 	"failures": [],
-	"scope": "All256original weapon WAVs,32distinct instruments/eight pitches,128s native score versus pure512-step schedule, actual flight timing and paused rebuild. No claim of human musical taste acceptance."
+	"scope": "All288 archived/active weapon WAVs, four live recorded instruments,128s native score versus pure1024-step schedule, actual flight timing and paused rebuild. No claim of human musical taste acceptance."
 }

@@ -54,5 +54,5 @@ func run() -> void:
 	check(max_error<.06,"late-run weapon attacks remain on native audio clock")
 	await shot("run-victory")
 	var result={"checks":checks,"failures":failures,"elapsed_wall_seconds":(Time.get_ticks_msec()-start)/1000.,"music_seconds":game.music.timeline,"kills":game.kills,"total_spawned":game.total_spawned,"score":game.score,"chosen_rewards":selected,"waves":waves,"weapon_damage":game.weapon_damage.duplicate(),"peak_enemies":max_enemies,"peak_bullets":max_bullets,"peak_hostile_bullets":max_hostile,"late_timing_max_error":max_error,"scope":"One complete ten-wave run on real native audio and production durations, native spawns/hits/boss phase/victory, real reward buttons. Invulnerability, assisted steering and automatic overload; no injected kills, HP reduction, music seeking or wave/time skips. Not human difficulty or listening acceptance."}
-	FileAccess.open("res://tests/results-full-run.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("BEATDRIFT_FULL_RUN ",JSON.stringify(result))
+	FileAccess.open("res://tests/results-full-run.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("GROOVE_FLIGHT_FULL_RUN ",JSON.stringify(result))
 	game.music.stop(); current_scene=null; game.queue_free(); await frames(5); quit(0 if failures.is_empty() else 1)

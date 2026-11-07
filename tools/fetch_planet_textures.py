@@ -39,7 +39,7 @@ class Links(HTMLParser):
             self.values[value.rsplit('/',1)[-1]] = urljoin(PAGE, value)
 
 def request(url):
-    return urllib.request.Request(url, headers={'User-Agent': 'BeatDrift-art-source/1.0'})
+    return urllib.request.Request(url, headers={'User-Agent': 'GrooveFlight-art-source/1.0'})
 
 def main():
     with urllib.request.urlopen(request(PAGE),timeout=60) as response:

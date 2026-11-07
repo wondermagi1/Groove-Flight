@@ -1,7 +1,8 @@
 extends Node2D
-## Instanced, filled aircraft for large fleets. Six shared meshes replace
+## Instanced, filled aircraft for large fleets. Eight shared meshes replace
 ## thousands of per-aircraft canvas commands while retaining role silhouettes.
-const TYPES=["mote","armor","shooter","dart","splitter","sentinel"]
+const TYPES=["mote","armor","shooter","dart","splitter","sentinel","lance","mirror"]
+const CAPACITY=1024
 var fleets: Dictionary={}
 var counts: Dictionary={}
 var active_count: int=0
@@ -11,7 +12,7 @@ func _ready() -> void:
 		var fleet=MultiMesh.new()
 		fleet.transform_format=MultiMesh.TRANSFORM_2D
 		fleet.use_colors=true; fleet.mesh=make_mesh(kind)
-		fleet.instance_count=640; fleet.visible_instance_count=0
+		fleet.instance_count=CAPACITY; fleet.visible_instance_count=0
 		fleets[kind]=fleet; counts[kind]=0
 
 static func add_plate(vertices: PackedVector3Array,colors: PackedColorArray,points: Array,color: Color) -> void:
@@ -58,8 +59,22 @@ static func make_mesh(kind: String) -> ArrayMesh:
 			for side in [-1.,1.]:
 				add_plate(vertices,colors,[[.7,side*.42],[.95,side*.7],[-.3,side*1.13],[-.9,side*.63]],dark)
 				add_plate(vertices,colors,[[.68,side*.55],[.77,side*.66],[-.43,side*.93],[-.58,side*.75]],red)
+		"lance":
+			add_plate(vertices,colors,[[1.72,0],[.45,-.25],[-.8,-.9],[-1.3,-.5],[-.95,0],[-1.3,.5],[-.8,.9],[.45,.25]],ink)
+			add_plate(vertices,colors,[[1.58,0],[.38,-.17],[-.7,-.68],[-1.02,-.34],[-.72,0],[-1.02,.34],[-.7,.68],[.38,.17]],plate)
+			for side in [-1.,1.]:
+				add_plate(vertices,colors,[[.1,side*.36],[.82,side*.33],[.82,side*.45],[.1,side*.48]],Color("71819b"))
+				add_plate(vertices,colors,[[.76,side*.28],[.87,side*.28],[.87,side*.50],[.76,side*.50]],red)
+		"mirror":
+			for side in [-1.,1.]:
+				add_plate(vertices,colors,[[.64,side*.14],[-.04,side*.82],[-1.04,side*.72],[-.96,side*.36],[-.4,side*.39],[-.1,side*.20]],ink)
+				add_plate(vertices,colors,[[.54,side*.18],[-.06,side*.64],[-.8,side*.58],[-.74,side*.42],[-.3,side*.43]],plate)
+				add_plate(vertices,colors,hex(Vector2(-.22,side*.48),.14),red)
+			add_plate(vertices,colors,[[.96,0],[.34,-.18],[-.6,-.18],[-.92,0],[-.6,.18],[.34,.18]],plate)
 	add_plate(vertices,colors,hex(Vector2(.06,0),.18),red)
 	add_plate(vertices,colors,[[-.70,-.17],[-1.14,-.10],[-1.14,.10],[-.70,.17]],Color("7baec4"))
+	add_plate(vertices,colors,[[-.38,-.34],[-.08,-.43],[.08,-.20],[-.22,-.13]],Color("e6f3ff"))
+	add_plate(vertices,colors,[[-.50,.48],[.42,.42],[.22,.57],[-.34,.62]],Color("101b2b"))
 	var arrays=[]; arrays.resize(Mesh.ARRAY_MAX)
 	arrays[Mesh.ARRAY_VERTEX]=vertices; arrays[Mesh.ARRAY_COLOR]=colors
 	var mesh=ArrayMesh.new(); mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
@@ -73,6 +88,7 @@ func update_fleet(enemies: Array,bounds: Rect2) -> void:
 		var kind=str(enemy.kind)
 		if enemy.hp<=0 or not fleets.has(kind) or not bounds.has_point(enemy.at): continue
 		var index=int(counts[kind]); var mesh: MultiMesh=fleets[kind]
+		if index>=CAPACITY: continue
 		var transform=Transform2D(float(enemy.angle),enemy.at).scaled_local(Vector2.ONE*float(enemy.radius))
 		mesh.set_instance_transform_2d(index,transform)
 		mesh.set_instance_color(index,Color.WHITE*(1.+clampf(float(enemy.flash)*12.,0,1.5)))

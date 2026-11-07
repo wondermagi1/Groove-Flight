@@ -1,8 +1,8 @@
 {
-	"after5s_max_error": 0.0147713049110223,
+	"after5s_max_error": 0.0110796142578096,
 	"arrangements": [
 		{
-			"dust": 26,
+			"dust": 19,
 			"modules": [
 				{
 					"kind": "pulse",
@@ -30,12 +30,12 @@
 					"uid": 5
 				},
 				{
-					"kind": "orbit",
+					"kind": "recorded_crude",
 					"level": 1,
 					"uid": 6
 				},
 				{
-					"kind": "r_drum_fuel",
+					"kind": "r_support_ostinato",
 					"level": 1,
 					"uid": 7
 				}
@@ -69,7 +69,7 @@
 			"wave": 1
 		},
 		{
-			"dust": 89,
+			"dust": 76,
 			"modules": [
 				{
 					"kind": "pulse",
@@ -97,22 +97,22 @@
 					"uid": 5
 				},
 				{
-					"kind": "orbit",
+					"kind": "recorded_crude",
 					"level": 1,
 					"uid": 6
 				},
 				{
-					"kind": "r_drum_fuel",
+					"kind": "r_support_ostinato",
 					"level": 1,
 					"uid": 7
 				},
 				{
-					"kind": "pulse",
+					"kind": "drone",
 					"level": 1,
 					"uid": 8
 				},
 				{
-					"kind": "nova",
+					"kind": "mod_nova_1",
 					"level": 1,
 					"uid": 9
 				}
@@ -123,12 +123,12 @@
 				2,
 				6,
 				6,
-				8,
+				9,
 				3,
 				3,
 				4,
-				9,
-				9,
+				8,
+				8,
 				-1,
 				5,
 				5,
@@ -146,7 +146,7 @@
 			"wave": 2
 		},
 		{
-			"dust": 187,
+			"dust": 171,
 			"modules": [
 				{
 					"kind": "pulse",
@@ -174,32 +174,32 @@
 					"uid": 5
 				},
 				{
-					"kind": "orbit",
+					"kind": "recorded_crude",
 					"level": 1,
 					"uid": 6
 				},
 				{
-					"kind": "r_drum_fuel",
+					"kind": "r_support_ostinato",
 					"level": 1,
 					"uid": 7
 				},
 				{
-					"kind": "pulse",
+					"kind": "drone",
 					"level": 1,
 					"uid": 8
 				},
 				{
-					"kind": "nova",
+					"kind": "mod_nova_1",
 					"level": 1,
 					"uid": 9
 				},
 				{
-					"kind": "rail",
+					"kind": "flame",
 					"level": 1,
 					"uid": 10
 				},
 				{
-					"kind": "mod_beam_1",
+					"kind": "mod_drone_4",
 					"level": 1,
 					"uid": 11
 				}
@@ -210,17 +210,17 @@
 				2,
 				6,
 				6,
-				8,
+				9,
 				3,
 				3,
 				4,
-				9,
-				9,
+				8,
+				8,
+				10,
+				5,
+				5,
 				11,
-				5,
-				5,
-				10,
-				10,
+				-1,
 				-1,
 				-1,
 				-1,
@@ -233,7 +233,7 @@
 			"wave": 3
 		},
 		{
-			"dust": 337,
+			"dust": 306,
 			"modules": [
 				{
 					"kind": "pulse",
@@ -261,42 +261,42 @@
 					"uid": 5
 				},
 				{
-					"kind": "orbit",
+					"kind": "recorded_crude",
 					"level": 1,
 					"uid": 6
 				},
 				{
-					"kind": "r_drum_fuel",
+					"kind": "r_support_ostinato",
 					"level": 1,
 					"uid": 7
 				},
 				{
-					"kind": "pulse",
+					"kind": "drone",
 					"level": 1,
 					"uid": 8
 				},
 				{
-					"kind": "nova",
+					"kind": "mod_nova_1",
 					"level": 1,
 					"uid": 9
 				},
 				{
-					"kind": "rail",
+					"kind": "flame",
 					"level": 1,
 					"uid": 10
 				},
 				{
-					"kind": "mod_beam_1",
+					"kind": "mod_drone_4",
 					"level": 1,
 					"uid": 11
 				},
 				{
-					"kind": "drone",
+					"kind": "scatter",
 					"level": 1,
 					"uid": 12
 				},
 				{
-					"kind": "mod_pulse_4",
+					"kind": "mine",
 					"level": 1,
 					"uid": 13
 				}
@@ -307,20 +307,20 @@
 				2,
 				6,
 				6,
-				8,
+				9,
 				3,
 				3,
 				4,
-				9,
-				9,
+				8,
+				8,
+				10,
+				5,
+				5,
 				11,
-				5,
-				5,
-				10,
-				10,
-				12,
 				12,
 				13,
+				-1,
+				-1,
 				-1,
 				-1,
 				-1,
@@ -330,7 +330,7 @@
 			"wave": 4
 		},
 		{
-			"dust": 521,
+			"dust": 471,
 			"modules": [
 				{
 					"kind": "pulse",
@@ -358,52 +358,52 @@
 					"uid": 5
 				},
 				{
-					"kind": "orbit",
+					"kind": "recorded_crude",
 					"level": 1,
 					"uid": 6
 				},
 				{
-					"kind": "r_drum_fuel",
+					"kind": "r_support_ostinato",
 					"level": 1,
 					"uid": 7
 				},
 				{
-					"kind": "pulse",
+					"kind": "drone",
 					"level": 1,
 					"uid": 8
 				},
 				{
-					"kind": "nova",
+					"kind": "mod_nova_1",
 					"level": 1,
 					"uid": 9
 				},
 				{
-					"kind": "rail",
+					"kind": "flame",
 					"level": 1,
 					"uid": 10
 				},
 				{
-					"kind": "mod_beam_1",
+					"kind": "mod_drone_4",
 					"level": 1,
 					"uid": 11
 				},
 				{
-					"kind": "drone",
+					"kind": "scatter",
 					"level": 1,
 					"uid": 12
 				},
 				{
-					"kind": "mod_pulse_4",
+					"kind": "mine",
 					"level": 1,
 					"uid": 13
 				},
 				{
-					"kind": "drone",
+					"kind": "recorded_medium",
 					"level": 1,
 					"uid": 14
 				},
 				{
-					"kind": "r_return_finale",
+					"kind": "mod_flame_4",
 					"level": 1,
 					"uid": 15
 				}
@@ -414,172 +414,178 @@
 				2,
 				6,
 				6,
-				8,
+				9,
 				3,
 				3,
 				4,
-				9,
-				9,
+				8,
+				8,
+				10,
+				5,
+				5,
 				11,
-				5,
-				5,
-				10,
-				10,
-				12,
 				12,
 				13,
 				14,
 				14,
 				15,
-				15,
+				-1,
+				-1,
+				-1,
 				-1
 			],
 			"wave": 5
 		}
 	],
-	"boss_max_hp": 4000.0,
+	"boss_max_hp": 3000.0,
 	"checks": 69,
-	"elapsed_wall_seconds": 163.193,
+	"elapsed_wall_seconds": 178.747,
 	"failures": [],
-	"first5s_max_error": 0.0491968876422644,
-	"kills": 763,
-	"max_compile_msec": 1630.682,
-	"max_timing_error": 0.0491968876422644,
-	"music_seconds": 155.027353221171,
-	"observed_weapon_events": 693,
-	"peak_bullets": 59,
-	"peak_enemies": 86,
-	"peak_hostile_bullets": 50,
+	"first5s_max_error": 0.00586798855561018,
+	"kills": 700,
+	"max_compile_msec": 4675.149,
+	"max_timing_error": 0.0110796142578096,
+	"music_seconds": 137.82520869458,
+	"observed_weapon_events": 2173,
+	"peak_bullets": 201,
+	"peak_enemies": 99,
+	"peak_hostile_bullets": 16,
 	"planet": "mercury",
 	"purchases": [
 		{
-			"kind": "orbit",
-			"price": 24,
+			"kind": "recorded_crude",
+			"price": 31,
 			"slot": 3,
 			"uid": 6,
 			"wave": 1
 		},
 		{
-			"kind": "r_drum_fuel",
+			"kind": "r_support_ostinato",
 			"price": 20,
 			"slot": 1,
 			"uid": 7,
 			"wave": 1
 		},
 		{
-			"kind": "pulse",
-			"price": 14,
-			"slot": 5,
+			"kind": "drone",
+			"price": 26,
+			"slot": 9,
 			"uid": 8,
 			"wave": 2
 		},
 		{
-			"kind": "nova",
-			"price": 23,
-			"slot": 9,
+			"kind": "mod_nova_1",
+			"price": 14,
+			"slot": 5,
 			"uid": 9,
 			"wave": 2
 		},
 		{
-			"kind": "rail",
-			"price": 27,
-			"slot": 14,
+			"kind": "flame",
+			"price": 16,
+			"slot": 11,
 			"uid": 10,
 			"wave": 3
 		},
 		{
-			"kind": "mod_beam_1",
-			"price": 15,
-			"slot": 11,
+			"kind": "mod_drone_4",
+			"price": 16,
+			"slot": 14,
 			"uid": 11,
 			"wave": 3
 		},
 		{
-			"kind": "drone",
-			"price": 27,
-			"slot": 16,
+			"kind": "scatter",
+			"price": 15,
+			"slot": 15,
 			"uid": 12,
 			"wave": 4
 		},
 		{
-			"kind": "mod_pulse_4",
-			"price": 16,
-			"slot": 18,
+			"kind": "mine",
+			"price": 24,
+			"slot": 16,
 			"uid": 13,
 			"wave": 4
 		},
 		{
-			"kind": "drone",
-			"price": 28,
-			"slot": 19,
+			"kind": "recorded_medium",
+			"price": 42,
+			"slot": 17,
 			"uid": 14,
 			"wave": 5
 		},
 		{
-			"kind": "r_return_finale",
-			"price": 28,
-			"slot": 21,
+			"kind": "mod_flame_4",
+			"price": 17,
+			"slot": 19,
 			"uid": 15,
 			"wave": 5
 		}
 	],
 	"record": {
 		"attempts": 1,
-		"best_score": 873,
-		"best_time": 154.961145003641,
+		"best_score": 810,
+		"best_time": 137.82520869458,
 		"clears": 1,
+		"hard_attempts": 0,
+		"hard_best_score": 0,
+		"hard_best_time": 0.0,
+		"hard_clears": 0,
 		"last_result": "clear"
 	},
-	"scope": "Complete Mercury six-wave route at production timings/native128-second music, five real shops/purchases/equipment drops/continue signals and actual4000HPBoss phase2/victory/progress record. Assistance: invulnerability, steering, automatic overload only. No enemy HP reduction, injected kills, music seeking or wave/time skips. No claim of eight full planet clears or human difficulty acceptance.",
-	"score": 873,
+	"scope": "Complete Mercury six-wave route at production timings/native128-second music, five real shops/purchases/equipment drops/continue signals and actual3000HPBoss phase2/victory/progress record. Assistance: invulnerability, steering, automatic overload only. No enemy HP reduction, injected kills, music seeking or wave/time skips. No claim of eight full planet clears or human difficulty acceptance.",
+	"score": 810,
 	"shops": 5,
-	"total_spawned": 766,
+	"total_spawned": 756,
 	"waves": {
 		"1": {
 			"dust": 0,
 			"equipped": 5,
 			"modules": 5,
-			"start": 0.0491968876422644
+			"start": 0.0
 		},
 		"2": {
-			"dust": 26,
+			"dust": 19,
 			"equipped": 7,
 			"modules": 7,
-			"start": 20.0521095528358
+			"start": 20.0386371422119
 		},
 		"3": {
-			"dust": 89,
+			"dust": 76,
 			"equipped": 9,
 			"modules": 9,
-			"start": 42.0448426740516
+			"start": 42.0990083879395
 		},
 		"4": {
-			"dust": 187,
+			"dust": 171,
 			"equipped": 11,
 			"modules": 11,
-			"start": 66.0656127370399
+			"start": 66.1148941665039
 		},
 		"5": {
-			"dust": 337,
+			"dust": 306,
 			"equipped": 13,
 			"modules": 13,
-			"start": 92.0610370842079
+			"start": 92.0897304814453
 		},
 		"6": {
-			"dust": 521,
+			"dust": 471,
 			"equipped": 15,
 			"modules": 15,
-			"start": 120.064257465067
+			"start": 120.10180748877
 		}
 	},
 	"weapon_damage": {
-		"beam": 2269.745,
-		"drone": 753.625,
-		"nova": 2827.0,
-		"orbit": 170.125,
-		"overload": 7125.145,
-		"pulse": 5492.11,
-		"rail": 1494.5,
-		"scatter": 1627.75
+		"beam": 1067.488,
+		"drone": 1771.793625,
+		"flame": 53.44,
+		"mine": 4.224,
+		"nova": 1699.52975,
+		"overload": 5001.84275,
+		"pulse": 4352.694125,
+		"recorded_crude": 3355.58999999999,
+		"recorded_medium": 589.884,
+		"scatter": 1765.94675
 	}
 }

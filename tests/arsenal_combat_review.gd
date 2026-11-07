@@ -18,9 +18,10 @@ func frames(count: int=3) -> void:
 func fixture(kinds: Array=["pulse"]) -> void:
 	game.state="combat"; game.wave=10; game.wave_start=100.; game.music.timeline=100.; game.boss_down=false
 	game.enemies.clear(); game.by_id.clear(); game.spatial.clear(); game.bullets.clear(); game.enemy_bullets.clear(); game.pickups.clear(); game.warnings.clear(); game.proc_queue.clear(); game.pending_splits.clear()
+	game.loadout.audio_guard_enabled=false; game.loadout.active_tracks=3
 	game.loadout.reset(); game.loadout.set_fleet({"health":10,"damage_scale":1.},{"id":"mender"}); game.loadout.set_starters(kinds)
 	game.refresh_loadout_stats(); game.selected_pilot="mender"; game.pilot_amp_until=-1.; game.overload_until=-1.
-	game.health=10.; game.invulnerable=0.; game.dash_left=0.; game.dash_cooldown=0.; game.shield_points=0.; game.pending_dash_missiles=0; game.charge=0.
+	game.health=10.; game.player_guard_until=-1.; game.invulnerable=0.; game.dash_left=0.; game.dash_cooldown=0.; game.shield_points=0.; game.pending_dash_missiles=0; game.charge=0.
 	game.player=Vector2.ZERO; game.facing=Vector2.UP; game.camera.position=Vector2.ZERO; game.camera.reset_smoothing(); game.camera.force_update_scroll()
 	game.kills=0; game.dust=0; game.picked=0; game.pilot_heal_progress=0; game.weapon_damage.clear(); game.fire_log.clear()
 	game.fx.particles.clear(); game.fx.marks.clear()
@@ -37,9 +38,9 @@ func run() -> void:
 	game.set_process(false); game.set_physics_process(false); game.set_process_unhandled_input(false)
 	check(game.test_mode,"combat test uses isolated profile and testmode")
 	weapon_impacts(); projectile_mechanics(); actual_stat_effects(); actual_proc_effects(); await economy_callbacks()
-	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"Production methods under controlled position/time/high-HP fixtures:32weapon impacts, projectiles, attributes,7procs, inventory/shop currency callbacks. Native full-route timing/audio and human balance are separate."}
+	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"Production methods under controlled position/time/high-HP fixtures:36weapon impacts, projectiles, attributes,7procs, inventory/shop currency callbacks. Native full-route timing/audio and human balance are separate."}
 	FileAccess.open("res://tests/results-arsenal-combat.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
-	print("BEATDRIFT_ARSENAL_COMBAT ",JSON.stringify(result))
+	print("GROOVE_FLIGHT_ARSENAL_COMBAT ",JSON.stringify(result))
 	game.music.stop(); game.music.stream=null
 	for voice in game.voices: voice.stop(); voice.stream=null
 	current_scene=null; game.queue_free(); await frames(5); await create_timer(.15,true).timeout
@@ -47,7 +48,10 @@ func run() -> void:
 func weapon_impacts() -> void:
 	var measured: Dictionary={}
 	for row in C.weapons():
-		fixture([str(row.id)]); var enemy=target(); var event=fire()
+		fixture([str(row.id)])
+		# The prism's four diagonal arms deliberately leave the vertical axis clear.
+		var enemy=target(Vector2(110,-174) if str(row.id)=="scatter_prism" else Vector2(0,-100))
+		var event=fire()
 		for i in range(100): game.update_bullets(.02)
 		var damage=100000.-float(enemy.hp)
 		check(damage>0 and float(game.weapon_damage.get(str(row.id),0))>0,"actual target damaged by / "+str(row.id))

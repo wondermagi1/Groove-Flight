@@ -1,0 +1,5 @@
+{
+	"checks": 367,
+	"failures": [],
+	"scope": "Pure production scheduling of every active weapon for eight seconds; phase isolation, 1-second deadlines, authored contours, damage conservation and pure snapshot/clone behavior."
+}

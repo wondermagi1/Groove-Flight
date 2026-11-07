@@ -1,0 +1,590 @@
+{
+	"after5s_max_error": 0.0170631914062511,
+	"arrangements": [
+		{
+			"dust": 26,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_drum_fuel",
+					"level": 1,
+					"uid": 7
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				-1,
+				3,
+				3,
+				4,
+				-1,
+				-1,
+				-1,
+				5,
+				5,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 1
+		},
+		{
+			"dust": 80,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_drum_fuel",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_drum_fuel",
+					"level": 1,
+					"uid": 9
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				8,
+				3,
+				3,
+				4,
+				9,
+				-1,
+				-1,
+				5,
+				5,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 2
+		},
+		{
+			"dust": 162,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_drum_fuel",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_drum_fuel",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "chain",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "r_density",
+					"level": 1,
+					"uid": 11
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				8,
+				3,
+				3,
+				4,
+				9,
+				10,
+				10,
+				5,
+				5,
+				11,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 3
+		},
+		{
+			"dust": 281,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_drum_fuel",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_drum_fuel",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "chain",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "r_density",
+					"level": 1,
+					"uid": 11
+				},
+				{
+					"kind": "scatter_heavy",
+					"level": 1,
+					"uid": 12
+				},
+				{
+					"kind": "mod_boomerang_2",
+					"level": 1,
+					"uid": 13
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				8,
+				3,
+				3,
+				4,
+				9,
+				10,
+				10,
+				5,
+				5,
+				11,
+				13,
+				12,
+				12,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 4
+		},
+		{
+			"dust": 437,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "orbit",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_drum_fuel",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_drum_fuel",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "chain",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "r_density",
+					"level": 1,
+					"uid": 11
+				},
+				{
+					"kind": "scatter_heavy",
+					"level": 1,
+					"uid": 12
+				},
+				{
+					"kind": "mod_boomerang_2",
+					"level": 1,
+					"uid": 13
+				},
+				{
+					"kind": "boomerang_ricochet",
+					"level": 1,
+					"uid": 14
+				},
+				{
+					"kind": "r_double_time",
+					"level": 1,
+					"uid": 15
+				}
+			],
+			"slots": [
+				1,
+				7,
+				2,
+				6,
+				6,
+				8,
+				3,
+				3,
+				4,
+				9,
+				10,
+				10,
+				5,
+				5,
+				11,
+				13,
+				12,
+				12,
+				14,
+				14,
+				15,
+				15,
+				-1,
+				-1
+			],
+			"wave": 5
+		}
+	],
+	"boss_max_hp": 3000.0,
+	"checks": 69,
+	"elapsed_wall_seconds": 197.23,
+	"failures": [],
+	"first5s_max_error": 0.00590698855561018,
+	"kills": 690,
+	"max_compile_msec": 5587.728,
+	"max_timing_error": 0.0170631914062511,
+	"music_seconds": 134.680009305084,
+	"observed_weapon_events": 566,
+	"peak_bullets": 54,
+	"peak_enemies": 120,
+	"peak_hostile_bullets": 13,
+	"planet": "mercury",
+	"purchases": [
+		{
+			"kind": "orbit",
+			"price": 24,
+			"slot": 3,
+			"uid": 6,
+			"wave": 1
+		},
+		{
+			"kind": "r_drum_fuel",
+			"price": 20,
+			"slot": 1,
+			"uid": 7,
+			"wave": 1
+		},
+		{
+			"kind": "boomerang",
+			"price": 21,
+			"slot": 5,
+			"uid": 8,
+			"wave": 2
+		},
+		{
+			"kind": "r_drum_fuel",
+			"price": 21,
+			"slot": 9,
+			"uid": 9,
+			"wave": 2
+		},
+		{
+			"kind": "chain",
+			"price": 23,
+			"slot": 10,
+			"uid": 10,
+			"wave": 3
+		},
+		{
+			"kind": "r_density",
+			"price": 21,
+			"slot": 14,
+			"uid": 11,
+			"wave": 3
+		},
+		{
+			"kind": "scatter_heavy",
+			"price": 33,
+			"slot": 16,
+			"uid": 12,
+			"wave": 4
+		},
+		{
+			"kind": "mod_boomerang_2",
+			"price": 19,
+			"slot": 15,
+			"uid": 13,
+			"wave": 4
+		},
+		{
+			"kind": "boomerang_ricochet",
+			"price": 34,
+			"slot": 18,
+			"uid": 14,
+			"wave": 5
+		},
+		{
+			"kind": "r_double_time",
+			"price": 31,
+			"slot": 20,
+			"uid": 15,
+			"wave": 5
+		}
+	],
+	"record": {
+		"attempts": 1,
+		"best_score": 800,
+		"best_time": 134.680009305084,
+		"clears": 1,
+		"hard_attempts": 0,
+		"hard_best_score": 0,
+		"hard_best_time": 0.0,
+		"hard_clears": 0,
+		"last_result": "clear"
+	},
+	"scope": "Complete Mercury six-wave route at production timings/native128-second music, five real shops/purchases/equipment drops/continue signals and actual3000HPBoss phase2/victory/progress record. Assistance: invulnerability, steering, automatic overload only. No enemy HP reduction, injected kills, music seeking or wave/time skips. No claim of eight full planet clears or human difficulty acceptance.",
+	"score": 800,
+	"shops": 5,
+	"total_spawned": 753,
+	"waves": {
+		"1": {
+			"dust": 0,
+			"equipped": 5,
+			"modules": 5,
+			"start": 0.0
+		},
+		"2": {
+			"dust": 26,
+			"equipped": 7,
+			"modules": 7,
+			"start": 20.0774411422119
+		},
+		"3": {
+			"dust": 80,
+			"equipped": 9,
+			"modules": 9,
+			"start": 42.1416106369629
+		},
+		"4": {
+			"dust": 162,
+			"equipped": 11,
+			"modules": 11,
+			"start": 66.1189421665039
+		},
+		"5": {
+			"dust": 281,
+			"equipped": 13,
+			"modules": 13,
+			"start": 92.1610221010742
+		},
+		"6": {
+			"dust": 437,
+			"equipped": 15,
+			"modules": 15,
+			"start": 120.10376648877
+		}
+	},
+	"weapon_damage": {
+		"beam": 1227.0312,
+		"boomerang": 3141.1038,
+		"boomerang_ricochet": 600.59,
+		"chain": 220.04,
+		"nova": 1511.66245,
+		"overload": 6755.13895,
+		"pulse": 3863.5292,
+		"scatter": 1448.48855,
+		"scatter_heavy": 451.165850000002
+	}
+}

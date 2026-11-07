@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "rule": "The runtime sound is one continuous file from the source recording. Four-beat gameplay timing does not split or transpose the recording.",
+  "groups": [
+    {
+      "voice": "rec_crude",
+      "catalog_id": "weapon_crude_fire",
+      "source_file": "audio/library/groove_core/working/weapon_crude_fire/extracted_audio.wav",
+      "source_start_seconds": 0.0,
+      "source_end_seconds": 7.0,
+      "runtime_file": "audio/authorized/weapon_crude_fire_group.wav",
+      "processing": "direct PCM16 slice only; no fades, gain, normalization, resampling, segmentation or pitch processing",
+      "duration_seconds": 7.0,
+      "peak_dbfs": -8.316,
+      "rms_dbfs": -30.997,
+      "waveform": "audio/library/groove_core/analysis/weapon_crude_fire/crude-fire-full-0-7s-waveform.png",
+      "pcm_samples_identical_to_source": true
+    },
+    {
+      "voice": "rec_light",
+      "catalog_id": "weapon_ballistic_volume_ramp",
+      "source_file": "audio/library/groove_core/working/weapon_ballistic_volume_ramp/extracted_audio.wav",
+      "source_start_seconds": 0.58,
+      "source_end_seconds": 8.06,
+      "runtime_file": "audio/authorized/weapon_ballistic_light_group.wav",
+      "processing": "direct PCM16 slice only; no fades, gain, normalization, resampling, segmentation or pitch processing",
+      "duration_seconds": 7.48,
+      "peak_dbfs": -9.706,
+      "rms_dbfs": -30.163,
+      "waveform": "audio/library/groove_core/analysis/weapon_ballistic_volume_ramp/ballistic-light-eight-events-waveform.png",
+      "pcm_samples_identical_to_source": true
+    },
+    {
+      "voice": "rec_medium",
+      "catalog_id": "weapon_ballistic_volume_ramp",
+      "source_file": "audio/library/groove_core/working/weapon_ballistic_volume_ramp/extracted_audio.wav",
+      "source_start_seconds": 20.08,
+      "source_end_seconds": 27.56,
+      "runtime_file": "audio/authorized/weapon_ballistic_medium_group.wav",
+      "processing": "direct PCM16 slice only; no fades, gain, normalization, resampling, segmentation or pitch processing",
+      "duration_seconds": 7.48,
+      "peak_dbfs": -9.533,
+      "rms_dbfs": -29.675,
+      "waveform": "audio/library/groove_core/analysis/weapon_ballistic_volume_ramp/ballistic-medium-eight-events-waveform.png",
+      "pcm_samples_identical_to_source": true
+    },
+    {
+      "voice": "rec_heavy",
+      "catalog_id": "weapon_ballistic_volume_ramp",
+      "source_file": "audio/library/groove_core/working/weapon_ballistic_volume_ramp/extracted_audio.wav",
+      "source_start_seconds": 33.08,
+      "source_end_seconds": 40.94,
+      "runtime_file": "audio/authorized/weapon_ballistic_heavy_group.wav",
+      "processing": "direct PCM16 slice only; no fades, gain, normalization, resampling, segmentation or pitch processing",
+      "duration_seconds": 7.86,
+      "peak_dbfs": -8.308,
+      "rms_dbfs": -27.041,
+      "waveform": "audio/library/groove_core/analysis/weapon_ballistic_volume_ramp/ballistic-heavy-eight-events-waveform.png",
+      "pcm_samples_identical_to_source": true
+    }
+  ]
+}

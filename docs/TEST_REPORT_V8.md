@@ -1,4 +1,4 @@
-# 律航 V8 · UHD背景验证
+# Groove Flight V8 · UHD背景验证
 
 2026-10-30，Windows、Godot4.7.2、RTX4060 Laptop。使用隔离测试参数，不写入玩家设置、乐谱或星球记录。
 

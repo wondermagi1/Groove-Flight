@@ -1,6 +1,6 @@
-# 律航 V4 · 太阳系航线验证
+# Groove Flight V4 · 太阳系航线验证
 
-2026-10-30，Godot4.7.2，Windows，RTX4060 Laptop。全部检查附加`--beatdrift-test`，不写入玩家设置或其他游戏的进度。
+2026-10-30，Godot4.7.2，Windows，RTX4060 Laptop。全部检查附加`--grooveflight-test`，不写入玩家设置或其他游戏的进度。
 
 ## 已执行检查
 

@@ -1,9 +1,14 @@
 {
-  "weapons": 32,
-  "pitched_weapon_samples": 256,
+  "weapons": 36,
+  "synthesized_weapons": 32,
+  "recorded_audio_weapons": 4,
+  "weapon_sample_files": 288,
+  "synthesized_pitched_samples": 256,
+  "recorded_event_slices": 32,
+  "recorded_transposition": false,
   "percussion_samples": 32,
   "rate": 22050,
   "format": "mono PCM16",
-  "unique_first_pitch_hashes": 32,
-  "origin": "Original procedural synthesis"
+  "unique_synthesized_first_pitch_hashes": 32,
+  "origin": "32 original procedural synthesis instruments plus 4 authorized recorded-audio event groups"
 }

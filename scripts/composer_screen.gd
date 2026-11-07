@@ -257,7 +257,7 @@ func _build_inspector() -> void:
 	var track=current_track()
 	var track_name=LineEdit.new(); track_name.name="ComposerTrackName"; track_name.text=str(track.name); track_name.placeholder_text="声部名称"; track_name.text_changed.connect(func(value):current_track().name=value; _changed(false)); inspector.add_child(track_name)
 	instrument_picker=OptionButton.new(); instrument_picker.name="ComposerInstrument"; instrument_picker.custom_minimum_size.y=40; instrument_picker.fit_to_longest_item=false
-	var weapons=DATA.weapons(); var selected=0
+	var weapons=DATA.playable_weapons(); var selected=0
 	for i in range(weapons.size()):
 		instrument_picker.add_item(str(weapons[i].name)); instrument_picker.set_item_metadata(i,str(weapons[i].id))
 		if str(weapons[i].id)==str(track.weapon): selected=i
@@ -373,7 +373,7 @@ func open_file_dialog(action: String) -> void:
 	pending_file=action; file_dialog=FileDialog.new(); file_dialog.name="ComposerFileDialog"; file_dialog.access=FileDialog.ACCESS_FILESYSTEM; file_dialog.use_native_dialog=true
 	var save=action in ["save","export_midi","export_wav"]
 	file_dialog.file_mode=FileDialog.FILE_MODE_SAVE_FILE if save else FileDialog.FILE_MODE_OPEN_FILE
-	if action in ["save","load"]: file_dialog.filters=PackedStringArray(["*.beat.json ; 律航乐谱"]); file_dialog.current_file="我的乐曲.beat.json" if save else ""
+	if action in ["save","load"]: file_dialog.filters=PackedStringArray(["*.beat.json ; Groove Flight 乐谱"]); file_dialog.current_file="我的乐曲.beat.json" if save else ""
 	elif action in ["import_midi","export_midi"]: file_dialog.filters=PackedStringArray(["*.mid,*.midi ; MIDI 乐曲"]); file_dialog.current_file="我的乐曲.mid" if save else ""
 	elif action=="import_audio": file_dialog.filters=PackedStringArray(["*.mp3,*.wav,*.flac,*.ogg ; 可识谱音频"])
 	else: file_dialog.filters=PackedStringArray(["*.wav ; WAV 音频"]); file_dialog.current_file="我的乐曲.wav"

@@ -1,0 +1,234 @@
+{
+	"checks": 27,
+	"facts": {
+		"recorded_peak_min": 5138,
+		"recorded_peaks": {
+			"res://audio/arsenal/notes/rec_crude_0.wav": {
+				"bytes": 11908,
+				"format": 1,
+				"peak": 5138,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_crude_1.wav": {
+				"bytes": 30430,
+				"format": 1,
+				"peak": 17185,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_crude_2.wav": {
+				"bytes": 11908,
+				"format": 1,
+				"peak": 5285,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_crude_3.wav": {
+				"bytes": 30430,
+				"format": 1,
+				"peak": 17660,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_crude_4.wav": {
+				"bytes": 11908,
+				"format": 1,
+				"peak": 5752,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_crude_5.wav": {
+				"bytes": 30870,
+				"format": 1,
+				"peak": 13073,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_crude_6.wav": {
+				"bytes": 12348,
+				"format": 1,
+				"peak": 5449,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_crude_7.wav": {
+				"bytes": 30430,
+				"format": 1,
+				"peak": 11220,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_heavy_0.wav": {
+				"bytes": 33516,
+				"format": 1,
+				"peak": 32768,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_heavy_1.wav": {
+				"bytes": 33516,
+				"format": 1,
+				"peak": 32767,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_heavy_2.wav": {
+				"bytes": 33516,
+				"format": 1,
+				"peak": 32535,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_heavy_3.wav": {
+				"bytes": 33516,
+				"format": 1,
+				"peak": 32768,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_heavy_4.wav": {
+				"bytes": 33516,
+				"format": 1,
+				"peak": 32767,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_heavy_5.wav": {
+				"bytes": 33516,
+				"format": 1,
+				"peak": 32767,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_heavy_6.wav": {
+				"bytes": 33516,
+				"format": 1,
+				"peak": 31712,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_heavy_7.wav": {
+				"bytes": 33516,
+				"format": 1,
+				"peak": 32768,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_light_0.wav": {
+				"bytes": 21168,
+				"format": 1,
+				"peak": 32767,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_light_1.wav": {
+				"bytes": 18522,
+				"format": 1,
+				"peak": 19043,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_light_2.wav": {
+				"bytes": 21168,
+				"format": 1,
+				"peak": 32767,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_light_3.wav": {
+				"bytes": 21168,
+				"format": 1,
+				"peak": 27777,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_light_4.wav": {
+				"bytes": 21168,
+				"format": 1,
+				"peak": 32767,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_light_5.wav": {
+				"bytes": 21168,
+				"format": 1,
+				"peak": 28576,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_light_6.wav": {
+				"bytes": 21168,
+				"format": 1,
+				"peak": 31458,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_light_7.wav": {
+				"bytes": 21168,
+				"format": 1,
+				"peak": 31043,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_medium_0.wav": {
+				"bytes": 16758,
+				"format": 1,
+				"peak": 32768,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_medium_1.wav": {
+				"bytes": 16758,
+				"format": 1,
+				"peak": 28223,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_medium_2.wav": {
+				"bytes": 16758,
+				"format": 1,
+				"peak": 32767,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_medium_3.wav": {
+				"bytes": 16758,
+				"format": 1,
+				"peak": 29283,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_medium_4.wav": {
+				"bytes": 16758,
+				"format": 1,
+				"peak": 32767,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_medium_5.wav": {
+				"bytes": 16758,
+				"format": 1,
+				"peak": 30268,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_medium_6.wav": {
+				"bytes": 16758,
+				"format": 1,
+				"peak": 28041,
+				"rate": 22050,
+				"stereo": false
+			},
+			"res://audio/arsenal/notes/rec_medium_7.wav": {
+				"bytes": 16758,
+				"format": 1,
+				"peak": 31352,
+				"rate": 22050,
+				"stereo": false
+			}
+		}
+	},
+	"failures": [],
+	"scope": "Production editor overlay at720p/1080p, 36 weapons, 288 PCM sample paths/hashes, cadence labels and actual AudioStreamPlayer preview. Does not judge subjective timbre."
+}

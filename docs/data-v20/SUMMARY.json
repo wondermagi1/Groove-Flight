@@ -1,0 +1,58 @@
+{
+  "version": "0.20.2-restored-entry",
+  "date": "2026-11-05",
+  "checks": 940,
+  "failures": 0,
+  "reviews": [
+    {
+      "test": "prism_cross_review",
+      "checks": 89,
+      "failures": 0,
+      "renderer": "forward_plus",
+      "result": "results-prism-cross.json"
+    },
+    {
+      "test": "contact_swarm_review",
+      "checks": 96,
+      "failures": 0,
+      "renderer": "headless",
+      "result": "results-contact-swarm.json"
+    },
+    {
+      "test": "arsenal_combat_review",
+      "checks": 114,
+      "failures": 0,
+      "renderer": "headless",
+      "result": "results-arsenal-combat.json"
+    },
+    {
+      "test": "weapon_cycle_review",
+      "checks": 144,
+      "failures": 0,
+      "renderer": "headless",
+      "result": "results-weapon-cycle.json"
+    },
+    {
+      "test": "selected_weapon_review",
+      "checks": 412,
+      "failures": 0,
+      "renderer": "headless",
+      "result": "results-selected-weapons.json"
+    },
+    {
+      "test": "electronic_audio_logic_review",
+      "checks": 45,
+      "failures": 0,
+      "renderer": "forward_plus",
+      "result": "results-electronic-audio-logic.json"
+    },
+    {
+      "test": "rhythm_feedback_review",
+      "checks": 40,
+      "failures": 0,
+      "renderer": "forward_plus",
+      "result": "results-rhythm-feedback.json"
+    }
+  ],
+  "scope": "Restored radial spawns and original formations; retained half-second pacing and no ordinary shooting. Four groups of three parallel colored beams; controlled native GPU and audio checks, not a full campaign balance review."
+}

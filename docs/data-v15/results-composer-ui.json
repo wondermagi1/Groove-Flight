@@ -1,0 +1,5 @@
+{
+	"checks": 28,
+	"failures": [],
+	"scope": "Production piano-roll UI/model with explicit mock transport/files: actual click-to-write/delete, chromatic pitch, duration/velocity/BPM/bars/track instrument/mute/solo/gain/pan, callbacks and720p/1080p visuals. Not native audio or complete battle."
+}

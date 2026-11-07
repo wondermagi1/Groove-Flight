@@ -49,6 +49,7 @@ var _resuming_rebuild: bool=false
 var _drums: PackedFloat32Array
 var _audition_players: Array[AudioStreamPlayer]=[]
 var _audition_index: int=0
+var _recorded_cache: Dictionary={}
 
 func _ready() -> void:
 	process_priority=-100
@@ -60,6 +61,8 @@ func _ready() -> void:
 		for i in _drums.size(): _drums[i]=float(raw.decode_s16(i*2))/32768.
 	for i in range(2):
 		var voice=AudioStreamPlayer.new(); voice.bus=bus; add_child(voice); _audition_players.append(voice)
+	for row in DATA.weapons():
+		if bool(row.get("recorded_audio",false)): _recorded_samples(str(row.get("voice","")))
 
 func _snapshot(score) -> Dictionary:
 	if score==null or not score.has_method("validate"):
@@ -67,13 +70,21 @@ func _snapshot(score) -> Dictionary:
 	var status: Dictionary=score.validate()
 	if not status.ok: return {"ok":false,"error":"\n".join(status.errors)}
 	var events: Array=score.all_events().duplicate(true)
+	var used_weapons: Dictionary={}
+	for event in events: used_weapons[str(event.get("voice",event.get("weapon","")))]=true
 	var aggregate=0.
 	for event in events: aggregate+=float(event.duration)
 	if aggregate>MAX_NOTE_SECONDS:
 		return {"ok":false,"error":"长音重叠总量过高；请缩短延音或减少重叠声部后再播放。"}
 	var recipes: Dictionary={}
 	for row in DATA.weapons():
-		recipes[str(row.id)]=row.timbre.duplicate(true); recipes[str(row.id)].family=str(row.family)
+		var recipe=row.timbre.duplicate(true); recipe.family=str(row.family)
+		if bool(row.get("instrument_samples",false)) and used_weapons.has(str(row.id)):
+			recipe.instrument_pcm=_recorded_samples(str(row.voice))
+			recipe.sample_root=int(row.get("sample_root",60)); recipe.percussion=bool(row.get("percussion",false))
+		if bool(row.get("recorded_audio",false)) and used_weapons.has(str(row.id)):
+			recipe.recorded_pcm=_recorded_samples(str(row.voice))
+		recipes[str(row.id)]=recipe
 	return {"ok":true,"events":events,"recipes":recipes,"duration":float(score.duration_seconds()),"step_duration":float(score.step_seconds()),"step_count":int(score.step_count()),"bpm":float(score.bpm),"drums":drums_enabled,"backing":_drums}
 
 func _set_cancelled(value: bool) -> void:
@@ -220,6 +231,33 @@ func _native_finished() -> void:
 
 func _tone(weapon: String,pitch: int,frames: int,recipe: Dictionary,cancel_checks: bool=true,role: String="auto") -> PackedFloat32Array:
 	var result=PackedFloat32Array(); result.resize(frames)
+	var instrument_pcm: Array=recipe.get("instrument_pcm",[])
+	if not instrument_pcm.is_empty():
+		var roots=[0,2,3,5,7,8,10,12]; var base=int(recipe.get("sample_root",60)); var selected=0
+		for i in range(instrument_pcm.size()):
+			if abs(pitch-base-int(roots[i]))<abs(pitch-base-int(roots[selected])): selected=i
+		var source: PackedFloat32Array=instrument_pcm[selected]
+		var ratio=1. if bool(recipe.get("percussion",false)) else pow(2.,float(pitch-base-int(roots[selected]))/12.)
+		for n in frames:
+			if cancel_checks and n%8192==0 and _is_cancelled(): return PackedFloat32Array()
+			var at=float(n)*ratio; var index=floori(at)
+			if index>=source.size()-1: break
+			result[n]=lerpf(source[index],source[index+1],at-index)
+		var fade=mini(roundi(RATE*.014),frames)
+		for n in fade: result[frames-fade+n]*=1.-float(n)/maxf(1.,fade)
+		return result
+	var recorded_pcm: Array=recipe.get("recorded_pcm",[])
+	if not recorded_pcm.is_empty():
+		var sample_index=clampi(pitch-57,0,recorded_pcm.size()-1)
+		var source: PackedFloat32Array=recorded_pcm[sample_index]
+		for n in mini(frames,source.size()):
+			if cancel_checks and n%8192==0 and _is_cancelled(): return PackedFloat32Array()
+			result[n]=source[n]
+		var fade_frames=mini(roundi(RATE*.02),mini(frames,source.size()))
+		for n in fade_frames:
+			var index=source.size()-fade_frames+n
+			if index>=0 and index<frames: result[index]*=float(n)/maxf(1.,fade_frames)
+		return result
 	# Pitched instruments keep absolute MIDI tuning; percussion is explicitly
 	# tagged and never inferred from an ordinary melody's MIDI number.
 	var frequency=440.*pow(2.,float(pitch-69)/12.)
@@ -346,7 +384,7 @@ func export_wav_async(path: String,score) -> bool:
 
 func _write_wav(path: String,bytes: PackedByteArray) -> Dictionary:
 	if path.strip_edges().is_empty(): return {"ok":false,"error":"请选择WAV保存位置。"}
-	var temporary=path+".beatdrift.tmp"; var file=FileAccess.open(temporary,FileAccess.WRITE)
+	var temporary=path+".grooveflight.tmp"; var file=FileAccess.open(temporary,FileAccess.WRITE)
 	if file==null: return {"ok":false,"error":"无法写入WAV："+error_string(FileAccess.get_open_error())}
 	file.store_buffer("RIFF".to_ascii_buffer()); file.store_32(bytes.size()+36); file.store_buffer("WAVEfmt ".to_ascii_buffer())
 	file.store_32(16); file.store_16(1); file.store_16(2); file.store_32(RATE); file.store_32(RATE*4); file.store_16(4); file.store_16(16)
@@ -362,7 +400,21 @@ func _write_wav(path: String,bytes: PackedByteArray) -> Dictionary:
 
 func audition(weapon: String,pitch: int,velocity: int=100,role: String="auto") -> bool:
 	var row=DATA.item(weapon)
-	if row.is_empty() or row.get("category","")!="weapon" or pitch<24 or pitch>108 or _audition_players.is_empty(): return false
+	if row.is_empty() or row.get("category","")!="weapon" or not DATA.is_weapon_audio_ready(weapon) or pitch<24 or pitch>108 or _audition_players.is_empty(): return false
+	if bool(row.get("recorded_audio",false)):
+		var recorded=_load_sample(str(row.voice),3)
+		if recorded==null: return false
+		var player=_audition_players[_audition_index%_audition_players.size()]; _audition_index+=1
+		player.stream=recorded; player.pitch_scale=pow(2.,(float(pitch)-60.)/12.); player.volume_db=volume_db+linear_to_db(clampf(float(velocity)/127.,0.,1.)); player.play(); return true
+	if bool(row.get("instrument_samples",false)):
+		var recipe=row.timbre.duplicate(true); recipe.instrument_pcm=_recorded_samples(str(row.voice))
+		recipe.sample_root=int(row.get("sample_root",60)); recipe.percussion=bool(row.get("percussion",false))
+		var pcm=_tone(weapon,pitch,roundi(RATE*.75),recipe,false,role)
+		var bytes=PackedByteArray(); bytes.resize(pcm.size()*2)
+		for n in pcm.size(): bytes.encode_s16(n*2,roundi(clampf(pcm[n],-.98,.98)*32767.))
+		var clip=AudioStreamWAV.new(); clip.format=AudioStreamWAV.FORMAT_16_BITS; clip.mix_rate=RATE; clip.data=bytes
+		var player=_audition_players[_audition_index%_audition_players.size()]; _audition_index+=1
+		player.stream=clip; player.pitch_scale=1.; player.volume_db=volume_db+linear_to_db(maxf(.0001,float(velocity)/127.)); player.play(); return true
 	# A short audition uses the same synthesis and absolute pitch as rendering.
 	# Its tiny tone is generated on the main thread without interrupting a job's
 	# cancel flag, so previewing a key never changes an in-flight composition.
@@ -375,6 +427,26 @@ func audition(weapon: String,pitch: int,velocity: int=100,role: String="auto") -
 	var recording=AudioStreamWAV.new(); recording.format=AudioStreamWAV.FORMAT_16_BITS; recording.mix_rate=RATE; recording.stereo=false; recording.data=bytes
 	var player=_audition_players[_audition_index%_audition_players.size()]; _audition_index+=1
 	player.volume_db=volume_db; player.stream=recording; player.play(); return true
+
+func _load_sample(voice: String,pitch: int) -> AudioStreamWAV:
+	var path="res://audio/arsenal/notes/%s_%d.wav"%[voice,posmod(pitch,8)]
+	var absolute=ProjectSettings.globalize_path(path)
+	if FileAccess.file_exists(absolute) and ClassDB.class_has_method("AudioStreamWAV","load_from_file"):
+		return AudioStreamWAV.load_from_file(absolute)
+	if ResourceLoader.exists(path): return load(path) as AudioStreamWAV
+	return null
+
+func _recorded_samples(voice: String) -> Array[PackedFloat32Array]:
+	if _recorded_cache.has(voice): return _recorded_cache[voice]
+	var result: Array[PackedFloat32Array]=[]
+	for pitch in range(8):
+		var stream=_load_sample(voice,pitch)
+		if stream==null: continue
+		var pcm=PackedFloat32Array(); pcm.resize(stream.data.size()/2)
+		for n in pcm.size(): pcm[n]=float(stream.data.decode_s16(n*2))/32768.
+		result.append(pcm)
+	_recorded_cache[voice]=result
+	return result
 
 func _exit_tree() -> void:
 	_set_cancelled(true); _pending_job.clear(); _running=false; stop()

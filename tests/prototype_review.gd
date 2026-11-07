@@ -124,5 +124,5 @@ func run() -> void:
 	game.close_editor(); game.show_settings(); await frames(3); await shot("07-settings-720p"); game.close_settings()
 	check(game.state=="combat","settings safely return to the current run")
 	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"Native audio timing, real movement, camera/world, loadout ownership, six real weapon impacts, rewards, pause/edit, overload and death/retry; explicit isolated weapon fixtures and invulnerability, not human difficulty or a full run."}
-	FileAccess.open("res://tests/results-prototype.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("BEATDRIFT_REVIEW ",JSON.stringify(result))
+	FileAccess.open("res://tests/results-prototype.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("GROOVE_FLIGHT_REVIEW ",JSON.stringify(result))
 	game.music.stop(); current_scene=null; game.queue_free(); await frames(5); quit(0 if failures.is_empty() else 1)

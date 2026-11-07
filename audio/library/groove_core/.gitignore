@@ -1,0 +1,4 @@
+incoming/*
+!incoming/.gitkeep
+*.import
+*.tmp

@@ -1,0 +1,1186 @@
+{
+	"after5s_max_error": 0.0373117725829957,
+	"arrangements": [
+		{
+			"dust": 296,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_even_charge",
+					"level": 1,
+					"uid": 7
+				}
+			],
+			"slots": [
+				1,
+				6,
+				2,
+				7,
+				-1,
+				-1,
+				3,
+				3,
+				4,
+				-1,
+				-1,
+				-1,
+				5,
+				5,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 1
+		},
+		{
+			"dust": 691,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_even_charge",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "chain",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_spark_timing",
+					"level": 1,
+					"uid": 9
+				}
+			],
+			"slots": [
+				1,
+				6,
+				2,
+				7,
+				8,
+				8,
+				3,
+				3,
+				4,
+				9,
+				-1,
+				-1,
+				5,
+				5,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 2
+		},
+		{
+			"dust": 1566,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_even_charge",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "chain",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_spark_timing",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "rail",
+					"level": 1,
+					"uid": 11
+				}
+			],
+			"slots": [
+				1,
+				6,
+				2,
+				7,
+				8,
+				8,
+				3,
+				3,
+				4,
+				9,
+				10,
+				-1,
+				5,
+				5,
+				11,
+				11,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 3
+		},
+		{
+			"dust": 2524,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_even_charge",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "chain",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_spark_timing",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "rail",
+					"level": 1,
+					"uid": 11
+				},
+				{
+					"kind": "drone_sentry",
+					"level": 1,
+					"uid": 12
+				},
+				{
+					"kind": "pulse_ribbon",
+					"level": 1,
+					"uid": 13
+				}
+			],
+			"slots": [
+				1,
+				6,
+				2,
+				7,
+				8,
+				8,
+				3,
+				3,
+				4,
+				9,
+				10,
+				-1,
+				5,
+				5,
+				11,
+				11,
+				12,
+				12,
+				12,
+				13,
+				13,
+				-1,
+				-1,
+				-1
+			],
+			"wave": 4
+		},
+		{
+			"dust": 3784,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_even_charge",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "chain",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_spark_timing",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "rail",
+					"level": 1,
+					"uid": 11
+				},
+				{
+					"kind": "drone_sentry",
+					"level": 1,
+					"uid": 12
+				},
+				{
+					"kind": "pulse_ribbon",
+					"level": 1,
+					"uid": 13
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 14
+				},
+				{
+					"kind": "mod_pulse_5",
+					"level": 1,
+					"uid": 15
+				}
+			],
+			"slots": [
+				1,
+				6,
+				2,
+				7,
+				8,
+				8,
+				3,
+				3,
+				4,
+				9,
+				10,
+				14,
+				5,
+				5,
+				11,
+				11,
+				12,
+				12,
+				12,
+				13,
+				13,
+				15,
+				15,
+				-1
+			],
+			"wave": 5
+		},
+		{
+			"dust": 5224,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_even_charge",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "chain",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_spark_timing",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "rail",
+					"level": 1,
+					"uid": 11
+				},
+				{
+					"kind": "drone_sentry",
+					"level": 1,
+					"uid": 12
+				},
+				{
+					"kind": "pulse_ribbon",
+					"level": 1,
+					"uid": 13
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 14
+				},
+				{
+					"kind": "mod_pulse_5",
+					"level": 1,
+					"uid": 15
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 16
+				},
+				{
+					"kind": "r_laser_bar",
+					"level": 1,
+					"uid": 17
+				}
+			],
+			"slots": [
+				1,
+				6,
+				2,
+				7,
+				8,
+				8,
+				3,
+				3,
+				4,
+				9,
+				10,
+				14,
+				5,
+				5,
+				11,
+				11,
+				12,
+				12,
+				12,
+				13,
+				13,
+				15,
+				15,
+				16
+			],
+			"wave": 6
+		},
+		{
+			"dust": 6973,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_even_charge",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "chain",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_spark_timing",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "rail",
+					"level": 1,
+					"uid": 11
+				},
+				{
+					"kind": "drone_sentry",
+					"level": 1,
+					"uid": 12
+				},
+				{
+					"kind": "pulse_ribbon",
+					"level": 1,
+					"uid": 13
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 14
+				},
+				{
+					"kind": "mod_pulse_5",
+					"level": 1,
+					"uid": 15
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 16
+				},
+				{
+					"kind": "r_laser_bar",
+					"level": 1,
+					"uid": 17
+				},
+				{
+					"kind": "chain",
+					"level": 1,
+					"uid": 18
+				},
+				{
+					"kind": "mine_anchor",
+					"level": 1,
+					"uid": 19
+				}
+			],
+			"slots": [
+				1,
+				6,
+				2,
+				7,
+				8,
+				8,
+				3,
+				3,
+				4,
+				9,
+				10,
+				14,
+				5,
+				5,
+				11,
+				11,
+				12,
+				12,
+				12,
+				13,
+				13,
+				15,
+				15,
+				16
+			],
+			"wave": 7
+		},
+		{
+			"dust": 8969,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_even_charge",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "chain",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_spark_timing",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "rail",
+					"level": 1,
+					"uid": 11
+				},
+				{
+					"kind": "drone_sentry",
+					"level": 1,
+					"uid": 12
+				},
+				{
+					"kind": "pulse_ribbon",
+					"level": 1,
+					"uid": 13
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 14
+				},
+				{
+					"kind": "mod_pulse_5",
+					"level": 1,
+					"uid": 15
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 16
+				},
+				{
+					"kind": "r_laser_bar",
+					"level": 1,
+					"uid": 17
+				},
+				{
+					"kind": "chain",
+					"level": 1,
+					"uid": 18
+				},
+				{
+					"kind": "mine_anchor",
+					"level": 1,
+					"uid": 19
+				},
+				{
+					"kind": "rail",
+					"level": 1,
+					"uid": 20
+				},
+				{
+					"kind": "mod_drone_3",
+					"level": 1,
+					"uid": 21
+				}
+			],
+			"slots": [
+				1,
+				6,
+				2,
+				7,
+				8,
+				8,
+				3,
+				3,
+				4,
+				9,
+				10,
+				14,
+				5,
+				5,
+				11,
+				11,
+				12,
+				12,
+				12,
+				13,
+				13,
+				15,
+				15,
+				16
+			],
+			"wave": 8
+		},
+		{
+			"dust": 11251,
+			"modules": [
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 1
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 2
+				},
+				{
+					"kind": "beam",
+					"level": 1,
+					"uid": 3
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 4
+				},
+				{
+					"kind": "nova",
+					"level": 1,
+					"uid": 5
+				},
+				{
+					"kind": "pulse",
+					"level": 1,
+					"uid": 6
+				},
+				{
+					"kind": "r_even_charge",
+					"level": 1,
+					"uid": 7
+				},
+				{
+					"kind": "chain",
+					"level": 1,
+					"uid": 8
+				},
+				{
+					"kind": "r_spark_timing",
+					"level": 1,
+					"uid": 9
+				},
+				{
+					"kind": "scatter",
+					"level": 1,
+					"uid": 10
+				},
+				{
+					"kind": "rail",
+					"level": 1,
+					"uid": 11
+				},
+				{
+					"kind": "drone_sentry",
+					"level": 1,
+					"uid": 12
+				},
+				{
+					"kind": "pulse_ribbon",
+					"level": 1,
+					"uid": 13
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 14
+				},
+				{
+					"kind": "mod_pulse_5",
+					"level": 1,
+					"uid": 15
+				},
+				{
+					"kind": "boomerang",
+					"level": 1,
+					"uid": 16
+				},
+				{
+					"kind": "r_laser_bar",
+					"level": 1,
+					"uid": 17
+				},
+				{
+					"kind": "chain",
+					"level": 1,
+					"uid": 18
+				},
+				{
+					"kind": "mine_anchor",
+					"level": 1,
+					"uid": 19
+				},
+				{
+					"kind": "rail",
+					"level": 1,
+					"uid": 20
+				},
+				{
+					"kind": "mod_drone_3",
+					"level": 1,
+					"uid": 21
+				},
+				{
+					"kind": "missile_swarm",
+					"level": 1,
+					"uid": 22
+				},
+				{
+					"kind": "r_two_step",
+					"level": 1,
+					"uid": 23
+				}
+			],
+			"slots": [
+				1,
+				6,
+				2,
+				7,
+				8,
+				8,
+				3,
+				3,
+				4,
+				9,
+				10,
+				14,
+				5,
+				5,
+				11,
+				11,
+				12,
+				12,
+				12,
+				13,
+				13,
+				15,
+				15,
+				16
+			],
+			"wave": 9
+		}
+	],
+	"checks": 94,
+	"elapsed_wall_seconds": 488.041,
+	"failures": [],
+	"first5s_max_error": 0.0967619885556102,
+	"kills": 6884,
+	"max_compile_msec": 7394.938,
+	"music_seconds": 368.44610398584,
+	"observed_weapon_events": 1983,
+	"peak_bullets": 60,
+	"peak_enemies": 363,
+	"peak_hostile_bullets": 483,
+	"purchases": [
+		{
+			"kind": "pulse",
+			"price": 14,
+			"slot": 1,
+			"uid": 6,
+			"wave": 1
+		},
+		{
+			"kind": "r_even_charge",
+			"price": 20,
+			"slot": 3,
+			"uid": 7,
+			"wave": 1
+		},
+		{
+			"kind": "chain",
+			"price": 23,
+			"slot": 4,
+			"uid": 8,
+			"wave": 2
+		},
+		{
+			"kind": "r_spark_timing",
+			"price": 22,
+			"slot": 9,
+			"uid": 9,
+			"wave": 2
+		},
+		{
+			"kind": "scatter",
+			"price": 15,
+			"slot": 10,
+			"uid": 10,
+			"wave": 3
+		},
+		{
+			"kind": "rail",
+			"price": 27,
+			"slot": 14,
+			"uid": 11,
+			"wave": 3
+		},
+		{
+			"kind": "drone_sentry",
+			"price": 39,
+			"slot": 16,
+			"uid": 12,
+			"wave": 4
+		},
+		{
+			"kind": "pulse_ribbon",
+			"price": 26,
+			"slot": 19,
+			"uid": 13,
+			"wave": 4
+		},
+		{
+			"kind": "boomerang",
+			"price": 22,
+			"slot": 11,
+			"uid": 14,
+			"wave": 5
+		},
+		{
+			"kind": "mod_pulse_5",
+			"price": 22,
+			"slot": 21,
+			"uid": 15,
+			"wave": 5
+		},
+		{
+			"kind": "boomerang",
+			"price": 23,
+			"slot": 23,
+			"uid": 16,
+			"wave": 6
+		},
+		{
+			"kind": "r_laser_bar",
+			"price": 23,
+			"slot": -1,
+			"uid": 17,
+			"wave": 6
+		},
+		{
+			"kind": "chain",
+			"price": 25,
+			"slot": -1,
+			"uid": 18,
+			"wave": 7
+		},
+		{
+			"kind": "mine_anchor",
+			"price": 49,
+			"slot": -1,
+			"uid": 19,
+			"wave": 7
+		},
+		{
+			"kind": "rail",
+			"price": 31,
+			"slot": -1,
+			"uid": 20,
+			"wave": 8
+		},
+		{
+			"kind": "mod_drone_3",
+			"price": 20,
+			"slot": -1,
+			"uid": 21,
+			"wave": 8
+		},
+		{
+			"kind": "missile_swarm",
+			"price": 38,
+			"slot": -1,
+			"uid": 22,
+			"wave": 9
+		},
+		{
+			"kind": "r_two_step",
+			"price": 31,
+			"slot": -1,
+			"uid": 23,
+			"wave": 9
+		}
+	],
+	"scope": "Complete ten-wave Uranus route on production native128-second score/durations, native fleets/hits/Boss/victory, nine six-offer shops using real purchase/continue signals and equipment drop handlers. Assistance: invulnerability, steering, automatic overload. No seeking, skips, injected kills or HP reduction. Not human difficulty or listening acceptance.",
+	"score": 7005,
+	"shops": 9,
+	"timing_max_error_all": 0.0967619885556102,
+	"total_spawned": 8121,
+	"waves": {
+		"1": {
+			"dust": 0,
+			"equipped": 5,
+			"modules": 5,
+			"start": 0.0
+		},
+		"10": {
+			"dust": 11251,
+			"equipped": 16,
+			"modules": 23,
+			"start": 324.090038946289
+		},
+		"2": {
+			"dust": 296,
+			"equipped": 7,
+			"modules": 7,
+			"start": 28.111523567627
+		},
+		"3": {
+			"dust": 691,
+			"equipped": 9,
+			"modules": 9,
+			"start": 58.1107299897461
+		},
+		"4": {
+			"dust": 1566,
+			"equipped": 11,
+			"modules": 11,
+			"start": 90.0636131972656
+		},
+		"5": {
+			"dust": 2524,
+			"equipped": 13,
+			"modules": 13,
+			"start": 124.148877253906
+		},
+		"6": {
+			"dust": 3784,
+			"equipped": 15,
+			"modules": 15,
+			"start": 160.089106910645
+		},
+		"7": {
+			"dust": 5224,
+			"equipped": 16,
+			"modules": 17,
+			"start": 198.1769098125
+		},
+		"8": {
+			"dust": 6973,
+			"equipped": 16,
+			"modules": 19,
+			"start": 238.079189669434
+		},
+		"9": {
+			"dust": 8969,
+			"equipped": 16,
+			"modules": 21,
+			"start": 280.109801020508
+		}
+	},
+	"weapon_damage": {
+		"beam": 33465.7003345997,
+		"boomerang": 32980.5550237002,
+		"chain": 25038.9569806999,
+		"drone_sentry": 11770.8051578,
+		"nova": 18227.2851560001,
+		"overload": 192195.735217698,
+		"pulse": 46888.660573099,
+		"pulse_ribbon": 21435.1650449997,
+		"rail": 25438.4736852999,
+		"scatter": 18679.6479411998
+	}
+}

@@ -1,0 +1,10 @@
+{
+	"checks": 52,
+	"facts": {
+		"compile_msec": 34.695,
+		"native_max_error": 0.00604807475507263,
+		"pitch_results": {}
+	},
+	"failures": [],
+	"scope": "Original score fixtures: stereoPCM/BPM/gates/pan/velocity/mute/solo, four active recorded weapon voices, disabled placeholder synths, pure schedule manifest, worker cancellation, real native loop/pause/seek/one-shot, asynchronous WAV file/header/overwrite. No copied song, human listening or complete battle claim."
+}

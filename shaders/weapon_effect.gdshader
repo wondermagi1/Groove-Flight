@@ -7,7 +7,7 @@ float hash(float n){return .5+.5*cos(n*2.399963+detail.w*6.283185);}
 float noise(float x){float i=floor(x),f=fract(x); return mix(hash(i),hash(i+1.),f);}
 void fragment(){
  vec2 p=(UV-.5)*2.; float t=detail.y;
- int mode=int(round(detail.x*4.));
+ int mode=int(round(detail.x*5.));
  float fade=pow(max(0.,1.-t),1.3),core=0.,glow=0.;
  if(mode<=1){
   float y=p.y;
@@ -15,24 +15,30 @@ void fragment(){
   float ends=smoothstep(0.,.018,UV.x)*(1.-smoothstep(.982,1.,UV.x));
   core=exp(-abs(y)*42.)*ends;
   float sheath=exp(-abs(y)*11.)*ends;
+  float filament=exp(-abs(abs(y)-.22)*48.)*ends;
   if(mode==1) sheath+=exp(-abs(y+.20*sin(UV.x*23.))*28.)*.22*ends;
   else sheath*=.85+.15*sin(UV.x*70.-t*28.);
-  glow=exp(-abs(y)*4.8)*ends*.2+sheath*.55;
+  glow=exp(-abs(y)*4.8)*ends*.25+sheath*.65+filament*.19;
  }else{
   float r=length(p),a=atan(p.y,p.x);
   if(mode==2){
    core=exp(-r*(14.+t*16.));
-   float rays=pow(max(0.,cos(a*4.+detail.w*6.)),18.);
-   glow=exp(-r*8.)*.5+rays*exp(-r*5.)*.55;
+   float rays=pow(max(0.,cos(a*6.+detail.w*6.)),22.);
+   glow=exp(-r*8.)*.6+rays*exp(-r*5.)*.72;
   }else if(mode==3){
    float ring=exp(-abs(r-(.12+t*.7))*55.);
    float rays=pow(max(0.,cos(a*9.+detail.w*6.)),22.)*exp(-r*5.);
    core=exp(-r*16.)*max(0.,1.-t*5.);
    glow=ring*.48+rays*.48+exp(-r*7.)*max(0.,1.-t*4.);
-  }else{
+  }else if(mode==4){
    float cone=exp(-abs(p.y)*(9.+p.x*3.))*exp(-abs(p.x)*4.);
    core=exp(-length(p*vec2(1.,2.))*15.);
    glow=cone*.8+exp(-length(p)*7.)*.3;
+  }else{
+   float shell=exp(-abs(r-(.54+t*.22))*34.);
+   float outer=exp(-abs(r-(.20+t*.72))*52.);
+   core=exp(-r*13.)*max(0.,1.-t*4.)*.12;
+   glow=shell*.62+outer*.82+exp(-abs(r-.72)*7.)*.06*(1.-t);
   }
  }
  float edge=1.-smoothstep(.86,1.,(mode<=1 ? abs(p.y) : max(abs(p.x),abs(p.y))));

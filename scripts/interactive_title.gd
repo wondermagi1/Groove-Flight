@@ -25,7 +25,7 @@ func register_target(id: String, control: Control) -> void:
 	targets[id] = control
 
 func shoot_target(id: String) -> void:
-	if launched or not pending_id.is_empty() or not targets.has(id):
+	if game == null or game.state != "title" or launched or not pending_id.is_empty() or not targets.has(id):
 		return
 	var control: Control = targets[id]
 	if not is_instance_valid(control):
@@ -131,6 +131,11 @@ func _impact(id: String, at: Vector2) -> void:
 		targets[id].modulate = Color("a1fff0")
 
 func _activate(id: String) -> void:
+	if id=="codex":
+		game.open_weapon_codex()
+		launched=false
+		pending_id=""
+		return
 	launched = true
 	match id:
 		"hub": game.enter_hub()

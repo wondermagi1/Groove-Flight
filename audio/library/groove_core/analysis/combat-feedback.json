@@ -1,0 +1,79 @@
+{
+  "source_catalog_id": "gameplay_feedback_audio",
+  "source_sha256": "a12d5ed55c3f1ef5155fcebba18c9053e9687e89c77080a18901900314f849e9",
+  "source_pcm_sha256": "77a455c332d50a4a62f74a6c3f9f2a8415a51eabbab844ba63421bc5ca17c63e",
+  "silent_reference": {
+    "id": "gameplay_feedback_demo",
+    "status": "digital_silence_not_used"
+  },
+  "review": "Full-track waveform/spectrum and video frames inspected; shield ring begins at23.34s; distinct shield audio transient at23.50s, trimmed to23.48s; isolated high pickup at6.7s; low kill events begin at11.46s. Mixed-gameplay excerpts are filtered, not claimed as isolated original stems.",
+  "sample_rate": 48000,
+  "channels": 2,
+  "clips": [
+    {
+      "id": "kill_low_strong",
+      "file": "audio/authorized/feedback/kill_low_strong.wav",
+      "source_catalog_id": "gameplay_feedback_audio",
+      "source_start_seconds": 11.45,
+      "source_end_seconds": 11.82,
+      "seconds": 0.37,
+      "processing": "Butterworth3 bandpass 22-700Hz; 2ms attack/14ms release boundary fades; fixed gain 4.045007; no pitch/time change",
+      "peak_dbfs": -3.3958119168149015,
+      "rms_dbfs": -15.523809755596725,
+      "low_35_250_ratio": 0.9925710636484948,
+      "sha256": "7d396a080eee88161e4c724e4980736bc1a4be970b01e9708b0d1ec60e5c2716"
+    },
+    {
+      "id": "kill_low_soft",
+      "file": "audio/authorized/feedback/kill_low_soft.wav",
+      "source_catalog_id": "gameplay_feedback_audio",
+      "source_start_seconds": 17.27,
+      "source_end_seconds": 17.62,
+      "seconds": 0.35,
+      "processing": "Butterworth3 bandpass 22-700Hz; 2ms attack/14ms release boundary fades; fixed gain 4.045007; no pitch/time change",
+      "peak_dbfs": -3.476256141253015,
+      "rms_dbfs": -15.324637952615252,
+      "low_35_250_ratio": 0.992614235259342,
+      "sha256": "b28abeffc74e8812c13cdde6a7559f7be4aaf0c7a7b6f3e4e7bb52752ddc7acd"
+    },
+    {
+      "id": "kill_low_round",
+      "file": "audio/authorized/feedback/kill_low_round.wav",
+      "source_catalog_id": "gameplay_feedback_audio",
+      "source_start_seconds": 16.41,
+      "source_end_seconds": 16.7,
+      "seconds": 0.29,
+      "processing": "Butterworth3 bandpass 22-700Hz; 2ms attack/14ms release boundary fades; fixed gain 4.045007; no pitch/time change",
+      "peak_dbfs": -3.349821745875273,
+      "rms_dbfs": -13.312439806011936,
+      "low_35_250_ratio": 0.9932692073016294,
+      "sha256": "0310dd22d776670a59d04c67e9d436a06d70a8f01dedf591b6dadc6d15f9ddfd"
+    },
+    {
+      "id": "shield_impact",
+      "file": "audio/authorized/feedback/shield_impact.wav",
+      "source_catalog_id": "gameplay_feedback_audio",
+      "source_start_seconds": 23.48,
+      "source_end_seconds": 23.73,
+      "seconds": 0.25,
+      "processing": "Butterworth3 bandpass 380-4500Hz; 2ms attack/14ms release boundary fades; fixed gain 4.928875; no pitch/time change",
+      "peak_dbfs": -4.436974992327128,
+      "rms_dbfs": -26.485256400442516,
+      "low_35_250_ratio": 0.03420485145057081,
+      "sha256": "435c96a18b5db3bf0682391192a5545b7fb536e33593a67f164cd13ffb0fdcab"
+    },
+    {
+      "id": "pickup_coin",
+      "file": "audio/authorized/feedback/pickup_coin.wav",
+      "source_catalog_id": "gameplay_feedback_audio",
+      "source_start_seconds": 6.685,
+      "source_end_seconds": 6.845,
+      "seconds": 0.16,
+      "processing": "Butterworth3 bandpass 3000-9500Hz; 2ms attack/14ms release boundary fades; fixed gain 7.692835; no pitch/time change",
+      "peak_dbfs": -4.436974992327128,
+      "rms_dbfs": -28.01929122859174,
+      "low_35_250_ratio": 4.748702388500973e-18,
+      "sha256": "cb11675ea2078cdaae6bd34d3e0626e8b3a05b71d0a827625f1b0787deeb3b46"
+    }
+  ]
+}
