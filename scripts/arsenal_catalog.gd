@@ -251,7 +251,7 @@ static func weapon_description(data: Dictionary) -> String:
 	if data.explosion>0: parts.append("爆炸半径%s像素"%_number(data.explosion))
 	if data.homing>0: parts.append("追踪转向强度%s"%_number(data.homing))
 	if data.bounces>0: parts.append("连跳/反弹%d次"%int(data.bounces))
-	parts.append("占%d格；%s独立音色"%[int(data.width),str(data.voice)])
+	parts.append("占%d格；%s独立音色"%[int(data.width),str(data.get("instrument",data.voice))])
 	var motif: Array[String]=[]
 	for degree in data.get("melody",[]): motif.append(str(int(degree)+1))
 	if bool(data.get("instrument_samples",false)): parts.append("固定乐器音色："+str(data.get("instrument","乐器"))+"；白点到格发声一次")

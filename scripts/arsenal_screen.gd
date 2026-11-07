@@ -82,7 +82,7 @@ class ModuleCard:
 		preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		preview.small = true
 		preview.theme = screen.theme
-		screen.decorate_card(preview, DATA.quality_color(row), true)
+		screen.decorate_card(preview, DATA.quality_color(row,item_level), true)
 		set_drag_preview(preview)
 		return {"grooveflight_module": module_uid}
 	func _drop_target(position_value: Vector2) -> int:
@@ -110,7 +110,7 @@ class ModuleCard:
 			ART.draw_item(self, art_rect, item_id, item_level, 0.35 if selected else 0.0)
 		var card_font: Font = get_theme_font("font")
 		var name_size: int = 15 if small else 21
-		var baseline: float = size.y - (10.0 if small else 47.0)
+		var baseline: float = size.y - (10.0 if small else 55.0)
 		var display_name: String = str(row.name)
 		while display_name.length() > 1 and card_font.get_string_size(display_name, HORIZONTAL_ALIGNMENT_LEFT, -1, name_size).x > size.x - 20.0:
 			display_name = display_name.left(display_name.length() - 2) + "…"
@@ -118,14 +118,14 @@ class ModuleCard:
 		if small:
 			draw_string(card_font, Vector2(size.x - 26.0, 18.0), str(item_level), HORIZONTAL_ALIGNMENT_LEFT, 20.0, 13, Color(accent, 0.9))
 		else:
-			draw_string(card_font, Vector2(11.0, 24.0), DATA.quality_name(row,item_level) + " / " + str(row.width) + " 格", HORIZONTAL_ALIGNMENT_LEFT, size.x - 22.0, 15, DATA.quality_color(row))
+			draw_string(card_font, Vector2(11.0, 24.0), DATA.quality_name(row,item_level) + " / " + str(row.width) + " 格", HORIZONTAL_ALIGNMENT_LEFT, size.x - 22.0, 15, accent)
 			if bool(row.get("linear_projectiles",false)):
 				var growth=screen.projectile_preview(item_id,item_level,module_uid)
 				var formula="发射 %d · %s %.1f · 品质 +%d"%[int(growth.count),str(DATA.GROWTH.ATTR_NAMES.get(str(row.attr),"属性")),float(growth.points),int(growth.quality_count)]
 				if bool(growth.capped): formula+=" · 上限"
-				draw_string(card_font,Vector2(11.0,size.y-33.0),formula,HORIZONTAL_ALIGNMENT_LEFT,size.x-22.0,13,Color(accent,.95))
+				draw_string(card_font,Vector2(11.0,size.y-38.0),formula,HORIZONTAL_ALIGNMENT_LEFT,size.x-22.0,13,Color(accent,.95))
 
-			draw_string(card_font, Vector2(11.0, size.y - 17.0), "已售出" if sold else "✦ %d  ·  购买" % price, HORIZONTAL_ALIGNMENT_LEFT, size.x - 22.0, 18, Color("6c7d96") if sold else accent)
+			draw_string(card_font, Vector2(11.0, size.y - 10.0), "已售出" if sold else "✦ %d  ·  购买" % price, HORIZONTAL_ALIGNMENT_LEFT, size.x - 22.0, 18, Color("6c7d96") if sold else accent)
 		if selected:
 			draw_line(Vector2(10.0, 1.0), Vector2(size.x - 10.0, 1.0), accent, 2.0, true)
 
@@ -728,26 +728,30 @@ func _update_detail() -> void:
 		return
 	detail_panel.visible = true
 	_detail_text(str(row.name), 27, Color("f0f6ff"))
-	_detail_text("//%s  /  %s  /  占 %d 格" % [DATA.quality_name(row,int(game.loadout.find(preview_uid).get("level",1))), CATEGORY_NAMES.get(str(row.category), "模块"), int(row.width)], 16, DATA.quality_color(row))
+	var detail_level=int(game.loadout.find(preview_uid).get("level",1))
+	_detail_text("//%s  /  %s  /  占 %d 格" % [DATA.quality_name(row,detail_level), CATEGORY_NAMES.get(str(row.category), "模块"), int(row.width)], 16, DATA.quality_color(row,detail_level))
 	var illustration := DetailIllustration.new()
 	illustration.item_id = str(row.id)
 	illustration.item_level = int(game.loadout.find(preview_uid).get("level", 1))
 	illustration.custom_minimum_size.y = 125.0
 	illustration.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	detail_content.add_child(illustration)
-	_detail_text(str(row.detail), 19)
 	var module: Dictionary = game.loadout.find(preview_uid)
 	if str(row.category) == "weapon":
 		var head: int = game.loadout.equipped_head(preview_uid)
 		var serial: int = maxi(0, floori(float(game.music.timeline) / 1.0)) * 8 + maxi(0, head) % 8
 		var actual: Dictionary = game.loadout.item_stats(preview_uid, serial) if not module.is_empty() else row
+		if module.is_empty() and bool(row.get("linear_projectiles",false)):
+			actual=row.duplicate(true); actual.growth=projectile_preview(str(row.id),detail_level); actual.count=actual.growth.count
 		_detail_text("所在拍预览 · 第 %d 格" % (head % 8 + 1) if head >= 0 else "基础参数", 18, row.color)
 		if actual.has("growth"):
+			_detail_text("每次发射 %d %s"%[int(actual.count),"束" if str(row.family) in ["beam","chain"] or str(row.get("emission",""))=="prism_cross" else "发"],26,DATA.quality_color(row,detail_level))
 			_detail_text(DATA.GROWTH.formula(actual.growth),18,DATA.quality_color(row,int(module.get("level",1))))
 			if bool(actual.growth.capped): _detail_text("已达单次发射上限 %d"%int(actual.growth.cap),16,Color("ffd478"))
 
 		_detail_text("单发伤害 %.1f  ·  弹丸 %d\n穿透 %d  ·  速度 %.0f\n爆破半径 %.0f  ·  %d 小节充能" % [float(actual.get("damage", row.get("damage", 0.0))), int(actual.get("count", row.get("count", 1))), int(actual.get("pierce", row.get("pierce", 0))), float(actual.get("speed", row.get("speed", 0.0))), float(actual.get("explosion", row.get("explosion", 0.0))), int(actual.get("charge", row.get("charge", 1)))], 18)
 		_detail_text("固定音色 · 白点经过时播放一次\n同种武器各自发声，可错位重奏\n充能 %d 轮；声音保持固定，充能仍限制弹体"%int(actual.get("charge",1)),16,Color("e7c78d"))
+		_detail_text(str(row.detail),17,Color("879db6"))
 		if not actual.get("calculation",{}).is_empty():
 			var f: Dictionary=actual.calculation
 			_detail_text("计算明细\n基础 %.1f × 舰体 %.2f × 等级 %.2f\n× 属性 %.2f × 单发倍率 %.2f × 改装 %.2f"%[f.base_damage,f.ship_multiplier,f.level_multiplier,f.attribute_multiplier,f.damage_multiplier,f.mod_multiplier],16)
@@ -761,6 +765,8 @@ func _update_detail() -> void:
 		_detail_text("本局实际伤害  %s" % _short_number(damage), 19, Color("f0ce9c"))
 		_detail_text("属性归属  " + _stat_name(str(row.attr)), 17, Color("879db6"))
 		_detail_text("拍位决定触发时刻；武器保持固定乐器音色。其他音高素材用于显式作曲。",16,Color("69819b"))
+	else:
+		_detail_text(str(row.detail),19)
 
 	if not module.is_empty():
 		var equipped: bool = game.loadout.slots.has(preview_uid)

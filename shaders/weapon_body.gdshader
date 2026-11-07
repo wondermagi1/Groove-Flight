@@ -61,12 +61,12 @@ void fragment(){
  float aa=max(fwidth(d),.012); float mask=1.-smoothstep(-aa,aa,d);
  float bevel=1.-smoothstep(-.11,-.015,d);
  float specular=pow(max(0.,dot(normalize(p+vec2(.001)),normalize(vec2(-.56,.83)))),10.)*smoothstep(-.08,.18,d);
- vec3 energy=mix(tint.rgb*.68,vec3(1.),clamp(core*.8+trim*.5,0.,.9));
+ vec3 energy=mix(tint.rgb*.84,vec3(1.),clamp(core*.48+trim*.32,0.,.65));
  vec3 metal=mix(vec3(.06,.10,.17),vec3(.48,.64,.78),clamp(.58-p.y*.6,0.,1.));
  metal=mix(metal,tint.rgb,clamp(trim+core,.0,.85));
  metal+=vec3(.55,.72,.82)*specular*.42;
  vec3 color=mix(energy,metal,surface);
- color+=tint.rgb*bevel*.55+vec3(core*.46);
+ color+=tint.rgb*bevel*.28+vec3(core*.18);
  float fade=min(1.,detail.z*12.);
  COLOR=vec4(color,mask*tint.a*fade);
 }

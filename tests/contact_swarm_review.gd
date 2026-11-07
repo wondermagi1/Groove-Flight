@@ -174,7 +174,7 @@ func run() -> void:
 	game.set_process(false); game.set_physics_process(false); game.set_process_unhandled_input(false)
 	game.fx.set_process(false); game.music.stop(); game.music._running=false
 	attack_checks(); spawning_checks(); march_checks(); route_checks(); contact_checks(); await visual_checks()
-	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"Restored production radial spawning and original formations, all eight directions, ordinary attack gates, half-second pacing/pause, 30/60/120Hz agreement and actual swept contact damage. Controlled fixtures, not a complete campaign or human balance review."}
+	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"Production square/circle births from upper-left, above and upper-right with boundary deferral, ordinary attack gates, half-second pacing/pause, 30/60/120Hz agreement and actual swept contact damage. Controlled fixtures, not a complete campaign or human balance review."}
 	FileAccess.open("res://tests/results-contact-swarm.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	print("CONTACT_SWARM ",JSON.stringify(result))
 	game.music.stop(); stop_audio(game); current_scene=null; game.queue_free(); await frames(5)

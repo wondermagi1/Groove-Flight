@@ -172,7 +172,7 @@
 			},
 			"pulse_ribbon": {
 				"count": 6,
-				"damage": 33.0,
+				"damage": 27.5,
 				"family": "pulse",
 				"pitch": 0
 			},
@@ -196,13 +196,13 @@
 			},
 			"recorded_ballistic_legend": {
 				"count": 11,
-				"damage": 297.0,
+				"damage": 231.0,
 				"family": "pulse",
 				"pitch": 0
 			},
 			"recorded_ballistic_rare": {
 				"count": 6,
-				"damage": 108.899999999965,
+				"damage": 90.7499999999709,
 				"family": "pulse",
 				"pitch": 0
 			},
@@ -214,7 +214,7 @@
 			},
 			"recorded_crude_legend": {
 				"count": 10,
-				"damage": 360.0,
+				"damage": 270.0,
 				"family": "pulse",
 				"pitch": 0
 			},

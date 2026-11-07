@@ -18,7 +18,7 @@ void fragment(){
   float filament=exp(-abs(abs(y)-.22)*48.)*ends;
   if(mode==1) sheath+=exp(-abs(y+.20*sin(UV.x*23.))*28.)*.22*ends;
   else sheath*=.85+.15*sin(UV.x*70.-t*28.);
-  glow=exp(-abs(y)*4.8)*ends*.25+sheath*.65+filament*.19;
+  glow=exp(-abs(y)*6.)*ends*.10+sheath*.22+filament*.06;
  }else{
   float r=length(p),a=atan(p.y,p.x);
   if(mode==2){

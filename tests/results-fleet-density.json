@@ -10,9 +10,9 @@
 			"friendly": 800,
 			"hostile": 450
 		},
-		"frame_interval_ms_max": 39.45,
-		"frame_interval_ms_median": 25.307,
-		"frame_interval_ms_p95": 28.776,
+		"frame_interval_ms_max": 34.871,
+		"frame_interval_ms_median": 23.896,
+		"frame_interval_ms_p95": 26.379,
 		"gpu": "",
 		"note": "Controlled fixture with frozen native audio, stationary high-HP enemies and positive one-damage bullets. Frame intervals include graphics/OS scheduling; this is a short sample rather than stable FPS or human gameplay.",
 		"peak_enemies": 480,
@@ -20,24 +20,24 @@
 		"peak_hostile": 450,
 		"phase_ms": {
 			"collision": {
-				"max": 20.497,
-				"median": 11.363,
-				"p95": 12.714
+				"max": 19.796,
+				"median": 10.797,
+				"p95": 12.407
 			},
 			"enemy": {
-				"max": 2.768,
-				"median": 1.409,
-				"p95": 1.816
+				"max": 2.035,
+				"median": 1.332,
+				"p95": 1.7
 			},
 			"hostile": {
-				"max": 0.697,
-				"median": 0.33,
-				"p95": 0.608
+				"max": 0.756,
+				"median": 0.335,
+				"p95": 0.536
 			},
 			"spatial": {
-				"max": 1.585,
-				"median": 0.881,
-				"p95": 1.385
+				"max": 1.953,
+				"median": 0.858,
+				"p95": 1.221
 			}
 		},
 		"render_driver": "vulkan",
@@ -59,11 +59,11 @@
 			}
 		},
 		"samples": 90,
-		"sampling_elapsed_ms": 2275,
-		"sampling_started_utc": "2026-11-07T09:57:06",
-		"update_ms_max": 22.948,
-		"update_ms_median": 14.178,
-		"update_ms_p95": 15.737,
+		"sampling_elapsed_ms": 2126,
+		"sampling_started_utc": "2026-11-07T10:05:54",
+		"update_ms_max": 22.783,
+		"update_ms_median": 13.515,
+		"update_ms_p95": 15.224,
 		"window": "(0, 0)"
 	},
 	"facts": {
