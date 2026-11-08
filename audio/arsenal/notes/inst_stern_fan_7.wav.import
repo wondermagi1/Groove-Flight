@@ -1,13 +1,17 @@
 [remap]
+
 importer="wav"
 type="AudioStreamWAV"
+uid="uid://fg0bcmovjppo"
 path="res://.godot/imported/inst_stern_fan_7.wav-07ef61369be084c42a4f8b004e774d8e.sample"
 
 [deps]
+
 source_file="res://audio/arsenal/notes/inst_stern_fan_7.wav"
 dest_files=["res://.godot/imported/inst_stern_fan_7.wav-07ef61369be084c42a4f8b004e774d8e.sample"]
 
 [params]
+
 force/8_bit=false
 force/mono=false
 force/max_rate=false

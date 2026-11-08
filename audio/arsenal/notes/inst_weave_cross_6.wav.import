@@ -1,13 +1,17 @@
 [remap]
+
 importer="wav"
 type="AudioStreamWAV"
+uid="uid://d0egoy8tnwamw"
 path="res://.godot/imported/inst_weave_cross_6.wav-5f5d6e1e566abded6e82814385d897ae.sample"
 
 [deps]
+
 source_file="res://audio/arsenal/notes/inst_weave_cross_6.wav"
 dest_files=["res://.godot/imported/inst_weave_cross_6.wav-5f5d6e1e566abded6e82814385d897ae.sample"]
 
 [params]
+
 force/8_bit=false
 force/mono=false
 force/max_rate=false

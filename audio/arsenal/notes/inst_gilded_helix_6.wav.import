@@ -1,13 +1,17 @@
 [remap]
+
 importer="wav"
 type="AudioStreamWAV"
+uid="uid://l68hfgduakkd"
 path="res://.godot/imported/inst_gilded_helix_6.wav-eb7565e52b9084b9370ee9666d9e52dc.sample"
 
 [deps]
+
 source_file="res://audio/arsenal/notes/inst_gilded_helix_6.wav"
 dest_files=["res://.godot/imported/inst_gilded_helix_6.wav-eb7565e52b9084b9370ee9666d9e52dc.sample"]
 
 [params]
+
 force/8_bit=false
 force/mono=false
 force/max_rate=false

@@ -1,13 +1,17 @@
 [remap]
+
 importer="wav"
 type="AudioStreamWAV"
+uid="uid://4t2d4wsypyto"
 path="res://.godot/imported/inst_crown_orbit_4.wav-a40d6b7f1b4f5770c47cf794947cd14a.sample"
 
 [deps]
+
 source_file="res://audio/arsenal/notes/inst_crown_orbit_4.wav"
 dest_files=["res://.godot/imported/inst_crown_orbit_4.wav-a40d6b7f1b4f5770c47cf794947cd14a.sample"]
 
 [params]
+
 force/8_bit=false
 force/mono=false
 force/max_rate=false
