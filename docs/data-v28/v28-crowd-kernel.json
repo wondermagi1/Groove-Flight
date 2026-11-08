@@ -1,0 +1,22 @@
+{
+  "cases": [
+    {
+      "max_endpoint_error": 0.0,
+      "scenario": "convergence",
+      "units": 144
+    },
+    {
+      "max_endpoint_error": 6.29135975032113e-05,
+      "scenario": "mixed_speeds",
+      "units": 144
+    },
+    {
+      "max_endpoint_error": 0.0,
+      "scenario": "deployment_obstacle",
+      "units": 144
+    }
+  ],
+  "checks": 7,
+  "failures": [],
+  "maximum_endpoint_error_world": 6.29135975032113e-05
+}

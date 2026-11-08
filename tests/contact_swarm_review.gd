@@ -48,8 +48,8 @@ func attack_checks() -> void:
 		game.enemy_fire(enemy)
 	check(game.enemy_bullets.is_empty(),"direct attack calls cannot make any ordinary enemy shoot")
 	for serial in range(64):
-		game.music.timeline=serial*.125; game.on_step(serial%8,serial,game.music.timeline)
-	check(game.enemy_bullets.is_empty() and game.warnings.is_empty(),"eight seconds of production sequencer callbacks produce no ordinary bullets or rays")
+		game.music.timeline=serial*game.LOADOUT.SEQUENCE_STEP_SECONDS; game.on_step(serial%8,serial,game.music.timeline)
+	check(game.enemy_bullets.is_empty() and game.warnings.is_empty(),"eight loops of production sequencer callbacks produce no ordinary bullets or rays")
 	fixture(); var elite=game.spawn_enemy("elite",Vector2(0,-350)); game.enemy_fire(elite)
 	check(not game.enemy_bullets.is_empty(),"elite attack remains available")
 	fixture(); var boss=game.spawn_enemy("boss",Vector2(0,-350)); boss.entry_until=0.
@@ -125,8 +125,8 @@ func march_checks() -> void:
 			game.music.timeline=float(i)/fps; game.update_enemies(1./fps)
 		endpoints.append(enemy.at)
 	check(endpoints[0].is_equal_approx(endpoints[1]) and endpoints[1].is_equal_approx(endpoints[2]),"30/60/120Hz updates retain the same beat positions")
-	check(game.loadout.SEQUENCE_LOOP_SECONDS==1. and game.music.STEP==.125,"the sequencer remains one second per eight cells")
-	facts.rhythm={"sequencer_seconds":1.,"enemy_step_seconds":.5,"move_seconds":.22,"hold_seconds":.28}
+	check(game.loadout.SEQUENCE_LOOP_SECONDS==2. and game.music.STEP==.25,"the current sequencer remains two seconds per eight cells")
+	facts.rhythm={"sequencer_seconds":game.loadout.SEQUENCE_LOOP_SECONDS,"enemy_step_seconds":.5,"move_seconds":.22,"hold_seconds":.28}
 
 func route_checks() -> void:
 	fixture(); game.invulnerable=1000.

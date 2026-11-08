@@ -2,7 +2,9 @@
 
 武器改动先查[武器特效与音频对应表](WEAPON_VFX_AUDIO_REFERENCE.md)。用户要求本表长期维护；武器特效、声音或触发规则变更必须在同一提交同步更新表格、日期、版本与迭代记录。
 
-2026-11-08，工程版本 `0.27.0-two-second-sequencer`，开发分支 `codex/v27-two-second-loop`。远程仓库：https://github.com/wondermagi1/Groove-Flight 。后续每轮游戏修改前必须先上传Git备份并核验SHA，规则见根目录 `AGENTS.md`。
+2026-11-08，工程版本 `0.28.0-crowd-performance`，开发分支 `codex/v28-crowd-performance`。远程仓库：https://github.com/wondermagi1/Groove-Flight 。本轮修改前备份`ce780a6`已上传并核验。后续每轮游戏修改前必须先上传Git备份并核验SHA，规则见根目录 `AGENTS.md`。
+
+V28将密集敌群的数值避让热点迁到Windows64原生模块，保留同一套个体路线、分组与扫掠净空规则。打包时必须携带`native/crowd/crowd.gdextension`和同目录DLL；构建源与MSVC脚本均在库内。其他平台沿用脚本后备。见[性能报告](V28_CROWD_PERFORMANCE.md)与[模块说明](../native/crowd/README.md)。
 
 优先阅读 [V24全部武器独立运动](V24_ALL_WEAPON_MOTION.md)、[V23分类弹体与独立喷射](V23_INDIVIDUAL_WEAPON_FLIGHT.md) 和 [方阵与圆阵的分布、追击、包围与建模](ENEMY_FORMATIONS_AND_ENCIRCLEMENT.md)。V24扩展环形、环绕、四向折光羽弹与其他光学武器；V23方向覆盖V22最后的视觉回退约定。出生方向仍为上方、左上方、右上方；方阵与圆阵并存，未引入菱阵。
 
@@ -35,7 +37,7 @@
 | 敌机密度与波次 | `scripts/planet_catalog.gd` |
 | 方阵/圆阵出生、空区与预告 | `scripts/enemy_arrival.gd` |
 | 个体近端进攻、径向展开、视野外绕行 | `scripts/enemy_maneuver.gd` |
-| 半秒运动、局部净空与避让 | `scripts/contact_swarm.gd` |
+| 半秒运动、局部净空与避让 | `scripts/contact_swarm.gd`、`native/crowd/crowd.cpp` |
 | 实例舰体、侧壁与受光 | `scripts/fleet_batch.gd`、`shaders/fleet_depth.gdshader` |
 | 战斗调度、生成与实际命中 | `scripts/main.gd` |
 | 武器名单、参数与美术配置 | `scripts/arsenal_catalog.gd`、`scripts/weapon_visuals.gd` |
@@ -46,6 +48,6 @@
 
 ## 验证与后续
 
-最新音序验证见`docs/data-v27/SUMMARY.json`；护盾裁剪以`docs/data-v26.1/SUMMARY.json`为准，分类音量基线保留在`docs/data-v26/SUMMARY.json`，音色基线在V25，弹道和高密度专项沿用V24结果，旧基准保留在 `docs/data-v24/`、`docs/data-v23/`、`docs/data-v22/`、`docs/data-v21.1/` 与 `docs/data-v21/`，不能当成现版通过记录。新预览位于 `docs/video-v24/`，为四斜向摇摆羽流、环形与惯性环绕的受控原生样本；方向与射程专项旧样本位于 `docs/video-v23/`。还需要真人调整成长曲线、进攻比例、包围距离、批次间隔、混音和八星难度；没有宣称所有星球已完成真人验收或持续60FPS。高密度偶发耗时峰值仍需优化。
+最新敌群行为与性能验证见`docs/data-v28/SUMMARY.json`；1024汇聚最慢帧从约2445降至73毫秒，600规模最慢帧约34–39毫秒，仍有短暂尖峰，详见V28报告。音序验证沿用`docs/data-v27/SUMMARY.json`；护盾裁剪以`docs/data-v26.1/SUMMARY.json`为准，分类音量基线在V26、音色基线在V25、弹道专项在V24。旧基准保留在 `docs/data-v24/`、`docs/data-v23/`、`docs/data-v22/`、`docs/data-v21.1/` 与 `docs/data-v21/`，不能当成现版通过记录。新预览位于 `docs/video-v24/`，为四斜向摇摆羽流、环形与惯性环绕的受控原生样本；方向与射程专项旧样本位于 `docs/video-v23/`。还需要真人调整成长曲线、进攻比例、包围距离、批次间隔、混音和八星难度；没有宣称所有星球已完成真人验收或持续60FPS。
 
 原接手页完整保存为 [V21前历史接手说明](archives/CURRENT_HANDOFF_BEFORE_V21.md)。旧四拍强弱约定、旧武器数量、录音原型和旧入场规则属于对应历史版本。

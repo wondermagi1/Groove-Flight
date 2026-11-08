@@ -7,6 +7,17 @@ const MANEUVER=preload("res://scripts/enemy_maneuver.gd")
 const STEP_SECONDS=.5
 const MOVE_SECONDS=.22
 const CELL=96.
+static var profile_enabled=false
+static var last_profile: Dictionary={}
+static var use_native=true
+static var _native_checked=false
+
+static func native_available() -> bool:
+	if not _native_checked:
+		_native_checked=true
+		if OS.has_feature("windows") and OS.has_feature("x86_64") and not ClassDB.class_exists("GrooveCrowdKernel"):
+			GDExtensionManager.load_extension("res://native/crowd/crowd.gdextension")
+	return ClassDB.class_exists("GrooveCrowdKernel")
 
 static func _cells(from: Vector2,to: Vector2,padding: float=0.) -> Array[Vector2i]:
 	var low=(from.min(to)-Vector2.ONE*padding)/CELL
@@ -40,6 +51,8 @@ static func plan_individuals(enemies: Array,time: float,player: Vector2) -> void
 		if enemy.hp>0. and bool(enemy.get("warned_entry",false)) and float(enemy.speed)>0. and beat>=ceili((float(enemy.born)-.000001)/STEP_SECONDS) and (not enemy.has("march") or int(enemy.march.index)!=beat):
 			needs_plan=true; break
 	if not needs_plan: return
+	var clock=Time.get_ticks_usec() if profile_enabled else 0
+	var native=use_native and native_available()
 	var motions: Array[Move]=[]; var grid: Dictionary={}; var max_travel=0.
 	for enemy in enemies:
 		if enemy.hp<=0. or not is_ordinary(enemy): continue
@@ -70,7 +83,8 @@ static func plan_individuals(enemies: Array,time: float,player: Vector2) -> void
 				motion.target=motion.start+heading*minf(travel,toward.length())
 		motion.wanted=motion.target-motion.start
 		max_travel=maxf(max_travel,motion.wanted.length())
-		_reserve(grid,motions.size(),motion.start,motion.start); motions.append(motion)
+		if not native: _reserve(grid,motions.size(),motion.start,motion.start)
+		motions.append(motion)
 	# One newly born batch follows a shared monotone expansion field: rows
 	# retain order and every within-row gap grows. No all-pairs solver is needed
 	# until another crowd can intersect it or deployment ends.
@@ -82,6 +96,25 @@ static func plan_individuals(enemies: Array,time: float,player: Vector2) -> void
 		for motion in motions:
 			motion.enemy.march={"index":beat,"from":motion.start,"to":motion.target}
 			motion.enemy.formation_phase="独立追击"; motion.enemy.crowd_wait=motion.wanted.length_squared()<1.
+		return
+	var built=Time.get_ticks_usec() if profile_enabled else 0
+	if native:
+		var packed=PackedFloat64Array(); packed.resize(3+motions.size()*10)
+		packed[0]=1.; packed[1]=motions.size(); packed[2]=max_travel
+		var deployments: Dictionary={}
+		for i in range(motions.size()):
+			var motion: Move=motions[i]; var offset=3+i*10
+			if not deployments.has(motion.deployment): deployments[motion.deployment]=deployments.size()
+			var route: Dictionary=motion.enemy.get("maneuver",{})
+			packed[offset]=motion.start.x; packed[offset+1]=motion.start.y
+			packed[offset+2]=motion.target.x; packed[offset+3]=motion.target.y
+			packed[offset+4]=motion.radius; packed[offset+5]=1. if motion.movable else 0.
+			packed[offset+6]=1. if motion.deploying else 0.; packed[offset+7]=deployments[motion.deployment]
+			packed[offset+8]=1. if str(route.get("role",""))=="pressure" and str(route.get("phase",""))!="径向展开" else 0.
+		var solved: PackedFloat64Array=ClassDB.class_call_static("GrooveCrowdKernel","solve",packed)
+		for i in range(motions.size()): motions[i].target=Vector2(solved[3+i*10+2],solved[3+i*10+3])
+		_apply_motions(motions,beat)
+		if profile_enabled: last_profile={"time":time,"build_ms":(built-clock)/1000.,"native_ms":(Time.get_ticks_usec()-built)/1000.,"backend":"native"}
 		return
 	var pairs: Array[Vector2i]=[]; var parent=PackedInt32Array()
 	for i in range(motions.size()): parent.append(i)
@@ -106,7 +139,10 @@ static func plan_individuals(enemies: Array,time: float,player: Vector2) -> void
 	# Resolve independent interacting neighbourhoods, then merge only regions
 	# whose corrected paths actually meet. This retains independent movement
 	# across the large map without a global "stop everyone" collision response.
+	var paired=Time.get_ticks_usec() if profile_enabled else 0
+	var passes=0
 	for iteration in range(16):
+		passes+=1
 		_resolve_components(motions,parent,pairs,max_travel)
 		var merged=false
 		for pair in pairs:
@@ -117,6 +153,11 @@ static func plan_individuals(enemies: Array,time: float,player: Vector2) -> void
 		if iteration==15:
 			for i in range(parent.size()): parent[i]=0
 			_resolve_components(motions,parent,pairs,max_travel)
+	if profile_enabled:
+		last_profile={"time":time,"build_ms":(built-clock)/1000.,"pairs_ms":(paired-built)/1000.,"solve_ms":(Time.get_ticks_usec()-paired)/1000.,"pairs":pairs.size(),"passes":passes,"max_travel":max_travel}
+	_apply_motions(motions,beat)
+
+static func _apply_motions(motions: Array[Move],beat: int) -> void:
 	for motion in motions:
 		if not motion.movable: continue
 		if motion.deploying and (motion.target-motion.start).distance_squared_to(motion.wanted)>.0001: motion.enemy.maneuver.clean_deploy=false
@@ -125,8 +166,10 @@ static func plan_individuals(enemies: Array,time: float,player: Vector2) -> void
 
 static func _resolve_components(motions: Array[Move],parent: PackedInt32Array,pairs: Array[Vector2i],max_travel: float) -> void:
 	var components: Dictionary={}
+	var roots=PackedInt32Array(); roots.resize(motions.size())
 	for i in range(motions.size()):
 		var key=_root(parent,i); var motion: Move=motions[i]
+		roots[i]=key
 		motion.planes.clear()
 		if not components.has(key): components[key]={"sum":Vector2.ZERO,"count":0,"pressure":Vector2.ZERO,"pressers":0}
 		if not motion.movable: continue
@@ -134,10 +177,10 @@ static func _resolve_components(motions: Array[Move],parent: PackedInt32Array,pa
 		var route: Dictionary=motion.enemy.get("maneuver",{})
 		if not motion.deploying and str(route.get("role",""))=="pressure" and str(route.get("phase",""))!="径向展开": group.pressure=Vector2(group.pressure)+motion.wanted; group.pressers=int(group.pressers)+1
 	for i in range(motions.size()):
-		var group: Dictionary=components[_root(parent,i)]
+		var group: Dictionary=components[roots[i]]
 		motions[i].drift=Vector2(group.pressure)/int(group.pressers) if int(group.pressers)>0 else Vector2(group.sum)/maxi(1,int(group.count))
 	for pair in pairs:
-		if _root(parent,pair.x)!=_root(parent,pair.y): continue
+		if roots[pair.x]!=roots[pair.y]: continue
 		var a: Move=motions[pair.x]; var b: Move=motions[pair.y]
 		var delta=a.start-b.start; var distance=delta.length(); var margin=maxf(0.,distance-a.radius-b.radius-2.)
 		var normal=delta/distance if distance>.0001 else Vector2.RIGHT
@@ -158,6 +201,10 @@ static func _resolve_components(motions: Array[Move],parent: PackedInt32Array,pa
 static func _root(parent: PackedInt32Array,index: int) -> int:
 	var result=index
 	while parent[result]!=result: result=parent[result]
+	# Compression preserves the exact interacting regions, without repeatedly
+	# walking a crowd-sized chain for every neighbour and solver iteration.
+	while parent[index]!=index:
+		var next=parent[index]; parent[index]=result; index=next
 	return result
 
 static func _safe_fraction(a: Move,b: Move) -> float:

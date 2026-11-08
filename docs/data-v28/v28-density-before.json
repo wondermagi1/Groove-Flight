@@ -1,0 +1,237 @@
+{
+  "checks": 4,
+  "cpu": "Intel(R) Core(TM) i9-14900HX",
+  "failures": [],
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "renderer": "forward_plus",
+  "scenarios": {
+    "deployment": {
+      "frames": 660,
+      "milliseconds": {
+        "beat_enemy": {
+          "max": 740.373,
+          "median": 189.233,
+          "p95": 643.282
+        },
+        "dispatch": {
+          "max": 9.117,
+          "median": 0.004,
+          "p95": 0.532
+        },
+        "effects": {
+          "max": 0.545,
+          "median": 0.224,
+          "p95": 0.455
+        },
+        "enemy": {
+          "max": 740.373,
+          "median": 4.842,
+          "p95": 5.925
+        },
+        "frame": {
+          "max": 756.965,
+          "median": 12.731,
+          "p95": 19.166
+        },
+        "gpu": {
+          "max": 0.305000007152557,
+          "median": 0.263000011444092,
+          "p95": 0.275000005960464
+        },
+        "projectile": {
+          "max": 4.229,
+          "median": 0.743,
+          "p95": 2.275
+        },
+        "simulation": {
+          "max": 752.282,
+          "median": 8.084,
+          "p95": 11.007
+        },
+        "spatial": {
+          "max": 3.814,
+          "median": 2.07,
+          "p95": 2.538
+        }
+      },
+      "peaks": {
+        "enemies": 1024,
+        "projectiles": 271,
+        "rendered": 704
+      },
+      "worst": [
+        {
+          "dispatch": 9.117,
+          "enemy": 740.373,
+          "projectile": 0.396,
+          "simulation": 752.282,
+          "time": 11.5
+        },
+        {
+          "dispatch": 0.425,
+          "enemy": 643.282,
+          "projectile": 0.968,
+          "simulation": 647.386,
+          "time": 11.0
+        },
+        {
+          "dispatch": 0.471,
+          "enemy": 634.613,
+          "projectile": 0.405,
+          "simulation": 637.66,
+          "time": 10.5
+        },
+        {
+          "dispatch": 5.098,
+          "enemy": 555.487,
+          "projectile": 3.402,
+          "simulation": 566.852,
+          "time": 10.0
+        },
+        {
+          "dispatch": 6.83,
+          "enemy": 509.943,
+          "projectile": 0.466,
+          "simulation": 519.494,
+          "time": 9.5
+        },
+        {
+          "dispatch": 0.574,
+          "enemy": 475.62,
+          "projectile": 0.273,
+          "simulation": 478.533,
+          "time": 8.5
+        },
+        {
+          "dispatch": 0.443,
+          "enemy": 417.192,
+          "projectile": 0.156,
+          "simulation": 420.129,
+          "time": 9.0
+        },
+        {
+          "dispatch": 2.514,
+          "enemy": 372.722,
+          "projectile": 0.987,
+          "simulation": 378.742,
+          "time": 8.0
+        }
+      ]
+    },
+    "encirclement": {
+      "frames": 660,
+      "milliseconds": {
+        "beat_enemy": {
+          "max": 2439.418,
+          "median": 1503.433,
+          "p95": 2237.238
+        },
+        "dispatch": {
+          "max": 13.114,
+          "median": 0.004,
+          "p95": 0.468
+        },
+        "effects": {
+          "max": 0.662,
+          "median": 0.187,
+          "p95": 0.586
+        },
+        "enemy": {
+          "max": 2439.418,
+          "median": 4.617,
+          "p95": 5.417
+        },
+        "frame": {
+          "max": 2444.981,
+          "median": 11.077,
+          "p95": 15.53
+        },
+        "gpu": {
+          "max": 0.291999995708466,
+          "median": 0.263999998569489,
+          "p95": 0.280000001192093
+        },
+        "projectile": {
+          "max": 4.135,
+          "median": 0.258,
+          "p95": 1.463
+        },
+        "simulation": {
+          "max": 2441.428,
+          "median": 6.956,
+          "p95": 9.444
+        },
+        "spatial": {
+          "max": 2.384,
+          "median": 1.768,
+          "p95": 2.031
+        }
+      },
+      "peaks": {
+        "enemies": 1024,
+        "projectiles": 176,
+        "rendered": 766
+      },
+      "worst": [
+        {
+          "dispatch": 0.409,
+          "enemy": 2439.418,
+          "projectile": 0.009,
+          "simulation": 2441.428,
+          "time": 1.0
+        },
+        {
+          "dispatch": 13.114,
+          "enemy": 2237.238,
+          "projectile": 0.374,
+          "simulation": 2253.323,
+          "time": 1.5
+        },
+        {
+          "dispatch": 5.117,
+          "enemy": 1870.798,
+          "projectile": 2.863,
+          "simulation": 1880.57,
+          "time": 2.0
+        },
+        {
+          "dispatch": 0.504,
+          "enemy": 1812.313,
+          "projectile": 0.457,
+          "simulation": 1815.666,
+          "time": 2.5
+        },
+        {
+          "dispatch": 2.17,
+          "enemy": 1790.485,
+          "projectile": 0.679,
+          "simulation": 1795.505,
+          "time": 4.0
+        },
+        {
+          "dispatch": 13.077,
+          "enemy": 1750.103,
+          "projectile": 0.423,
+          "simulation": 1765.906,
+          "time": 5.5
+        },
+        {
+          "dispatch": 0.421,
+          "enemy": 1749.462,
+          "projectile": 0.747,
+          "simulation": 1752.785,
+          "time": 3.0
+        },
+        {
+          "dispatch": 0.423,
+          "enemy": 1633.304,
+          "projectile": 0.031,
+          "simulation": 1635.948,
+          "time": 5.0
+        }
+      ]
+    }
+  },
+  "scope": "Isolated native1920x1080,1024high-HP ordinary hulls,eightLv4 weapons,attributes24,two12second manual60Hz simulations (deployment and encirclement),first60frames discarded per scenario. Current production250ms sequence. Audio muted,no captures. Controlled crowd test,not sustained campaign FPS.",
+  "sequence_step_seconds": 0.25
+}
