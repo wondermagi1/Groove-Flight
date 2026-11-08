@@ -1230,7 +1230,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 	var speed=float(trigger.get("speed",700)); var lifetime=float(trigger.get("life",2))
 	var spread=float(trigger.get("spread",.1)); var pierce=int(trigger.get("pierce",0))
 	var reach=EMISSION.weapon_reach(speed,lifetime)
-	if prism_cross or family=="beam": rebuild_spatial()
+	if family=="beam": rebuild_spatial()
 	fx.volley(origin,direction,color,family,count)
 	if prism_cross:
 		fx.ring(origin,Color("f0f6ff"),22.,.16)
@@ -1242,9 +1242,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 	else:
 		fx.muzzle(origin+direction*25,direction,color,1.25 if family in ["rail","beam","missile"] else 1.)
 	_play_weapon_reference(trigger,family)
-	if prism_cross:
-		_fire_prism_beams(context,origin,count,damage,reach)
-	elif family=="chain":
+	if family=="chain":
 		var roots=enemies.filter(func(e): return e.hp>0. and player.distance_to(e.at)<reach)
 		roots.sort_custom(func(a,b): return player.distance_squared_to(a.at)<player.distance_squared_to(b.at))
 		for branch in range(count):
@@ -1279,7 +1277,10 @@ func fire_weapon(trigger: Dictionary) -> void:
 			var axis=direction.rotated(angle) if radial else EMISSION.projectile_axis(direction,i,count,spread)
 			var muzzle=origin+axis*(50 if family=="orbit" else 24) if radial else EMISSION.projectile_origin(origin,direction,i,count,family)
 			var mount: Dictionary={}
-			if mounted:
+			if prism_cross:
+				mount=EMISSION.prism_shot(i,count,spread,float(trigger.get("angle",0.)))
+				axis=mount.axis; muzzle=origin+Vector2(mount.offset)
+			elif mounted:
 				mount=EMISSION.mounted_shot(pattern,direction,i,count,spread,int(trigger.get("serial",0)))
 				axis=mount.axis; muzzle=origin+Vector2(mount.offset)
 			var bullet=shot(muzzle,axis,speed,damage,color,kind,lifetime,pierce)
@@ -1294,7 +1295,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 			if kind in VISUALS.MOVING_IDS: bullet.range_limit=reach
 			VISUALS.setup(bullet,kind,i,count,player,music.timeline)
 			if not radial: bullet.launch_delay=EMISSION.projectile_delay(i,count)
-			if mounted:
+			if mounted or prism_cross:
 				bullet.launch_delay=mount.delay
 				if mount.has("tint"): bullet.color=mount.tint
 				if mount.has("rear_axis"):
@@ -1318,42 +1319,6 @@ func _ray_contacts(start: Vector2,finish: Vector2,half_width: float) -> Array:
 			checked[enemy.uid]=true
 			if enemy.hp>0. and Geometry2D.get_closest_point_to_segment(enemy.at,start,finish).distance_to(enemy.at)<float(enemy.radius)+half_width: contacts.append(enemy)
 	contacts.sort_custom(func(a,b): return start.distance_squared_to(a.at)<start.distance_squared_to(b.at))
-	return contacts
-
-func _fire_prism_beams(context: Dictionary,center: Vector2,count: int,damage: float,reach: float) -> void:
-	var spread=float(context.get("spread",.24)); var rotation=float(context.get("angle",0.))
-	var pierce=int(context.get("pierce",0)); var kind=str(context.kind)
-	for i in range(count):
-		var axis=EMISSION.prism_axis(i,count,spread,rotation)
-		var start=EMISSION.prism_ray_origin(center,i,count,spread,rotation)
-		var end=start+axis*reach; var tint=EMISSION.prism_color(i)
-		var optical=EMISSION.optical_profile(i,int(context.get("uid",0)),int(context.get("serial",0)),EMISSION.LIGHT_BASE_WIDTH)
-		var path=EMISSION.light_path(start,end,int(optical.code))
-		var contacts=_light_contacts(path,float(optical.width)*.5); var clip=1.
-		# Keep explicit hit-splitting modifiers on this scatter-family weapon.
-		var impact={"at":start,"v":axis*float(context.get("speed",800.)),"damage":damage,"color":tint,"kind":kind,"family":str(context.family),"context":context}
-		for j in range(mini(contacts.size(),pierce+1)):
-			var enemy: Dictionary=contacts[j].enemy
-			impact.at=contacts[j].at
-			split_projectile(impact,enemy)
-			hurt_enemy(enemy,damage,kind,context)
-			if float(context.get("explosion",0.))>0.: explosion(enemy.at,float(context.explosion),damage*.5,tint,kind,context,enemy.uid)
-			if j==pierce and contacts.size()>pierce+1: clip=float(contacts[j].u)
-		fx.refracted_beam(start,end,tint,optical,path,clip)
-
-func _light_contacts(path: PackedVector2Array,half_width: float) -> Array:
-	var candidates: Dictionary={}; var cells: Dictionary={}; var contacts: Array=[]
-	for i in range(path.size()-1):
-		for cell in EMISSION.ray_cells(path[i],path[i+1],GRID):
-			if cells.has(cell): continue
-			cells[cell]=true
-			for enemy in spatial.get(cell,[]):
-				if enemy.hp>0.: candidates[enemy.uid]=enemy
-	for enemy in candidates.values():
-		var nearest_point=EMISSION.closest_light_point(enemy.at,path)
-		if float(nearest_point.distance)<float(enemy.radius)+half_width:
-			contacts.append({"enemy":enemy,"at":nearest_point.at,"u":nearest_point.u})
-	contacts.sort_custom(func(a,b): return float(a.u)<float(b.u))
 	return contacts
 
 func _play_weapon_reference(trigger: Dictionary,_family: String) -> void:
@@ -1795,8 +1760,9 @@ func draw_preview_ranges() -> void:
 			var radius=reach
 			var count=int(actual.get("count",12)); var spread=float(actual.get("spread",.24)); var rotation=float(actual.get("angle",0.))
 			for i in range(count):
-				var axis=EMISSION.prism_axis(i,count,spread,rotation)
-				var start=EMISSION.prism_ray_origin(origin,i,count,spread,rotation)
+				var plume=EMISSION.prism_shot(i,count,spread,rotation)
+				var axis=Vector2(plume.axis)
+				var start=origin+Vector2(plume.offset)
 				draw_dashed_line(start,start+axis*radius,Color(EMISSION.prism_color(i),.36),1.5,10.,true)
 			draw_arc(origin,10.,0.,TAU,16,Color("e2eaff",.5),1.5,true)
 		elif family in ["orbit","nova","mine"]:

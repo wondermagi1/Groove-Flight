@@ -1,8 +1,8 @@
 extends RefCounted
 ## Class profiles and independent flight dynamics. Hit resolution lives in main.
 const PALETTE=[Color("ffe98a"),Color("8effb5"),Color("57eaff"),Color("b99aff"),Color("ff8bd7"),Color("ffba79")]
-const STANDARD_IDS=["pulse","scatter","rail","pulse_needle","rail_horizon","recorded_heavy","gilded_helix","weave_cross","stern_fan"]
-const MOVING_IDS=["pulse","scatter","rail","pulse_needle","rail_horizon","recorded_heavy","gilded_helix","weave_cross","stern_fan","missile","nova","crown_orbit"]
+const STANDARD_IDS=["pulse","scatter","rail","pulse_needle","rail_horizon","recorded_heavy","gilded_helix","weave_cross","stern_fan","scatter_prism"]
+const MOVING_IDS=["pulse","scatter","rail","pulse_needle","rail_horizon","recorded_heavy","gilded_helix","weave_cross","stern_fan","scatter_prism","missile","nova","crown_orbit"]
 # The selected gold-helix baseline, including its existing glow shader. Only
 # tint, emission geometry and motion distinguish the active solid projectiles.
 const STANDARD={"style":1,"size":Vector2(48,16),"tail":165.,"width":3.2,"variant":.92,"trail_alpha":.36}
@@ -50,7 +50,7 @@ static func individualize(bullet: Dictionary,index: int,time: float,uid: int,ser
 	var nozzle=sin((time+delay)*7.1+uid*.73)*.11+sin(index*.49+(time+delay)*3.3)*.065
 	var jitter=(_grain(seed,2)-.5)*.09
 	var kind=str(bullet.kind); var strength=.25 if kind=="gilded_helix" else (.55 if kind=="weave_cross" else 1.)
-	if kind=="stern_fan": nozzle*=.22; jitter*=.3
+	if kind in ["stern_fan","scatter_prism"]: nozzle*=.22; jitter*=.3
 	if kind=="nova":
 		var angular_gap=TAU/maxf(1.,float(bullet.get("volley_count",12)))
 		nozzle=clampf(nozzle,-angular_gap*.14,angular_gap*.14); jitter*=.3
@@ -69,6 +69,7 @@ static func individualize(bullet: Dictionary,index: int,time: float,uid: int,ser
 	if kind=="nova": bullet.curve_rate=(.18+_grain(seed,15)*.22)*(-1. if posmod(floori(float(serial)/8.),2)==1 else 1.)
 	if bullet.has("stern_axis"):
 		bullet.stern_launch_axis=axis; bullet.flight_axis=bullet.stern_axis
+		if kind=="scatter_prism": bullet.plume_phase=time*3.1+float(index%4)*1.3+_grain(seed,17)*.18
 	if kind=="crown_orbit":
 		var anchor=Vector2(bullet.at)-Vector2.from_angle(float(bullet.orbit_angle))*float(bullet.orbit_radius)
 		bullet.orbit_angle+=jitter*3.; bullet.orbit_rate*=float(bullet.flight_speed_scale)
@@ -92,7 +93,9 @@ static func _flight_step(bullet: Dictionary,delta: float) -> Vector2:
 	if bullet.has("flight_cruise"):
 		force+=axis*maxf(0.,float(bullet.flight_cruise)-before.dot(axis))*1.85
 	if bullet.has("stern_axis"):
-		var desired=Vector2(bullet.stern_axis)*float(bullet.original_speed)*float(bullet.flight_speed_scale)
+		var guide=Vector2(bullet.stern_axis)
+		if bullet.has("plume_phase"): guide=guide.rotated(.14*sin(age*3.1+float(bullet.plume_phase)))
+		var desired=guide*float(bullet.original_speed)*float(bullet.flight_speed_scale)
 		force+=(desired-before)*3.2
 	bullet.v+=force/mass*delta
 	bullet.flight_lateral+=(before+Vector2(bullet.v)).dot(side)*.5*delta

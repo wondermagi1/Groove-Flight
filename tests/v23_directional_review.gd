@@ -71,7 +71,7 @@ func range_checks() -> void:
 		var definition: Dictionary=game.weapon_renderer.definitions[kind]
 		check(definition.size==Vector2(48,16) and definition.style==1 and definition.variant_index==.92,"active solid weapon shares the chosen gold-helix body / "+kind)
 	check(game.weapon_renderer.definitions.missile.style==3 and game.weapon_renderer.definitions.nova.style==4,"missile hull and energy-orb rendering retain their own class instead of inheriting the feather body")
-	check(C.item("beam").visual_class=="laser_beam" and C.item("scatter_prism").visual_class=="laser_beam" and C.item("chain").visual_class=="electric_arc","instant lasers and electrical chains remain separate visual classes")
+	check(C.item("beam").visual_class=="laser_beam" and C.item("scatter_prism").visual_class=="feather_projectile" and C.item("chain").visual_class=="electric_arc","lasers and chains retain their classes while prism uses the requested physical feather class")
 
 func motion_sample(kind: String,dt: float) -> Array:
 	fixture(kind); game.settings.aim_mode=2

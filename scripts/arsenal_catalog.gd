@@ -218,7 +218,7 @@ static func _build_weapons() -> void:
 			data.tags.append("原创电子音色")
 		if str(data.id)=="scatter_prism":
 			data.emission="prism_cross"
-			data.tags.append("四向平行彩色光束")
+			data.tags.append("四向彩色羽状弹流")
 		elif str(data.id)=="rail_horizon":
 			data.emission="hull_broadside"; data.tags.append("机翼左右双向")
 		elif str(data.id)=="stern_fan":
@@ -243,7 +243,7 @@ static func _build_weapons() -> void:
 
 static func weapon_description(data: Dictionary) -> String:
 	var parts: Array[String]=["每%d小节在所在拍触发"%int(data.charge),"单发伤害%s × %d"%[_number(data.damage),int(data.count)],"弹速%s / 寿命%s秒"%[_number(data.speed),_number(data.life)]]
-	if str(data.get("emission",""))=="prism_cross": parts.append("机头前方朝四个斜角发射多束彩色折光；每束有独立光路、光宽与闪烁，命中沿可见光路结算")
+	if str(data.get("emission",""))=="prism_cross": parts.append("机头前方朝四个斜角展开多排彩色U形羽流；每颗实体弹独立喷射、弯转并留下柔光尾迹，到有效射程后才缩小消散")
 	elif str(data.get("emission",""))=="hull_broadside": parts.append("从机翼左右两侧同时发射并排弹列；总弹数分配到两侧，奇数额外弹逐轮交替；保持机身朝向")
 	elif str(data.get("emission",""))=="stern_fan": parts.append("从机尾向后展开多排彩色U形扇面；左翼绿黄、中央橙黄、右翼粉紫；随飞行逐渐缩小并淡出")
 	if str(data.id)=="gilded_helix": parts.append("金色羽状弹向四周展开并弯转，形成双层螺旋弹幕")

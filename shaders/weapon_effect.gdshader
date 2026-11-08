@@ -1,7 +1,5 @@
 shader_type canvas_item;
 render_mode unshaded, blend_add;
-uniform bool reduced_effects=false;
-uniform float refraction_base_width=6.;
 varying vec4 tint;
 varying vec4 detail;
 void vertex(){tint=COLOR; detail=INSTANCE_CUSTOM;}
@@ -9,21 +7,9 @@ float hash(float n){return .5+.5*cos(n*2.399963+detail.w*6.283185);}
 float noise(float x){float i=floor(x),f=fract(x); return mix(hash(i),hash(i+1.),f);}
 void fragment(){
  vec2 p=(UV-.5)*2.; float t=detail.y;
- int mode=int(round(detail.x*6.));
+ int mode=int(round(detail.x*5.));
  float fade=pow(max(0.,1.-t),1.3),core=0.,glow=0.;
- if(mode==6){
-  // Eight-bit seed survives compatibility renderer half-float custom data.
-  float seed=round(detail.w*255.)/255.;
-  float width=round(refraction_base_width*(.88+.24*seed)*10.)*.1;
-  float u=UV.x; float envelope=sin(u*3.14159265);
-  float offset=(9.+13.*seed)*sin(6.2831853*u*(1.1+.7*seed)+6.2831853*seed)*envelope*envelope;
-  float y=(p.y*96.-offset)/max(.1,width*3.);
-  float ends=smoothstep(0.,.018,u)*(1.-smoothstep(max(0.,detail.z-.018),detail.z,u));
-  float pulse=.68+.32*pow(max(0.,sin(u*44.-t*24.+seed*6.2831853)),4.);
-  core=exp(-abs(y)*42.)*ends*pulse;
-  glow=(exp(-abs(y)*4.8)*.18+exp(-abs(y)*11.)*.42)*ends;
-  if(reduced_effects) glow*=.6;
- }else if(mode<=1){
+ if(mode<=1){
   float y=p.y;
   if(mode==1) y-= (noise(UV.x*22.)-.5)*.65*sin(UV.x*3.14159265);
   float ends=smoothstep(0.,.018,UV.x)*(1.-smoothstep(.982,1.,UV.x));
@@ -54,8 +40,8 @@ void fragment(){
    glow=exp(-r*r*6.)*.32+spokes*exp(-r*6.)*(1.-t)*.45;
   }
  }
- float edge=1.-smoothstep(.86,1.,(mode<=1 || mode==6 ? abs(p.y) : max(abs(p.x),abs(p.y))));
- float strength=mode==6 ? .9 : detail.z;
+ float edge=1.-smoothstep(.86,1.,(mode<=1 ? abs(p.y) : max(abs(p.x),abs(p.y))));
+ float strength=detail.z;
  vec3 col=mix(tint.rgb,vec3(1.),core*.82);
  COLOR=vec4(col,min(.95,core+glow)*fade*edge*strength*tint.a);
 }

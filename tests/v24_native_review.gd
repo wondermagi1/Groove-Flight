@@ -13,7 +13,7 @@ func all_weapon_gallery() -> void:
 		game.fire_weapon(event)
 		var physical=str(row.id) in game.VISUALS.MOVING_IDS
 		var duration=.5 if physical else .035
-		if str(row.id) in ["crown_orbit","stern_fan","nova"]: duration=.8
+		if str(row.id) in ["crown_orbit","stern_fan","nova","scatter_prism"]: duration=.8
 		var elapsed=0.
 		while elapsed<duration-.00001:
 			var dt=minf(.025,duration-elapsed)
@@ -31,18 +31,18 @@ func focused_clip() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://work/v24-frames"))
 	var section=-1; var fired=-1; var event: Dictionary={}
 	for i in range(192):
-		var time=float(i)/24.; var current=0 if time<2.5 else (1 if time<5.2 else 2)
-		var local_time=time-(0. if current==0 else (2.5 if current==1 else 5.2))
+		var time=float(i)/24.; var current=2 if time<4. else (0 if time<6. else 1)
+		var local_time=time-(4. if current==0 else (6. if current==1 else 0.))
 		if current!=section:
 			section=current; fired=-1; event=load_weapon(["nova","crown_orbit","scatter_prism"][section],40.)
-			banner.text=["新星环炮 · 全周能量花瓣各自弯转 · 受控重复触发","星冕回旋阵 · 独立呼吸与惯性跟随","七彩折光匣 · 四向独立曲线光束 · 受控重复触发（正常充能未改）"][section]
-		var volley=0 if section==1 else floori(local_time/(1.2 if section==0 else .7))
+			banner.text=["新星环炮 · 全周能量花瓣各自弯转 · 受控重复触发","星冕回旋阵 · 独立呼吸与惯性跟随","七彩折光匣 · 四向彩色羽状实体弹 · 受控重复触发（正常充能未改）"][section]
+		var volley=0 if section==1 else floori(local_time/(1.2 if section==0 else 1.0))
 		if volley!=fired:
 			fired=volley; event.serial=volley*8; game.fire_weapon(event)
 		if section==1: game.player=Vector2(sin(local_time*1.8)*125.,sin(local_time*2.6)*45.)
 		advance(1./24.); await process_frame; await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png("res://work/v24-frames/%04d.png"%i)
-	facts.preview={"seconds":8,"fps":24,"scope":"Native1920x1080 controlled repeat triggers, Lv4/attribute40, muted. Repeats reveal successive ring envelopes and independent optical phases; normal charge rules unchanged. No capture time used as gameplay timing."}
+	facts.preview={"seconds":8,"fps":24,"scope":"Native1920x1080 controlled repeat triggers, Lv4/attribute40, muted. Repeats reveal successive ring envelopes and four physical feather plumes; normal charge rules unchanged. No capture time used as gameplay timing."}
 func run() -> void:
 	root.size=Vector2i(1920,1080)
 	game=load("res://scenes/Main.tscn").instantiate(); game.is_preview=true; root.add_child(game); current_scene=game; await frames(4)
@@ -52,7 +52,7 @@ func run() -> void:
 	banner.position=Vector2(28,28); banner.add_theme_font_size_override("font_size",25)
 	var font=SystemFont.new(); font.font_names=PackedStringArray(["Microsoft YaHei UI","Noto Sans CJK SC"]); banner.add_theme_font_override("font",font)
 	await all_weapon_gallery(); await focused_clip()
-	var result={"checks":checks,"failures":failures,"facts":facts,"renderer":RenderingServer.get_current_rendering_method(),"scope":"All16 actual weapon GPU submissions with class-specific material/geometry; focused circular and refraction preview under explicit controlled conditions."}
+	var result={"checks":checks,"failures":failures,"facts":facts,"renderer":RenderingServer.get_current_rendering_method(),"scope":"All16 actual weapon GPU submissions with class-specific material/geometry; focused circular and physical prism plume preview under explicit controlled conditions."}
 	FileAccess.open("res://tests/results-v24-native.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("V24_NATIVE ",JSON.stringify(result))
 	game.music.stop(); game.composer_player.stop_song(); stop_audio(game); current_scene=null; game.queue_free(); layer.queue_free(); await frames(6)
 	await create_timer(.15,true).timeout; quit(0 if failures.is_empty() else 1)

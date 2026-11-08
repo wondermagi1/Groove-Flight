@@ -50,7 +50,7 @@ func firing_checks() -> void:
 			if str(row.family)=="chain":
 				victim=game.spawn_enemy("armor",Vector2(0,-400)); victim.hp=1000000.; victim.max_hp=victim.hp; victim.speed=0.
 			game.fire_weapon(event)
-			if str(row.family) in ["beam","chain"] or str(row.get("emission",""))=="prism_cross":
+			if str(row.family) in ["beam","chain"]:
 				var beams=game.fx.marks.filter(func(m): return str(m.kind)=="beam")
 				check(beams.size()==int(event.count),"every compiled beam/branch has an actual emitted visual / "+str(row.id))
 				if not victim.is_empty(): check(is_equal_approx(1000000.-float(victim.hp),float(event.damage)*event.count),"each actual chain branch applies real damage")

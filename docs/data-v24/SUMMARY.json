@@ -1,0 +1,185 @@
+{
+  "version": "0.24.0-independent-feather-plumes",
+  "date": "2026-11-08",
+  "development_branch": "codex/v24-prism-feather-motion",
+  "backup_before_round": "045359fdaf3fa9f737687a0d991e87e02b582e7b",
+  "backup_before_prism_revision": "ad14a6892b0c2fb2b7bdd81215d50ece7dd4f710",
+  "active_weapon_count": 16,
+  "shared_feather_visual_weapons": 10,
+  "independent_physical_weapon_types": 13,
+  "instant_optical_electrical_types": 3,
+  "rules": {
+    "unified_by_visual_class": true,
+    "prism_is_four_swaying_physical_feather_plumes": true,
+    "prism_hits_wait_for_actual_arrival": true,
+    "full_size_until_effective_range": true,
+    "range_fade_seconds": 1.5,
+    "retirement_deals_damage": false,
+    "nova_full_circle_individual_curvature": true,
+    "crown_independent_breathing_and_inertial_follow": true,
+    "fixed_sound_one_event_per_scan": true,
+    "same_type_uid_layering": true,
+    "sequencer_cycle_seconds": 1.0
+  },
+  "audio_assets": {
+    "baseline": "bfedd71",
+    "unchanged_samples": 128,
+    "total_sample_files": 128,
+    "failures": []
+  },
+  "reports": [
+    {
+      "report": "v24-all-weapons.json",
+      "checks": 57,
+      "failures": [],
+      "scope": "All16 active weapons; actual independent physical motion and optical branches, circular coverage, orbital follow inertia, four sustained swaying physical prism plumes, shared feather GPU submission. Controlled fixtures, not full-campaign balance or source-game internals."
+    },
+    {
+      "report": "v24-all-weapons-forward_plus.json",
+      "checks": 57,
+      "failures": [],
+      "scope": "All16 active weapons; actual independent physical motion and optical branches, circular coverage, orbital follow inertia, four sustained swaying physical prism plumes, shared feather GPU submission. Controlled fixtures, not full-campaign balance or source-game internals."
+    },
+    {
+      "report": "v24-all-weapons-gl_compatibility.json",
+      "checks": 57,
+      "failures": [],
+      "scope": "All16 active weapons; actual independent physical motion and optical branches, circular coverage, orbital follow inertia, four sustained swaying physical prism plumes, shared feather GPU submission. Controlled fixtures, not full-campaign balance or source-game internals."
+    },
+    {
+      "report": "v24-native.json",
+      "checks": 16,
+      "failures": [],
+      "scope": "All16 actual weapon GPU submissions with class-specific material/geometry; focused circular and physical prism plume preview under explicit controlled conditions."
+    },
+    {
+      "report": "v24-density.json",
+      "checks": 2,
+      "failures": [],
+      "scope": "Separate native1920x1080 run without capture or concurrent tests. Manual1/60 clock calls production dispatch, individual motion, actual collision,600enemy AI and FX for8seconds; first60frames discarded. Eight Lv4 weapons, four stats24, high-HP enemies, invulnerable player and stopped/muted audio. Occupied grid is a stress fixture rather than an allowed birth. Short measurement, no sustained FPS or human balance claim."
+    },
+    {
+      "report": "selected-weapons.json",
+      "checks": 432,
+      "failures": [],
+      "scope": "Original twelve plus four new weapons, exact sixteen-name roster, restored heavy, live inventory gate,320 real six-offer shops, retired-score migration and instrument PCM routing."
+    },
+    {
+      "report": "v23-directional.json",
+      "checks": 93,
+      "failures": [],
+      "scope": "Actual hull-relative wing/rear emissions across five headings, real lane/rear damage, shared standard heads, exact travel-distance clipping, size preservation before range, post-range visual-only shrink/glow and bounded removal. Controlled fixtures; no source-game code, human balance or sustained FPS claim."
+    },
+    {
+      "report": "v22-projectile-growth.json",
+      "checks": 907,
+      "failures": [],
+      "scope": "All active weapons x4upgrade levels x5attribute values, unrelated attributes, real merge, visible caps, actual damaging rays/branches and train projectiles. Fixed controlled fixtures; no human balance claim."
+    },
+    {
+      "report": "arsenal-combat.json",
+      "checks": 122,
+      "failures": [],
+      "scope": "Production methods under controlled position/time/high-HP fixtures:36weapon impacts, projectiles, attributes,7procs, inventory/shop currency callbacks. Native full-route timing/audio and human balance are separate."
+    },
+    {
+      "report": "prism-cross.json",
+      "checks": 36,
+      "failures": [],
+      "scope": "Physical prism: four colored feather plumes, delayed arrival, penetration, split children, full size through actual range, bounded retirement, all tracks/aim modes and shared renderer. Supersedes instant-prism expectations."
+    },
+    {
+      "report": "v21-spectacle.json",
+      "checks": 77,
+      "failures": [],
+      "scope": "Actual new weapon trajectories/damage, all active visual profiles, matrix/circular wave routes, real density/population/renderer cap, player scale and received-hit guard lifecycle. Controlled GPU captures when enabled."
+    },
+    {
+      "report": "weapon-cycle.json",
+      "checks": 189,
+      "failures": [],
+      "scope": "Pure production scheduling of every active weapon for eight seconds; separate UID scheduling, 1-second deadlines, fixed voices, damage conservation and pure snapshot/clone behavior."
+    },
+    {
+      "report": "composer-score.json",
+      "checks": 112,
+      "failures": [],
+      "scope": "Pure score/editor transactions, boundedJSONsave/load, actualSMF0/1 byte fixtures/runningstatus/chords/sustain/tempo handling/corruptinput, MIDIandJSONroundtrip, sharedschedule. No audio or UI/nativeflight acceptance."
+    },
+    {
+      "report": "electronic-audio-logic.json",
+      "checks": 53,
+      "failures": [],
+      "scope": "Fixed voices for the active weapon roster, same-type12/34 native PCM overlap and live fire, zero-volume/track mute, live/paused PCM refresh and isolated preview compilation. Native fixture uses invulnerability; no human listening or balance claim."
+    },
+    {
+      "report": "rhythm-feedback.json",
+      "checks": 40,
+      "failures": [],
+      "scope": "Production Main callbacks, native audio transport, fixed-voice recompile, death/receive/pickup feedback and bounded drum scheduling. Invulnerable native smoke fixture; no human difficulty or subjective listening claim."
+    }
+  ],
+  "performance": {
+    "frame_ms": {
+      "max": 74.935,
+      "median": 10.635,
+      "p95": 14.356
+    },
+    "simulation_ms": {
+      "max": 67.913,
+      "median": 4.853,
+      "p95": 8.771
+    },
+    "gpu_render_ms": {
+      "max": 2.47699999809265,
+      "median": 1.16299998760223,
+      "p95": 1.43900001049042
+    },
+    "peaks": {
+      "enemies": 600,
+      "hostile": 0,
+      "projectiles": 453,
+      "rendered": 600
+    },
+    "limit": "Short controlled 600-enemy/eight-weapon stress run, no concurrent captures or game tests. Occasional frame spikes remain. Not sustained FPS certification."
+  },
+  "native_preview": {
+    "path": "docs/video-v24/all-weapon-motion-preview.mp4",
+    "width": 1920,
+    "height": 1080,
+    "fps": 24,
+    "frames": 192,
+    "seconds": 8,
+    "muted": true,
+    "scope": "Native1920x1080 controlled repeat triggers, Lv4/attribute40, muted. Repeats reveal successive ring envelopes and four physical feather plumes; normal charge rules unchanged. No capture time used as gameplay timing.",
+    "sections": [
+      {
+        "seconds": [
+          0,
+          4
+        ],
+        "weapon": "scatter_prism"
+      },
+      {
+        "seconds": [
+          4,
+          6
+        ],
+        "weapon": "nova"
+      },
+      {
+        "seconds": [
+          6,
+          8
+        ],
+        "weapon": "crown_orbit"
+      }
+    ]
+  },
+  "unchanged_enemy_baseline": "../data-v23/SUMMARY.json",
+  "limits": [
+    "No new human listening or balance acceptance.",
+    "No full-route or all-planet acceptance claim.",
+    "Intermediate prism laser solution is preserved only in backup ad14a68 and superseded by physical feathers."
+  ]
+}

@@ -1,170 +1,87 @@
-extends SceneTree
-## Controlled production firing/collision fixtures, plus an optional GPU image.
-const C=preload("res://scripts/arsenal_catalog.gd")
-var game
-var checks=0
-var failures: Array[String]=[]
-var facts: Dictionary={}
+extends "res://tests/v23_directional_review.gd"
+## Physical prism contract supersedes the historical V20 laser fixture.
 
-func _initialize() -> void:
-	run.call_deferred(); watchdog.call_deferred()
-func watchdog() -> void:
-	await create_timer(120.).timeout; push_error("Prism cross review timed out"); quit(2)
-func check(ok: bool,message: String) -> void:
-	checks+=1
-	if not ok: failures.append(message); push_error(message)
-func frames(n: int=3) -> void:
-	for i in range(n): await process_frame
+func advance(seconds: float) -> void:
+	var elapsed=0.
+	while elapsed<seconds-.000001:
+		var dt=minf(1./120.,seconds-elapsed)
+		game.update_bullets(dt); elapsed+=dt
 
-func fixture(kind: String="scatter_prism",head: int=0) -> void:
-	game.state="combat"; game.wave=1; game.music.timeline=1.; game.wave_start=1.
-	game.enemies.clear(); game.by_id.clear(); game.spatial.clear()
-	game.bullets.clear(); game.pending_projectiles.clear(); game.enemy_bullets.clear()
-	game.pending_triggers.clear(); game.proc_queue.clear(); game.pending_splits.clear()
-	game.fx.marks.clear(); game.fx.particles.clear(); game.fire_log.clear()
-	game.player=Vector2.ZERO; game.facing=Vector2.UP; game.movement_facing=Vector2.UP
-	game.settings.aim_mode=0; game.settings.reduced_fx=false
-	game.selected_pilot="mender"; game.pilot_amp_until=-1.; game.overload_until=-1.
-	game.invulnerable=0.; game.player_guard_until=-1.; game.shield_points=0.; game.health=10.
-	game.loadout.audio_guard_enabled=false; game.loadout.active_tracks=3
-	game.loadout.reset(); game.loadout.set_fleet({"health":10,"damage_scale":1.},{"id":"mender"})
-	game.loadout.set_starters([kind])
-	if head!=0: game.loadout.move_module(int(game.loadout.slots[0]),head)
-	game.refresh_loadout_stats()
-
-func fire(head: int=0) -> Dictionary:
-	var event=game.loadout.trigger(head).duplicate(true)
-	event.crit_chance=0.; game.fire_weapon(event)
+func event_for_test() -> Dictionary:
+	var event=game.loadout.trigger(0).duplicate(true)
+	event.crit_chance=0.; event.explosion=0.; event.uid=777; event.serial=24
 	return event
 
-func rays() -> Array:
-	return game.fx.marks.filter(func(m): return str(m.kind)=="beam")
-
-func ray_axis(mark: Dictionary) -> Vector2:
-	return (Vector2(mark.to)-Vector2(mark.at)).normalized()
-
 func emission_checks() -> void:
-	fixture()
-	var base_count=int(game.loadout.trigger(0).count)
+	fixture("scatter_prism"); var event=event_for_test()
 	game.music.timeline=0.; game.on_step(0,0,0.)
-	check(game.bullets.is_empty(),"existing two-loop charge does not emit a premature prism volley")
+	check(game.bullets.is_empty(),"two-loop charge does not emit a premature prism volley")
 	game.music.timeline=1.; game.on_step(0,8,1.)
-	check(rays().size()==base_count and game.fire_log.size()==1,"one eligible sequencer pass launches one quality-scaled volley")
-	check(game.bullets.is_empty(),"the prism emits actual instantaneous beams")
-	if rays().size()!=base_count: return
-	var origin=Vector2(0,-64)
+	check(game.bullets.size()==int(event.count) and game.fire_log.size()==1,"one eligible scan emits exactly the compiled physical count")
+	check(game.fx.marks.all(func(m): return str(m.kind)!="beam"),"prism fires moving feathers rather than instant laser lines")
 	var colors: Dictionary={}; var arms: Dictionary={}
-	var baseline: Array=[]
-	for mark in rays():
-		var axis=ray_axis(mark); var quadrant=Vector2(signf(axis.x),signf(axis.y))
-		check(is_equal_approx(absf(axis.x),absf(axis.y)),"each arm travels diagonally at45degrees")
-		check(absf((Vector2(mark.at)-origin).dot(axis))<.001,"each lane starts on the shared perpendicular launch bar")
-		colors[mark.color.to_html()]=true
-		if not arms.has(quadrant): arms[quadrant]=[]
-		arms[quadrant].append(mark)
-		baseline.append(Vector2(mark.at))
-	check(colors.size()==7 and arms.size()==4,"seven colors cover four diagonal beam groups")
-	for group in arms.values():
-		check(group.size()==base_count/4,"each direction receives its share of the quality-scaled beams")
-		check(ray_axis(group[0]).is_equal_approx(ray_axis(group[1])) and ray_axis(group[1]).is_equal_approx(ray_axis(group[2])),"three beams in an arm stay parallel")
-		check(is_equal_approx(Vector2(group[0].at).distance_to(group[1].at),18.) and is_equal_approx(Vector2(group[1].at).distance_to(group[2].at),18.),"parallel rays have visible18pixel lane spacing")
-		check(group[0].color!=group[1].color and group[1].color!=group[2].color and group[0].color!=group[2].color,"each beam group contains three distinct colors")
-	check(C.item("scatter_prism").voice=="inst_scatter_prism" and game.recorded_weapon_players.is_empty(),"the fixed instrument remains unchanged without a second recorded voice")
-	facts.base={"count":base_count,"beams_per_arm":base_count/4,"origin":[origin.x,origin.y],"colors":colors.keys(),"base_total_damage":float(C.item("scatter_prism").damage)*12.}
+	for b in game.bullets:
+		var quadrant=Vector2(b.stern_axis).snapped(Vector2.ONE*.01)
+		arms[quadrant]=int(arms.get(quadrant,0))+1; colors[Color(b.color).to_html()]=true
+	check(arms.size()==4 and colors.size()>=7,"four diagonal plumes retain rainbow individual feathers")
+	check(arms.values().all(func(n): return n==int(event.count)/4),"total count is divided evenly across four directions")
 	for head in [0,8,16]:
 		for aim in [0,1,2]:
-			fixture("scatter_prism",head); game.player=Vector2(120,80); game.settings.aim_mode=aim
+			fixture("scatter_prism"); game.player=Vector2(120,80); game.settings.aim_mode=aim
+			if head!=0: game.loadout.move_module(int(game.loadout.slots[0]),head)
 			game.movement_facing=Vector2.RIGHT; game.spawn_enemy("armor",Vector2(500,80))
-			fire(head)
-			var beams=rays(); var matched=beams.size()==base_count
-			if matched:
-				for i in range(base_count): matched=matched and Vector2(beams[i].at).is_equal_approx(game.player+baseline[i])
-			check(matched,"all tracks and aim modes retain the same ship-relative launch bars")
-			check(ray_axis(beams[0]).x<0 and ray_axis(beams[0]).y<0 and ray_axis(beams[3]).x>0 and ray_axis(beams[3]).y>0,"targets do not turn the world-aligned X into an aimed fan")
-			check(game.facing==Vector2.UP,"the cross does not turn the ship toward an unrelated auto-aim target")
-	fixture(); game.loadout.add_module("mod_scatter_2",3); game.refresh_loadout_stats()
-	var event=fire(); arms.clear()
-	for mark in rays():
-		var axis=ray_axis(mark); var quadrant=Vector2(signf(axis.x),signf(axis.y))
-		if not arms.has(quadrant): arms[quadrant]=[]
-		arms[quadrant].append(mark)
-	check(rays().size()==int(event.count) and event.count==base_count+1 and arms.size()==4,"actual extra-projectile modifier adds a ray while preserving all four groups")
-	for group in arms.values():
-		check(group.all(func(m): return ray_axis(m).is_equal_approx(ray_axis(group[0]))),"upgraded beam groups remain parallel")
+			var actual=fire(head)
+			check(game.bullets.size()==int(actual.count) and game.bullets.all(func(b): return absf(absf(Vector2(b.stern_axis).x)-absf(Vector2(b.stern_axis).y))<.001),"tracks and aim modes retain four world-diagonal launch envelopes")
+			check(game.facing==Vector2.UP,"prism does not rotate the hull toward unrelated auto-aim targets")
+	fixture("scatter_prism"); var before=int(game.loadout.trigger(0).count)
+	game.loadout.add_module("mod_scatter_2",3); game.refresh_loadout_stats(); event=fire()
+	check(game.bullets.size()==event.count and event.count==before+1,"real extra-projectile modifier adds exactly one feather")
+	check(C.item("scatter_prism").voice=="inst_scatter_prism" and game.recorded_weapon_players.is_empty(),"fixed low-tom sound remains unchanged without extra voices")
+	facts.base={"count":event.count,"arms":4,"class":C.item("scatter_prism").visual_class,"physical":true}
 
 func collision_checks() -> void:
-	fixture()
-	var victims: Array=[]
-	var actual=game.loadout.trigger(0)
-	for i in range(int(actual.count)):
-		var axis=game.EMISSION.prism_axis(i,int(actual.count),float(actual.spread))
-		var start=game.EMISSION.prism_ray_origin(Vector2(0,-64),i,int(actual.count),float(actual.spread))
-		var enemy=game.spawn_enemy("armor",start+axis*230.)
-		enemy.hp=1000.; enemy.max_hp=1000.; enemy.speed=0.; enemy.radius=4.; victims.append(enemy)
+	fixture("scatter_prism"); var event=event_for_test(); event.count=1; event.pierce=1
+	game.fire_weapon(event); var path: Array=[]
+	for duration in [.3,.25,.3]:
+		advance(duration); path.append(Vector2(game.bullets[0].at))
+	fixture("scatter_prism"); var victims: Array=[]
+	for at in path:
+		var enemy=game.spawn_enemy("armor",at); enemy.radius=3.; enemy.hp=1000.; enemy.max_hp=1000.; enemy.speed=0.; victims.append(enemy)
+	game.rebuild_spatial(); game.fire_weapon(event)
+	check(victims.all(func(e): return e.hp==1000.),"far targets take no immediate laser damage at emission")
+	advance(.2)
+	check(victims.all(func(e): return e.hp==1000.),"damage waits until the physical feather arrives")
+	advance(.8)
+	check(is_equal_approx(1000.-float(victims[0].hp),float(event.damage)) and is_equal_approx(1000.-float(victims[1].hp),float(event.damage)) and victims[2].hp==1000.,"curved feather motion consumes exactly two penetration contacts")
+	check(game.bullets.is_empty(),"feather is removed when its penetration budget is exhausted")
+	fixture("scatter_prism"); game.loadout.add_module("r_cross",3); game.refresh_loadout_stats()
+	event=event_for_test(); event.count=1; event.pierce=0; game.fire_weapon(event); advance(.45)
+	var target_at=Vector2(game.bullets[0].at)
+	fixture("scatter_prism"); var target=game.spawn_enemy("armor",target_at); target.radius=3.; target.hp=1000.; target.speed=0.
+	game.rebuild_spatial(); game.fire_weapon(event); advance(.55)
+	check(target.hp<1000. and game.bullets.size()==4 and game.bullets.all(func(b): return int(b.context.depth)==1 and b.has("flight_mass")),"hit-splitting produces four actual independently moving children")
 
-	var empty_lane=game.spawn_enemy("armor",Vector2(0,-290)); empty_lane.hp=1000.; empty_lane.max_hp=1000.; empty_lane.speed=0.
-	game.rebuild_spatial(); var event=fire()
-	check(victims.all(func(e): return is_equal_approx(1000.-float(e.hp),float(event.damage))),"all actual lane targets each take one immediate hit on their visible beam lane")
-	check(is_equal_approx(victims.reduce(func(total,e): return total+1000.-float(e.hp),0.),float(event.damage)*event.count),"quality-added rays contribute exactly their real per-ray damage")
-	var remaining=victims.map(func(e): return float(e.hp))
-	game.fx._process(.1); game.update_bullets(.1)
-	check(victims.map(func(e): return float(e.hp))==remaining,"the visible beam tail does not repeat damage on later frames")
-	check(empty_lane.hp==1000.,"the open vertical lane is not filled by invisible old fan damage")
-	fixture(); victims.clear()
-	var lane_event=game.loadout.trigger(0)
-	var lane_start=game.EMISSION.prism_ray_origin(Vector2(0,-64),0,int(lane_event.count),float(lane_event.spread))
-	for distance in [150.,260.,360.]:
-		var enemy=game.spawn_enemy("armor",lane_start+Vector2(-1,-1).normalized()*distance)
-		enemy.hp=1000.; enemy.max_hp=1000.; enemy.speed=0.; enemy.radius=4.; victims.append(enemy)
-
-	game.rebuild_spatial(); fire()
-	check(victims[0].hp<1000. and victims[1].hp<1000. and victims[2].hp==1000.,"one ray honors the actual two-target penetration budget")
-	var stopped=rays().filter(func(m): return Vector2(m.at).is_equal_approx(lane_start) and ray_axis(m).x<0 and ray_axis(m).y<0)
-	check(stopped.size()==1 and Vector2(stopped[0].to).distance_to(victims[1].at)<float(victims[1].radius)+float(stopped[0].width)*.5,"the visible curved ray stops on its final penetrated target")
-	fixture(); game.loadout.add_module("r_cross",3); game.refresh_loadout_stats()
-	var split_event=game.loadout.trigger(0)
-	var split_axis=game.EMISSION.prism_axis(0,int(split_event.count),float(split_event.spread),float(split_event.angle))
-	var split_start=game.EMISSION.prism_ray_origin(Vector2(0,-64),0,int(split_event.count),float(split_event.spread),float(split_event.angle))
-	var split_target=game.spawn_enemy("armor",split_start+split_axis*180.)
-
-	split_target.radius=4.; split_target.hp=1000.; split_target.max_hp=1000.; game.rebuild_spatial(); fire()
-	check(game.bullets.size()==4 and game.bullets.all(func(b): return int(b.context.depth)==1),"explicit hit-splitting modifiers still produce four real child projectiles")
-	fixture("scatter"); fire()
-	check(game.bullets.size()==5 and game.bullets.all(func(b): return b.v.y<0.),"ordinary scatter still emits its five-round forward fan")
-
-func visual_capture() -> void:
-	fixture(); game.player=Vector2(0,100); game.facing=Vector2.UP
-	game.camera.enabled=true; game.camera.position_smoothing_enabled=false
-	game.camera.zoom=Vector2.ONE*.9; game.camera.position=Vector2(0,32)
-	game.camera.reset_smoothing(); game.camera.force_update_scroll()
-	game.ui.root_control.hide()
-	for axis in [Vector2(-1,-1),Vector2(-1,1),Vector2(1,-1),Vector2(1,1)]:
-		var enemy=game.spawn_enemy("armor",Vector2(0,36)+axis.normalized()*350.)
-		enemy.hp=10000.; enemy.max_hp=10000.; enemy.speed=0.; enemy.born=-10.
-	game.rebuild_spatial(); fire()
-	game.fx._process(.08); game.queue_redraw(); await frames(3)
-	check(rays().size()==int(game.loadout.trigger(0).count) and game.fx.effect_count>=rays().size(),"GPU submission retains all separate quality-scaled colored beams")
-	game.fx.reduced=true; game.fx.queue_redraw(); await frames(3)
-	check(rays().size()==int(game.loadout.trigger(0).count) and game.fx.effect_count>=rays().size(),"reduced effects preserve every parallel beam")
-	game.fx.reduced=false
-	game.settings.reduced_fx=false
-	if DisplayServer.get_name()!="headless":
-		game.queue_redraw(); await frames(3); await RenderingServer.frame_post_draw
-		var image=root.get_texture().get_image()
-		var path="res://docs/screenshots/v20-prism-parallel-beams.png"
-		check(image!=null and image.get_width()>=1000,"native GPU screenshot can be read back")
-		image.save_png(path); facts.screenshot=path
-	game.fx._process(.17)
-	check(rays().is_empty(),"beam flashes expire after one volley without lingering into the next scan")
+func range_and_visual_checks() -> void:
+	fixture("scatter_prism"); var event=event_for_test(); game.fire_weapon(event); advance(.8)
+	check(game.bullets.size()==event.count and game.bullets.all(func(b): return not b.retiring and game.VISUALS.life_scale(b)==1.),"prism remains full size and flying beyond a short flash")
+	game.weapon_renderer.update_projectiles(game.bullets,Rect2(-3000,-3000,6000,6000),false)
+	check(game.weapon_renderer.active_count==event.count,"normal effects render every actual feather head")
+	game.weapon_renderer.update_projectiles(game.bullets,Rect2(-3000,-3000,6000,6000),true)
+	check(game.weapon_renderer.active_count==event.count,"reduced effects retain every feather head")
+	var elapsed=.8
+	while elapsed<8. and not game.bullets.all(func(b): return b.retiring): advance(.05); elapsed+=.05
+	check(not game.bullets.is_empty() and game.bullets.all(func(b): return b.retiring and is_equal_approx(float(b.travelled),float(b.range_limit))),"feathers only retire after reaching their individual actual range")
+	advance(.3)
+	check(game.bullets.all(func(b): return game.VISUALS.life_scale(b)<1.),"post-range bodies glow and trails begin shrinking")
+	advance(1.6); check(game.bullets.is_empty(),"range retirement removes every remaining prism feather")
 
 func run() -> void:
-	game=load("res://scenes/Main.tscn").instantiate(); game.is_preview=true
-	root.add_child(game); current_scene=game; await frames(4)
-	game.set_process(false); game.set_physics_process(false); game.set_process_unhandled_input(false)
-	game.fx.set_process(false); game.music.stop(); game.music._running=false
-	emission_checks(); collision_checks(); await visual_capture()
-	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"Production scan, four parallel beam groups, quality-scaled visible lane hits, penetration endpoint, track/aim invariance, real modifiers and renderer submission; controlled GPU image when available."}
-	FileAccess.open("res://tests/results-prism-cross.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
-	print("PRISM_CROSS ",JSON.stringify(result))
-	game.music.stop(); current_scene=null; game.queue_free(); await frames(4)
+	root.size=Vector2i(1920,1080)
+	game=load("res://scenes/Main.tscn").instantiate(); game.is_preview=true; root.add_child(game); current_scene=game; await frames(4)
+	game.set_process(false); game.set_physics_process(false); game.set_process_unhandled_input(false); game.fx.set_process(false)
+	game.music.stop(); game.music._running=false; game.settings.master=0.; game.apply_audio()
+	emission_checks(); collision_checks(); range_and_visual_checks()
+	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"Physical prism: four colored feather plumes, delayed arrival, penetration, split children, full size through actual range, bounded retirement, all tracks/aim modes and shared renderer. Supersedes instant-prism expectations."}
+	FileAccess.open("res://tests/results-prism-cross.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("PRISM_CROSS ",JSON.stringify(result))
+	game.music.stop(); game.composer_player.stop_song(); stop_audio(game); current_scene=null; game.queue_free(); await frames(6)
 	quit(0 if failures.is_empty() else 1)

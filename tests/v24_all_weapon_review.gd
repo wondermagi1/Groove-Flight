@@ -46,47 +46,32 @@ func ring_checks() -> void:
 	check(centers.size()>1 and breathing>game.bullets.size()/2 and game.bullets.all(func(b): return absf(Vector2(b.at).distance_to(game.player)-float(b.orbit_radius))<3.),"independent orbital centers settle into breathing guard bands")
 	facts.rings={"nova_sectors":sectors.size(),"nova_distinct_turn_rates":rates.size(),"crown_first_frame_max_displacement":displacement,"crown_breathing_rounds":breathing}
 
-func refraction_checks() -> void:
-	fixture("scatter_prism"); var event=game.loadout.trigger(0).duplicate(true); event.count=1; event.pierce=0; event.crit_chance=0.
-	game.fire_weapon(event); var mark: Dictionary=game.fx.marks.filter(func(m): return str(m.kind)=="beam")[0].duplicate(true)
-	game.fx.marks.clear(); var path: PackedVector2Array=mark.path
-	var axis=(Vector2(mark.curve_end)-Vector2(mark.at)).normalized(); var strongest=1; var deviation=0.
-	for i in range(1,path.size()-1):
-		var offset=absf((Vector2(path[i])-Vector2(mark.at)).cross(axis))
-		if offset>deviation: deviation=offset; strongest=i
-	var curved=game.spawn_enemy("armor",path[strongest]); curved.hp=1000.; curved.radius=1.; curved.speed=0.
-	var straight=game.spawn_enemy("armor",Vector2(mark.at)+axis*(Vector2(path[strongest])-Vector2(mark.at)).dot(axis)); straight.hp=1000.; straight.radius=1.; straight.speed=0.
-	game.rebuild_spatial(); game.fire_weapon(event)
-	check(deviation>8. and curved.hp<1000. and straight.hp==1000.,"actual refraction damages a target on the visible curve and leaves the old straight lane untouched")
-	fixture("scatter_prism"); event=game.loadout.trigger(0).duplicate(true); event.count=1; event.pierce=1; event.crit_chance=0.; game.fire_weapon(event)
-	mark=game.fx.marks.filter(func(m): return str(m.kind)=="beam")[0].duplicate(true); path=mark.path; game.fx.marks.clear(); var victims: Array=[]
-	for i in [7,12,18]:
-		var enemy=game.spawn_enemy("armor",path[i]); enemy.hp=1000.; enemy.radius=1.; enemy.speed=0.; victims.append(enemy)
-	game.rebuild_spatial(); game.fire_weapon(event)
-	var clipped: Dictionary=game.fx.marks.filter(func(m): return str(m.kind)=="beam")[0]
-	check(victims[0].hp<1000. and victims[1].hp<1000. and victims[2].hp==1000. and clipped.curve_clip<.6,"curved beams consume the normal ordered penetration budget")
-	check(clipped.path==path and Vector2(clipped.to).distance_to(path[12])<.01,"clipping shortens the visible path without reshaping the curve before the hit")
-	fixture("scatter_prism"); game.loadout.modules[0].level=4; game.loadout._fleet_stats.ballistic=40.; game.refresh_loadout_stats(); event=fire()
-	game.fx._update_effects()
-	var beams=game.fx.marks.filter(func(m): return str(m.kind)=="beam")
-	check(beams.size()==event.count and game.fx.effect_count<=event.count+4,"high-attribute refraction uses one GPU effect per real ray rather than a mark per segment")
-	if DisplayServer.get_name()!="headless":
-		var correct=0
-		for i in range(game.fx.effect_count):
-			var data=game.fx.effects.multimesh.get_instance_custom_data(i)
-			if roundi(data.r*6.)!=6: continue
-			var seed=roundi(data.a*255.); var width=roundf(game.EMISSION.LIGHT_BASE_WIDTH*(.88+.24*float(seed)/255.)*10.)/10.
-			if beams.any(func(b): return b.seed_code==seed and is_equal_approx(float(b.width),width)): correct+=1
-		check(correct==event.count,"native GPU recovers every beam's exact phase and width on this backend")
-	facts.refraction={"high_count":event.count,"maximum_test_bend_world":deviation,"one_gpu_instance_per_ray":true}
+func prism_plume_checks() -> void:
+	fixture("scatter_prism"); game.loadout.modules[0].level=4; game.loadout._fleet_stats.ballistic=40.; game.refresh_loadout_stats()
+	var event=fire(); var arms: Dictionary={}; var phases: Dictionary={}
+	for b in game.bullets:
+		arms[Vector2(b.stern_axis).snapped(Vector2.ONE*.01)]=true; phases[b.plume_phase]=true
+	check(game.bullets.size()==event.count and arms.size()==4 and phases.size()==event.count,"prism launches four independent physical feather plumes with individual sway phases")
+	check(game.fx.marks.all(func(m): return str(m.kind)!="beam"),"prism does not substitute short-lived instantaneous laser flashes")
+	for i in range(48): game.update_bullets(1./60.)
+	check(game.bullets.size()==event.count and game.bullets.all(func(b): return b.age>.5 and b.trail_points.size()>3 and not b.retiring and game.VISUALS.life_scale(b)==1.),"prism feathers remain full-size and moving after the former laser flash would have expired")
+	var curved=0
+	for b in game.bullets:
+		var p: Array=b.trail_points
+		for i in range(1,p.size()-1):
+			if absf((Vector2(p[i])-Vector2(p[0])).cross(Vector2(p[-1])-Vector2(p[0])))>1.: curved+=1; break
+	check(curved>event.count/2,"four diagonal feather streams sway through actual curved collision paths")
+	game.weapon_renderer.update_projectiles(game.bullets,Rect2(-3000,-3000,6000,6000),false)
+	check(game.weapon_renderer.active_count==event.count and game.weapon_renderer.definitions.scatter_prism.style==game.weapon_renderer.definitions.stern_fan.style,"all prism heads reach the shared stern feather renderer")
+	facts.prism={"high_count":event.count,"arms":arms.size(),"curved_trails":curved,"still_flying_at_seconds":.8,"physical":true}
 
 func run() -> void:
 	root.size=Vector2i(1920,1080)
 	game=load("res://scenes/Main.tscn").instantiate(); game.is_preview=true; root.add_child(game); current_scene=game; await frames(4)
 	game.set_process(false); game.set_physics_process(false); game.set_process_unhandled_input(false); game.fx.set_process(false)
 	game.music.stop(); game.music._running=false; game.settings.master=0.; game.apply_audio()
-	roster_checks(); ring_checks(); refraction_checks()
-	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"All16 active weapons; actual independent physical motion and optical branches, circular coverage, orbital follow inertia, curve-only damage, ordered penetration, unchanged pre-hit path and bounded GPU submission. Controlled fixtures, not full-campaign balance or source-game internals."}
+	roster_checks(); ring_checks(); prism_plume_checks()
+	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"All16 active weapons; actual independent physical motion and optical branches, circular coverage, orbital follow inertia, four sustained swaying physical prism plumes, shared feather GPU submission. Controlled fixtures, not full-campaign balance or source-game internals."}
 	FileAccess.open("res://tests/results-v24-all-weapons.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	if DisplayServer.get_name()!="headless": FileAccess.open("res://tests/results-v24-all-weapons-gpu.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	if DisplayServer.get_name()!="headless": FileAccess.open("res://tests/results-v24-all-weapons-"+RenderingServer.get_current_rendering_method()+".json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))

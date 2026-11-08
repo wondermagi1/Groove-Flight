@@ -1,0 +1,57 @@
+{
+  "checks": 93,
+  "facts": {
+    "accelerated_range_age": 0.62,
+    "individual_motion": {
+      "horizon_30_120hz_max_error_world": 6.3232421875,
+      "physical_weapon_types": 13,
+      "reproducible": true
+    },
+    "range": {
+      "active_range_world": 300.0,
+      "fade_seconds": 1.5,
+      "outside_target_damage": 0.0,
+      "sampled_scale": [
+        0.856438024140643,
+        0.708471574104535,
+        0.554784736033922,
+        0.393049215227122,
+        0.218057705118119
+      ]
+    },
+    "submitted_scales": [
+      {
+        "actual": 1.0,
+        "expected": 41.1090251587509,
+        "glow_visible": true,
+        "submitted": 1
+      },
+      {
+        "actual": 1.0,
+        "expected": 34.0066355570177,
+        "glow_visible": true,
+        "submitted": 1
+      },
+      {
+        "actual": 1.0,
+        "expected": 26.6296673296283,
+        "glow_visible": true,
+        "submitted": 1
+      },
+      {
+        "actual": 1.0,
+        "expected": 18.8663623309018,
+        "glow_visible": true,
+        "submitted": 1
+      },
+      {
+        "actual": 1.0,
+        "expected": 10.4667698456697,
+        "glow_visible": true,
+        "submitted": 1
+      }
+    ]
+  },
+  "failures": [],
+  "scope": "Actual hull-relative wing/rear emissions across five headings, real lane/rear damage, shared standard heads, exact travel-distance clipping, size preservation before range, post-range visual-only shrink/glow and bounded removal. Controlled fixtures; no source-game code, human balance or sustained FPS claim."
+}

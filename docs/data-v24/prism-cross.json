@@ -1,0 +1,13 @@
+{
+  "checks": 36,
+  "facts": {
+    "base": {
+      "arms": 4,
+      "class": "feather_projectile",
+      "count": 17,
+      "physical": true
+    }
+  },
+  "failures": [],
+  "scope": "Physical prism: four colored feather plumes, delayed arrival, penetration, split children, full size through actual range, bounded retirement, all tracks/aim modes and shared renderer. Supersedes instant-prism expectations."
+}

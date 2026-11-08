@@ -1,0 +1,175 @@
+{
+  "checks": 16,
+  "facts": {
+    "catalog": [
+      {
+        "beam_marks": 0,
+        "class": "feather_projectile",
+        "count": 36,
+        "id": "pulse",
+        "image": "res://work/v24-catalog/pulse.png",
+        "name": "脉冲机炮",
+        "physical": true,
+        "rendered_heads": 36
+      },
+      {
+        "beam_marks": 0,
+        "class": "feather_projectile",
+        "count": 38,
+        "id": "scatter",
+        "image": "res://work/v24-catalog/scatter.png",
+        "name": "星砂霰弹",
+        "physical": true,
+        "rendered_heads": 38
+      },
+      {
+        "beam_marks": 34,
+        "class": "laser_beam",
+        "count": 34,
+        "id": "beam",
+        "image": "res://work/v24-catalog/beam.png",
+        "name": "棱镜光束",
+        "physical": false,
+        "rendered_heads": 0
+      },
+      {
+        "beam_marks": 0,
+        "class": "missile_shell",
+        "count": 34,
+        "id": "missile",
+        "image": "res://work/v24-catalog/missile.png",
+        "name": "彗星导弹",
+        "physical": true,
+        "rendered_heads": 34
+      },
+      {
+        "beam_marks": 0,
+        "class": "energy_orb",
+        "count": 43,
+        "id": "nova",
+        "image": "res://work/v24-catalog/nova.png",
+        "name": "新星环炮",
+        "physical": true,
+        "rendered_heads": 43
+      },
+      {
+        "beam_marks": 88,
+        "class": "electric_arc",
+        "count": 34,
+        "id": "chain",
+        "image": "res://work/v24-catalog/chain.png",
+        "name": "跃迁电弧",
+        "physical": false,
+        "rendered_heads": 0
+      },
+      {
+        "beam_marks": 0,
+        "class": "feather_projectile",
+        "count": 34,
+        "id": "rail",
+        "image": "res://work/v24-catalog/rail.png",
+        "name": "苍穹轨炮",
+        "physical": true,
+        "rendered_heads": 21
+      },
+      {
+        "beam_marks": 0,
+        "class": "feather_projectile",
+        "count": 34,
+        "id": "pulse_needle",
+        "image": "res://work/v24-catalog/pulse_needle.png",
+        "name": "星针狙击器",
+        "physical": true,
+        "rendered_heads": 34
+      },
+      {
+        "beam_marks": 0,
+        "class": "feather_projectile",
+        "count": 45,
+        "id": "scatter_prism",
+        "image": "res://work/v24-catalog/scatter_prism.png",
+        "name": "七彩折光匣",
+        "physical": true,
+        "rendered_heads": 45
+      },
+      {
+        "beam_marks": 35,
+        "class": "laser_beam",
+        "count": 35,
+        "id": "beam_split",
+        "image": "res://work/v24-catalog/beam_split.png",
+        "name": "双生棱镜",
+        "physical": false,
+        "rendered_heads": 0
+      },
+      {
+        "beam_marks": 0,
+        "class": "feather_projectile",
+        "count": 35,
+        "id": "rail_horizon",
+        "image": "res://work/v24-catalog/rail_horizon.png",
+        "name": "地平线终奏",
+        "physical": true,
+        "rendered_heads": 35
+      },
+      {
+        "beam_marks": 0,
+        "class": "feather_projectile",
+        "count": 34,
+        "id": "recorded_heavy",
+        "image": "res://work/v24-catalog/recorded_heavy.png",
+        "name": "终压攻城铳",
+        "physical": true,
+        "rendered_heads": 31
+      },
+      {
+        "beam_marks": 0,
+        "class": "feather_projectile",
+        "count": 81,
+        "id": "gilded_helix",
+        "image": "res://work/v24-catalog/gilded_helix.png",
+        "name": "鎏金螺旋阵",
+        "physical": true,
+        "rendered_heads": 81
+      },
+      {
+        "beam_marks": 0,
+        "class": "feather_projectile",
+        "count": 97,
+        "id": "weave_cross",
+        "image": "res://work/v24-catalog/weave_cross.png",
+        "name": "虹织十字炮",
+        "physical": true,
+        "rendered_heads": 97
+      },
+      {
+        "beam_marks": 0,
+        "class": "orbital_guard",
+        "count": 49,
+        "id": "crown_orbit",
+        "image": "res://work/v24-catalog/crown_orbit.png",
+        "name": "星冕回旋阵",
+        "physical": true,
+        "rendered_heads": 49
+      },
+      {
+        "beam_marks": 0,
+        "class": "feather_projectile",
+        "count": 57,
+        "id": "stern_fan",
+        "image": "res://work/v24-catalog/stern_fan.png",
+        "name": "尾羽回响",
+        "physical": true,
+        "rendered_heads": 57
+      }
+    ],
+    "preview": {
+      "fps": 24,
+      "scope": "Native1920x1080 controlled repeat triggers, Lv4/attribute40, muted. Repeats reveal successive ring envelopes and four physical feather plumes; normal charge rules unchanged. No capture time used as gameplay timing.",
+      "seconds": 8
+    }
+  },
+  "failures": [],
+  "renderer": "forward_plus",
+  "scope": "All16 actual weapon GPU submissions with class-specific material/geometry; focused circular and physical prism plume preview under explicit controlled conditions."
+}
