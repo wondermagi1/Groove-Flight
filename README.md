@@ -1,5 +1,7 @@
 # Groove Flight
 
+长期维护的[武器特效与音频对应表](docs/WEAPON_VFX_AUDIO_REFERENCE.md)：16种现役武器的发射形式、运动、光色、乐器音色与原声试听。以后武器迭代与本表同步提交更新。
+
 当前版本 **0.24.0-independent-feather-plumes**：全部16种武器按类别优化，13种实体弹各自拥有喷射时差、初速、质量与实际受力轨迹；新星环炮各弹独立弯转，星冕加入呼吸与跟随惯性，七彩折光匣改为四斜向摇摆的彩色羽状实体弹流。激光、电弧保持各自形式。地平线两翼喷流、机尾U形羽流、射程后缩小退场、属性/品质加弹、1秒固定声音与同种重奏保留。见[本版说明与预览](docs/V24_ALL_WEAPON_MOTION.md)、[敌群机制文档](docs/ENEMY_FORMATIONS_AND_ENCIRCLEMENT.md)和[当前接手说明](docs/CURRENT_HANDOFF.md)。
 
 后续制作遵循[当前固定声音约定](docs/RHYTHM_CONTRACT.md)。四拍强弱与自动旋律暂时搁置，相关旧素材保留。

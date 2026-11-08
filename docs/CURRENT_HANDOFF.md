@@ -1,5 +1,7 @@
 # Groove Flight 当前接手说明
 
+武器改动先查[武器特效与音频对应表](WEAPON_VFX_AUDIO_REFERENCE.md)。用户要求本表长期维护；武器特效、声音或触发规则变更必须在同一提交同步更新表格、日期、版本与迭代记录。
+
 2026-11-08，工程版本 `0.24.0-independent-feather-plumes`，开发分支 `codex/v24-prism-feather-motion`。远程仓库：https://github.com/wondermagi1/Groove-Flight 。后续每轮游戏修改前必须先上传Git备份并核验SHA，规则见根目录 `AGENTS.md`。
 
 优先阅读 [V24全部武器独立运动](V24_ALL_WEAPON_MOTION.md)、[V23分类弹体与独立喷射](V23_INDIVIDUAL_WEAPON_FLIGHT.md) 和 [方阵与圆阵的分布、追击、包围与建模](ENEMY_FORMATIONS_AND_ENCIRCLEMENT.md)。V24扩展环形、环绕、四向折光羽弹与其他光学武器；V23方向覆盖V22最后的视觉回退约定。出生方向仍为上方、左上方、右上方；方阵与圆阵并存，未引入菱阵。
