@@ -1,0 +1,34 @@
+{
+  "version": "0.26.1-shield-one-shot",
+  "date": "2026-11-08",
+  "development_branch": "codex/v26-shield-tail-trim",
+  "backup_before_round": "cad0b22cd0605b9ccb0acf565b8485105db1a91e",
+  "source_window_seconds": [
+    28.745,
+    28.94
+  ],
+  "runtime_seconds": 0.195,
+  "unchanged_prefix_seconds": 0.183,
+  "fade_ms": 12,
+  "normalized_again": false,
+  "current_sample_sha256": "7fa70ca0d184772a7089048252ea651bfad630280ef3c1b5874b6cd944ee9fb2",
+  "waveform_checks": {
+    "PCM": "48000Hz stereo PCM16",
+    "exact_unchanged_prefix": true,
+    "endpoint_zero": true,
+    "main_high_band_peak_seconds": [
+      0.015
+    ],
+    "secondary_onsets_removed_seconds": [
+      0.215,
+      0.345
+    ]
+  },
+  "production_report": "audio-controls-headless.json",
+  "checks": 46,
+  "failures": [],
+  "other_feedback_clips_unchanged": 4,
+  "weapon_samples_unchanged": 128,
+  "category_audio_baseline": "../data-v26/SUMMARY.json",
+  "scope": "Focused shield-tail trim. Actual Main playback loads195ms shield; existing category/config/provenance checks pass. No new native fader or full-route test; independent volume routes are unchanged."
+}

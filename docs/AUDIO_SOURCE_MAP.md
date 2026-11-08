@@ -1,6 +1,6 @@
 # Groove Flight 录音来源与运行时对应表
 
-2026-11-08更新：当前三类反馈沿用《音频资源.mp4》，护盾按用户指出的28秒附近改用28.745—29.255秒；击杀低鼓和清脆拾取素材保留。详见[V26分类音量与反馈](V26_AUDIO_CONTROLS.md)和[当前分析记录](../audio/library/groove_core/analysis/combat-feedback.json)。下文为来源历史。
+2026-11-08更新：当前三类反馈沿用《音频资源.mp4》，护盾按用户指出的28秒附近改用28.745—28.940秒（V26.1单次主声，后续小声音已裁去）；击杀低鼓和清脆拾取素材保留。详见[V26分类音量与反馈](V26_AUDIO_CONTROLS.md)和[当前分析记录](../audio/library/groove_core/analysis/combat-feedback.json)。下文为来源历史。
 
 V17新增 `gameplay_feedback_audio`（用户提供《音频资源.mp4》），提取3种低鼓、护盾和拾取共5个运行文件。另入库的《实机演示.mp4》确认全静音，只作画面参考。源区间、处理与SHA256见 `audio/library/groove_core/analysis/combat-feedback.json`；触发规则见 [V17制作说明](V17_RHYTHM_AND_FEEDBACK.md)。下文7条来源为此前版本清单，当前完整索引以 `catalog.json` 与 `runtime_mapping.json` 为准。
 

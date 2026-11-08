@@ -198,7 +198,7 @@
       "groove_core_use": "实机反馈录屏",
       "source_file": "audio/library/groove_core/raw/gameplay_feedback_audio/音频资源.mp4",
       "source_sha256": "a12d5ed55c3f1ef5155fcebba18c9053e9687e89c77080a18901900314f849e9",
-      "processing": "V26: low-kill22-700Hz and pickup3000-9500Hz excerpts preserved; shield replaced by Butterworth3 bandpass120-5000Hz; source28.745-29.255s;2ms attack/35ms release fades; fixed gain2.514724; no pitch/time change",
+      "processing": "V26.1: kill/pickup unchanged; shield source28.745-28.940s,195ms one-shot; same120-5000Hz filtered body and gain,12ms release; later incidental attacks removed.",
       "groove_flight_use": "死亡低鼓、玩家受击护盾与拾取金币",
       "runtime_files": [
         "audio/authorized/feedback/kill_low_strong.wav",
@@ -225,7 +225,7 @@
         },
         {
           "start_seconds": 28.745,
-          "end_seconds": 29.255,
+          "end_seconds": 28.94,
           "use": "shield_impact"
         },
         {
