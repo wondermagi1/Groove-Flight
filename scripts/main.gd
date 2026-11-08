@@ -11,6 +11,7 @@ const PLAN=preload("res://scripts/wave_plan.gd")
 const PLANETS=preload("res://scripts/planet_catalog.gd")
 const SCORE=preload("res://scripts/composer_score.gd")
 const CLOCK=preload("res://scripts/music_clock.gd")
+const AUDIO=preload("res://scripts/audio_controls.gd")
 const FORMATION=preload("res://scripts/formation_motion.gd")
 const SWARM=preload("res://scripts/contact_swarm.gd")
 const BOSS_SCORE=preload("res://scripts/boss_score.gd")
@@ -138,7 +139,7 @@ var shop_reroll_cost: int=8
 var editor_return: String="combat"
 var notice: String=""
 var notice_until: float=0
-var settings={"backing":0.,"weapons":.34,"groove":0.,"background_motion":.55,"text_scale":1.,"low_dynamic":false,"starting_path":0,"difficulty":0,"aim_mode":0,"input_bindings":{},"tutorial_done":false,"tutorial_skipped":false,"master":.75,"music":.75,"sfx":.55,"reduced_fx":false,"fullscreen":true,"background_quality":2,"background_exposure":.9,"panel_attributes":true,"panel_status":true,"panel_buffs":true,"panel_inventory":true,"panel_sequencer":true,"combat_panel_attributes":false,"combat_panel_status":false,"combat_panel_buffs":false,"combat_panel_inventory":false,"combat_panel_sequencer":true}
+var settings={"backing":0.,"weapons":.255,"audio_schema":2,"kill":.55,"pickup":.55,"shield":.55,"combat":.55,"ui":.55,"groove":0.,"background_motion":.55,"text_scale":1.,"low_dynamic":false,"starting_path":0,"difficulty":0,"aim_mode":0,"input_bindings":{},"tutorial_done":false,"tutorial_skipped":false,"master":.75,"music":.75,"sfx":.55,"reduced_fx":false,"fullscreen":true,"background_quality":2,"background_exposure":.9,"panel_attributes":true,"panel_status":true,"panel_buffs":true,"panel_inventory":true,"panel_sequencer":true,"combat_panel_attributes":false,"combat_panel_status":false,"combat_panel_buffs":false,"combat_panel_inventory":false,"combat_panel_sequencer":true}
 var voices: Array[AudioStreamPlayer]=[]
 var voice_index: int=0
 var sound_times: Dictionary={}
@@ -224,7 +225,7 @@ func _ready() -> void:
 	if is_preview: ui.root_control.hide()
 	if not test_mode:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if settings.fullscreen else DisplayServer.WINDOW_MODE_WINDOWED)
-	apply_audio(); apply_background_quality(); ui.refresh()
+	apply_audio(not is_preview); apply_background_quality(); ui.refresh()
 
 func bind_input() -> void:
 	for row in [["left",KEY_A,KEY_LEFT],["right",KEY_D,KEY_RIGHT],["up",KEY_W,KEY_UP],["down",KEY_S,KEY_DOWN],["dash",KEY_SPACE],["overload",KEY_E],["editor",KEY_TAB],["pause",KEY_ESCAPE],["fullscreen",KEY_F11],["interact",KEY_F]]:
@@ -243,6 +244,7 @@ func load_settings() -> void:
 	var config=ConfigFile.new()
 	if config.load("user://settings.cfg")!=OK: return
 	for key in settings: settings[key]=config.get_value("settings",key,settings[key])
+	AUDIO.restore(settings,config)
 	best=int(config.get_value("score","best",0))
 	selected_ship=str(FLEET.ship(str(config.get_value("fleet","ship","hex"))).id)
 	selected_pilot=str(FLEET.pilot(str(config.get_value("fleet","pilot","echo"))).id)
@@ -289,24 +291,32 @@ func save_settings() -> void:
 	if test_mode: return
 	var config=ConfigFile.new()
 	for key in settings: config.set_value("settings",key,settings[key])
+	AUDIO.store(settings,config)
 	config.set_value("score","best",best)
 	config.set_value("fleet","ship",selected_ship); config.set_value("fleet","pilot",selected_pilot)
 	store_planet_progress(config)
 	config.save("user://settings.cfg")
-func apply_audio() -> void:
-	var level=linear_to_db(maxf(.0001,float(settings.master)*float(settings.music)))-2.
-	music.volume_db=level
-	if is_instance_valid(standard_music): standard_music.volume_db=level
-	if is_instance_valid(menu_music): menu_music.volume_db=level-4.
-	if is_instance_valid(planet_music): planet_music.volume_db=level-8.
+func apply_audio(update_levels: bool=true) -> void:
+	AUDIO.ensure_buses()
+	if update_levels: AUDIO.apply(settings)
+	if is_instance_valid(standard_music):
+		standard_music.bus=AUDIO.WEAPONS; standard_music.volume_db=-2.
+		standard_music.backing_gain=0.; standard_music.weapon_gain=1.; standard_music.groove_gain=0.
+	if is_instance_valid(menu_music): menu_music.bus=AUDIO.MUSIC; menu_music.volume_db=-6.
+	if is_instance_valid(planet_music): planet_music.bus=AUDIO.MUSIC; planet_music.volume_db=-10.
+	for voice in voices: voice.bus=AUDIO.WEAPONS
 	for recorded_player in recorded_weapon_players.values():
-		if is_instance_valid(recorded_player): recorded_player.volume_db=level-8.
-	if is_instance_valid(composer_player): composer_player.volume_db=level
+		if is_instance_valid(recorded_player): recorded_player.bus=AUDIO.WEAPONS; recorded_player.volume_db=-10.
+	if is_instance_valid(composer_player): composer_player.set_audio_bus(AUDIO.WEAPONS); composer_player.volume_db=-2.
+	if is_instance_valid(mixer): mixer.gain=1.; mixer.low_dynamic=bool(settings.low_dynamic)
 	fx.reduced=bool(settings.reduced_fx)
-	var old_weapon_gain=standard_music.weapon_gain
-	standard_music.backing_gain=0.; standard_music.weapon_gain=float(settings.weapons); standard_music.groove_gain=0.
-	if standard_music._running and not is_equal_approx(old_weapon_gain,standard_music.weapon_gain): standard_music.refresh(loadout)
-	if is_instance_valid(mixer): mixer.gain=float(settings.master)*float(settings.sfx); mixer.low_dynamic=bool(settings.low_dynamic)
+
+func set_audio_volume(key: String,value: float) -> void:
+	if not AUDIO.DEFAULTS.has(key): return
+	settings[key]=AUDIO.clean(value,float(AUDIO.DEFAULTS[key])); apply_audio(); save_settings()
+func reset_audio_volumes() -> void:
+	for key in AUDIO.DEFAULTS: settings[key]=AUDIO.DEFAULTS[key]
+	apply_audio(); save_settings(); ui.refresh()
 
 func apply_background_quality() -> void:
 	settings.background_quality=clampi(int(settings.get("background_quality",2)),0,2)
@@ -340,7 +350,7 @@ func sound(id: String,volume: float=-10.,pitch: float=1.) -> void:
 	}
 	var stream=_load_audio("res://audio/"+str(sources.get(id,id+".wav")))
 	if stream==null: return
-	var group="pickup" if id=="pickup" else "alert" if id in ["hit","enemy_hurt","reward","spawn","shield"] else ("hit" if id in ["metal","explosion"] else ("kill" if id in ["kill","ballistic_light","ballistic_medium","ballistic_heavy","crude_shot"] else "ui"))
+	var group="pickup" if id=="pickup" else "shield" if id in ["hit","enemy_hurt","shield"] else "alert" if id in ["reward","spawn"] else ("hit" if id in ["metal","explosion"] else ("kill" if id in ["kill","ballistic_light","ballistic_medium","ballistic_heavy","crude_shot"] else "ui"))
 	mixer.play(stream,group,volume,pitch)
 
 func _load_audio(path: String) -> AudioStream:
@@ -1001,13 +1011,11 @@ func play_note(voice_id: String,_pitch: int,volume: float=-18.) -> void:
 	if voices.is_empty(): return
 	var row=C.item(voice_id)
 	if row.is_empty() or not C.is_weapon_audio_ready(voice_id): return
-	var gain=float(settings.master)*float(settings.music)*float(settings.weapons)
-	if gain<=0.: return
 	var stream=_load_audio("res://audio/arsenal/notes/%s_0.wav"%str(row.voice))
 	if stream==null: return
 	var voice=voices[voice_index%voices.size()]; voice_index+=1
 	voice.stream=stream; voice.pitch_scale=1.
-	voice.volume_db=volume+linear_to_db(gain); voice.play()
+	voice.volume_db=volume; voice.play()
 
 func spawn_for_step(serial: int) -> void:
 	if is_preview: return
@@ -1333,7 +1341,7 @@ func _create_recorded_weapon_player(uid: int) -> AudioStreamPlayer:
 		return recorded_weapon_players[key]
 	var player=AudioStreamPlayer.new()
 	player.name="RecordedWeaponGroup_%d"%uid
-	player.volume_db=linear_to_db(maxf(.0001,float(settings.master)*float(settings.music)))-10.
+	player.bus=AUDIO.WEAPONS; player.volume_db=-10.
 	player.max_polyphony=1
 	add_child(player)
 	recorded_weapon_players[key]=player

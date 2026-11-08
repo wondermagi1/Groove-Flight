@@ -139,7 +139,7 @@ func _ready() -> void:
 	play_all_button.add_theme_stylebox_override("normal",_box(Color("153a3d"),Color("65d9ce"),6,8)); play_all_button.add_theme_color_override("font_color",Color("c9fff5")); play_all_button.pressed.connect(play_cadence); detail_column.add_child(play_all_button)
 	status=_label("选择武器后试听。播放的是战斗音频实际使用的WAV样本。",15,Color("7893a9")); status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; detail_column.add_child(status)
 	audio_player=AudioStreamPlayer.new(); audio_player.name="WeaponCodexAudio"
-	audio_player.volume_db=linear_to_db(maxf(.0001,float(game.settings.master)))-2.
+	audio_player.bus=game.AUDIO.WEAPONS; audio_player.volume_db=-2.
 	audio_player.max_polyphony=1
 	add_child(audio_player)
 	resized.connect(_layout); _layout(); select_weapon("pulse")

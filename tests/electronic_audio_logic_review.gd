@@ -21,7 +21,9 @@ func excerpt(wav: AudioStreamWAV,path: String) -> void:
 	var clip=AudioStreamWAV.new(); clip.mix_rate=wav.mix_rate; clip.format=wav.format; clip.stereo=wav.stereo
 	clip.data=wav.data.slice(0,4*wav.mix_rate*4); clip.save_to_wav(path)
 func run() -> void:
+	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_NO_FOCUS,true)
 	game=load("res://scenes/Main.tscn").instantiate(); root.add_child(game); current_scene=game
+	game.set_process_unhandled_input(false)
 	await frames()
 	game.set_process(false); game.set_physics_process(false); game.music.stop(); game.music._running=false
 	game.state="combat"; game.ui.refresh(); await frames()
@@ -94,21 +96,19 @@ func run() -> void:
 	await RenderingServer.frame_post_draw
 	root.get_texture().get_image().save_png("res://docs/screenshots/v18-fixed-voice-no-meter.png")
 	var before_time=game.music.timeline
+	var before_stream=synth.stream; var before_compiles=synth.compile_count
 	game.settings.weapons=0.; game.apply_audio(); waited=0.
-	while not synth.is_current(game.loadout) and waited<15.:
-		await create_timer(.1).timeout; waited+=.1
-	check(synth.is_current(game.loadout) and zero_pcm(synth.stream),"live volume change replaces the playing PCM, not only future previews")
-	check(game.music.timeline>=before_time,"live mix refresh does not restart the scan clock")
+	check(AudioServer.is_bus_mute(AudioServer.get_bus_index(game.AUDIO.WEAPONS)) and synth.stream==before_stream and synth.compile_count==before_compiles,"live weapon mute changes the actual bus without rebuilding or replacing PCM")
+	check(game.music.timeline>=before_time,"live bus gain does not restart the scan clock")
 	game.music.hold(true); var held=game.music.timeline
 	game.settings.weapons=.3; game.apply_audio(); waited=0.
-	while not synth.is_current(game.loadout) and waited<15.:
-		await create_timer(.1).timeout; waited+=.1
-	check(synth.is_current(game.loadout) and synth.stream_paused and game.music.timeline==held and not zero_pcm(synth.stream),"volume refresh during pause preserves the exact paused scan position")
+	check(not AudioServer.is_bus_mute(AudioServer.get_bus_index(game.AUDIO.WEAPONS)) and synth.stream==before_stream and synth.stream_paused and game.music.timeline==held and synth.compile_count==before_compiles,"bus volume change during pause preserves the exact paused scan position without recompilation")
 	game.state="editor"; game.editor_return="combat"; game.editing_changed=false; game.ensure_lab()
 	var wanted=synth._wanted; var campaign=JSON.stringify([game.loadout.modules,game.loadout.slots,game.dust])
 	game.lab.begin_preview("beam"); waited=0.
 	while game.lab.arena.music.timeline<1.15 and waited<20.:
 		await create_timer(.1).timeout; waited+=.1
+	facts.preview_state={"state":game.state,"status":game.lab.status,"timeline":game.lab.arena.music.timeline,"campaign_wanted_before":wanted,"campaign_wanted_after":synth._wanted,"preview_key":game.lab.signature,"actual_key":game.lab.arena.music.key_for(game.lab.arena.loadout),"compiling":game.lab.arena.music.compiling}
 	check(game.lab.arena.music.timeline>=1. and synth._wanted==wanted,"preview uses its own compiler without replacing the campaign's pending audio")
 	check(JSON.stringify([game.loadout.modules,game.loadout.slots,game.dust])==campaign,"same-type preview does not change equipment or currency")
 	game.lab.toggle_track(0); game.close_editor(); waited=0.

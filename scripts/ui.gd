@@ -203,15 +203,22 @@ func pause_screen() -> void:
 	content.add_child(button("继续飞行",game.pause_game)); content.add_child(button("设置",game.show_settings,Color("9badc4")))
 	content.add_child(button("返回作曲工坊" if game.free_music_run else "返回主菜单",game.return_to_composer if game.free_music_run else game.return_title,Color("e1a2a9")))
 func settings_screen() -> void:
-	var view=get_viewport().get_visible_rect().size; var height=minf(680.,view.y-48.)
-	var shell=panel(700,height)
+	var view=get_viewport().get_visible_rect().size; var height=minf(860.,view.y-48.)
+	var shell=panel(minf(820.,view.x-48.),height)
 	var scroll=ScrollContainer.new(); scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED; scroll.custom_minimum_size.y=height-104.; shell.add_child(scroll)
 	var content=VBoxContainer.new(); content.size_flags_horizontal=Control.SIZE_EXPAND_FILL; content.add_theme_constant_override("separation",12); scroll.add_child(content)
 	section_title(content,"设置","全屏跟随显示器原生分辨率。F11 可切换全屏。")
-	for item in [["master","总音量"],["music","乐曲总线"],["sfx","拾取 / 命中音效"],["weapons","武器声部"]]:
-		var heading=label(item[1]+"  %d%%"%int(float(game.settings[item[0]])*100),19); content.add_child(heading)
-		var slider=HSlider.new(); slider.min_value=0; slider.max_value=1; slider.step=.01; slider.value=game.settings[item[0]]
-		slider.value_changed.connect(func(value):game.settings[item[0]]=value; heading.text=item[1]+"  %d%%"%int(value*100); game.apply_audio()); content.add_child(slider)
+	content.add_child(label("声音",22,Color("9de5dc")))
+	content.add_child(label("即时生效并自动保存 · 调至0%即可静音",16,Color("95a8bf")))
+	for item in game.AUDIO.CONTROLS:
+		var row=HBoxContainer.new(); row.custom_minimum_size.y=40; row.add_theme_constant_override("separation",14); content.add_child(row)
+		var caption=label(item[1],18); caption.custom_minimum_size.x=190; row.add_child(caption)
+		var slider=HSlider.new(); slider.name="Volume_"+str(item[0]); slider.min_value=0.; slider.max_value=1.; slider.step=.01
+		slider.size_flags_horizontal=Control.SIZE_EXPAND_FILL; slider.custom_minimum_size=Vector2(200,36); slider.value=float(game.settings[item[0]]); slider.tooltip_text=item[2]; row.add_child(slider)
+		var percent=label("%d%%"%roundi(float(slider.value)*100.),18); percent.name="Percent_"+str(item[0]); percent.custom_minimum_size.x=56; percent.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT; row.add_child(percent)
+		slider.value_changed.connect(func(value): percent.text="%d%%"%roundi(value*100.); game.set_audio_volume(str(item[0]),value))
+	content.add_child(button("恢复默认音量",game.reset_audio_volumes,Color("9badc4"),36))
+	content.add_child(label("画面与操作",22,Color("9de5dc")))
 	var motion_label=label("背景节奏强度",19); content.add_child(motion_label)
 	var motion=HSlider.new(); motion.min_value=0.; motion.max_value=1.; motion.step=.05; motion.value=float(game.settings.background_motion)
 	motion.value_changed.connect(func(value): game.settings.background_motion=value); content.add_child(motion)

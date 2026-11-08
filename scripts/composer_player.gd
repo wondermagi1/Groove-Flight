@@ -51,6 +51,10 @@ var _audition_players: Array[AudioStreamPlayer]=[]
 var _audition_index: int=0
 var _recorded_cache: Dictionary={}
 
+func set_audio_bus(value: String) -> void:
+	bus=value
+	for player in _audition_players: player.bus=value
+
 func _ready() -> void:
 	process_priority=-100
 	finished.connect(_native_finished)

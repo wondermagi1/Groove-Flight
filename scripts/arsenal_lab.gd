@@ -22,6 +22,7 @@ func ensure_ready() -> void:
 	viewport.handle_input_locally=false; add_child(viewport)
 	arena=load("res://scenes/Main.tscn").instantiate(); arena.is_preview=true; viewport.add_child(arena)
 	arena.set_physics_process(false); arena.set_process_unhandled_input(false); arena.set_process(false)
+	arena.settings=source_game.settings.duplicate(true); arena.apply_audio(false)
 	arena.ui.root_control.hide(); arena.camera.enabled=true; arena.camera.position_smoothing_enabled=false
 	arena.camera.zoom=Vector2.ONE*.72; arena.player=Vector2.ZERO; arena.camera.position=Vector2(0,-180)
 	arena.music._cache=source_game.standard_music._cache.duplicate()

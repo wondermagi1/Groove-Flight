@@ -1,7 +1,8 @@
 extends Node
+const AUDIO=preload("res://scripts/audio_controls.gd")
 ## Recorded low-drum kill feedback; bounded rolls and reserved shield/pickup voices.
 const RATE=22050
-var groups={"hit":[],"kill":[],"ui":[],"alert":[],"pickup":[]}
+var groups={"hit":[],"kill":[],"ui":[],"alert":[],"pickup":[],"shield":[]}
 var samples: Dictionary={}
 var counters={"played":0,"aggregated":0,"limited":0,"stolen":0,"kill_hits":0}
 var pending: Dictionary={}
@@ -19,6 +20,7 @@ var drum_index: int=0
 var feedback_log: Array=[]
 var feedback_active: bool=true
 func _ready() -> void:
+	AUDIO.ensure_buses()
 	for group in groups:
 		var bus_name="GrooveFlight_"+str(group)
 		if AudioServer.get_bus_index(bus_name)<0:

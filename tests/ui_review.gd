@@ -19,9 +19,9 @@ func run() -> void:
 	button.button_pressed=false; check(not game.settings.reduced_fx and button.text.ends_with("标准"),"real particle toggle restores standard particles and readable state")
 	var sliders=game.ui.root_control.find_children("*","HSlider",true,false)
 	sliders[0].value=.2
-	check(is_equal_approx(float(game.settings.master),.2) and game.music.volume_db<-17,"real master slider changes audible music gain")
+	check(is_equal_approx(float(game.settings.master),.2) and AudioServer.get_bus_volume_db(AudioServer.get_bus_index(game.AUDIO.MASTER))<-13.,"real master slider changes the audible master bus")
 	sliders[0].value=.75
-	check(game.music.volume_db>-10,"master slider restores audible gain")
+	check(AudioServer.get_bus_volume_db(AudioServer.get_bus_index(game.AUDIO.MASTER))>-3.,"master slider restores audible gain")
 	await shot("07-settings-720p")
 	var back=game.ui.root_control.find_children("*","Button",true,false).filter(func(node):return node.text=="保存并返回")[0]
 	back.pressed.emit(); await frames(4)
