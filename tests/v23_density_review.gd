@@ -1,4 +1,5 @@
 extends "res://tests/v21_spectacle_review.gd"
+var result_tag="v23"
 func distribution(values: Array) -> Dictionary:
 	values.sort(); var n=values.size()
 	return {"median":values[n/2],"p95":values[mini(n-1,floori(n*.95))],"max":values[-1]}
@@ -32,6 +33,6 @@ func run() -> void:
 	check(game.enemies.size()==600 and peaks.hostile==0 and shots.size()==8,"bounded native scene exercises all eight equipped weapon types with600live ordinary enemies and zero hostile bullets")
 	check(peaks.projectiles<=game.MAX_BULLETS and game.pending_projectiles.is_empty(),"actual independent projectiles and terminal fades remain within the production pool without backlog")
 	var result={"checks":checks,"failures":failures,"peaks":peaks,"weapons_fired":shots.keys(),"sampled_frames":420,"frame_ms":distribution(frame_ms),"simulation_ms":distribution(cpu_ms),"gpu_render_ms":distribution(gpu_ms),"gpu":RenderingServer.get_video_adapter_name(),"cpu":OS.get_processor_name(),"renderer":RenderingServer.get_current_rendering_method(),"scope":"Separate native1920x1080 run without capture or concurrent tests. Manual1/60 clock calls production dispatch, individual motion, actual collision,600enemy AI and FX for8seconds; first60frames discarded. Eight Lv4 weapons, four stats24, high-HP enemies, invulnerable player and stopped/muted audio. Occupied grid is a stress fixture rather than an allowed birth. Short measurement, no sustained FPS or human balance claim."}
-	FileAccess.open("res://tests/results-v23-density.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("V23_DENSITY ",JSON.stringify(result))
+	FileAccess.open("res://tests/results-"+result_tag+"-density.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print(result_tag.to_upper()+"_DENSITY ",JSON.stringify(result))
 	game.music.stop(); game.composer_player.stop_song(); stop_audio(game); current_scene=null; game.queue_free(); await frames(6)
 	await create_timer(.15,true).timeout; quit(0 if failures.is_empty() else 1)

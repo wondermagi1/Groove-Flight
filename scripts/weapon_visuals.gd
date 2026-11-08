@@ -1,5 +1,5 @@
 extends RefCounted
-## Art-only profiles. Collision and damage remain in production firing code.
+## Class profiles and independent flight dynamics. Hit resolution lives in main.
 const PALETTE=[Color("ffe98a"),Color("8effb5"),Color("57eaff"),Color("b99aff"),Color("ff8bd7"),Color("ffba79")]
 const STANDARD_IDS=["pulse","scatter","rail","pulse_needle","rail_horizon","recorded_heavy","gilded_helix","weave_cross","stern_fan"]
 const MOVING_IDS=["pulse","scatter","rail","pulse_needle","rail_horizon","recorded_heavy","gilded_helix","weave_cross","stern_fan","missile","nova","crown_orbit"]
@@ -13,7 +13,7 @@ const PROFILES={
 	"scatter":{"size":Vector2(34,11),"tail":125.,"width":2.5,"color":Color("ffe08b")},
 	"beam":{"size":Vector2(68,11),"tail":245.,"width":4.,"color":Color("bea7ff")},
 	"missile":{"size":Vector2(52,20),"tail":230.,"width":4.,"color":Color("ff97b9")},
-	"nova":{"size":Vector2(25,25),"tail":135.,"width":3.,"color":Color("8bffd0")},
+	"nova":{"size":Vector2(25,25),"tail":135.,"width":2.3,"trail_alpha":.34,"color":Color("8bffd0")},
 	"chain":{"size":Vector2(48,10),"tail":190.,"width":3.,"color":Color("7ad5ff")},
 	"rail":{"size":Vector2(128,9),"tail":410.,"width":4.4,"color":Color("d9f4ff")},
 	"pulse_needle":{"size":Vector2(86,7),"tail":250.,"width":2.2,"color":Color("9efaff")},
@@ -23,7 +23,7 @@ const PROFILES={
 	"recorded_heavy":{"size":Vector2(114,17),"tail":340.,"width":5.,"color":Color("ffcda1")},
 	"gilded_helix":{"style":1,"size":Vector2(48,16),"tail":165.,"width":3.2,"variant":.92,"color":Color("fff09a")},
 	"weave_cross":{"style":1,"size":Vector2(42,16),"tail":145.,"width":3.,"variant":.92,"color":Color("b2ffb4")},
-	"crown_orbit":{"style":1,"size":Vector2(46,18),"tail":120.,"width":3.4,"variant":.92,"color":Color("9fffe2")},
+	"crown_orbit":{"style":1,"size":Vector2(46,18),"tail":120.,"width":2.4,"trail_alpha":.32,"variant":.92,"color":Color("9fffe2")},
 	"stern_fan":{"color":Color("ff9ecb")}
 }
 
@@ -51,6 +51,9 @@ static func individualize(bullet: Dictionary,index: int,time: float,uid: int,ser
 	var jitter=(_grain(seed,2)-.5)*.09
 	var kind=str(bullet.kind); var strength=.25 if kind=="gilded_helix" else (.55 if kind=="weave_cross" else 1.)
 	if kind=="stern_fan": nozzle*=.22; jitter*=.3
+	if kind=="nova":
+		var angular_gap=TAU/maxf(1.,float(bullet.get("volley_count",12)))
+		nozzle=clampf(nozzle,-angular_gap*.14,angular_gap*.14); jitter*=.3
 	axis=axis.rotated((nozzle+jitter)*strength)
 	if kind!="crown_orbit": bullet.at+=side*(_grain(seed,3)-.5)*7.+axis*(_grain(seed,4)-.5)*4.
 	bullet.launch_delay=delay; bullet.flight_seed=seed; bullet.flight_axis=axis
@@ -63,6 +66,7 @@ static func individualize(bullet: Dictionary,index: int,time: float,uid: int,ser
 	if kind=="rail_horizon":
 		bullet.flight_cruise=float(bullet.original_speed)*float(bullet.flight_speed_scale)
 		bullet.v*=.34+_grain(seed,11)*.10
+	if kind=="nova": bullet.curve_rate=(.18+_grain(seed,15)*.22)*(-1. if posmod(floori(float(serial)/8.),2)==1 else 1.)
 	if bullet.has("stern_axis"):
 		bullet.stern_launch_axis=axis; bullet.flight_axis=bullet.stern_axis
 	if kind=="crown_orbit":
@@ -70,6 +74,8 @@ static func individualize(bullet: Dictionary,index: int,time: float,uid: int,ser
 		bullet.orbit_angle+=jitter*3.; bullet.orbit_rate*=float(bullet.flight_speed_scale)
 		bullet.orbit_radius*=.96+_grain(seed,13)*.08
 		bullet.at=anchor+Vector2.from_angle(float(bullet.orbit_angle))*float(bullet.orbit_radius)
+		bullet.orbit_base_radius=bullet.orbit_radius; bullet.orbit_center=anchor
+		bullet.orbit_follow_gain=(13.+_grain(seed,16)*5.)/float(bullet.flight_mass)
 	if kind=="missile": bullet.homing=float(bullet.get("homing",0.))*(.85+_grain(seed,14)*.3)
 	var tint=Color(bullet.color)
 	bullet.color=Color.from_hsv(fposmod(tint.h+(_grain(seed,12)-.5)*.035,1.),tint.s,tint.v,tint.a)
@@ -79,7 +85,7 @@ static func _flight_step(bullet: Dictionary,delta: float) -> Vector2:
 	if not bullet.has("flight_mass") or bool(bullet.get("retiring",false)): return Vector2.ZERO
 	if str(bullet.kind)=="crown_orbit": return Vector2.ZERO
 	var before: Vector2=bullet.v; var axis=Vector2(bullet.flight_axis)
-	if str(bullet.kind)=="gilded_helix" or float(bullet.get("homing",0.))>0.: axis=before.normalized()
+	if str(bullet.kind) in ["gilded_helix","nova"] or float(bullet.get("homing",0.))>0.: axis=before.normalized()
 	var side=axis.orthogonal(); var age=float(bullet.age); var phase=float(bullet.flight_phase)
 	var mass=float(bullet.flight_mass); var frequency=float(bullet.flight_frequency)
 	var force=side*(float(bullet.flight_sway)*(sin(age*frequency+phase)+.32*sin(age*frequency*.53+phase*1.7))-before.dot(side)*float(bullet.flight_drag)-float(bullet.flight_lateral)*.65)
@@ -93,6 +99,16 @@ static func _flight_step(bullet: Dictionary,delta: float) -> Vector2:
 	# Trapezoidal displacement keeps the independent forces stable across
 	# different frame rates, while collision still sweeps the actual path.
 	return -(Vector2(bullet.v)-before)*.5*delta
+
+static func orbit_target(bullet: Dictionary,player: Vector2,delta: float) -> Vector2:
+	var phase=float(bullet.get("flight_phase",0.)); var age=float(bullet.age)
+	var rate=float(bullet.get("orbit_rate",float(bullet.get("original_speed",245))*.012))
+	bullet.orbit_angle+=delta*rate*(1.+.045*sin(age*1.6+phase))
+	var base=float(bullet.get("orbit_base_radius",bullet.get("orbit_radius",119.)))
+	bullet.orbit_radius=base*(1.+.035*sin(age*1.45+phase)+.015*sin(age*2.3+phase*1.7))
+	var center=Vector2(bullet.get("orbit_center",player))
+	center=center.lerp(player,1.-exp(-float(bullet.get("orbit_follow_gain",15.))*delta)); bullet.orbit_center=center
+	return center+Vector2.from_angle(float(bullet.orbit_angle))*float(bullet.orbit_radius)
 
 static func setup(bullet: Dictionary,kind: String,index: int,count: int,player: Vector2,time: float) -> void:
 	if kind=="gilded_helix":

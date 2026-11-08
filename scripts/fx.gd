@@ -1,6 +1,7 @@
 extends Node2D
 ## Bounded sparks and analytic emissive quads. Simulation age freezes on pause.
 const EFFECT=preload("res://shaders/weapon_effect.gdshader")
+const EMISSION=preload("res://scripts/weapon_emission.gd")
 const MAX_MARKS=320
 const SKILL_PALETTE=[
 	Color("55f6ff"),
@@ -22,6 +23,7 @@ func _ready() -> void:
 	mesh.mesh=quad; mesh.instance_count=MAX_MARKS; mesh.visible_instance_count=0
 	effects=MultiMeshInstance2D.new(); effects.multimesh=mesh
 	var mat=ShaderMaterial.new(); mat.shader=EFFECT; effects.material=mat
+	mat.set_shader_parameter("refraction_base_width",EMISSION.LIGHT_BASE_WIDTH)
 	effects.show_behind_parent=true; add_child(effects)
 func burst(at: Vector2,color: Color,count: int=12,force: float=240) -> void:
 	for i in range(maxi(2,count/3) if reduced else count):
@@ -39,8 +41,15 @@ func _mark(value: Dictionary,priority: bool=false) -> void:
 	marks.append(value)
 func ring(at: Vector2,color: Color,reach: float=100,duration: float=.35,delay: float=0.) -> void:
 	_mark({"kind":"ring","at":at,"color":color,"reach":reach,"life":duration+delay,"max":duration+delay,"delay":delay})
-func beam(a: Vector2,b: Vector2,color: Color,width: float=10,electric: bool=false,duration: float=.17) -> void:
-	_mark({"kind":"beam","at":a,"to":b,"color":color,"width":width,"electric":electric,"life":duration,"max":duration},true)
+func beam(a: Vector2,b: Vector2,color: Color,width: float=10,electric: bool=false,duration: float=.17,optical: Dictionary={}) -> void:
+	_mark({"kind":"beam","at":a,"to":b,"color":color,"width":width,"electric":electric,"life":duration,"max":duration,"seed":float(optical.get("seed",fposmod(a.x*.013+a.y*.019,1.)))},true)
+func refracted_beam(a: Vector2,b: Vector2,color: Color,optical: Dictionary,path: PackedVector2Array,clip: float=1.) -> void:
+	var at=path[0]
+	if clip>=1.: at=path[-1]
+	else:
+		var index=clampi(floori(clip*(path.size()-1)),0,path.size()-2)
+		at=path[index].lerp(path[index+1],clip*(path.size()-1)-index)
+	_mark({"kind":"beam","at":a,"to":at,"curve_end":b,"color":color,"width":optical.width,"electric":false,"life":optical.duration,"max":optical.duration,"curve":true,"curve_clip":clip,"seed":optical.seed,"seed_code":optical.code,"path":path},true)
 func muzzle(at: Vector2,axis: Vector2,color: Color,power: float=1.) -> void:
 	_mark({"kind":"muzzle","at":at,"angle":axis.angle(),"color":color,"reach":clampf(32.*power,24.,55.),"life":.10,"max":.10},true)
 func impact(at: Vector2,color: Color,heavy: bool=false) -> void:
@@ -124,6 +133,7 @@ func _process(delta: float) -> void:
 	queue_redraw()
 func _update_effects() -> void:
 	if not is_instance_valid(effects): return
+	effects.material.set_shader_parameter("reduced_effects",reduced)
 	effect_count=0
 	for mark in marks:
 		if float(mark.get("delay",0.))>0.: continue
@@ -131,8 +141,10 @@ func _update_effects() -> void:
 		match str(mark.kind):
 			"beam":
 				mode=1 if bool(mark.get("electric",false)) else 0
-				var axis: Vector2=mark.to-mark.at; at=(mark.at+mark.to)*.5; angle=axis.angle()
-				size_value=Vector2(maxf(1.,axis.length()),float(mark.width)*6.)
+				var finish: Vector2=mark.get("curve_end",mark.to)
+				var axis: Vector2=finish-mark.at; at=(mark.at+finish)*.5; angle=axis.angle()
+				size_value=Vector2(maxf(1.,axis.length()),192. if bool(mark.get("curve",false)) else float(mark.width)*6.)
+				if bool(mark.get("curve",false)): mode=6
 			"impact": mode=2; size_value=Vector2.ONE*float(mark.reach)*2.
 			"blast": mode=3; size_value=Vector2.ONE*float(mark.reach)*2.
 			"muzzle": mode=4; size_value=Vector2(float(mark.reach)*2.,float(mark.reach)); angle=float(mark.angle)
@@ -140,7 +152,7 @@ func _update_effects() -> void:
 		if mode<0 or effect_count>=MAX_MARKS: continue
 		var mesh=effects.multimesh; mesh.set_instance_transform_2d(effect_count,Transform2D(angle,at).scaled_local(size_value))
 		mesh.set_instance_color(effect_count,mark.color)
-		mesh.set_instance_custom_data(effect_count,Color(float(mode)/5.,1.-float(mark.life)/maxf(.001,float(mark.max)),.62 if reduced else .9,float(effect_count%13)/13.))
+		mesh.set_instance_custom_data(effect_count,Color(float(mode)/6.,1.-float(mark.life)/maxf(.001,float(mark.max)),float(mark.get("curve_clip",1.)) if mode==6 else (.62 if reduced else .9),float(mark.get("seed",float(effect_count%13)/13.))))
 		effect_count+=1
 	effects.multimesh.visible_instance_count=effect_count
 func _draw() -> void:

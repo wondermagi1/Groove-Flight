@@ -1252,16 +1252,19 @@ func fire_weapon(trigger: Dictionary) -> void:
 			for bounce in range(int(trigger.get("chain_count",3))):
 				var enemy=roots[branch%roots.size()] if bounce==0 and not roots.is_empty() else nearest(start,hit)
 				if enemy.is_empty() or start.distance_to(enemy.at)>(reach if bounce==0 else reach*.55): break
-				fx.beam(start,enemy.at,EMISSION.volley_color(color,branch,int(trigger.get("quality",0))),EMISSION.beam_width(count),true); hit.append(enemy.uid); hurt_enemy(enemy,damage,kind,context)
+				var optical=EMISSION.optical_profile(branch+bounce*17,int(context.get("uid",0)),int(context.get("serial",0)),EMISSION.beam_width(count))
+				fx.beam(start,enemy.at,EMISSION.volley_color(color,branch,int(trigger.get("quality",0))),optical.width,true,optical.duration,optical); hit.append(enemy.uid); hurt_enemy(enemy,damage,kind,context)
 				if float(trigger.get("explosion",0))>0: explosion(enemy.at,float(trigger.explosion),damage*.5,color,kind,context,enemy.uid)
 				start=enemy.at
 	elif family=="beam":
 		for i in range(count):
 			var axis=direction.rotated((float(i)/maxf(1,count-1)-.5)*spread if count>1 else 0.)
+			var optical=EMISSION.optical_profile(i,int(context.get("uid",0)),int(context.get("serial",0)),EMISSION.beam_width(count))
+			axis=axis.rotated(float(optical.axis_jitter))
 			var start=EMISSION.beam_origin(origin,direction,i,count)
 			var tint=EMISSION.volley_color(color,i,int(trigger.get("quality",0)))
-			var width=EMISSION.beam_width(count)
-			var end=start+axis*reach; fx.beam(start,end,tint,width,false,.22)
+			var width=float(optical.width)
+			var end=start+axis*reach; fx.beam(start,end,tint,width,false,optical.duration,optical)
 			# Sort contacts so a finite penetration budget stops at the proper
 			# target, not whichever dictionary happened to be inserted first.
 			var contacts=_ray_contacts(start,end,width*.5)
@@ -1287,6 +1290,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 			bullet.target=int(target.get("uid",-1)); bullet.explosion=float(trigger.get("explosion",0))
 			bullet.homing=float(trigger.get("homing",0)); bullet.bounces=int(trigger.get("bounces",0))
 			bullet.original_speed=speed; bullet.orbit_angle=axis.angle(); bullet.radius=10. if family in ["boomerang","orbit","drone"] else (13. if family=="mine" else (8. if family=="flame" else 5.))
+			bullet.volley_count=count
 			if kind in VISUALS.MOVING_IDS: bullet.range_limit=reach
 			VISUALS.setup(bullet,kind,i,count,player,music.timeline)
 			if not radial: bullet.launch_delay=EMISSION.projectile_delay(i,count)
@@ -1323,17 +1327,34 @@ func _fire_prism_beams(context: Dictionary,center: Vector2,count: int,damage: fl
 		var axis=EMISSION.prism_axis(i,count,spread,rotation)
 		var start=EMISSION.prism_ray_origin(center,i,count,spread,rotation)
 		var end=start+axis*reach; var tint=EMISSION.prism_color(i)
-		var contacts=_ray_contacts(start,end,EMISSION.PRISM_BEAM_WIDTH*.5)
+		var optical=EMISSION.optical_profile(i,int(context.get("uid",0)),int(context.get("serial",0)),EMISSION.LIGHT_BASE_WIDTH)
+		var path=EMISSION.light_path(start,end,int(optical.code))
+		var contacts=_light_contacts(path,float(optical.width)*.5); var clip=1.
 		# Keep explicit hit-splitting modifiers on this scatter-family weapon.
 		var impact={"at":start,"v":axis*float(context.get("speed",800.)),"damage":damage,"color":tint,"kind":kind,"family":str(context.family),"context":context}
 		for j in range(mini(contacts.size(),pierce+1)):
-			var enemy: Dictionary=contacts[j]
-			impact.at=Geometry2D.get_closest_point_to_segment(enemy.at,start,end)
+			var enemy: Dictionary=contacts[j].enemy
+			impact.at=contacts[j].at
 			split_projectile(impact,enemy)
 			hurt_enemy(enemy,damage,kind,context)
 			if float(context.get("explosion",0.))>0.: explosion(enemy.at,float(context.explosion),damage*.5,tint,kind,context,enemy.uid)
-			if j==pierce and contacts.size()>pierce+1: end=impact.at
-		fx.beam(start,end,tint,EMISSION.PRISM_BEAM_WIDTH,false,EMISSION.PRISM_BEAM_SECONDS)
+			if j==pierce and contacts.size()>pierce+1: clip=float(contacts[j].u)
+		fx.refracted_beam(start,end,tint,optical,path,clip)
+
+func _light_contacts(path: PackedVector2Array,half_width: float) -> Array:
+	var candidates: Dictionary={}; var cells: Dictionary={}; var contacts: Array=[]
+	for i in range(path.size()-1):
+		for cell in EMISSION.ray_cells(path[i],path[i+1],GRID):
+			if cells.has(cell): continue
+			cells[cell]=true
+			for enemy in spatial.get(cell,[]):
+				if enemy.hp>0.: candidates[enemy.uid]=enemy
+	for enemy in candidates.values():
+		var nearest_point=EMISSION.closest_light_point(enemy.at,path)
+		if float(nearest_point.distance)<float(enemy.radius)+half_width:
+			contacts.append({"enemy":enemy,"at":nearest_point.at,"u":nearest_point.u})
+	contacts.sort_custom(func(a,b): return float(a.u)<float(b.u))
+	return contacts
 
 func _play_weapon_reference(trigger: Dictionary,_family: String) -> void:
 	# Electronic voices are already mixed once per UID/scan into the native
@@ -1398,7 +1419,7 @@ func update_bullets(frame_delta: float) -> void:
 		if float(bullet.get("launch_delay",0.))>0.:
 			var waited=float(bullet.launch_delay)
 			bullet.launch_delay=maxf(0.,waited-delta)
-			if bullet.has("muzzle_offset"): bullet.at=player+Vector2(bullet.muzzle_offset)
+			if bullet.has("muzzle_offset") and str(bullet.kind)!="crown_orbit": bullet.at=player+Vector2(bullet.muzzle_offset)
 			if bullet.has("trail_points"): bullet.trail_points=[Vector2(bullet.at)]
 			if waited>=delta: continue
 			delta-=waited
@@ -1421,8 +1442,8 @@ func update_bullets(frame_delta: float) -> void:
 			bullet.v=bullet.v.rotated(deg_to_rad(float(bullet.turn_deg))); bullet.turned=true
 		var family=str(bullet.get("family",bullet.kind))
 		if family=="orbit":
-			bullet.orbit_angle+=delta*float(bullet.get("orbit_rate",float(bullet.get("original_speed",245))*.012))
-			var at=player+Vector2.from_angle(bullet.orbit_angle)*float(bullet.get("orbit_radius",70.+float(bullet.get("original_speed",245))*.2))
+			var at=VISUALS.orbit_target(bullet,player,delta) if str(bullet.kind)=="crown_orbit" else player+Vector2.from_angle(float(bullet.orbit_angle)+delta*float(bullet.get("original_speed",245))*.012)*(70.+float(bullet.get("original_speed",245))*.2)
+			if str(bullet.kind)!="crown_orbit": bullet.orbit_angle+=delta*float(bullet.get("original_speed",245))*.012
 			bullet.v=(at-bullet.at)/maxf(.001,delta)
 		elif family=="boomerang" and bullet.age>float(bullet.get("total_life",2))*.48:
 			bullet.v=bullet.v.lerp((player-bullet.at).normalized()*float(bullet.get("original_speed",640))*1.4,minf(1.,delta*7.))

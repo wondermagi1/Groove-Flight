@@ -120,7 +120,7 @@ func collision_checks() -> void:
 	game.rebuild_spatial(); fire()
 	check(victims[0].hp<1000. and victims[1].hp<1000. and victims[2].hp==1000.,"one ray honors the actual two-target penetration budget")
 	var stopped=rays().filter(func(m): return Vector2(m.at).is_equal_approx(lane_start) and ray_axis(m).x<0 and ray_axis(m).y<0)
-	check(stopped.size()==1 and Vector2(stopped[0].to).distance_to(victims[1].at)<.001,"the visible ray stops at its final penetrated target")
+	check(stopped.size()==1 and Vector2(stopped[0].to).distance_to(victims[1].at)<float(victims[1].radius)+float(stopped[0].width)*.5,"the visible curved ray stops on its final penetrated target")
 	fixture(); game.loadout.add_module("r_cross",3); game.refresh_loadout_stats()
 	var split_event=game.loadout.trigger(0)
 	var split_axis=game.EMISSION.prism_axis(0,int(split_event.count),float(split_event.spread),float(split_event.angle))

@@ -67,7 +67,7 @@ func mechanism_checks() -> void:
 	check(absf(first.at.y-start.y)>4. and first.trail_points.size()>3,"woven ribbons have actual lateral motion rather than straight decorative lines")
 	fixture("crown_orbit"); fire(); game.player=Vector2(120,60)
 	for i in range(12): game.update_bullets(.02)
-	check(game.bullets.size()==20 and game.bullets.all(func(b): return absf(Vector2(b.at).distance_to(game.player)-float(b.orbit_radius))<.01),"twenty quality-scaled crown rounds retain their three orbital radii around the moved ship")
+	check(game.bullets.size()==20 and game.bullets.all(func(b): return absf(Vector2(b.at).distance_to(game.player)-float(b.orbit_radius))<15.),"twenty quality-scaled crown rounds maintain their breathing guard bands with bounded inertial follow lag")
 	check(game.bullets.all(func(b): return b.pierce==3 and b.damage>0.),"orbital coverage consists of real damaging projectiles")
 	facts.new_mechanisms=["gilded_helix","weave_cross","crown_orbit"]
 

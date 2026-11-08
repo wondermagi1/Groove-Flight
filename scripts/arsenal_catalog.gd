@@ -243,12 +243,13 @@ static func _build_weapons() -> void:
 
 static func weapon_description(data: Dictionary) -> String:
 	var parts: Array[String]=["每%d小节在所在拍触发"%int(data.charge),"单发伤害%s × %d"%[_number(data.damage),int(data.count)],"弹速%s / 寿命%s秒"%[_number(data.speed),_number(data.life)]]
-	if str(data.get("emission",""))=="prism_cross": parts.append("机头前方朝四个斜角同时发射彩色光束；基础每方向3道并排平行光束")
+	if str(data.get("emission",""))=="prism_cross": parts.append("机头前方朝四个斜角发射多束彩色折光；每束有独立光路、光宽与闪烁，命中沿可见光路结算")
 	elif str(data.get("emission",""))=="hull_broadside": parts.append("从机翼左右两侧同时发射并排弹列；总弹数分配到两侧，奇数额外弹逐轮交替；保持机身朝向")
 	elif str(data.get("emission",""))=="stern_fan": parts.append("从机尾向后展开多排彩色U形扇面；左翼绿黄、中央橙黄、右翼粉紫；随飞行逐渐缩小并淡出")
 	if str(data.id)=="gilded_helix": parts.append("金色羽状弹向四周展开并弯转，形成双层螺旋弹幕")
 	elif str(data.id)=="weave_cross": parts.append("四个方向同时射出彩色编织弹流，弹道左右交错")
-	elif str(data.id)=="crown_orbit": parts.append("星冕弹环绕战机形成三层防线，弹数增加时向外扩展至多八层，随战机移动")
+	elif str(data.id)=="crown_orbit": parts.append("星冕弹形成三至八层防线，各自呼吸、环绕并带惯性跟随战机")
+	elif str(data.id)=="nova": parts.append("能量花瓣向四周展开，每颗独立弯转，保留完整环形覆盖与渐隐曲线尾迹")
 	if bool(data.get("linear_projectiles",false)):
 		if str(data.id) in VISUALS.STANDARD_IDS: parts.append("羽状实体弹；有效射程内保持完整，到射程末端缩小、减光并收拢尾迹")
 		parts.append("弹数随%s线性成长：每1点+1发；每档品质+2发，强化每级另+1发"%str(GROWTH.ATTR_NAMES.get(str(data.attr),str(data.attr))))
