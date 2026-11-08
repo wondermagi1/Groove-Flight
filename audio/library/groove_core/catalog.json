@@ -8,7 +8,7 @@
     "evidence_dir": "authorization/"
   },
   "created_at": "2026-11-02T00:00:00+00:00",
-  "updated_at": "2026-11-04T13:12:46+00:00",
+  "updated_at": "2026-11-08T11:45:45+00:00",
   "items": [
     {
       "id": "music_menu",
@@ -4062,6 +4062,30 @@
           "source_name": "shield_impact.wav",
           "file_size_bytes": 48044,
           "sha256": "435c96a18b5db3bf0682391192a5545b7fb536e33593a67f164cd13ffb0fdcab"
+        },
+        {
+          "label": "runtime_shield_impact_v26_28s",
+          "role": "shield_impact",
+          "file": "audio/library/groove_core/working/gameplay_feedback_audio/runtime_shield_impact_v26_28s.wav",
+          "created_at": "2026-11-08T11:45:45+00:00",
+          "notes": "V26 user reference28s: source28.745-29.255; full track hashes and waveform verified; contact/blue protection near28.50, orange ring and dominant transient28.75-28.76; Butterworth3 bandpass120-5000Hz with2ms/35ms fades; no pitch/time changes; mixed recording, not isolated stem.",
+          "media_type": "audio",
+          "codec": "pcm_s16le",
+          "sample_rate_hz": 48000,
+          "channels": 2,
+          "bit_depth": 16,
+          "duration_seconds": 0.51,
+          "has_audio": true,
+          "has_video": false,
+          "video_codec": null,
+          "video_width": null,
+          "video_height": null,
+          "frame_rate": null,
+          "peak_dbfs": -5.036,
+          "rms_dbfs": -18.431,
+          "source_name": "shield-impact-28s.wav",
+          "file_size_bytes": 97964,
+          "sha256": "48ed9478d8f0ef4d76b99b8f00f3d11226be61b4e2a790f1fe3162e83c13070b"
         }
       ],
       "analysis": {

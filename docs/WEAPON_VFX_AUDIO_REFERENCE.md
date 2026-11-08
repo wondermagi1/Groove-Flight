@@ -74,6 +74,18 @@ V25使用同一组音区与质感协调的钢琴、弓弦和竖琴，撤下武�
 
 详细时序约定见[固定声音约定](RHYTHM_CONTRACT.md)。
 
+### 三类独立反馈
+
+按用户再次给出的《音频资源.mp4》核对。这三类与武器乐器层分开，各有独立音量。
+
+| 反馈 | 当前素材与试听 | 视频来源 | 音量控制 |
+| --- | --- | --- | --- |
+| 击杀低鼓 | [重](../audio/authorized/feedback/kill_low_strong.wav)、[轻](../audio/authorized/feedback/kill_low_soft.wav)、[圆润低鼓](../audio/authorized/feedback/kill_low_round.wav)，死亡立即反馈并组成短鼓列 | 11.45—11.82秒、17.27—17.62秒、16.41—16.70秒 | 击杀鼓点 |
+| 清脆拾取 | [金币拾取](../audio/authorized/feedback/pickup_coin.wav) | 6.685—6.845秒 | 道具与拾取 |
+| 受击护盾 | [新版护盾](../audio/authorized/feedback/shield_impact.wav)，保留起音、主体与收尾 | V26按用户指出的28秒附近，取28.745—29.255秒 | 受击与护盾 |
+
+[三类反馈组合试听](audio-v26/feedback-source-audition.wav)与[来源及处理记录](../audio/library/groove_core/analysis/combat-feedback.json)同时保留。参考片是混合录屏，滤波截段不代表独立原始音轨。
+
 ## 4. 所有武器共用的视觉约定
 
 - 按类别统一质感：10种羽状武器共享鎏金基底；导弹、能量珠、环绕、激光、电弧保留各自形式。颜色是识别线索，发射结构和运动才是各武器的主要区别。
@@ -102,15 +114,15 @@ V25使用同一组音区与质感协调的钢琴、弓弦和竖琴，撤下武�
 
 | 日期 | 游戏版本 / 基线 | 本表变更 |
 | --- | --- | --- |
-| 2026-11-08 | V26 / 备份`0698dcf` | 增加8项独立音量控制、0%静音与自动保存；背景与武器分离，试听入口统一，调整音量不重编PCM；保留V25全部乐器样本与武器特效。 |
+| 2026-11-08 | V26 / 备份`0698dcf`、`ba8cc0b` | 增加8项独立音量控制、0%静音与自动保存；背景与武器分离，调整音量不重编PCM；按视频28秒附近更新护盾反馈，保留击杀低鼓、拾取声及V25武器音色。 |
 | 2026-11-08 | V25 / 备份`8418597` | 根据试玩反馈统一为钢琴、柔奏提琴、竖琴；10种钢琴变化，重制128样本、柔化起音并控制响度，保留固定扫描和同种重奏。 |
 | 2026-11-08 | V24 / `5c925ce` | 建立16种现役武器的特效、乐器与原声索引；明确折光四斜向羽流、13种实体弹、固定声音与充能分离；确立以后同提交更新规则。 |
 
 ## 7. 核对来源
 
-- [当前武器参数快照](data-v25/weapon-selection.json)、[武器生产目录](../scripts/arsenal_catalog.gd)：名单、ID、属性、充能和音色键。
+- [当前武器参数快照](data-v26/weapon-selection.json)、[武器生产目录](../scripts/arsenal_catalog.gd)：名单、ID、属性、充能和音色键。
 - [发射与命中](../scripts/main.gd)、[发射几何](../scripts/weapon_emission.gd)、[个体运动与视觉类别](../scripts/weapon_visuals.gd)：真实方向、曲线路径、实体弹与光学分工。
 - [当前乐器索引](../audio/weapon_codex.json)、[音乐播放与混音](../scripts/music.gd)：样本、固定音色和实例重奏。
-- [V25音色验证汇总](data-v25/SUMMARY.json)：128份音源格式、固定扫描、原生重奏与弹道兼容回归；视觉专项基线见[V24汇总](data-v24/SUMMARY.json)。
+- [V26分类音量与反馈验证](data-v26/SUMMARY.json)；[V25音色验证汇总](data-v25/SUMMARY.json)：128份音源格式、固定扫描、原生重奏与弹道兼容回归；视觉专项基线见[V24汇总](data-v24/SUMMARY.json)。
 
-本表只登记武器的对应声音；击杀低鼓、受击护盾、拾取音效和背景音乐另见[反馈音频说明](GROOVE_CORE_KILL_FEEDBACK.md)与[录音来源](AUDIO_SOURCE_MAP.md)。
+击杀低鼓的机制背景见[反馈音频说明](GROOVE_CORE_KILL_FEEDBACK.md)，其余授权素材见[录音来源](AUDIO_SOURCE_MAP.md)；当前分类音量与28秒护盾以[V26说明](V26_AUDIO_CONTROLS.md)为准。

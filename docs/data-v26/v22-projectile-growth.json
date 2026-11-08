@@ -1,0 +1,105 @@
+{
+  "checks": 907,
+  "facts": {
+    "examples": {
+      "beam": {
+        "attribute": "energy",
+        "high_count": 30,
+        "high_quality": "传奇",
+        "low_count": 3
+      },
+      "beam_split": {
+        "attribute": "energy",
+        "high_count": 31,
+        "high_quality": "传奇",
+        "low_count": 6
+      },
+      "chain": {
+        "attribute": "energy",
+        "high_count": 30,
+        "high_quality": "传奇",
+        "low_count": 3
+      },
+      "crown_orbit": {
+        "attribute": "support",
+        "high_count": 45,
+        "high_quality": "传奇",
+        "low_count": 20
+      },
+      "gilded_helix": {
+        "attribute": "energy",
+        "high_count": 77,
+        "high_quality": "传奇",
+        "low_count": 52
+      },
+      "missile": {
+        "attribute": "power",
+        "high_count": 30,
+        "high_quality": "传奇",
+        "low_count": 3
+      },
+      "nova": {
+        "attribute": "energy",
+        "high_count": 39,
+        "high_quality": "传奇",
+        "low_count": 12
+      },
+      "pulse": {
+        "attribute": "ballistic",
+        "high_count": 32,
+        "high_quality": "传奇",
+        "low_count": 3
+      },
+      "pulse_needle": {
+        "attribute": "ballistic",
+        "high_count": 30,
+        "high_quality": "传奇",
+        "low_count": 3
+      },
+      "rail": {
+        "attribute": "ballistic",
+        "high_count": 30,
+        "high_quality": "传奇",
+        "low_count": 3
+      },
+      "rail_horizon": {
+        "attribute": "ballistic",
+        "high_count": 31,
+        "high_quality": "传奇",
+        "low_count": 8
+      },
+      "recorded_heavy": {
+        "attribute": "ballistic",
+        "high_count": 30,
+        "high_quality": "传奇",
+        "low_count": 7
+      },
+      "scatter": {
+        "attribute": "ballistic",
+        "high_count": 34,
+        "high_quality": "传奇",
+        "low_count": 5
+      },
+      "scatter_prism": {
+        "attribute": "ballistic",
+        "high_count": 41,
+        "high_quality": "传奇",
+        "low_count": 16
+      },
+      "stern_fan": {
+        "attribute": "ballistic",
+        "high_count": 53,
+        "high_quality": "传奇",
+        "low_count": 26
+      },
+      "weave_cross": {
+        "attribute": "ballistic",
+        "high_count": 93,
+        "high_quality": "传奇",
+        "low_count": 70
+      }
+    }
+  },
+  "failures": [],
+  "scope": "All active weapons x4upgrade levels x5attribute values, unrelated attributes, real merge, visible caps, actual damaging rays/branches and train projectiles. Fixed controlled fixtures; no human balance claim."
+}

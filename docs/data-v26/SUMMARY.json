@@ -1,0 +1,127 @@
+{
+  "version": "0.26.0-category-audio",
+  "date": "2026-11-08",
+  "development_branch": "codex/v26-audio-feedback",
+  "backup_before_round": "0698dcf8b9025585143c514fa444910c2b74d0dd",
+  "backup_before_shield_excerpt": "ba8cc0b2bb82e05d8f8b4d78f40c7ddaeb6ce9e8",
+  "volume_controls": [
+    "master",
+    "music",
+    "weapons",
+    "kill",
+    "pickup",
+    "shield",
+    "combat",
+    "ui"
+  ],
+  "rules": {
+    "independent_background_and_weapons": true,
+    "all_weapon_auditions_routed": true,
+    "live_faders_without_pcm_rebuild": true,
+    "no_stream_replacement_on_settings_close": true,
+    "exact0_bus_mute": true,
+    "auto_save": true,
+    "one_time_legacy_config_migration": true,
+    "sequencer_seconds": 1.0,
+    "weapon_samples_unchanged": 128,
+    "kill_pickup_clips_unchanged": 4
+  },
+  "feedback_reference": {
+    "source_sha256": "a12d5ed55c3f1ef5155fcebba18c9053e9687e89c77080a18901900314f849e9",
+    "shield_source_window": [
+      28.745,
+      29.255
+    ],
+    "shield_seconds": 0.51,
+    "analysis": "../../audio/library/groove_core/analysis/combat-feedback.json",
+    "preview": "../audio-v26/feedback-source-audition.wav",
+    "preview_seconds": 4.2,
+    "scope": "Filtered excerpts from mixed gameplay, not isolated source stems. Three existing low-drums and crisp pickup preserved; received-hit shield re-cut from user-specified28second event."
+  },
+  "reports": [
+    {
+      "report": "v26-audio-controls-forward_plus.json",
+      "checks": 55,
+      "scope": "Eight real settings sliders, isolated legacy config migration/roundtrip, production category routes including feedback/codex/composer/shop, runtime source hashes and actual510ms shield from28seconds, exact0 mute without touching siblings. Native mode captures actual Master output at full/quarter/muted gain for all7categories and background/weapon independence.",
+      "failures": []
+    },
+    {
+      "report": "v26-audio-controls-gl_compatibility.json",
+      "checks": 55,
+      "scope": "Eight real settings sliders, isolated legacy config migration/roundtrip, production category routes including feedback/codex/composer/shop, runtime source hashes and actual510ms shield from28seconds, exact0 mute without touching siblings. Native mode captures actual Master output at full/quarter/muted gain for all7categories and background/weapon independence.",
+      "failures": []
+    },
+    {
+      "report": "ui.json",
+      "checks": 11,
+      "scope": "Actual interactive-title settings projectile, title return, separate direct-start combat settings fixture, particle toggles and master slider;720p; isolated profile, not a harbor departure or full run.",
+      "failures": []
+    },
+    {
+      "report": "electronic-audio-logic.json",
+      "checks": 53,
+      "scope": "Fixed voices for the active weapon roster, same-type12/34 native PCM overlap and live fire, zero-volume/track mute, live/paused PCM refresh and isolated preview compilation. Native fixture uses invulnerability; no human listening or balance claim.",
+      "failures": []
+    },
+    {
+      "report": "rhythm-feedback.json",
+      "checks": 40,
+      "scope": "Production Main callbacks, native audio transport, fixed-voice recompile, death/receive/pickup feedback and bounded drum scheduling. Invulnerable native smoke fixture; no human difficulty or subjective listening claim.",
+      "failures": []
+    },
+    {
+      "report": "v25-chamber-audio.json",
+      "checks": 332,
+      "scope": "Current palette source/production metadata, all128 actual sample hashes PCM format endpoints and headroom, unchanged weapon stats and visual classes, fixed scan voices, and production stereo ensemble compilation with repeated same-type piano. Backing and feedback muted for isolated audition; human listening remains subjective.",
+      "failures": []
+    },
+    {
+      "report": "selected-weapons.json",
+      "checks": 432,
+      "scope": "Original twelve plus four new weapons, exact sixteen-name roster, restored heavy, live inventory gate,320 real six-offer shops, retired-score migration and instrument PCM routing.",
+      "failures": []
+    },
+    {
+      "report": "weapon-cycle.json",
+      "checks": 189,
+      "scope": "Pure production scheduling of every active weapon for eight seconds; separate UID scheduling, 1-second deadlines, fixed voices, damage conservation and pure snapshot/clone behavior.",
+      "failures": []
+    },
+    {
+      "report": "v24-all-weapons.json",
+      "checks": 57,
+      "scope": "All16 active weapons; actual independent physical motion and optical branches, circular coverage, orbital follow inertia, four sustained swaying physical prism plumes, shared feather GPU submission. Controlled fixtures, not full-campaign balance or source-game internals.",
+      "failures": []
+    },
+    {
+      "report": "v22-projectile-growth.json",
+      "checks": 907,
+      "scope": "All active weapons x4upgrade levels x5attribute values, unrelated attributes, real merge, visible caps, actual damaging rays/branches and train projectiles. Fixed controlled fixtures; no human balance claim.",
+      "failures": []
+    },
+    {
+      "report": "prism-cross.json",
+      "checks": 36,
+      "scope": "Physical prism: four colored feather plumes, delayed arrival, penetration, split children, full size through actual range, bounded retirement, all tracks/aim modes and shared renderer. Supersedes instant-prism expectations.",
+      "failures": []
+    },
+    {
+      "report": "composer-score.json",
+      "checks": 112,
+      "scope": "Pure score/editor transactions, boundedJSONsave/load, actualSMF0/1 byte fixtures/runningstatus/chords/sustain/tempo handling/corruptinput, MIDIandJSONroundtrip, sharedschedule. No audio or UI/nativeflight acceptance.",
+      "failures": []
+    }
+  ],
+  "native_output_capture": "Separate Forward+ and OpenGL tests capture final Master stereo PCM for all7categories at100percent,25percent and0percent. All muted captures are digitalzero; muting background preserves a playing weapon. Controlled looping tone for gain measurement, plus production player routing and feedback callbacks.",
+  "ui_screenshots": [
+    "../screenshots/v26-audio-1920.png",
+    "../screenshots/v26-audio-1280.png"
+  ],
+  "screenshot_values": "Controlled slider test values of41percent, not installation defaults.",
+  "unchanged_weapon_motion_stress_baseline": "../data-v24/SUMMARY.json",
+  "unchanged_instrument_palette_baseline": "../data-v25/SUMMARY.json",
+  "limits": [
+    "No new sustained-FPS or full-route measurement; this is an audio settings/feedback change.",
+    "Automated PCM/source validation does not establish subjective sound acceptance."
+  ]
+}

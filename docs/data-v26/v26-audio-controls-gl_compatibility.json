@@ -1,0 +1,45 @@
+{
+  "checks": 55,
+  "facts": {
+    "native_capture": {
+      "combat": {
+        "full_rms": 0.107957638243158,
+        "muted_rms": 0.0,
+        "quarter_rms": 0.0269766992140542
+      },
+      "kill": {
+        "full_rms": 0.107899131844202,
+        "muted_rms": 0.0,
+        "quarter_rms": 0.0269649257262828
+      },
+      "music": {
+        "full_rms": 0.107890011993109,
+        "muted_rms": 0.0,
+        "quarter_rms": 0.0269766992140542
+      },
+      "pickup": {
+        "full_rms": 0.10789181499478,
+        "muted_rms": 0.0,
+        "quarter_rms": 0.0269720692285245
+      },
+      "shield": {
+        "full_rms": 0.107909580089719,
+        "muted_rms": 0.0,
+        "quarter_rms": 0.0269766992140542
+      },
+      "ui": {
+        "full_rms": 0.10789181499478,
+        "muted_rms": 0.0,
+        "quarter_rms": 0.0269626411521095
+      },
+      "weapons": {
+        "full_rms": 0.10789181499478,
+        "muted_rms": 0.0,
+        "quarter_rms": 0.0269766992140542
+      }
+    }
+  },
+  "failures": [],
+  "renderer": "gl_compatibility",
+  "scope": "Eight real settings sliders, isolated legacy config migration/roundtrip, production category routes including feedback/codex/composer/shop, runtime source hashes and actual510ms shield from28seconds, exact0 mute without touching siblings. Native mode captures actual Master output at full/quarter/muted gain for all7categories and background/weapon independence."
+}

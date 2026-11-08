@@ -1,0 +1,43 @@
+{
+  "seconds": 4.2,
+  "scope": "Source-excerpt audition, not live gameplay. Low kill roll at0s, crisp pickup at1.5s, revised28s shield at2.7s. No weapon music or backing.",
+  "events": [
+    {
+      "sample": "kill_low_strong",
+      "at_seconds": 0.0,
+      "gain": 0.7
+    },
+    {
+      "sample": "kill_low_soft",
+      "at_seconds": 0.125,
+      "gain": 0.7
+    },
+    {
+      "sample": "kill_low_round",
+      "at_seconds": 0.25,
+      "gain": 0.7
+    },
+    {
+      "sample": "pickup_coin",
+      "at_seconds": 1.5,
+      "gain": 0.75
+    },
+    {
+      "sample": "shield_impact",
+      "at_seconds": 2.7,
+      "gain": 0.8
+    }
+  ],
+  "shield": {
+    "id": "shield_impact",
+    "file": "audio/authorized/feedback/shield_impact.wav",
+    "source_catalog_id": "gameplay_feedback_audio",
+    "source_start_seconds": 28.745,
+    "source_end_seconds": 29.255,
+    "seconds": 0.51,
+    "processing": "Butterworth3 bandpass120-5000Hz; source28.745-29.255s;2ms attack/35ms release fades; fixed gain2.514724; no pitch/time change",
+    "peak_dbfs": -5.036239459875991,
+    "rms_dbfs": -18.431221140538632,
+    "sha256": "48ed9478d8f0ef4d76b99b8f00f3d11226be61b4e2a790f1fe3162e83c13070b"
+  }
+}

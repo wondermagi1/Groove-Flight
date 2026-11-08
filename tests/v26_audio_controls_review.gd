@@ -21,6 +21,12 @@ func routing_checks() -> void:
 	check(codex.audio_player.bus==AUDIO.WEAPONS,"weapon codex audition obeys the weapon volume control"); codex.queue_free()
 	game.sound_times.clear(); game.sound("pickup"); check(game.mixer.last_player.bus==AUDIO.BUSES.pickup,"pickup reaches its own category")
 	game.sound_times.clear(); game.sound("shield"); check(game.mixer.last_player.bus==AUDIO.BUSES.shield,"shield feedback reaches its reserved category")
+	var feedback=JSON.parse_string(FileAccess.get_file_as_string("res://audio/library/groove_core/analysis/combat-feedback.json"))
+	for clip in feedback.clips:
+		var context=HashingContext.new(); context.start(HashingContext.HASH_SHA256); context.update(FileAccess.get_file_as_bytes("res://"+str(clip.file)))
+		check(context.finish().hex_encode()==str(clip.sha256),"feedback provenance matches its actual runtime clip / "+str(clip.id))
+	var shield=feedback.clips.filter(func(c): return c.id=="shield_impact")[0]
+	check(is_equal_approx(float(shield.source_start_seconds),28.745) and is_equal_approx(game.mixer.last_player.stream.get_length(),.51),"the real shield playback uses the requested28second event and complete510ms excerpt")
 	game.sound_times.clear(); game.sound("metal"); check(game.mixer.last_player.bus==AUDIO.BUSES.combat,"enemy impacts reach the impact category")
 	game.mixer.reset_feedback(); game.mixer.set_combat_state("combat"); game.mixer.death("mote")
 	check(game.mixer.last_player.bus==AUDIO.BUSES.kill,"low death drums reach the independent kill category")
@@ -87,8 +93,9 @@ func run() -> void:
 	game=load("res://scenes/Main.tscn").instantiate(); root.add_child(game); current_scene=game; await frames(4)
 	game.set_process(false); game.set_physics_process(false); game.set_process_unhandled_input(false); game.music.stop(); game.music._running=false
 	config_checks(); await routing_checks(); await ui_checks(); await native_checks()
-	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"Eight real settings sliders, isolated legacy config migration/roundtrip, production category routes including live feedback/codex/composer/shop, exact0 mute without touching sibling faders. Native mode captures actual Master-bus stereo output at full/quarter/muted gain for all7categories and checks background/weapon independence."}
+	var result={"checks":checks,"failures":failures,"facts":facts,"renderer":RenderingServer.get_current_rendering_method(),"scope":"Eight real settings sliders, isolated legacy config migration/roundtrip, production category routes including feedback/codex/composer/shop, runtime source hashes and actual510ms shield from28seconds, exact0 mute without touching siblings. Native mode captures actual Master output at full/quarter/muted gain for all7categories and background/weapon independence."}
 	FileAccess.open("res://tests/results-v26-audio-controls.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	if DisplayServer.get_name()!="headless": FileAccess.open("res://tests/results-v26-audio-controls-native.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
+	if DisplayServer.get_name()!="headless": FileAccess.open("res://tests/results-v26-audio-controls-"+RenderingServer.get_current_rendering_method()+".json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	print("V26_AUDIO_CONTROLS ",JSON.stringify(result)); game.reset_audio_volumes(); stop_audio(game); current_scene=null; game.queue_free(); await frames(6); await create_timer(.2,true).timeout
 	quit(0 if failures.is_empty() else 1)

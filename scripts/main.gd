@@ -821,7 +821,7 @@ func show_settings() -> void:
 	state="settings"; ui.refresh()
 func close_settings() -> void:
 	save_settings(); state=previous_state
-	if music==standard_music and state in ["combat","paused"]:
+	if music==standard_music and state in ["combat","paused"] and not standard_music.is_current(loadout):
 		music.rebuild(loadout); resync_pending()
 	music.hold(state in ["paused","reward","editor"]); ui.refresh()
 func return_title() -> void:

@@ -1,5 +1,7 @@
 # Groove Flight 录音来源与运行时对应表
 
+2026-11-08更新：当前三类反馈沿用《音频资源.mp4》，护盾按用户指出的28秒附近改用28.745—29.255秒；击杀低鼓和清脆拾取素材保留。详见[V26分类音量与反馈](V26_AUDIO_CONTROLS.md)和[当前分析记录](../audio/library/groove_core/analysis/combat-feedback.json)。下文为来源历史。
+
 V17新增 `gameplay_feedback_audio`（用户提供《音频资源.mp4》），提取3种低鼓、护盾和拾取共5个运行文件。另入库的《实机演示.mp4》确认全静音，只作画面参考。源区间、处理与SHA256见 `audio/library/groove_core/analysis/combat-feedback.json`；触发规则见 [V17制作说明](V17_RHYTHM_AND_FEEDBACK.md)。下文7条来源为此前版本清单，当前完整索引以 `catalog.json` 与 `runtime_mapping.json` 为准。
 
 记录日期：2026-11-04。原始参考游戏：`Groove Core Demo`。目标项目：`Groove Flight`。
@@ -74,4 +76,4 @@ V17新增 `gameplay_feedback_audio`（用户提供《音频资源.mp4》），�
 
 四条待播放原声组的完整段波形检查图、截取起止和源文件哈希同时登记在`audio/library/groove_core/analysis/recorded-weapon-groups.json`。粗制火弹原声组波形：
 
-![粗制火弹0-6秒原声组](audio/library/groove_core/analysis/weapon_crude_fire/crude-fire-full-0-6s-waveform.png)
+![粗制火弹0-6秒原声组](../audio/library/groove_core/analysis/weapon_crude_fire/crude-fire-full-0-6s-waveform.png)

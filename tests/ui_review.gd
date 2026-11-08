@@ -2,6 +2,7 @@ extends "res://tests/prototype_review.gd"
 func run() -> void:
 	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_NO_FOCUS,true)
 	root.size=Vector2i(1280,720); game=load("res://scenes/Main.tscn").instantiate(); root.add_child(game); current_scene=game; await frames(5)
+	game.set_process_unhandled_input(false)
 	var entry=game.ui.title_flight.targets.settings
 	entry.pressed.emit()
 	check(game.state=="title" and not game.ui.title_flight.shots.is_empty(),"actual title settings entry launches a projectile before switching screens")
@@ -11,7 +12,11 @@ func run() -> void:
 	check(game.state=="title","title settings return to the interactive title")
 	# A separate combat-settings fixture follows. The title now correctly enters
 	# the 3D harbor; this direct start is not claimed as a menu-to-flight test.
-	game.start_run(441); await frames(5)
+	game.start_run(441); game.invulnerable=1000.; var waited=0.
+	while not game.music.playing and waited<20.:
+		await create_timer(.05).timeout; waited+=.05
+	check(game.music.playing,"combat settings fixture waits for actual native playback")
+	var original_stream=game.music.stream
 	game.show_settings(); await frames(3)
 	check(game.state=="settings" and game.music.stream_paused,"settings freeze current combat and actual music")
 	var button=game.ui.root_control.find_children("*","Button",true,false).filter(func(node):return node.text.begins_with("粒子密度"))[0]
@@ -26,6 +31,7 @@ func run() -> void:
 	var back=game.ui.root_control.find_children("*","Button",true,false).filter(func(node):return node.text=="保存并返回")[0]
 	back.pressed.emit(); await frames(4)
 	check(game.state=="combat" and not game.music.stream_paused,"actual save/back button safely resumes current run")
+	check(game.music.stream==original_stream,"closing volume settings retains the playing PCM")
 	var result={"checks":checks,"failures":failures,"scope":"Actual interactive-title settings projectile, title return, separate direct-start combat settings fixture, particle toggles and master slider;720p; isolated profile, not a harbor departure or full run."}
 	FileAccess.open("res://tests/results-ui.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("GROOVE_FLIGHT_UI_REVIEW ",JSON.stringify(result))
 	game.music.stop(); current_scene=null; game.queue_free(); await frames(5)
