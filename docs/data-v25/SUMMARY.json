@@ -1,0 +1,88 @@
+{
+  "version": "0.25.0-chamber-instruments",
+  "date": "2026-11-08",
+  "development_branch": "codex/v25-chamber-instruments",
+  "backup_before_round": "8418597412e6e4934a85b30599fa6421dde9af0c",
+  "active_weapons": 16,
+  "samples": 128,
+  "palette": {
+    "piano": 10,
+    "strings": 3,
+    "harp": 3,
+    "electronic_mix": 0,
+    "drum_bank_used": false
+  },
+  "policy": "../../audio/instruments/CHAMBER_PALETTE.json",
+  "manifest": "../../audio/instruments/MANIFEST.json",
+  "reports": [
+    {
+      "report": "v25-chamber-audio.json",
+      "checks": 332,
+      "scope": "Current palette source/production metadata, all128 actual sample hashes PCM format endpoints and headroom, unchanged weapon stats and visual classes, fixed scan voices, and production stereo ensemble compilation with repeated same-type piano. Backing and feedback muted for isolated audition; human listening remains subjective.",
+      "failures": []
+    },
+    {
+      "report": "selected-weapons.json",
+      "checks": 432,
+      "scope": "Original twelve plus four new weapons, exact sixteen-name roster, restored heavy, live inventory gate,320 real six-offer shops, retired-score migration and instrument PCM routing.",
+      "failures": []
+    },
+    {
+      "report": "weapon-cycle.json",
+      "checks": 189,
+      "scope": "Pure production scheduling of every active weapon for eight seconds; separate UID scheduling, 1-second deadlines, fixed voices, damage conservation and pure snapshot/clone behavior.",
+      "failures": []
+    },
+    {
+      "report": "composer-score.json",
+      "checks": 112,
+      "scope": "Pure score/editor transactions, boundedJSONsave/load, actualSMF0/1 byte fixtures/runningstatus/chords/sustain/tempo handling/corruptinput, MIDIandJSONroundtrip, sharedschedule. No audio or UI/nativeflight acceptance.",
+      "failures": []
+    },
+    {
+      "report": "v24-all-weapons.json",
+      "checks": 57,
+      "scope": "All16 active weapons; actual independent physical motion and optical branches, circular coverage, orbital follow inertia, four sustained swaying physical prism plumes, shared feather GPU submission. Controlled fixtures, not full-campaign balance or source-game internals.",
+      "failures": []
+    },
+    {
+      "report": "v22-projectile-growth.json",
+      "checks": 907,
+      "scope": "All active weapons x4upgrade levels x5attribute values, unrelated attributes, real merge, visible caps, actual damaging rays/branches and train projectiles. Fixed controlled fixtures; no human balance claim.",
+      "failures": []
+    },
+    {
+      "report": "prism-cross.json",
+      "checks": 36,
+      "scope": "Physical prism: four colored feather plumes, delayed arrival, penetration, split children, full size through actual range, bounded retirement, all tracks/aim modes and shared renderer. Supersedes instant-prism expectations.",
+      "failures": []
+    },
+    {
+      "report": "electronic-audio-logic.json",
+      "checks": 53,
+      "scope": "Fixed voices for the active weapon roster, same-type12/34 native PCM overlap and live fire, zero-volume/track mute, live/paused PCM refresh and isolated preview compilation. Native fixture uses invulnerability; no human listening or balance claim.",
+      "failures": []
+    },
+    {
+      "report": "rhythm-feedback.json",
+      "checks": 40,
+      "scope": "Production Main callbacks, native audio transport, fixed-voice recompile, death/receive/pickup feedback and bounded drum scheduling. Invulnerable native smoke fixture; no human difficulty or subjective listening claim.",
+      "failures": []
+    }
+  ],
+  "native_preview": {
+    "seconds": 8.0,
+    "channels": 2,
+    "peak": 0.099761962890625,
+    "rms": 0.021309887577763503
+  },
+  "native_preview_scope": "Production stereo music compilation, 9 equipped modules including repeated piano UID, 8seconds, fixed index0, backing and feedback muted for audition. This is not a recording of complete gameplay.",
+  "unchanged_mechanics_visuals_baseline": "../data-v24/weapon-selection.json",
+  "unchanged_stress_baseline": "../data-v24/v24-density.json",
+  "audio_feedback_unchanged": true,
+  "source": "Existing licensed GeneralUser GS2.0.3 / TinySoundFont MIT; local offline rendering only.",
+  "limits": [
+    "Subjective timbre and ensemble loudness require player listening; automated waveform checks are not listening acceptance.",
+    "No new stress or full-route measurement because this round changes sampled weapon voices, metadata and documentation."
+  ]
+}

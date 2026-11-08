@@ -13,10 +13,12 @@ const RECORDED_WEAPONS_ENABLED=false
 const VISUALS=preload("res://scripts/weapon_visuals.gd")
 const GROWTH=preload("res://scripts/projectile_growth.gd")
 const ACTIVE_WEAPON_IDS=["pulse","scatter","beam","missile","nova","chain","rail","pulse_needle","scatter_prism","beam_split","rail_horizon","recorded_heavy","gilded_helix","weave_cross","crown_orbit","stern_fan"]
-const INSTRUMENTS={"pulse":"钢琴","scatter":"军鼓","beam":"小提琴","missile":"底鼓","nova":"中音萨克斯","chain":"颤音琴＋电子泛音","rail":"大提琴","pulse_needle":"钢弦吉他","scatter_prism":"低音通鼓","beam_split":"合成弦乐＋电子光芯","rail_horizon":"低音钢琴","recorded_heavy":"定音鼓"}
-const INSTRUMENT_ROOTS={"chain":72,"rail":48,"rail_horizon":36,"recorded_heavy":43}
-const PERCUSSION_IDS=["scatter","missile","scatter_prism"]
-const NEW_INSTRUMENTS={"gilded_helix":"长笛","weave_cross":"钢片琴","crown_orbit":"竖琴","stern_fan":"拨弦弦乐"}
+## Generated from audio/instruments/CHAMBER_PALETTE.json by build_chamber_instruments.py.
+const INSTRUMENTS={"pulse":"柔和三角钢琴","scatter":"短奏钢琴","beam":"柔奏小提琴","missile":"温暖低音钢琴","nova":"圆润中音钢琴","chain":"柔和高音竖琴","rail":"柔奏大提琴","pulse_needle":"清亮高音钢琴","scatter_prism":"珠光钢琴","beam_split":"柔奏中提琴","rail_horizon":"深色低音钢琴","recorded_heavy":"厚实中低音钢琴","gilded_helix":"明亮三角钢琴","weave_cross":"轻巧断奏钢琴","crown_orbit":"通透竖琴","stern_fan":"温暖中音竖琴"}
+const INSTRUMENT_ROOTS={"pulse":60,"scatter":67,"beam":60,"missile":48,"nova":63,"chain":72,"rail":48,"pulse_needle":72,"scatter_prism":67,"beam_split":55,"rail_horizon":36,"recorded_heavy":43,"gilded_helix":60,"weave_cross":72,"crown_orbit":72,"stern_fan":60}
+const INSTRUMENT_FAMILIES={"pulse":"piano","scatter":"piano","beam":"strings","missile":"piano","nova":"piano","chain":"harp","rail":"strings","pulse_needle":"piano","scatter_prism":"piano","beam_split":"strings","rail_horizon":"piano","recorded_heavy":"piano","gilded_helix":"piano","weave_cross":"piano","crown_orbit":"harp","stern_fan":"harp"}
+const PERCUSSION_IDS=[]
+const NEW_INSTRUMENTS={"gilded_helix":"明亮三角钢琴","weave_cross":"轻巧断奏钢琴","crown_orbit":"通透竖琴","stern_fan":"温暖中音竖琴"}
 const LEGACY_WEAPON_ALIASES={"recorded_light":"pulse","recorded_medium":"scatter","recorded_heavy_rare":"recorded_heavy","recorded_heavy_legend":"recorded_heavy"}
 const RECORDED_QUALITY_PROFILES=[
 	{"suffix":"","rarity":0,"damage":1.,"count":0,"speed":1.,"pierce":0,"cost":1.,"attribute_scale":.5},
@@ -229,8 +231,9 @@ static func _build_weapons() -> void:
 			data.attribute_count_scale=GROWTH.PER_ATTRIBUTE
 			data.voice="inst_"+str(data.id)
 			data.instrument_samples=true
-			data.instrument=str(NEW_INSTRUMENTS.get(str(data.id),INSTRUMENTS.get(str(data.id),"乐器")))
-			data.sample_root=60 if str(data.id)=="stern_fan" else (72 if NEW_INSTRUMENTS.has(str(data.id)) else int(INSTRUMENT_ROOTS.get(str(data.id),60)))
+			data.instrument=str(INSTRUMENTS.get(str(data.id),"乐器"))
+			data.instrument_family=str(INSTRUMENT_FAMILIES.get(str(data.id),"piano"))
+			data.sample_root=int(INSTRUMENT_ROOTS.get(str(data.id),60))
 			data.percussion=str(data.id) in PERCUSSION_IDS
 			data.audio_status="sampled_instrument"
 			if str(data.family)!="orbit": data.life*=1.3

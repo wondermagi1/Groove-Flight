@@ -1,0 +1,134 @@
+{
+  "baseline": "8418597412e6e4934a85b30599fa6421dde9af0c",
+  "scope": "Raw fixed index0 RMS/peak from before/after manifests, not perceived loudness ratings. All weapon stats and visual data exactly match V24 export.",
+  "voices": [
+    {
+      "id": "pulse",
+      "previous_instrument": "钢琴",
+      "instrument": "柔和三角钢琴",
+      "old_rms": 0.1079598969884823,
+      "new_rms": 0.029354335657793044,
+      "new_peak": 0.16889026564177753
+    },
+    {
+      "id": "scatter",
+      "previous_instrument": "军鼓",
+      "instrument": "短奏钢琴",
+      "old_rms": 0.12,
+      "new_rms": 0.03983295827104558,
+      "new_peak": 0.15704463499258692
+    },
+    {
+      "id": "beam",
+      "previous_instrument": "小提琴",
+      "instrument": "柔奏小提琴",
+      "old_rms": 0.17453060381323487,
+      "new_rms": 0.05298481380240354,
+      "new_peak": 0.19748315372795233
+    },
+    {
+      "id": "missile",
+      "previous_instrument": "底鼓",
+      "instrument": "温暖低音钢琴",
+      "old_rms": 0.12,
+      "new_rms": 0.02916119108008658,
+      "new_peak": 0.14442450894043776
+    },
+    {
+      "id": "nova",
+      "previous_instrument": "中音萨克斯",
+      "instrument": "圆润中音钢琴",
+      "old_rms": 0.10681621114756014,
+      "new_rms": 0.026961541473195696,
+      "new_peak": 0.14241192845916267
+    },
+    {
+      "id": "chain",
+      "previous_instrument": "颤音琴＋电子泛音",
+      "instrument": "柔和高音竖琴",
+      "old_rms": 0.19399997897450352,
+      "new_rms": 0.035176956097691746,
+      "new_peak": 0.20931738368525613
+    },
+    {
+      "id": "rail",
+      "previous_instrument": "大提琴",
+      "instrument": "柔奏大提琴",
+      "old_rms": 0.13256496418214828,
+      "new_rms": 0.03236487273009846,
+      "new_peak": 0.15421271405882725
+    },
+    {
+      "id": "pulse_needle",
+      "previous_instrument": "钢弦吉他",
+      "instrument": "清亮高音钢琴",
+      "old_rms": 0.10856928945289453,
+      "new_rms": 0.03262674394931471,
+      "new_peak": 0.168246883153728
+    },
+    {
+      "id": "scatter_prism",
+      "previous_instrument": "低音通鼓",
+      "instrument": "珠光钢琴",
+      "old_rms": 0.12,
+      "new_rms": 0.03071926032267165,
+      "new_peak": 0.1295616972962562
+    },
+    {
+      "id": "beam_split",
+      "previous_instrument": "合成弦乐＋电子光芯",
+      "instrument": "柔奏中提琴",
+      "old_rms": 0.10169628634295363,
+      "new_rms": 0.03480288319873906,
+      "new_peak": 0.1670045688442873
+    },
+    {
+      "id": "rail_horizon",
+      "previous_instrument": "低音钢琴",
+      "instrument": "深色低音钢琴",
+      "old_rms": 0.1026246074087302,
+      "new_rms": 0.023030774244934257,
+      "new_peak": 0.16298561850749674
+    },
+    {
+      "id": "recorded_heavy",
+      "previous_instrument": "定音鼓",
+      "instrument": "厚实中低音钢琴",
+      "old_rms": 0.08467230982338768,
+      "new_rms": 0.027202640809395454,
+      "new_peak": 0.16074178663921013
+    },
+    {
+      "id": "gilded_helix",
+      "previous_instrument": "长笛",
+      "instrument": "明亮三角钢琴",
+      "old_rms": 0.09525845073821883,
+      "new_rms": 0.02658568888535728,
+      "new_peak": 0.14952692422050648
+    },
+    {
+      "id": "weave_cross",
+      "previous_instrument": "钢片琴",
+      "instrument": "轻巧断奏钢琴",
+      "old_rms": 0.08046620428800982,
+      "new_rms": 0.031152162169104335,
+      "new_peak": 0.13532439117367373
+    },
+    {
+      "id": "crown_orbit",
+      "previous_instrument": "竖琴",
+      "instrument": "通透竖琴",
+      "old_rms": 0.08692025467292874,
+      "new_rms": 0.034446763512807406,
+      "new_peak": 0.21239293377511592
+    },
+    {
+      "id": "stern_fan",
+      "previous_instrument": "拨弦弦乐",
+      "instrument": "温暖中音竖琴",
+      "old_rms": 0.07927989181273998,
+      "new_rms": 0.03388967027662401,
+      "new_peak": 0.0940703552247248
+    }
+  ]
+}

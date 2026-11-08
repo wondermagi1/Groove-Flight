@@ -1,0 +1,102 @@
+{
+  "scope": "Sequential offline current fixed-voice auditions; each repeats after250ms. No gameplay feedback/backing or live timing claim.",
+  "seconds": 27.2,
+  "timeline": [
+    {
+      "id": "pulse",
+      "instrument": "柔和三角钢琴",
+      "start_seconds": 0.0,
+      "end_seconds": 1.7
+    },
+    {
+      "id": "scatter",
+      "instrument": "短奏钢琴",
+      "start_seconds": 1.7,
+      "end_seconds": 3.4
+    },
+    {
+      "id": "beam",
+      "instrument": "柔奏小提琴",
+      "start_seconds": 3.4,
+      "end_seconds": 5.1
+    },
+    {
+      "id": "missile",
+      "instrument": "温暖低音钢琴",
+      "start_seconds": 5.1,
+      "end_seconds": 6.8
+    },
+    {
+      "id": "nova",
+      "instrument": "圆润中音钢琴",
+      "start_seconds": 6.8,
+      "end_seconds": 8.5
+    },
+    {
+      "id": "chain",
+      "instrument": "柔和高音竖琴",
+      "start_seconds": 8.5,
+      "end_seconds": 10.2
+    },
+    {
+      "id": "rail",
+      "instrument": "柔奏大提琴",
+      "start_seconds": 10.2,
+      "end_seconds": 11.9
+    },
+    {
+      "id": "pulse_needle",
+      "instrument": "清亮高音钢琴",
+      "start_seconds": 11.9,
+      "end_seconds": 13.6
+    },
+    {
+      "id": "scatter_prism",
+      "instrument": "珠光钢琴",
+      "start_seconds": 13.6,
+      "end_seconds": 15.299999999999999
+    },
+    {
+      "id": "beam_split",
+      "instrument": "柔奏中提琴",
+      "start_seconds": 15.299999999999999,
+      "end_seconds": 17.0
+    },
+    {
+      "id": "rail_horizon",
+      "instrument": "深色低音钢琴",
+      "start_seconds": 17.0,
+      "end_seconds": 18.7
+    },
+    {
+      "id": "recorded_heavy",
+      "instrument": "厚实中低音钢琴",
+      "start_seconds": 18.7,
+      "end_seconds": 20.4
+    },
+    {
+      "id": "gilded_helix",
+      "instrument": "明亮三角钢琴",
+      "start_seconds": 20.4,
+      "end_seconds": 22.099999999999998
+    },
+    {
+      "id": "weave_cross",
+      "instrument": "轻巧断奏钢琴",
+      "start_seconds": 22.099999999999998,
+      "end_seconds": 23.8
+    },
+    {
+      "id": "crown_orbit",
+      "instrument": "通透竖琴",
+      "start_seconds": 23.8,
+      "end_seconds": 25.5
+    },
+    {
+      "id": "stern_fan",
+      "instrument": "温暖中音竖琴",
+      "start_seconds": 25.5,
+      "end_seconds": 27.2
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "checks": 332,
+  "distinct_sample_hashes": 128,
+  "failures": [],
+  "families": {
+    "harp": 3,
+    "piano": 10,
+    "strings": 3
+  },
+  "native_mix_peak": 0.099761962890625,
+  "preview_seconds": 8,
+  "sample_count": 128,
+  "scope": "Current palette source/production metadata, all128 actual sample hashes PCM format endpoints and headroom, unchanged weapon stats and visual classes, fixed scan voices, and production stereo ensemble compilation with repeated same-type piano. Backing and feedback muted for isolated audition; human listening remains subjective."
+}

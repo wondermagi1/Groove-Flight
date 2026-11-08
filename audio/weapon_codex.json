@@ -18,58 +18,58 @@
 			"cadence_total": 1.0,
 			"family": "pulse",
 			"id": "pulse",
-			"instrument": "钢琴",
+			"instrument": "柔和三角钢琴",
 			"name": "脉冲机炮",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 27384,
+					"bytes": 37086,
 					"path": "res://audio/arsenal/notes/inst_pulse_0.wav",
 					"pitch": 0,
-					"sha256": "5c8f330f89a8f9690c40045d127bea3ee35260365cb39e4c93a4ba7c28cb455d"
+					"sha256": "788a99360971a8f3385a500ef6014474903638763c2b950244eb41dbe887c4b8"
 				},
 				{
-					"bytes": 27384,
+					"bytes": 37086,
 					"path": "res://audio/arsenal/notes/inst_pulse_1.wav",
 					"pitch": 1,
-					"sha256": "168b8a43e8d4a7963da682645c47f4354d6265a77908a1b8188f00af9ff078ba"
+					"sha256": "48231f9dfecc44ded6aaa3947290a15dce6325cad57db586b7ac80673ed4ac86"
 				},
 				{
-					"bytes": 27384,
+					"bytes": 37086,
 					"path": "res://audio/arsenal/notes/inst_pulse_2.wav",
 					"pitch": 2,
-					"sha256": "f7e8108c8c5f2d52f32fa481fed66f4cef656f7512b579bd3b09ae26babd7122"
+					"sha256": "c482f2c3e25169cec93d6d8472e29f84fc1a05bf6cd82c56e931a5c60ae7017f"
 				},
 				{
-					"bytes": 27384,
+					"bytes": 37086,
 					"path": "res://audio/arsenal/notes/inst_pulse_3.wav",
 					"pitch": 3,
-					"sha256": "3461620f0a6f9875c98e3635d04e25f95928332e13ed11ebd785764ccc833342"
+					"sha256": "645bbbcb0b7e9b6481d816086e6f937720dbc8ed5b86ebd4417bc38cf864478b"
 				},
 				{
-					"bytes": 27384,
+					"bytes": 37086,
 					"path": "res://audio/arsenal/notes/inst_pulse_4.wav",
 					"pitch": 4,
-					"sha256": "cd4f4ee43bf714ba9586e480c52164f969fc434d2401fc6593a09523c0047f9a"
+					"sha256": "cbc1244734d4b36530e00fcac09a667798fea6785eed08817301b0d274880482"
 				},
 				{
-					"bytes": 27384,
+					"bytes": 37086,
 					"path": "res://audio/arsenal/notes/inst_pulse_5.wav",
 					"pitch": 5,
-					"sha256": "6058af6f7b4e0d192874c1e2e954afc4ca7b1083e688f67d9325aa49d361cf28"
+					"sha256": "e7c67510a1178fe4b71f9f916a14b1d44f51f3fd1386c6851ba373e745bf9252"
 				},
 				{
-					"bytes": 27384,
+					"bytes": 37086,
 					"path": "res://audio/arsenal/notes/inst_pulse_6.wav",
 					"pitch": 6,
-					"sha256": "30a6fd2982539159990f58eee5f603270e9c7486200009df5cae165f8ae64848"
+					"sha256": "707d001ab8c35ca897f7e15b033c986a5136cc66ce61dd73eaa9ab2854c30c74"
 				},
 				{
-					"bytes": 27384,
+					"bytes": 37086,
 					"path": "res://audio/arsenal/notes/inst_pulse_7.wav",
 					"pitch": 7,
-					"sha256": "c52b744ef9d1913097e5451cf6c5f52964f18d1b0f00f11fa88b739890d7050e"
+					"sha256": "bd4119def8942c8bc8ca0d92b64fde0d9cddf6bef5728ab6289a193ee0f54316"
 				}
 			],
 			"voice": "inst_pulse"
@@ -88,58 +88,58 @@
 			"cadence_total": 1.0,
 			"family": "scatter",
 			"id": "scatter",
-			"instrument": "军鼓",
+			"instrument": "短奏钢琴",
 			"name": "星砂霰弹",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 17682,
+					"bytes": 20770,
 					"path": "res://audio/arsenal/notes/inst_scatter_0.wav",
 					"pitch": 0,
-					"sha256": "069767256a7fd62eddaa71d59e47f0bb4d2b88d976a73c211d3b6a1ed2a8a3a7"
+					"sha256": "71b911f233bdd57a1ded9479ddc96fd72745d02922fe212327095e1fa3631358"
 				},
 				{
-					"bytes": 17682,
+					"bytes": 20770,
 					"path": "res://audio/arsenal/notes/inst_scatter_1.wav",
 					"pitch": 1,
-					"sha256": "069767256a7fd62eddaa71d59e47f0bb4d2b88d976a73c211d3b6a1ed2a8a3a7"
+					"sha256": "b36daceccd50b220695bab783a8f12a55f2dfa6a876750c78615a1bb174a9f28"
 				},
 				{
-					"bytes": 17682,
+					"bytes": 20770,
 					"path": "res://audio/arsenal/notes/inst_scatter_2.wav",
 					"pitch": 2,
-					"sha256": "069767256a7fd62eddaa71d59e47f0bb4d2b88d976a73c211d3b6a1ed2a8a3a7"
+					"sha256": "be499b9497cd3a4b312d532a6599aae54f479f62fceb5ee6502aa48c7fb17493"
 				},
 				{
-					"bytes": 17682,
+					"bytes": 20770,
 					"path": "res://audio/arsenal/notes/inst_scatter_3.wav",
 					"pitch": 3,
-					"sha256": "069767256a7fd62eddaa71d59e47f0bb4d2b88d976a73c211d3b6a1ed2a8a3a7"
+					"sha256": "d46c9372790796f0443892b26c922081f68f917ce18eddb7dae9293b380b1014"
 				},
 				{
-					"bytes": 17682,
+					"bytes": 20770,
 					"path": "res://audio/arsenal/notes/inst_scatter_4.wav",
 					"pitch": 4,
-					"sha256": "069767256a7fd62eddaa71d59e47f0bb4d2b88d976a73c211d3b6a1ed2a8a3a7"
+					"sha256": "9f55d6bb7edb25412f249fffabdf1a7961a10894ed0c365a5816cec672c2102a"
 				},
 				{
-					"bytes": 17682,
+					"bytes": 20770,
 					"path": "res://audio/arsenal/notes/inst_scatter_5.wav",
 					"pitch": 5,
-					"sha256": "069767256a7fd62eddaa71d59e47f0bb4d2b88d976a73c211d3b6a1ed2a8a3a7"
+					"sha256": "4ddf0cfd5742b8e6d2e60ef741e71ad6345aca24ad71f229060ce03da8ff4404"
 				},
 				{
-					"bytes": 17682,
+					"bytes": 20770,
 					"path": "res://audio/arsenal/notes/inst_scatter_6.wav",
 					"pitch": 6,
-					"sha256": "069767256a7fd62eddaa71d59e47f0bb4d2b88d976a73c211d3b6a1ed2a8a3a7"
+					"sha256": "a907140931d473d8e05d1c8d86052ac840f85b41facaa08e66a47b0c3cbee448"
 				},
 				{
-					"bytes": 17682,
+					"bytes": 20770,
 					"path": "res://audio/arsenal/notes/inst_scatter_7.wav",
 					"pitch": 7,
-					"sha256": "069767256a7fd62eddaa71d59e47f0bb4d2b88d976a73c211d3b6a1ed2a8a3a7"
+					"sha256": "35ab1842fde041c7b1301e599a179907aa73c1392ca894b7e7749531d80353b3"
 				}
 			],
 			"voice": "inst_scatter"
@@ -158,58 +158,58 @@
 			"cadence_total": 1.0,
 			"family": "beam",
 			"id": "beam",
-			"instrument": "小提琴",
+			"instrument": "柔奏小提琴",
 			"name": "棱镜光束",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 30828,
+					"bytes": 29932,
 					"path": "res://audio/arsenal/notes/inst_beam_0.wav",
 					"pitch": 0,
-					"sha256": "ae1132414e3a5e38b4292a0f02ecf01e0feec3c98fd38abb5c7f55a67b99da7c"
+					"sha256": "d1ba1f42562a0ac3ea2a1f23c6d2ad9d171cda682935abf651f93c008915a9b2"
 				},
 				{
-					"bytes": 30828,
+					"bytes": 29946,
 					"path": "res://audio/arsenal/notes/inst_beam_1.wav",
 					"pitch": 1,
-					"sha256": "a3082e26d38831a8a04837ea6f96d9b7df8f457be3d40d9ca62a1f0851d3429c"
+					"sha256": "c5574624b207d221fc51e6e5a5adf08477fea505bfafb007987aa8241928347f"
 				},
 				{
-					"bytes": 30826,
+					"bytes": 29942,
 					"path": "res://audio/arsenal/notes/inst_beam_2.wav",
 					"pitch": 2,
-					"sha256": "2b3fc1cddd90ca67be010b43b8913c5fc5b8e98a95db48508cc8964abc6e6990"
+					"sha256": "3a5108085b1a0e88d071da3bb36ffe182b7dca4fd8da19248ec269008d00a6ca"
 				},
 				{
-					"bytes": 30826,
+					"bytes": 29942,
 					"path": "res://audio/arsenal/notes/inst_beam_3.wav",
 					"pitch": 3,
-					"sha256": "b1c2b662fab7929b216fd2f777b6a0a27c4a5ef6f428e8aaaceb1f16bd8f8f98"
+					"sha256": "c2997958866cee1c029ea42d9e6476f429410c8573b3b76fd54cbececf6b3be6"
 				},
 				{
-					"bytes": 30828,
+					"bytes": 29946,
 					"path": "res://audio/arsenal/notes/inst_beam_4.wav",
 					"pitch": 4,
-					"sha256": "694c9282e0fe64eaa73d5686a29f79383efd19c38e8742118598b732cf3b725f"
+					"sha256": "8ed48997a31f23f48abc00015746386bff3cd5d20489982ba0506c7ed5614b6e"
 				},
 				{
-					"bytes": 30828,
+					"bytes": 29946,
 					"path": "res://audio/arsenal/notes/inst_beam_5.wav",
 					"pitch": 5,
-					"sha256": "b158250dff3a8d5b84cdfd31bf1022a08d942cc96db521dd2d2f8d8b2424b495"
+					"sha256": "84de27f1049c17b6b7d5e7010224c000b97e4313aacb26d66ea250540f2a05a7"
 				},
 				{
-					"bytes": 30826,
+					"bytes": 29944,
 					"path": "res://audio/arsenal/notes/inst_beam_6.wav",
 					"pitch": 6,
-					"sha256": "db3737c6c3b265cdc6906c173a21d3bca7b74954ec0f8c5d483a37a079fbc68f"
+					"sha256": "2a88e59d4acbcc334b39fcc988e4a825bee14776c6fb753d33e15a666b354fe0"
 				},
 				{
-					"bytes": 30828,
+					"bytes": 29946,
 					"path": "res://audio/arsenal/notes/inst_beam_7.wav",
 					"pitch": 7,
-					"sha256": "5695c73efc3f075849e7f66e7593d22ff1c4e6e253a2b3f6acefa41f86cf8ae0"
+					"sha256": "9272728c2eec4654d96f36bb8fda670e004d157570baff7ae82f0c993a14fcb7"
 				}
 			],
 			"voice": "inst_beam"
@@ -228,58 +228,58 @@
 			"cadence_total": 1.0,
 			"family": "missile",
 			"id": "missile",
-			"instrument": "底鼓",
+			"instrument": "温暖低音钢琴",
 			"name": "彗星导弹",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 19810,
+					"bytes": 38850,
 					"path": "res://audio/arsenal/notes/inst_missile_0.wav",
 					"pitch": 0,
-					"sha256": "9e8d2d533f8c74241e903b3d963dacf69e1e212c194d48ce236101b9e4fcc800"
+					"sha256": "9763bf81f4c4065be9a86856240556a4fd08935cc2f4a82ff19f0b81753746d9"
 				},
 				{
-					"bytes": 19810,
+					"bytes": 38850,
 					"path": "res://audio/arsenal/notes/inst_missile_1.wav",
 					"pitch": 1,
-					"sha256": "9e8d2d533f8c74241e903b3d963dacf69e1e212c194d48ce236101b9e4fcc800"
+					"sha256": "1324b4a38c77a0ecd29ef3028c92ac24c12bce08ff9ceb93feef8de4bf82fb03"
 				},
 				{
-					"bytes": 19810,
+					"bytes": 38850,
 					"path": "res://audio/arsenal/notes/inst_missile_2.wav",
 					"pitch": 2,
-					"sha256": "9e8d2d533f8c74241e903b3d963dacf69e1e212c194d48ce236101b9e4fcc800"
+					"sha256": "3d1c832cb8d15e4667ad57f3f2e5ba029d156528b0b23307f5be3bbc4c2f9267"
 				},
 				{
-					"bytes": 19810,
+					"bytes": 38850,
 					"path": "res://audio/arsenal/notes/inst_missile_3.wav",
 					"pitch": 3,
-					"sha256": "9e8d2d533f8c74241e903b3d963dacf69e1e212c194d48ce236101b9e4fcc800"
+					"sha256": "4e56397f2baf7950cdbc19a6302f22cd51dae9fbc1d6227e5df3954f6d0ac056"
 				},
 				{
-					"bytes": 19810,
+					"bytes": 38850,
 					"path": "res://audio/arsenal/notes/inst_missile_4.wav",
 					"pitch": 4,
-					"sha256": "9e8d2d533f8c74241e903b3d963dacf69e1e212c194d48ce236101b9e4fcc800"
+					"sha256": "5ccbb989d7f0e3729503133ae70fe30e38b73066fe8dfc5b5cd4c9cf212ca594"
 				},
 				{
-					"bytes": 19810,
+					"bytes": 38850,
 					"path": "res://audio/arsenal/notes/inst_missile_5.wav",
 					"pitch": 5,
-					"sha256": "9e8d2d533f8c74241e903b3d963dacf69e1e212c194d48ce236101b9e4fcc800"
+					"sha256": "3961866c509568959f8ee3a20df5118eff5fbc4e240341d0ee4a7113bf84620b"
 				},
 				{
-					"bytes": 19810,
+					"bytes": 38850,
 					"path": "res://audio/arsenal/notes/inst_missile_6.wav",
 					"pitch": 6,
-					"sha256": "9e8d2d533f8c74241e903b3d963dacf69e1e212c194d48ce236101b9e4fcc800"
+					"sha256": "21efcf5965950f6ab57fb031654cd1ab0b4475c5077deb257dd338098eb1acb2"
 				},
 				{
-					"bytes": 19810,
+					"bytes": 38850,
 					"path": "res://audio/arsenal/notes/inst_missile_7.wav",
 					"pitch": 7,
-					"sha256": "9e8d2d533f8c74241e903b3d963dacf69e1e212c194d48ce236101b9e4fcc800"
+					"sha256": "90a850aae7c320e3ed7f7fafc00d63d42f3881d599ef0dcde24deafced0cb1af"
 				}
 			],
 			"voice": "inst_missile"
@@ -298,58 +298,58 @@
 			"cadence_total": 1.0,
 			"family": "nova",
 			"id": "nova",
-			"instrument": "中音萨克斯",
+			"instrument": "圆润中音钢琴",
 			"name": "新星环炮",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 23774,
+					"bytes": 36204,
 					"path": "res://audio/arsenal/notes/inst_nova_0.wav",
 					"pitch": 0,
-					"sha256": "4aa7aaf51cffcb22912efcbadb057fe73b2a62ed99392441df5cd70476d25d5c"
+					"sha256": "d5e6405c61548c6060c6ba02ac5471d03e7d7e00d90263d9bfc1d4ecd3c88b1b"
 				},
 				{
-					"bytes": 23774,
+					"bytes": 36204,
 					"path": "res://audio/arsenal/notes/inst_nova_1.wav",
 					"pitch": 1,
-					"sha256": "6299be69b6a315a02529a45df38c38bd30b3a9ab571cf613a7d78bff3b4ec089"
+					"sha256": "7572c92f69e428c223ed3db3830f661bb810ed8589262beba4f477f494b0e5ba"
 				},
 				{
-					"bytes": 23768,
+					"bytes": 36204,
 					"path": "res://audio/arsenal/notes/inst_nova_2.wav",
 					"pitch": 2,
-					"sha256": "0ff02f987449f3e13cfee2feb9a99185ece2b53057834abbc2d383d3a900190f"
+					"sha256": "ce7f39ce79c55a669726ffa671d664feef3dda61bf749771252759247424cd91"
 				},
 				{
-					"bytes": 23774,
+					"bytes": 36204,
 					"path": "res://audio/arsenal/notes/inst_nova_3.wav",
 					"pitch": 3,
-					"sha256": "4401bf7fe9defc4f1fef3fc5c01e7aff3fd92c4d22abffaa503e0b783cb0af20"
+					"sha256": "b6d7a4d26bf94905bedef5745892b708162d79edfcdc852b996bf2f2a3cedcda"
 				},
 				{
-					"bytes": 23774,
+					"bytes": 36204,
 					"path": "res://audio/arsenal/notes/inst_nova_4.wav",
 					"pitch": 4,
-					"sha256": "7f286dbcc7816cc07309df0730c9a3615bf9c1d484b9cfdfc604426ff0793ceb"
+					"sha256": "3b6593f3f2aca2c0228668ed1eccda7da47840a96aae95613e5183743cdcacd7"
 				},
 				{
-					"bytes": 23774,
+					"bytes": 36204,
 					"path": "res://audio/arsenal/notes/inst_nova_5.wav",
 					"pitch": 5,
-					"sha256": "237eb23228cf6a3c6850edf3efb5d6173fc3b7c155149faa928b3233d32991c2"
+					"sha256": "028bb6ba5d3f35d648a17d6d04c06fb0afa5e68fdd82798f8b965a5559e80510"
 				},
 				{
-					"bytes": 23774,
+					"bytes": 36204,
 					"path": "res://audio/arsenal/notes/inst_nova_6.wav",
 					"pitch": 6,
-					"sha256": "3b6ca34e9dbcb18856dc96a21454d2d0f672ce5dfdd0856fd4f1e18d98410435"
+					"sha256": "17856d936bbc09439d39fce9b6659631d023e2f75b13747dda059cbfcd987e26"
 				},
 				{
-					"bytes": 23772,
+					"bytes": 36204,
 					"path": "res://audio/arsenal/notes/inst_nova_7.wav",
 					"pitch": 7,
-					"sha256": "bdaf2c1a0de635bef87c2456bf011c4ac7e2f456473f8d04937ce53dd2830436"
+					"sha256": "b3861ef1882100e93be50a56c1beb0d8046dbb0ff57f296ba7e83dcb0b58665a"
 				}
 			],
 			"voice": "inst_nova"
@@ -368,58 +368,58 @@
 			"cadence_total": 1.0,
 			"family": "chain",
 			"id": "chain",
-			"instrument": "颤音琴＋电子泛音",
+			"instrument": "柔和高音竖琴",
 			"name": "跃迁电弧",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 26504,
+					"bytes": 33118,
 					"path": "res://audio/arsenal/notes/inst_chain_0.wav",
 					"pitch": 0,
-					"sha256": "0f890aec2afda5f1a07033c5fed3a15f02e08f9d8d419a48bb3118f9c45652e9"
+					"sha256": "b65317e38f8080c119b929d98b6de7861dd008fe60df74488e52c184845f2bd4"
 				},
 				{
-					"bytes": 26504,
+					"bytes": 33118,
 					"path": "res://audio/arsenal/notes/inst_chain_1.wav",
 					"pitch": 1,
-					"sha256": "86fd0a3a3494a19ec52fd85285c52bc575a6372e1bf5369f74ac8ea2bc6101fc"
+					"sha256": "0e0bb4d49ee554a277e7ad33afbcade2e4293632f5cc610a1da5390c69e58b09"
 				},
 				{
-					"bytes": 26504,
+					"bytes": 33118,
 					"path": "res://audio/arsenal/notes/inst_chain_2.wav",
 					"pitch": 2,
-					"sha256": "9d2ef01972ba0bb08eab242c2753caa762b9cae8a3c0e3eb94ece37436dd77d5"
+					"sha256": "dfd31d90cdfe477367b91744e5bf0d6f4917f6214f63ecf0c55df3bf34a507b6"
 				},
 				{
-					"bytes": 26504,
+					"bytes": 33118,
 					"path": "res://audio/arsenal/notes/inst_chain_3.wav",
 					"pitch": 3,
-					"sha256": "c8015876ad8d61afb07abaa1f13f7e438f0ad5841fc913a96572d623d7467967"
+					"sha256": "8cfa646f4b9924c19e6b84e4ab3b179ae2b3e0d9f7bce1059784e183a3ee1946"
 				},
 				{
-					"bytes": 26504,
+					"bytes": 33118,
 					"path": "res://audio/arsenal/notes/inst_chain_4.wav",
 					"pitch": 4,
-					"sha256": "2345ba3e7b6e9586019e2596a83aebc2911130c8abf32f3e71df3b3c3df74453"
+					"sha256": "44c46c75c4ed85e668739297559a0f417d2cc3f29b8a01eb805a2908ccd509b3"
 				},
 				{
-					"bytes": 26504,
+					"bytes": 33118,
 					"path": "res://audio/arsenal/notes/inst_chain_5.wav",
 					"pitch": 5,
-					"sha256": "69e27b2862916844fdb98cc8bd6de4f9b6f8935b692ec0a116a927c1671fff09"
+					"sha256": "1118288ce70c0ce4695696f76017f33b5fc6934bdad8157741408349b2d17369"
 				},
 				{
-					"bytes": 26504,
+					"bytes": 33118,
 					"path": "res://audio/arsenal/notes/inst_chain_6.wav",
 					"pitch": 6,
-					"sha256": "9a7e8c00a5546603180626e3fb23b00399a13b78eda72e69877b5fc4ae51a8a0"
+					"sha256": "568f2d32a2d8e4b91fdf112f99510c3563b3d7048ceb4d935fdb01e8ee156d37"
 				},
 				{
-					"bytes": 26504,
+					"bytes": 33118,
 					"path": "res://audio/arsenal/notes/inst_chain_7.wav",
 					"pitch": 7,
-					"sha256": "1ea3dc98a23a517191ed1c809f3c2e3dbf0ed92b8fc1640fcfca413c8d374553"
+					"sha256": "4f195ee75ced8457a3e3b4e18695b0a009420c24e0cc4bd34e8559a545fa9d8f"
 				}
 			],
 			"voice": "inst_chain"
@@ -438,58 +438,58 @@
 			"cadence_total": 1.0,
 			"family": "rail",
 			"id": "rail",
-			"instrument": "大提琴",
+			"instrument": "柔奏大提琴",
 			"name": "苍穹轨炮",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 25620,
+					"bytes": 35198,
 					"path": "res://audio/arsenal/notes/inst_rail_0.wav",
 					"pitch": 0,
-					"sha256": "b0a18c6bad30e6e236e3b38880729c50f964937459fa98087243b7bde3c41c45"
+					"sha256": "87016584c89f20a45c6745e3e0e3686e61b2bad61fd8756a5b6f68fed662697e"
 				},
 				{
-					"bytes": 25620,
+					"bytes": 35238,
 					"path": "res://audio/arsenal/notes/inst_rail_1.wav",
 					"pitch": 1,
-					"sha256": "432ecd328afd1949055b453fb20fff7dbcfb6d334049c67ea9d6eb1e3ab51435"
+					"sha256": "c3d453f948c3ca997746a3019d3fb69008741aa6e0caf604683a4aa6cdc4f1cf"
 				},
 				{
-					"bytes": 25620,
+					"bytes": 35238,
 					"path": "res://audio/arsenal/notes/inst_rail_2.wav",
 					"pitch": 2,
-					"sha256": "de959b760e37f8406f7bb3ead57807e823dbbe7ee513fbf03440a248b786cbc9"
+					"sha256": "8ae64c52c309b361da607813b48f1bd9eceabdbd63896f45299fb8f115b632a9"
 				},
 				{
-					"bytes": 25620,
+					"bytes": 35164,
 					"path": "res://audio/arsenal/notes/inst_rail_3.wav",
 					"pitch": 3,
-					"sha256": "5de8aaba667133b441d20ba3b9686a1a31add0890dc41578107f6415c02b5ef6"
+					"sha256": "afd71761b219859b101f9de07160d9a834d6011add9f1df6b4fffba8390ec3c8"
 				},
 				{
-					"bytes": 25620,
+					"bytes": 35186,
 					"path": "res://audio/arsenal/notes/inst_rail_4.wav",
 					"pitch": 4,
-					"sha256": "27074dab287a1d7ff85f9b440494da132722b7f0018e19d3748cac777c8fcf83"
+					"sha256": "d8f2e068569b1b34369e060c73dd3be6f00ee3017f4ce8e971db36e21faee858"
 				},
 				{
-					"bytes": 25620,
+					"bytes": 35192,
 					"path": "res://audio/arsenal/notes/inst_rail_5.wav",
 					"pitch": 5,
-					"sha256": "816f0f554440547afd081edf642aac4985ba588b655a7494362fc579ef37dc22"
+					"sha256": "582464986d3831812f5c3e7e15c4b6ecbf10c39521969b84304cbc4963403c7f"
 				},
 				{
-					"bytes": 25536,
+					"bytes": 35238,
 					"path": "res://audio/arsenal/notes/inst_rail_6.wav",
 					"pitch": 6,
-					"sha256": "03d49a7d883ad29bf1b3419f3f9d56b035cbfccf02b0c836f7e40821b9add90d"
+					"sha256": "7a57da04adc68837303ecac2fbfddd7e8bba8804dc1ab191f28a3c4386de7981"
 				},
 				{
-					"bytes": 25536,
+					"bytes": 35238,
 					"path": "res://audio/arsenal/notes/inst_rail_7.wav",
 					"pitch": 7,
-					"sha256": "71c4d763d5dcac682959ffb3533fbcb74d01b9ba407dc87d28adb4e64ee0c92e"
+					"sha256": "d15dd0f952b450f426e09da37533ab648facedfd582c853e7fe7da980d09a110"
 				}
 			],
 			"voice": "inst_rail"
@@ -508,58 +508,58 @@
 			"cadence_total": 1.0,
 			"family": "pulse",
 			"id": "pulse_needle",
-			"instrument": "钢弦吉他",
+			"instrument": "清亮高音钢琴",
 			"name": "星针狙击器",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 26504,
+					"bytes": 28266,
 					"path": "res://audio/arsenal/notes/inst_pulse_needle_0.wav",
 					"pitch": 0,
-					"sha256": "81277753c329a1852a6db6a79b9fcd0e221f8a8e35b552850f9a5fcf2fd359fc"
+					"sha256": "71307dcb1d7ef0ad8a538625d22c2940bb63a3705516b90e1ec1182bd97f1a47"
 				},
 				{
-					"bytes": 26504,
+					"bytes": 28266,
 					"path": "res://audio/arsenal/notes/inst_pulse_needle_1.wav",
 					"pitch": 1,
-					"sha256": "77d1233dcd8f6aca311ad884213b82be108b1b069e222e1814f3b9af62640634"
+					"sha256": "9c4466474a72292890a75eb7360d7a60b27707e1928972e06f3a0a1c16c78753"
 				},
 				{
-					"bytes": 26504,
+					"bytes": 28266,
 					"path": "res://audio/arsenal/notes/inst_pulse_needle_2.wav",
 					"pitch": 2,
-					"sha256": "1106597d92250e067cd864f462a4a29a2bba9cb00aa263293627ca87adc030fb"
+					"sha256": "006522f736bf266ce99159f1dbfcd28ae77d62f4464b2627be55ba083d25a6d2"
 				},
 				{
-					"bytes": 26504,
+					"bytes": 28266,
 					"path": "res://audio/arsenal/notes/inst_pulse_needle_3.wav",
 					"pitch": 3,
-					"sha256": "345142b3a00d8894e3479565f2b522f3ef8148b6bbc88d3bbf84f5a37f03f7fd"
+					"sha256": "934a1bd59b7f4aac85fdb6fa0333aed7b893e97979028497e12509cb9948ed56"
 				},
 				{
-					"bytes": 26504,
+					"bytes": 28266,
 					"path": "res://audio/arsenal/notes/inst_pulse_needle_4.wav",
 					"pitch": 4,
-					"sha256": "a40b92284c637dff4b0830ba57a2319a312410e7e596b467489b7604e43008f2"
+					"sha256": "c8fe04826ac4b120cf7cd5d0956a69adc0ef84e3fa3c6cf91d5d2615a9dee74d"
 				},
 				{
-					"bytes": 26504,
+					"bytes": 28266,
 					"path": "res://audio/arsenal/notes/inst_pulse_needle_5.wav",
 					"pitch": 5,
-					"sha256": "56ec19516680bf036a9843fd0cfe7061cd644334e34f480e68cc5cb2b705046a"
+					"sha256": "30baf87f39bc3a47b16a6ecc0c06096c6148fa1383727a1c5a21f580861270cb"
 				},
 				{
-					"bytes": 26504,
+					"bytes": 28266,
 					"path": "res://audio/arsenal/notes/inst_pulse_needle_6.wav",
 					"pitch": 6,
-					"sha256": "64954f5d349c602030737ab2d7320dae43040d859840442febb1039ce39f230f"
+					"sha256": "95e636d3e677ed3fd0e5b539f88b7c2406236bc2199af35ade65646a61d0f3a1"
 				},
 				{
-					"bytes": 26504,
+					"bytes": 28266,
 					"path": "res://audio/arsenal/notes/inst_pulse_needle_7.wav",
 					"pitch": 7,
-					"sha256": "2ab04090f496a9db6b94e0abbd6ee830da90949c3c4a7ebe64408184cc316b6b"
+					"sha256": "171b74ea24de0b294fed55749d10a21fc555f2961a924dda41f170e13a24d9f4"
 				}
 			],
 			"voice": "inst_pulse_needle"
@@ -578,58 +578,58 @@
 			"cadence_total": 1.0,
 			"family": "scatter",
 			"id": "scatter_prism",
-			"instrument": "低音通鼓",
+			"instrument": "珠光钢琴",
 			"name": "七彩折光匣",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 24298,
+					"bytes": 34000,
 					"path": "res://audio/arsenal/notes/inst_scatter_prism_0.wav",
 					"pitch": 0,
-					"sha256": "7d676093df0c9d98ade124809ee9083df6b8ad47e9b04156268c0e759d5d2578"
+					"sha256": "e3486b80ec8680b258cc3abfdc4651bb238cbfde86345445640e7c056e8e5e6a"
 				},
 				{
-					"bytes": 24298,
+					"bytes": 34000,
 					"path": "res://audio/arsenal/notes/inst_scatter_prism_1.wav",
 					"pitch": 1,
-					"sha256": "7d676093df0c9d98ade124809ee9083df6b8ad47e9b04156268c0e759d5d2578"
+					"sha256": "5a31853851e51ee90bf612fed0d17c2d0a549f4b7fe7bf092ce1926eaf8d2b3a"
 				},
 				{
-					"bytes": 24298,
+					"bytes": 34000,
 					"path": "res://audio/arsenal/notes/inst_scatter_prism_2.wav",
 					"pitch": 2,
-					"sha256": "7d676093df0c9d98ade124809ee9083df6b8ad47e9b04156268c0e759d5d2578"
+					"sha256": "b66070a0c73cb9613474a66e0d7c682b3ad4e8b4e17ea2fa15e30a86bf8f4d0d"
 				},
 				{
-					"bytes": 24298,
+					"bytes": 34000,
 					"path": "res://audio/arsenal/notes/inst_scatter_prism_3.wav",
 					"pitch": 3,
-					"sha256": "7d676093df0c9d98ade124809ee9083df6b8ad47e9b04156268c0e759d5d2578"
+					"sha256": "58be7a4b29ec7ccbcbea7dde1aef9887c0c7fa611deb6a91be5f03efb9660bc9"
 				},
 				{
-					"bytes": 24298,
+					"bytes": 34000,
 					"path": "res://audio/arsenal/notes/inst_scatter_prism_4.wav",
 					"pitch": 4,
-					"sha256": "7d676093df0c9d98ade124809ee9083df6b8ad47e9b04156268c0e759d5d2578"
+					"sha256": "1cc290728fef81e871234b2fc865b1c01d7fc7f11c0dd76b95290258af0b6d53"
 				},
 				{
-					"bytes": 24298,
+					"bytes": 34000,
 					"path": "res://audio/arsenal/notes/inst_scatter_prism_5.wav",
 					"pitch": 5,
-					"sha256": "7d676093df0c9d98ade124809ee9083df6b8ad47e9b04156268c0e759d5d2578"
+					"sha256": "f824f537b94bd2d79487995ea86f21f70f5af8fb465699f95242fd5fa6ef1017"
 				},
 				{
-					"bytes": 24298,
+					"bytes": 34000,
 					"path": "res://audio/arsenal/notes/inst_scatter_prism_6.wav",
 					"pitch": 6,
-					"sha256": "7d676093df0c9d98ade124809ee9083df6b8ad47e9b04156268c0e759d5d2578"
+					"sha256": "9bd95e32871ae8b040e4fd1274c9e43687538e0015654afcb301d14414af36e3"
 				},
 				{
-					"bytes": 24298,
+					"bytes": 34000,
 					"path": "res://audio/arsenal/notes/inst_scatter_prism_7.wav",
 					"pitch": 7,
-					"sha256": "7d676093df0c9d98ade124809ee9083df6b8ad47e9b04156268c0e759d5d2578"
+					"sha256": "6a0d82c4632a98190b54d3d8195b2c018f6b58a1178b761d3da3a6d42d51c347"
 				}
 			],
 			"voice": "inst_scatter_prism"
@@ -648,58 +648,58 @@
 			"cadence_total": 1.0,
 			"family": "beam",
 			"id": "beam_split",
-			"instrument": "合成弦乐＋电子光芯",
+			"instrument": "柔奏中提琴",
 			"name": "双生棱镜",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 28266,
+					"bytes": 36122,
 					"path": "res://audio/arsenal/notes/inst_beam_split_0.wav",
 					"pitch": 0,
-					"sha256": "8c3bd74df03196eb4f43b2ccdaa18a0dda417a3d6320cbbf7e273e5dec043c19"
+					"sha256": "e8757925045af7002a29651dfaac6e6fb3aa3c82478242f89553cca4812ce829"
 				},
 				{
-					"bytes": 28266,
+					"bytes": 36080,
 					"path": "res://audio/arsenal/notes/inst_beam_split_1.wav",
 					"pitch": 1,
-					"sha256": "2f312bbfe0b48ab1f70e850f814f78fc31754913cd9e963d67f631b722b2d0ed"
+					"sha256": "e9c67240bd3a6817b87dc02d2efc6c42e362fae368fcf2d8294b44760f812c13"
 				},
 				{
-					"bytes": 28266,
+					"bytes": 36088,
 					"path": "res://audio/arsenal/notes/inst_beam_split_2.wav",
 					"pitch": 2,
-					"sha256": "45d94e48cd265b7997701bef3c0e1c9732224bf74c46b284955046e8793410e7"
+					"sha256": "4c5b715a97e87fc9badc7d8a68c08f11acf284ece3d768baf8544a57d1a82fd6"
 				},
 				{
-					"bytes": 28266,
+					"bytes": 36122,
 					"path": "res://audio/arsenal/notes/inst_beam_split_3.wav",
 					"pitch": 3,
-					"sha256": "8c39be98b67e896484e00cb7292a05870085222344ffdc7a607d6feab5abab56"
+					"sha256": "250d10d5053543e2cd21b17e2280ac570025f181c7ea19e838b126b30bdd92d6"
 				},
 				{
-					"bytes": 28266,
+					"bytes": 36122,
 					"path": "res://audio/arsenal/notes/inst_beam_split_4.wav",
 					"pitch": 4,
-					"sha256": "810a4caebc6a64674b3c71a672a3e28dec691cdba1239ed2d9627a2218f86fdc"
+					"sha256": "d56eb8a506ac819f77a761aed6d80b88183eb39c9a7b39de3caeb16e1394208d"
 				},
 				{
-					"bytes": 28266,
+					"bytes": 36122,
 					"path": "res://audio/arsenal/notes/inst_beam_split_5.wav",
 					"pitch": 5,
-					"sha256": "c5699809048f4396aef262aa846cdedb6405b74916e5f14346f7c8f03b59c445"
+					"sha256": "815f6d0fdcbc5b93ccda80b7fec29bffac15c915788ac8b469a73149433e2bba"
 				},
 				{
-					"bytes": 28266,
+					"bytes": 36122,
 					"path": "res://audio/arsenal/notes/inst_beam_split_6.wav",
 					"pitch": 6,
-					"sha256": "4b7e0514f2edbe0a54c59b20545c4c8ca0af73fc9e49ac6697536f7183701796"
+					"sha256": "0e623969e8062cc95e55263f57e2f70650b0339c67a57cad5e950da196e218c4"
 				},
 				{
-					"bytes": 28266,
+					"bytes": 36122,
 					"path": "res://audio/arsenal/notes/inst_beam_split_7.wav",
 					"pitch": 7,
-					"sha256": "6c27e30b76e444d8c66c2a627519a3a01c519f195f0b68e80025d1aa675c8077"
+					"sha256": "712a82a9902bd3582e45da623db745b074f96b174123bf1e40002fe7afd7b058"
 				}
 			],
 			"voice": "inst_beam_split"
@@ -718,58 +718,58 @@
 			"cadence_total": 1.0,
 			"family": "rail",
 			"id": "rail_horizon",
-			"instrument": "低音钢琴",
+			"instrument": "深色低音钢琴",
 			"name": "地平线终奏",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 32676,
+					"bytes": 52520,
 					"path": "res://audio/arsenal/notes/inst_rail_horizon_0.wav",
 					"pitch": 0,
-					"sha256": "253341216b92ca99b5141f2791c7a9fc3d8c15951af50d9a41b39aa744aa59ec"
+					"sha256": "51dc778680c127b5bab659537f0fcf46ae00f19a7f520404025b71690198294f"
 				},
 				{
-					"bytes": 32676,
+					"bytes": 52520,
 					"path": "res://audio/arsenal/notes/inst_rail_horizon_1.wav",
 					"pitch": 1,
-					"sha256": "2074c8203f049dabcc125b02d8964365d16f33759b2888a0ee630372b00995ec"
+					"sha256": "f354d77beebfca8ed3901c7223b4cde29710e6fdbfc268a9a8cb73c1d6f37d21"
 				},
 				{
-					"bytes": 32676,
+					"bytes": 52520,
 					"path": "res://audio/arsenal/notes/inst_rail_horizon_2.wav",
 					"pitch": 2,
-					"sha256": "396fd73874d4d1460c855647bc2aa5e01912dc95cfe0b8d955db918538649cfd"
+					"sha256": "ad2ee75bbd7b0265697934582ecdab90f606fbc51c6306968c12ef5a36f7c7e2"
 				},
 				{
-					"bytes": 32676,
+					"bytes": 52520,
 					"path": "res://audio/arsenal/notes/inst_rail_horizon_3.wav",
 					"pitch": 3,
-					"sha256": "1e1bc50abede8d1800dc77d59d77fb8040b9a4e53ef953a40365f25aaa5d7bcc"
+					"sha256": "054e3aa7dde11156718ebe4a5984f2ac9a72396ac03177563d4ee767d7983d99"
 				},
 				{
-					"bytes": 32676,
+					"bytes": 52520,
 					"path": "res://audio/arsenal/notes/inst_rail_horizon_4.wav",
 					"pitch": 4,
-					"sha256": "df05b63fd00433cc6d43aa6dc7a4599cc4767ad91c52f01b50dd66576b6bf17e"
+					"sha256": "8a857b34f7fa61f88d0586169fd2e6103361a823f5c7420a72c7badfec50e018"
 				},
 				{
-					"bytes": 32676,
+					"bytes": 52520,
 					"path": "res://audio/arsenal/notes/inst_rail_horizon_5.wav",
 					"pitch": 5,
-					"sha256": "8808abc1b828fc6233828d6b0e5d82fb059fd2bfdf839c36f14ad227345a9761"
+					"sha256": "ccbea851dad0a5c50a244d79c97ee11f23f059220d51fa263dc885a7771389f8"
 				},
 				{
-					"bytes": 32676,
+					"bytes": 52520,
 					"path": "res://audio/arsenal/notes/inst_rail_horizon_6.wav",
 					"pitch": 6,
-					"sha256": "1781ba834712d32baa8233ec99a4b7b22b72389e1fdc5167e326554c47fb76c4"
+					"sha256": "1031bf1e3f365724338b0e19d47c105f82be3350457683f9a57da5f452488064"
 				},
 				{
-					"bytes": 32676,
+					"bytes": 52520,
 					"path": "res://audio/arsenal/notes/inst_rail_horizon_7.wav",
 					"pitch": 7,
-					"sha256": "8f5eb699f8e68de5edb4dd3643008ce2d927d90bc5569e03c7c184d628f19521"
+					"sha256": "787de353139d44fc538d4d92045d34e7036d1a2e6305614fa6693b123b927504"
 				}
 			],
 			"voice": "inst_rail_horizon"
@@ -788,58 +788,58 @@
 			"cadence_total": 1.0,
 			"family": "rail",
 			"id": "recorded_heavy",
-			"instrument": "定音鼓",
+			"instrument": "厚实中低音钢琴",
 			"name": "终压攻城铳",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 32236,
+					"bytes": 44144,
 					"path": "res://audio/arsenal/notes/inst_recorded_heavy_0.wav",
 					"pitch": 0,
-					"sha256": "f60c45ed393c19e4d7a77ca596155bd47da01d24f64912e896ac7ed9f8c95cfd"
+					"sha256": "76d2c6d71108f20dddc2afb5058ca3ea67df4d82fe4e1681cb5d5df631cb65f5"
 				},
 				{
-					"bytes": 32236,
+					"bytes": 44144,
 					"path": "res://audio/arsenal/notes/inst_recorded_heavy_1.wav",
 					"pitch": 1,
-					"sha256": "b1d7ce133b01fe78929be9b6607d90006c2911d1bbee45e1b6577dcf0b4d2791"
+					"sha256": "8decc87206961199057f9d22b71387e2cee93cd893c3d55d4007f775b9b0a89a"
 				},
 				{
-					"bytes": 32236,
+					"bytes": 44144,
 					"path": "res://audio/arsenal/notes/inst_recorded_heavy_2.wav",
 					"pitch": 2,
-					"sha256": "b230c477815b0bbb4322856d59a839bcbeb878226102970369e14e84d4a88d69"
+					"sha256": "7cf8fb8f2122357445e4ab9f747dd36d104cddddc5d6f0293ba067d017dc263a"
 				},
 				{
-					"bytes": 32236,
+					"bytes": 44144,
 					"path": "res://audio/arsenal/notes/inst_recorded_heavy_3.wav",
 					"pitch": 3,
-					"sha256": "7aea58c5dbaddc4f1971dcd47c5416b3acc9ce010a27e4f6051c3118eca585b7"
+					"sha256": "4e807112bc228ee880251d98a6e8ed7fc26fbedc9802bf24ecdce1bb5b48cd54"
 				},
 				{
-					"bytes": 32236,
+					"bytes": 44144,
 					"path": "res://audio/arsenal/notes/inst_recorded_heavy_4.wav",
 					"pitch": 4,
-					"sha256": "6a80ceb58083378219b6db21598d01d120a307c354571131df269059910eeded"
+					"sha256": "e67b84f0e75c81f8740f6f5e4e6ca0b9c8573dcc0c3d3a8c84edc81759fb4880"
 				},
 				{
-					"bytes": 32236,
+					"bytes": 44144,
 					"path": "res://audio/arsenal/notes/inst_recorded_heavy_5.wav",
 					"pitch": 5,
-					"sha256": "b3fd1bb5da8712670b5484399bfd76b614031b146aac5a42dfd11c26ee803ff7"
+					"sha256": "a3d302c3b881ec67dec30e81d2c0fec278fd61bb8ab6a22bc1c2c3770611cbf9"
 				},
 				{
-					"bytes": 32236,
+					"bytes": 44144,
 					"path": "res://audio/arsenal/notes/inst_recorded_heavy_6.wav",
 					"pitch": 6,
-					"sha256": "7b1cc5097909499acdbd94863f9a3712c286229ffeddcc2fc7a624cfcaa6b180"
+					"sha256": "58649a925322bfd32209219a5780eae8cf031c9b08c587dcf00dc850a705bf94"
 				},
 				{
-					"bytes": 32236,
+					"bytes": 44144,
 					"path": "res://audio/arsenal/notes/inst_recorded_heavy_7.wav",
 					"pitch": 7,
-					"sha256": "9949735827bfe6d046111b2cfa08e357ca28e144480f96d0c277362ed42ce36e"
+					"sha256": "36c490c708c564e51f698e75dc139ea50d384412d404bab9a21c71bb19182e99"
 				}
 			],
 			"voice": "inst_recorded_heavy"
@@ -858,58 +858,58 @@
 			"cadence_total": 1.0,
 			"family": "nova",
 			"id": "gilded_helix",
-			"instrument": "长笛",
+			"instrument": "明亮三角钢琴",
 			"name": "鎏金螺旋阵",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 24654,
+					"bytes": 38408,
 					"path": "res://audio/arsenal/notes/inst_gilded_helix_0.wav",
 					"pitch": 0,
-					"sha256": "cfb947b7586c9fd3068dd45b8ba6810cbc71bc3f094ad0ff22032b34e33a51ae"
+					"sha256": "15ba03f76d7b6748749a29a17184e48d11ae0cc38b63dd861f4d774dce965cfb"
 				},
 				{
-					"bytes": 24654,
+					"bytes": 38408,
 					"path": "res://audio/arsenal/notes/inst_gilded_helix_1.wav",
 					"pitch": 1,
-					"sha256": "8f46270aa3c6ff2af118a669bf5d1f229668f7758ce40ddb85572f6240615524"
+					"sha256": "b8ede3ab38fadf2f8e31aebd83b48ae8ea17ff6c202929a79c99bb5fefc57cc3"
 				},
 				{
-					"bytes": 24654,
+					"bytes": 38408,
 					"path": "res://audio/arsenal/notes/inst_gilded_helix_2.wav",
 					"pitch": 2,
-					"sha256": "d4f643a7d2739bfe749989d05b3e3aa4fa0dff677bda00cb837b260f273783e8"
+					"sha256": "0443c39f9bc3e91b31fb181a03fe2ce434d226c3c32c3a2183cdd10765041c45"
 				},
 				{
-					"bytes": 24654,
+					"bytes": 38408,
 					"path": "res://audio/arsenal/notes/inst_gilded_helix_3.wav",
 					"pitch": 3,
-					"sha256": "db0d293c24ab5ba66cb5b24bccb9633de9200b4487ee21a274c79b562616e89b"
+					"sha256": "56ca56ebaf84e3f3f13a58c093e285662fc57d61eb75d9dbd2b493e9e44e5964"
 				},
 				{
-					"bytes": 24654,
+					"bytes": 38408,
 					"path": "res://audio/arsenal/notes/inst_gilded_helix_4.wav",
 					"pitch": 4,
-					"sha256": "b4209e1a3f0c60730a48e4ac5aee8ca8ed963cb3b3424fa715dd4a30d966809e"
+					"sha256": "56b8652748555b94b74c108992caef3d63b1b6bb592a493e4a52a95f924cdf7b"
 				},
 				{
-					"bytes": 24654,
+					"bytes": 38408,
 					"path": "res://audio/arsenal/notes/inst_gilded_helix_5.wav",
 					"pitch": 5,
-					"sha256": "f2fb8dab41d2b8ded38fe5cab84f5b0c5d362690437af9757de220f541773a76"
+					"sha256": "436fe47c99791d1c9e03189d7e6c4838af58d3555f8ebd093d0afb8fe77c3173"
 				},
 				{
-					"bytes": 24652,
+					"bytes": 38408,
 					"path": "res://audio/arsenal/notes/inst_gilded_helix_6.wav",
 					"pitch": 6,
-					"sha256": "ffbb09cd11a82f1ba8dbf6a4d355c46b438ba34571a236461dd35d12ef42a59c"
+					"sha256": "65f557e3bf68beeca22fcb2aa500f6bfa7a6b4acc47d3d2f3659581263e9daa4"
 				},
 				{
-					"bytes": 24654,
+					"bytes": 38408,
 					"path": "res://audio/arsenal/notes/inst_gilded_helix_7.wav",
 					"pitch": 7,
-					"sha256": "d072d1dc8c7aa6edf922d8a599582754bdcc59de2b64ca564f743cfff7b7bda2"
+					"sha256": "f1cf02c02fb9b6433266904d8fc92e8b044a68449368e69eef0160fc653cf85f"
 				}
 			],
 			"voice": "inst_gilded_helix"
@@ -928,58 +928,58 @@
 			"cadence_total": 1.0,
 			"family": "pulse",
 			"id": "weave_cross",
-			"instrument": "钢片琴",
+			"instrument": "轻巧断奏钢琴",
 			"name": "虹织十字炮",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 30912,
+					"bytes": 21650,
 					"path": "res://audio/arsenal/notes/inst_weave_cross_0.wav",
 					"pitch": 0,
-					"sha256": "53675eeb88a2fc6c875b245fe0d0f8520f8fb056263327b8bdfb7eabfbf8329e"
+					"sha256": "c56b493a5888611fe97d3b99f303e20ef14a67846884136d295e5df46968f27f"
 				},
 				{
-					"bytes": 30912,
+					"bytes": 21650,
 					"path": "res://audio/arsenal/notes/inst_weave_cross_1.wav",
 					"pitch": 1,
-					"sha256": "c78e204c19a1d4f3e46a166a9e87caffa8c28d13e006eff8be17f60b437fe5c1"
+					"sha256": "e81995509164161d6f50aa775bbf6b0c9810bcf3ea53da4a1c5c15fe660ab0eb"
 				},
 				{
-					"bytes": 30912,
+					"bytes": 21650,
 					"path": "res://audio/arsenal/notes/inst_weave_cross_2.wav",
 					"pitch": 2,
-					"sha256": "97b7356bbf29ad626bb7702d34e218520867fbf948b03c6781adea6b321f2d59"
+					"sha256": "bc0d0f1456c445f90455daa38b68f78ab0f7900bba1386b5bcea22bdf7edbf83"
 				},
 				{
-					"bytes": 30912,
+					"bytes": 21650,
 					"path": "res://audio/arsenal/notes/inst_weave_cross_3.wav",
 					"pitch": 3,
-					"sha256": "3336f26f06481251ee5532c10643d21600f937b843f01a5ef8ff3c4c0680598c"
+					"sha256": "1bf5211d41722237ea6e820cb4473af0f1b1fe3c1cb0dff714da439323635479"
 				},
 				{
-					"bytes": 30912,
+					"bytes": 21650,
 					"path": "res://audio/arsenal/notes/inst_weave_cross_4.wav",
 					"pitch": 4,
-					"sha256": "f6d12748a1127ef1bba39020abe2241c562064c6b905564a409ab5c73caf4534"
+					"sha256": "7cac3913bd178bf80db3685256679d9c10c7059127b251fdae9a963f8cd35e5c"
 				},
 				{
-					"bytes": 30912,
+					"bytes": 21650,
 					"path": "res://audio/arsenal/notes/inst_weave_cross_5.wav",
 					"pitch": 5,
-					"sha256": "46707bf01db78fbc7860b5f158bac5380d59a80c827c8e3dd1bb0c272d467be3"
+					"sha256": "fc0643008128ab916a80730145131e1a006f0909427142110c8f8e93f1c85330"
 				},
 				{
-					"bytes": 30912,
+					"bytes": 21650,
 					"path": "res://audio/arsenal/notes/inst_weave_cross_6.wav",
 					"pitch": 6,
-					"sha256": "ad27e141a4a8cb578ccd1e3860aa1ceb97ab4a9ff809dd7e4603ef22756c2ff4"
+					"sha256": "0e424720c6e0a3a6a6bf73dc5cab8a9cd2caf967f321eb1ad77001b48c235ac2"
 				},
 				{
-					"bytes": 30912,
+					"bytes": 21650,
 					"path": "res://audio/arsenal/notes/inst_weave_cross_7.wav",
 					"pitch": 7,
-					"sha256": "e3aff4b2e9083f51d062cee3b9d0df8bcdd9dca3859dd0d1315713572c21ced9"
+					"sha256": "33dee25d17a4e0d98a9ab646b7164834d1c0a9f2abb10ec2964a67c8fd1ba106"
 				}
 			],
 			"voice": "inst_weave_cross"
@@ -998,58 +998,58 @@
 			"cadence_total": 1.0,
 			"family": "orbit",
 			"id": "crown_orbit",
-			"instrument": "竖琴",
+			"instrument": "通透竖琴",
 			"name": "星冕回旋阵",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 33560,
+					"bytes": 36204,
 					"path": "res://audio/arsenal/notes/inst_crown_orbit_0.wav",
 					"pitch": 0,
-					"sha256": "cd573b6432795934ed2010c5c9e19e886bac71df2ed4173c9981d26a79b6edd0"
+					"sha256": "a898e0853778497c3329ee37592b933af6b3a8d2c4ca7cc35e8cb89e227c666b"
 				},
 				{
-					"bytes": 33560,
+					"bytes": 36204,
 					"path": "res://audio/arsenal/notes/inst_crown_orbit_1.wav",
 					"pitch": 1,
-					"sha256": "c9728e5c48ece017c4d40c3b0acdad366272086fb75074d4e8551701e5ba26de"
+					"sha256": "31e3d5a1934ebe84b83b204187625de47eaf375e66d19f85b6a283b8bae6b737"
 				},
 				{
-					"bytes": 33560,
+					"bytes": 36204,
 					"path": "res://audio/arsenal/notes/inst_crown_orbit_2.wav",
 					"pitch": 2,
-					"sha256": "513928bfc8bbe530f06d63a23409b5a87830d861f784ca82162ec149d6cba49a"
+					"sha256": "bda6929a595dca569c6af78623577728c69bc3c7e65db8733b5cbe9f7ddfea27"
 				},
 				{
-					"bytes": 33560,
+					"bytes": 36204,
 					"path": "res://audio/arsenal/notes/inst_crown_orbit_3.wav",
 					"pitch": 3,
-					"sha256": "ab79646ddbb5130b911ef791771e439940113624437e597bbc9b8cc6ffeab3de"
+					"sha256": "95972d435f436fd1dfb32df012beacd19b28eaa1f1b15df01510bfb343cc0558"
 				},
 				{
-					"bytes": 33560,
+					"bytes": 36204,
 					"path": "res://audio/arsenal/notes/inst_crown_orbit_4.wav",
 					"pitch": 4,
-					"sha256": "54c730f1c0b621d7ce4cd2872596ffa1ed1957429467709e3eb0d90aaadf2fbe"
+					"sha256": "9074b36096eb50c5d8aa0a12d4573eea40acbb3e1ecdc6a6ea6bed40f8e11e08"
 				},
 				{
-					"bytes": 33560,
+					"bytes": 36204,
 					"path": "res://audio/arsenal/notes/inst_crown_orbit_5.wav",
 					"pitch": 5,
-					"sha256": "0c80ccbfd5699b11de5e12f724e6b5286a53d68bbe58f9dd78f6f7472ec65e64"
+					"sha256": "75b92a09479f96fa574d6265af5f7f6f942001f5a7aac9cd168c9f9f8954bc42"
 				},
 				{
-					"bytes": 33560,
+					"bytes": 36204,
 					"path": "res://audio/arsenal/notes/inst_crown_orbit_6.wav",
 					"pitch": 6,
-					"sha256": "5f6c52eabb5ed9bc31b0123d6273ab75128bbb7a92f42ac6d428effaa3b55645"
+					"sha256": "4019d256fe3f174f6829d967c9819b02704a0fbb6e01dab5807697e06cbe41b0"
 				},
 				{
-					"bytes": 33560,
+					"bytes": 36204,
 					"path": "res://audio/arsenal/notes/inst_crown_orbit_7.wav",
 					"pitch": 7,
-					"sha256": "4310e5dd9f944a6779e67374cbe70dd30ff6bc1e1f9f62aae0628b918992f133"
+					"sha256": "c3111d05dc64df7f545463117c4ba58e9031c5a01405206d02e4fd8efb3f8c59"
 				}
 			],
 			"voice": "inst_crown_orbit"
@@ -1068,58 +1068,58 @@
 			"cadence_total": 1.0,
 			"family": "pulse",
 			"id": "stern_fan",
-			"instrument": "拨弦弦乐",
+			"instrument": "温暖中音竖琴",
 			"name": "尾羽回响",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 27384,
+					"bytes": 37970,
 					"path": "res://audio/arsenal/notes/inst_stern_fan_0.wav",
 					"pitch": 0,
-					"sha256": "bdfe64fa7e12db13b7fa621ed9c9cd4c99e2088a9803e711d1c8f59fc9017bce"
+					"sha256": "ed5c7366881552a63ced0201b03ce208e46fadf8d2b8af58218dab20e844ce1f"
 				},
 				{
-					"bytes": 27384,
+					"bytes": 37970,
 					"path": "res://audio/arsenal/notes/inst_stern_fan_1.wav",
 					"pitch": 1,
-					"sha256": "dc0457ed6709ca647a61a26758ac3691f02c55287cf704059c5458a8d30ca554"
+					"sha256": "c2265ebc0ed6e7130aadddcd6e541a79b26cd7442885cd2cb8d6cdff9ce1c2ae"
 				},
 				{
-					"bytes": 27384,
+					"bytes": 37970,
 					"path": "res://audio/arsenal/notes/inst_stern_fan_2.wav",
 					"pitch": 2,
-					"sha256": "ceb3136c1290bd9ba0985285f8d3af88e8f54c0e8350d6c837d99dfa02cba8da"
+					"sha256": "affd2b6a96974b2d771d960b65632ea4a7fa27d9319e31d03eec5725923df6a7"
 				},
 				{
-					"bytes": 27384,
+					"bytes": 37970,
 					"path": "res://audio/arsenal/notes/inst_stern_fan_3.wav",
 					"pitch": 3,
-					"sha256": "e0901f4ad0c17421456683f80a020bd73ecdeb1101ce2988fd1ec6b73d5b0115"
+					"sha256": "84bc8eba10cb054963d300c8ce141f68c31a5ac6e52b21199d9ddfced9c4b028"
 				},
 				{
-					"bytes": 27384,
+					"bytes": 37970,
 					"path": "res://audio/arsenal/notes/inst_stern_fan_4.wav",
 					"pitch": 4,
-					"sha256": "192e1dd5cece1a6aa6f14237f548875a4e9cc40d5cfe6d6549239872ebde56a0"
+					"sha256": "63eb5e3050cee043f7c8cc25512c86b7325ffd738be34704f28dfe9fa19d082f"
 				},
 				{
-					"bytes": 27384,
+					"bytes": 37970,
 					"path": "res://audio/arsenal/notes/inst_stern_fan_5.wav",
 					"pitch": 5,
-					"sha256": "eed9dd06ae1f95caf2362a9c75a86466601668902654faa1fcdef722c6c462a5"
+					"sha256": "6082be830eb3bbddf93505e64ecaea9a3fe5a04cdd127230e2310b5d476a3b71"
 				},
 				{
-					"bytes": 27384,
+					"bytes": 37970,
 					"path": "res://audio/arsenal/notes/inst_stern_fan_6.wav",
 					"pitch": 6,
-					"sha256": "9a0d75f8f9c77a4ff965a37f577ba4235f6c678e7a2170d4cc6d315428bff106"
+					"sha256": "8582218e2bbdb18d06fdab42234969252f8b1820a81e09d551fde640ba780bb1"
 				},
 				{
-					"bytes": 27384,
+					"bytes": 37970,
 					"path": "res://audio/arsenal/notes/inst_stern_fan_7.wav",
 					"pitch": 7,
-					"sha256": "296789af8ce6d4e386e381b63228c4b4ec5a1438070b2b90d2394798c8a884e0"
+					"sha256": "1722b37e100de32db35be1e3e7e9e33e3f9d2ac0eef97756e3c88e44a46843d9"
 				}
 			],
 			"voice": "inst_stern_fan"

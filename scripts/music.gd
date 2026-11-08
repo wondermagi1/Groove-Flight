@@ -4,7 +4,7 @@ extends AudioStreamPlayer
 const CLOCK=preload("res://scripts/music_clock.gd")
 signal step_fired(index: int,serial: int,deadline: float)
 signal prepared(key: String)
-const RENDER_VERSION=2
+const RENDER_VERSION=3
 const RATE=22050
 const BPM=120.
 const STEP=.125

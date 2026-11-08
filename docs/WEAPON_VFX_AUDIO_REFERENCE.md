@@ -1,10 +1,10 @@
 # 武器特效与音频对应表（持续维护）
 
-最后更新：2026-11-08。核对版本：`0.24.0-independent-feather-plumes`；游戏基线提交：`5c925ce`。
+最后更新：2026-11-08。核对版本：`0.25.0-chamber-instruments`；调整前备份：`8418597`。
 
 这是当前现役武器的统一查阅入口。后续在同一份文档持续更新；历史版本说明和旧武器档案保留在原处。表中均为已经接入的内容，待开发设想另列。
 
-现役共**16种武器**：**10种共享羽状质感、13种实体弹、3种激光/电弧**。每件武器保留独立的固定乐器声音，共128份样本。
+现役共**16种武器**：**10种共享羽状质感、13种实体弹、3种激光/电弧**。每件武器保留独立的固定乐器声音，共128份样本。**当前武器声音仅使用10种钢琴变化、3种柔奏提琴和3种竖琴**；按用户试玩反馈收敛整体音色。
 
 ## 1. 武器、画面与声音对照
 
@@ -12,22 +12,22 @@
 
 | 武器 / ID | 发射形式与运动 | 弹体、光色与尾迹 | 固定音色（点击试听） | 对应主属性 | 弹体充能 |
 | --- | --- | --- | --- | --- | ---: |
-| 脉冲机炮<br>`pulse` | 朝瞄准方向错时喷射；各弹独立初速、偏角和摆动 | 青绿色羽状弹、柔光、细曲线尾迹 | [钢琴](../audio/arsenal/notes/inst_pulse_0.wav) | 实弹 | 1轮 |
-| 星砂霰弹<br>`scatter` | 前向扇面散射；各颗在扇面内独立推进、错位 | 暖金色羽状弹；共享鎏金基底 | [军鼓](../audio/arsenal/notes/inst_scatter_0.wav) | 实弹 | 1轮 |
-| 棱镜光束<br>`beam` | 朝瞄准方向发射多条直束；各束微小方向、宽度和闪光差异 | 淡紫束芯与能量鞘，保留激光形态 | [小提琴](../audio/arsenal/notes/inst_beam_0.wav) | 能量 | 1轮 |
-| 彗星导弹<br>`missile` | 向前发射后独立追踪；各弹转向响应不同，命中爆破 | 粉红导弹实体、推进尾焰与弯曲残迹 | [底鼓](../audio/arsenal/notes/inst_missile_0.wav) | 动力 | 1轮 |
-| 新星环炮<br>`nova` | 360°圆周展开；各颗独立弯转，保持完整圆周覆盖 | 浅绿能量珠、局部柔光、细弧形尾迹 | [中音萨克斯](../audio/arsenal/notes/inst_nova_0.wav) | 能量 | 1轮 |
-| 跃迁电弧<br>`chain` | 先连向目标，再向附近敌人跳跃；各段有稳定的独立相位 | 蓝色分支电流与局部辉光 | [颤音琴＋电子泛音](../audio/arsenal/notes/inst_chain_0.wav) | 能量 | 1轮 |
-| 苍穹轨炮<br>`rail` | 朝瞄准方向高速贯穿；各弹独立受力、保留主方向 | 冰白羽状弹；实际路径尾迹 | [大提琴](../audio/arsenal/notes/inst_rail_0.wav) | 实弹 | 2轮 |
-| 星针狙击器<br>`pulse_needle` | 朝瞄准方向集中喷射；个体速度与细微弯转不同 | 青白羽状弹；共享羽状质感 | [钢弦吉他](../audio/arsenal/notes/inst_pulse_needle_0.wav) | 实弹 | 1轮 |
-| 七彩折光匣<br>`scatter_prism` | 机头前方的四个斜向，展开多排U形羽流；每组轻摆、每颗独立飞行 | 七彩羽状实体弹；与尾羽共享柔光和真实弯曲尾迹 | [低音通鼓](../audio/arsenal/notes/inst_scatter_prism_0.wav) | 实弹 | 2轮 |
-| 双生棱镜<br>`beam_split` | 双重光束结构；弹数增加后形成多束，各束独立闪光相位 | 紫粉色直束、明亮束芯与电子能量鞘 | [合成弦乐＋电子光芯](../audio/arsenal/notes/inst_beam_split_0.wav) | 能量 | 1轮 |
-| 地平线终奏<br>`rail_horizon` | 沿实际机身左右两翼喷射；低初速出膛，再各自加速和摆动 | 绿色羽状弹流；柔光与逐渐变细的实际尾迹 | [低音钢琴](../audio/arsenal/notes/inst_rail_horizon_0.wav) | 实弹 | 8轮 |
-| 终压攻城铳<br>`recorded_heavy` | 朝瞄准方向发射重型贯穿弹；独立出膛时差与惯性，命中爆破 | 暖橙羽状实体弹；当前使用统一羽状基底 | [定音鼓](../audio/arsenal/notes/inst_recorded_heavy_0.wav) | 实弹 | 1轮 |
-| 鎏金螺旋阵<br>`gilded_helix` | 向四周展开，叠加不同弯转速率，形成螺旋包络 | 金色发光叶状弹头；同类羽弹的质感基准 | [长笛](../audio/arsenal/notes/inst_gilded_helix_0.wav) | 能量 | 2轮 |
-| 虹织十字炮<br>`weave_cross` | 上、下、左、右四向编织；实际横向摆动叠加个体受力 | 彩色羽状弹流、错位交织尾迹 | [钢片琴](../audio/arsenal/notes/inst_weave_cross_0.wav) | 实弹 | 2轮 |
-| 星冕回旋阵<br>`crown_orbit` | 三至八层环绕；每颗独立呼吸、角速度和惯性中心，跟随玩家 | 彩色环绕实体与柔光；细曲线残迹 | [竖琴](../audio/arsenal/notes/inst_crown_orbit_0.wav) | 支援 | 2轮 |
-| 尾羽回响<br>`stern_fan` | 沿机尾向后展开多排U形扇面；两翼先打开，再以不同惯性收向后方 | 左翼绿黄、中央橙黄、右翼粉紫的羽状弹流 | [拨弦弦乐](../audio/arsenal/notes/inst_stern_fan_0.wav) | 实弹 | 1轮 |
+| 脉冲机炮<br>`pulse` | 朝瞄准方向错时喷射；各弹独立初速、偏角和摆动 | 青绿色羽状弹、柔光、细曲线尾迹 | [柔和三角钢琴](../audio/arsenal/notes/inst_pulse_0.wav) | 实弹 | 1轮 |
+| 星砂霰弹<br>`scatter` | 前向扇面散射；各颗在扇面内独立推进、错位 | 暖金色羽状弹；共享鎏金基底 | [短奏钢琴](../audio/arsenal/notes/inst_scatter_0.wav) | 实弹 | 1轮 |
+| 棱镜光束<br>`beam` | 朝瞄准方向发射多条直束；各束微小方向、宽度和闪光差异 | 淡紫束芯与能量鞘，保留激光形态 | [柔奏小提琴](../audio/arsenal/notes/inst_beam_0.wav) | 能量 | 1轮 |
+| 彗星导弹<br>`missile` | 向前发射后独立追踪；各弹转向响应不同，命中爆破 | 粉红导弹实体、推进尾焰与弯曲残迹 | [温暖低音钢琴](../audio/arsenal/notes/inst_missile_0.wav) | 动力 | 1轮 |
+| 新星环炮<br>`nova` | 360°圆周展开；各颗独立弯转，保持完整圆周覆盖 | 浅绿能量珠、局部柔光、细弧形尾迹 | [圆润中音钢琴](../audio/arsenal/notes/inst_nova_0.wav) | 能量 | 1轮 |
+| 跃迁电弧<br>`chain` | 先连向目标，再向附近敌人跳跃；各段有稳定的独立相位 | 蓝色分支电流与局部辉光 | [柔和高音竖琴](../audio/arsenal/notes/inst_chain_0.wav) | 能量 | 1轮 |
+| 苍穹轨炮<br>`rail` | 朝瞄准方向高速贯穿；各弹独立受力、保留主方向 | 冰白羽状弹；实际路径尾迹 | [柔奏大提琴](../audio/arsenal/notes/inst_rail_0.wav) | 实弹 | 2轮 |
+| 星针狙击器<br>`pulse_needle` | 朝瞄准方向集中喷射；个体速度与细微弯转不同 | 青白羽状弹；共享羽状质感 | [清亮高音钢琴](../audio/arsenal/notes/inst_pulse_needle_0.wav) | 实弹 | 1轮 |
+| 七彩折光匣<br>`scatter_prism` | 机头前方的四个斜向，展开多排U形羽流；每组轻摆、每颗独立飞行 | 七彩羽状实体弹；与尾羽共享柔光和真实弯曲尾迹 | [珠光钢琴](../audio/arsenal/notes/inst_scatter_prism_0.wav) | 实弹 | 2轮 |
+| 双生棱镜<br>`beam_split` | 双重光束结构；弹数增加后形成多束，各束独立闪光相位 | 紫粉色直束、明亮束芯与电子能量鞘 | [柔奏中提琴](../audio/arsenal/notes/inst_beam_split_0.wav) | 能量 | 1轮 |
+| 地平线终奏<br>`rail_horizon` | 沿实际机身左右两翼喷射；低初速出膛，再各自加速和摆动 | 绿色羽状弹流；柔光与逐渐变细的实际尾迹 | [深色低音钢琴](../audio/arsenal/notes/inst_rail_horizon_0.wav) | 实弹 | 8轮 |
+| 终压攻城铳<br>`recorded_heavy` | 朝瞄准方向发射重型贯穿弹；独立出膛时差与惯性，命中爆破 | 暖橙羽状实体弹；当前使用统一羽状基底 | [厚实中低音钢琴](../audio/arsenal/notes/inst_recorded_heavy_0.wav) | 实弹 | 1轮 |
+| 鎏金螺旋阵<br>`gilded_helix` | 向四周展开，叠加不同弯转速率，形成螺旋包络 | 金色发光叶状弹头；同类羽弹的质感基准 | [明亮三角钢琴](../audio/arsenal/notes/inst_gilded_helix_0.wav) | 能量 | 2轮 |
+| 虹织十字炮<br>`weave_cross` | 上、下、左、右四向编织；实际横向摆动叠加个体受力 | 彩色羽状弹流、错位交织尾迹 | [轻巧断奏钢琴](../audio/arsenal/notes/inst_weave_cross_0.wav) | 实弹 | 2轮 |
+| 星冕回旋阵<br>`crown_orbit` | 三至八层环绕；每颗独立呼吸、角速度和惯性中心，跟随玩家 | 彩色环绕实体与柔光；细曲线残迹 | [通透竖琴](../audio/arsenal/notes/inst_crown_orbit_0.wav) | 支援 | 2轮 |
+| 尾羽回响<br>`stern_fan` | 沿机尾向后展开多排U形扇面；两翼先打开，再以不同惯性收向后方 | 左翼绿黄、中央橙黄、右翼粉紫的羽状弹流 | [温暖中音竖琴](../audio/arsenal/notes/inst_stern_fan_0.wav) | 实弹 | 1轮 |
 
 ## 2. 原声音频文件索引
 
@@ -37,26 +37,30 @@
 
 | 武器 | 音色键 / 文件前缀 | 当前固定原声 | 原声长度 |
 | --- | --- | --- | ---: |
-| 脉冲机炮 | `inst_pulse` | `inst_pulse_0.wav` | 0.620秒 |
-| 星砂霰弹 | `inst_scatter` | `inst_scatter_0.wav` | 0.400秒 |
-| 棱镜光束 | `inst_beam` | `inst_beam_0.wav` | 0.698秒 |
-| 彗星导弹 | `inst_missile` | `inst_missile_0.wav` | 0.448秒 |
-| 新星环炮 | `inst_nova` | `inst_nova_0.wav` | 0.538秒 |
-| 跃迁电弧 | `inst_chain` | `inst_chain_0.wav` | 0.600秒 |
-| 苍穹轨炮 | `inst_rail` | `inst_rail_0.wav` | 0.580秒 |
-| 星针狙击器 | `inst_pulse_needle` | `inst_pulse_needle_0.wav` | 0.600秒 |
-| 七彩折光匣 | `inst_scatter_prism` | `inst_scatter_prism_0.wav` | 0.550秒 |
-| 双生棱镜 | `inst_beam_split` | `inst_beam_split_0.wav` | 0.640秒 |
-| 地平线终奏 | `inst_rail_horizon` | `inst_rail_horizon_0.wav` | 0.740秒 |
-| 终压攻城铳 | `inst_recorded_heavy` | `inst_recorded_heavy_0.wav` | 0.730秒 |
-| 鎏金螺旋阵 | `inst_gilded_helix` | `inst_gilded_helix_0.wav` | 0.558秒 |
-| 虹织十字炮 | `inst_weave_cross` | `inst_weave_cross_0.wav` | 0.700秒 |
-| 星冕回旋阵 | `inst_crown_orbit` | `inst_crown_orbit_0.wav` | 0.760秒 |
-| 尾羽回响 | `inst_stern_fan` | `inst_stern_fan_0.wav` | 0.620秒 |
+| 脉冲机炮 | `inst_pulse` | `inst_pulse_0.wav` | 0.840秒 |
+| 星砂霰弹 | `inst_scatter` | `inst_scatter_0.wav` | 0.470秒 |
+| 棱镜光束 | `inst_beam` | `inst_beam_0.wav` | 0.678秒 |
+| 彗星导弹 | `inst_missile` | `inst_missile_0.wav` | 0.880秒 |
+| 新星环炮 | `inst_nova` | `inst_nova_0.wav` | 0.820秒 |
+| 跃迁电弧 | `inst_chain` | `inst_chain_0.wav` | 0.750秒 |
+| 苍穹轨炮 | `inst_rail` | `inst_rail_0.wav` | 0.797秒 |
+| 星针狙击器 | `inst_pulse_needle` | `inst_pulse_needle_0.wav` | 0.640秒 |
+| 七彩折光匣 | `inst_scatter_prism` | `inst_scatter_prism_0.wav` | 0.770秒 |
+| 双生棱镜 | `inst_beam_split` | `inst_beam_split_0.wav` | 0.818秒 |
+| 地平线终奏 | `inst_rail_horizon` | `inst_rail_horizon_0.wav` | 1.190秒 |
+| 终压攻城铳 | `inst_recorded_heavy` | `inst_recorded_heavy_0.wav` | 1.000秒 |
+| 鎏金螺旋阵 | `inst_gilded_helix` | `inst_gilded_helix_0.wav` | 0.870秒 |
+| 虹织十字炮 | `inst_weave_cross` | `inst_weave_cross_0.wav` | 0.490秒 |
+| 星冕回旋阵 | `inst_crown_orbit` | `inst_crown_orbit_0.wav` | 0.820秒 |
+| 尾羽回响 | `inst_stern_fan` | `inst_stern_fan_0.wav` | 0.860秒 |
 
-文件规格统一为22,050Hz、单声道、PCM16。完整8索引、文件长度和SHA256见[音频机器索引](../audio/weapon_codex.json)。当前128份样本均核对存在且与该索引一致。
+文件规格统一为22,050Hz、单声道、PCM16。完整8索引、文件长度和SHA256见[音频机器索引](../audio/weapon_codex.json)。V25重制了128份样本，均以较轻触键、离线低通、柔和起音与尾端淡化制作，保留个体音色差异。渲染来源、力度、滤波参数和SHA256见[当前音源清单](../audio/instruments/MANIFEST.json)，统一配置见[音色策略](../audio/instruments/CHAMBER_PALETTE.json)。旧声音可从调整前Git备份恢复，旧元数据见[原音色档案](../audio/instruments/archives/MANIFEST-before-v25.json)。
 
 ## 3. 声音与弹道怎样对应
+
+V25使用同一组音区与质感协调的钢琴、弓弦和竖琴，撤下武器中的萨克斯、鼓、长笛、吉他、钢片琴及电子叠层。钢琴通过三角钢琴/明亮三角钢琴音源、触键、音区、明暗、断奏和尾音区分。击杀、护盾与拾取反馈声音保持各自用途。
+
+[8秒原生叠奏试听](audio-v25/native-ensemble.wav) · [16种音色逐件试听](audio-v25/sixteen-chamber-voices.wav) · [逐件试听时间表](audio-v25/sixteen-chamber-voices.json)。两份试听隔离了背景和反馈声，原生叠奏使用生产混音，包含两件钢琴实例。
 
 1. 音序器3轨×8格，每格0.125秒，一轮1秒。白点到武器起始格，播放一次固定声音；占用的后续格不重复播放。
 2. 同种武器的不同装备实例各自发声，尾音允许重叠。例如分别放在第1–2格与第3–4格，就在第1格和第3格分别发声，相隔0.25秒。
@@ -96,13 +100,14 @@
 
 | 日期 | 游戏版本 / 基线 | 本表变更 |
 | --- | --- | --- |
+| 2026-11-08 | V25 / 备份`8418597` | 根据试玩反馈统一为钢琴、柔奏提琴、竖琴；10种钢琴变化，重制128样本、柔化起音并控制响度，保留固定扫描和同种重奏。 |
 | 2026-11-08 | V24 / `5c925ce` | 建立16种现役武器的特效、乐器与原声索引；明确折光四斜向羽流、13种实体弹、固定声音与充能分离；确立以后同提交更新规则。 |
 
 ## 7. 核对来源
 
-- [当前武器参数快照](data-v24/weapon-selection.json)、[武器生产目录](../scripts/arsenal_catalog.gd)：名单、ID、属性、充能和音色键。
+- [当前武器参数快照](data-v25/weapon-selection.json)、[武器生产目录](../scripts/arsenal_catalog.gd)：名单、ID、属性、充能和音色键。
 - [发射与命中](../scripts/main.gd)、[发射几何](../scripts/weapon_emission.gd)、[个体运动与视觉类别](../scripts/weapon_visuals.gd)：真实方向、曲线路径、实体弹与光学分工。
 - [当前乐器索引](../audio/weapon_codex.json)、[音乐播放与混音](../scripts/music.gd)：样本、固定音色和实例重奏。
-- [V24验证汇总](data-v24/SUMMARY.json)：实际武器、射程、声音与两种渲染模式回归。
+- [V25音色验证汇总](data-v25/SUMMARY.json)：128份音源格式、固定扫描、原生重奏与弹道兼容回归；视觉专项基线见[V24汇总](data-v24/SUMMARY.json)。
 
 本表只登记武器的对应声音；击杀低鼓、受击护盾、拾取音效和背景音乐另见[反馈音频说明](GROOVE_CORE_KILL_FEEDBACK.md)与[录音来源](AUDIO_SOURCE_MAP.md)。
