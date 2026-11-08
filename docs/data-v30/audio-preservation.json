@@ -1,0 +1,11 @@
+{
+  "baseline": "5e52ee0",
+  "unchanged_old_samples": 128,
+  "total_instruments": 19,
+  "new_samples": 24,
+  "allowed_families": [
+    "piano",
+    "strings",
+    "harp"
+  ]
+}

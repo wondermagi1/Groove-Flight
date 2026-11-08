@@ -98,7 +98,7 @@ func _ready() -> void:
 	var dim=ColorRect.new(); dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT); dim.color=Color(0.005,.01,.018,.94); add_child(dim)
 	var frame=Panel.new(); frame.name="WeaponCodexFrame"; frame.add_theme_stylebox_override("panel",_box(Color("091321"),Color("36536c"),12,20)); add_child(frame)
 	var title=_label("武器音色图鉴  /  WEAPON SONIC CODEX",30,Color("eff7ff")); title.position=Vector2(24,18); frame.add_child(title)
-	var subtitle=_label("16种精选武器 · 乐器固定音色 · 三轨8格 / 每格0.25秒 / 一轮2秒",17,Color("83a4bd")); subtitle.position=Vector2(26,59); frame.add_child(subtitle)
+	var subtitle=_label("%d种精选武器 · 乐器固定音色 · 三轨8格 / 每格0.25秒 / 一轮2秒"%DATA.playable_weapons().size(),17,Color("83a4bd")); subtitle.position=Vector2(26,59); frame.add_child(subtitle)
 	var close=Button.new(); close.name="WeaponCodexClose"; close.text="关闭  /  ESC"; close.position=Vector2(1020,24); close.size=Vector2(170,42)
 	close.add_theme_stylebox_override("normal",_box(Color("122233"),Color("5c768c"),6,7)); close.add_theme_stylebox_override("hover",_box(Color("213c4d"),Color("9bdde0"),6,7))
 	close.add_theme_color_override("font_color",Color("c5e7ed")); close.pressed.connect(queue_free); frame.add_child(close)

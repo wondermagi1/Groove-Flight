@@ -74,6 +74,15 @@ static func _weapon(canvas: CanvasItem,data: Dictionary,accent: Color,alpha: flo
 			canvas.draw_line(Vector2(-8,0),head,Color(STEEL,alpha),2.,true)
 			_poly(canvas,[head+axis*7.,head+side,head-axis*7.,head-side],Color.from_hsv(fposmod(.30-.10*i,1.),.64,1.,alpha))
 		return
+	elif str(data.get("emission","")) in ["forward_twin","forward_fan","forward_weave","forward_rain"]:
+		_plate(canvas,Vector2(-27,-16),Vector2(39,32),accent)
+		var wings=2 if str(data.emission) in ["forward_twin","forward_weave"] else 5
+		for i in range(wings):
+			var axis=Vector2.RIGHT.rotated((float(i)/maxf(1.,wings-1)-.5)*.9)
+			var head=axis*44.; var side=axis.orthogonal()*3.
+			canvas.draw_line(Vector2(7,0),head-axis*8.,Color(STEEL,alpha),4.,true)
+			_poly(canvas,[head+axis*7.,head+side,head-axis*7.,head-side],Color.from_hsv(fposmod(.17+i*.085,1.),.50,1.,alpha))
+		return
 	match family:
 		"pulse":
 			_plate(canvas,Vector2(-27,-14),Vector2(42,30),accent)

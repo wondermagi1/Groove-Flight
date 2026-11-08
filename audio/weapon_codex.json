@@ -1,11 +1,11 @@
 {
-	"sample_file_count": 128,
+	"sample_file_count": 152,
 	"schema": 1,
-	"scope": "Sixteen active fixed instruments. Fixed pitch0 battle sounds; no automatic strength or melody cycles.",
+	"scope": "Active fixed instruments. Fixed pitch0 battle sounds; no automatic strength or melody cycles.",
 	"sequence_loop_seconds": 2.0,
 	"sequence_step_seconds": 0.25,
-	"version": "0.29.0-filaments-shop-hud",
-	"weapon_count": 16,
+	"version": "0.30.0-forward-feathers",
+	"weapon_count": 19,
 	"weapons": [
 		{
 			"cadence": {
@@ -1126,6 +1126,216 @@
 				}
 			],
 			"voice": "inst_stern_fan"
+		},
+		{
+			"cadence": {
+				"beats": 1,
+				"label": "固定声音",
+				"pitches": [
+					0
+				],
+				"scales": [
+					1.0
+				]
+			},
+			"cadence_total": 1.0,
+			"family": "pulse",
+			"id": "dawn_fan",
+			"instrument": "柔亮高音钢琴",
+			"name": "晨羽前奏",
+			"recorded_audio": false,
+			"reference_layer": "sampled_instrument",
+			"samples": [
+				{
+					"bytes": 37968,
+					"path": "res://audio/arsenal/notes/inst_dawn_fan_0.wav",
+					"pitch": 0,
+					"sha256": "508a67483537ef755edf90a4483874f0d822ecb0d3167660dffb5668889d59af"
+				},
+				{
+					"bytes": 37968,
+					"path": "res://audio/arsenal/notes/inst_dawn_fan_1.wav",
+					"pitch": 1,
+					"sha256": "43011f91ef523b67cda16e13de6b0e0776a5a6cd871f1839a41d21d01b04da36"
+				},
+				{
+					"bytes": 37968,
+					"path": "res://audio/arsenal/notes/inst_dawn_fan_2.wav",
+					"pitch": 2,
+					"sha256": "8f719f5c22f3cef5ae406539c333004e523ed0e31d44781f0becf41821b06796"
+				},
+				{
+					"bytes": 37968,
+					"path": "res://audio/arsenal/notes/inst_dawn_fan_3.wav",
+					"pitch": 3,
+					"sha256": "7acc029346987655cabaee21a79a4a91bd1d93d266763fead925d3a8461b0d99"
+				},
+				{
+					"bytes": 37968,
+					"path": "res://audio/arsenal/notes/inst_dawn_fan_4.wav",
+					"pitch": 4,
+					"sha256": "7b555f1fa858f3b9fc5353078d5c4c4965d54bd1c6406a6633b84d3067ec3615"
+				},
+				{
+					"bytes": 37968,
+					"path": "res://audio/arsenal/notes/inst_dawn_fan_5.wav",
+					"pitch": 5,
+					"sha256": "f849126d12dedd1ee8bd4cd86a0c3e21601c4ffb6c4680be060435b5286abd78"
+				},
+				{
+					"bytes": 37968,
+					"path": "res://audio/arsenal/notes/inst_dawn_fan_6.wav",
+					"pitch": 6,
+					"sha256": "8e0be2d69ec10228d7c18abfcfb0aa45c48a0ac4ccda6651a182e5a6b024dac1"
+				},
+				{
+					"bytes": 37968,
+					"path": "res://audio/arsenal/notes/inst_dawn_fan_7.wav",
+					"pitch": 7,
+					"sha256": "8b7862775fc695208f791e52e7b08ab95261f46043bba6b0f282582d6c2743ed"
+				}
+			],
+			"voice": "inst_dawn_fan"
+		},
+		{
+			"cadence": {
+				"beats": 1,
+				"label": "固定声音",
+				"pitches": [
+					0
+				],
+				"scales": [
+					1.0
+				]
+			},
+			"cadence_total": 1.0,
+			"family": "pulse",
+			"id": "tidal_weave",
+			"instrument": "柔奏高音小提琴",
+			"name": "潮汐弦歌",
+			"recorded_audio": false,
+			"reference_layer": "sampled_instrument",
+			"samples": [
+				{
+					"bytes": 32150,
+					"path": "res://audio/arsenal/notes/inst_tidal_weave_0.wav",
+					"pitch": 0,
+					"sha256": "859b7b7d3fe2cd3b7942dcc0a019b91154e1bcf172398fe2a69e659355434735"
+				},
+				{
+					"bytes": 32150,
+					"path": "res://audio/arsenal/notes/inst_tidal_weave_1.wav",
+					"pitch": 1,
+					"sha256": "0db11c7aadae042c9b48ed8b9e2d819c4a5df419deeabac93ac530a10e1a8854"
+				},
+				{
+					"bytes": 32148,
+					"path": "res://audio/arsenal/notes/inst_tidal_weave_2.wav",
+					"pitch": 2,
+					"sha256": "0f0a3d2e2e74af4041fd6b3897546d2cb1cab8610c17b3a85b48c91bbba6efc4"
+				},
+				{
+					"bytes": 32150,
+					"path": "res://audio/arsenal/notes/inst_tidal_weave_3.wav",
+					"pitch": 3,
+					"sha256": "4c47e34a1853864b34288eb3f1764d56a3752c3fd08234d03e8cbd9d430d156d"
+				},
+				{
+					"bytes": 32150,
+					"path": "res://audio/arsenal/notes/inst_tidal_weave_4.wav",
+					"pitch": 4,
+					"sha256": "16bd7e71379ae5015a06e8ba4ef000c3842213cdcd8421b4950568724c5d2d62"
+				},
+				{
+					"bytes": 32148,
+					"path": "res://audio/arsenal/notes/inst_tidal_weave_5.wav",
+					"pitch": 5,
+					"sha256": "c30c74bf7d3be6c9fff97727d56835e6f2dec1a6b5648ba87d152d91c029b717"
+				},
+				{
+					"bytes": 32150,
+					"path": "res://audio/arsenal/notes/inst_tidal_weave_6.wav",
+					"pitch": 6,
+					"sha256": "644541473ff5e617beffb2b93efc0b0544001e0066e92d3091c6c6817c63e849"
+				},
+				{
+					"bytes": 32150,
+					"path": "res://audio/arsenal/notes/inst_tidal_weave_7.wav",
+					"pitch": 7,
+					"sha256": "d54ca2934e7c42d3d423b73d86a8e0328b29b238b8b7c5864e1ced5ecb30e7d8"
+				}
+			],
+			"voice": "inst_tidal_weave"
+		},
+		{
+			"cadence": {
+				"beats": 1,
+				"label": "固定声音",
+				"pitches": [
+					0
+				],
+				"scales": [
+					1.0
+				]
+			},
+			"cadence_total": 1.0,
+			"family": "pulse",
+			"id": "firefly_rain",
+			"instrument": "晶润中音竖琴",
+			"name": "流萤织雨",
+			"recorded_audio": false,
+			"reference_layer": "sampled_instrument",
+			"samples": [
+				{
+					"bytes": 34000,
+					"path": "res://audio/arsenal/notes/inst_firefly_rain_0.wav",
+					"pitch": 0,
+					"sha256": "c84d63984f37a821f7c69d401671206a6f0fa75a3fae8c03585b0fd5fbfbc0e9"
+				},
+				{
+					"bytes": 34000,
+					"path": "res://audio/arsenal/notes/inst_firefly_rain_1.wav",
+					"pitch": 1,
+					"sha256": "f92427b2a808eb45269685e89b08ae493aeb2f458233ecb168360d6fcac43af4"
+				},
+				{
+					"bytes": 34000,
+					"path": "res://audio/arsenal/notes/inst_firefly_rain_2.wav",
+					"pitch": 2,
+					"sha256": "3622f9d98c0849f41a3fdc9743a2e76323aa3934ca278ab96aed4a5dfa5f3d7c"
+				},
+				{
+					"bytes": 34000,
+					"path": "res://audio/arsenal/notes/inst_firefly_rain_3.wav",
+					"pitch": 3,
+					"sha256": "598824f658e4b07421559141f1921d8cd127b02eb4ed2df4c30d9cc4af3676b5"
+				},
+				{
+					"bytes": 34000,
+					"path": "res://audio/arsenal/notes/inst_firefly_rain_4.wav",
+					"pitch": 4,
+					"sha256": "1d1c965d028dcc7e96c18d29d7a9014dfe015d82ea6f221be3822f6dbf7c376e"
+				},
+				{
+					"bytes": 34000,
+					"path": "res://audio/arsenal/notes/inst_firefly_rain_5.wav",
+					"pitch": 5,
+					"sha256": "551dd423e85bf2765bb0843c9d018139e5e9684858ad1aaa476da0d3ffd3d67f"
+				},
+				{
+					"bytes": 34000,
+					"path": "res://audio/arsenal/notes/inst_firefly_rain_6.wav",
+					"pitch": 6,
+					"sha256": "5b1b0225ee3dcdb9700364b3a041a97d7361c6839d293a104ca8d1e634f02656"
+				},
+				{
+					"bytes": 34000,
+					"path": "res://audio/arsenal/notes/inst_firefly_rain_7.wav",
+					"pitch": 7,
+					"sha256": "e49ce34880b0392c97ee7fe5411f1611d28b68564c1e7b101de13ca53a02b9e5"
+				}
+			],
+			"voice": "inst_firefly_rain"
 		}
 	]
 }

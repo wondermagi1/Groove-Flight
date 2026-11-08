@@ -1,0 +1,353 @@
+{
+  "checks": 6,
+  "cpu": "Intel(R) Core(TM) i9-14900HX",
+  "failures": [],
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "renderer": "forward_plus",
+  "scenarios": {
+    "deployment": {
+      "fired_weapons": [
+        "dawn_fan",
+        "beam_split",
+        "nova",
+        "stern_fan",
+        "firefly_rain",
+        "scatter_prism",
+        "tidal_weave",
+        "rail_horizon"
+      ],
+      "frames": 900,
+      "milliseconds": {
+        "beat_enemy": {
+          "max": 18.815,
+          "median": 14.259,
+          "p95": 17.442
+        },
+        "dispatch": {
+          "max": 8.565,
+          "median": 0.004,
+          "p95": 0.426
+        },
+        "effects": {
+          "max": 0.994,
+          "median": 0.24,
+          "p95": 0.522
+        },
+        "enemy": {
+          "max": 18.815,
+          "median": 2.985,
+          "p95": 3.982
+        },
+        "frame": {
+          "max": 33.276,
+          "median": 11.558,
+          "p95": 18.839
+        },
+        "gpu": {
+          "max": 0.312999993562698,
+          "median": 0.264999985694885,
+          "p95": 0.275000005960464
+        },
+        "projectile": {
+          "max": 8.518,
+          "median": 1.226,
+          "p95": 2.88
+        },
+        "simulation": {
+          "max": 28.712,
+          "median": 5.85,
+          "p95": 8.877
+        },
+        "spatial": {
+          "max": 2.158,
+          "median": 1.241,
+          "p95": 1.584
+        }
+      },
+      "peaks": {
+        "enemies": 600,
+        "projectiles": 282,
+        "rendered": 450
+      },
+      "worst": [
+        {
+          "dispatch": 6.761,
+          "enemy": 18.815,
+          "planner": {
+            "backend": "native",
+            "build_ms": 6.352,
+            "native_ms": 9.331,
+            "time": 14.0
+          },
+          "projectile": 1.718,
+          "simulation": 28.712,
+          "time": 14.0
+        },
+        {
+          "dispatch": 8.565,
+          "enemy": 15.841,
+          "planner": {
+            "backend": "native",
+            "build_ms": 7.244,
+            "native_ms": 5.541,
+            "time": 10.0
+          },
+          "projectile": 1.678,
+          "simulation": 27.576,
+          "time": 10.0
+        },
+        {
+          "dispatch": 7.095,
+          "enemy": 14.259,
+          "planner": {
+            "backend": "native",
+            "build_ms": 6.844,
+            "native_ms": 4.212,
+            "time": 6.0
+          },
+          "projectile": 1.979,
+          "simulation": 24.934,
+          "time": 6.0
+        },
+        {
+          "dispatch": 3.301,
+          "enemy": 16.601,
+          "planner": {
+            "backend": "native",
+            "build_ms": 5.775,
+            "native_ms": 8.1,
+            "time": 14.5
+          },
+          "projectile": 1.788,
+          "simulation": 23.042,
+          "time": 14.5
+        },
+        {
+          "dispatch": 3.394,
+          "enemy": 15.082,
+          "planner": {
+            "backend": "native",
+            "build_ms": 6.206,
+            "native_ms": 5.989,
+            "time": 10.5
+          },
+          "projectile": 1.906,
+          "simulation": 21.899,
+          "time": 10.5
+        },
+        {
+          "dispatch": 2.823,
+          "enemy": 15.266,
+          "planner": {
+            "backend": "native",
+            "build_ms": 6.339,
+            "native_ms": 6.018,
+            "time": 11.0
+          },
+          "projectile": 1.633,
+          "simulation": 21.379,
+          "time": 11.0
+        },
+        {
+          "dispatch": 3.142,
+          "enemy": 15.979,
+          "planner": {
+            "backend": "native",
+            "build_ms": 6.284,
+            "native_ms": 6.744,
+            "time": 12.0
+          },
+          "projectile": 0.825,
+          "simulation": 21.21,
+          "time": 12.0
+        },
+        {
+          "dispatch": 3.236,
+          "enemy": 13.678,
+          "planner": {
+            "backend": "native",
+            "build_ms": 7.015,
+            "native_ms": 3.468,
+            "time": 3.0
+          },
+          "projectile": 2.528,
+          "simulation": 21.187,
+          "time": 3.0
+        }
+      ]
+    },
+    "encirclement": {
+      "fired_weapons": [
+        "dawn_fan",
+        "beam_split",
+        "nova",
+        "stern_fan",
+        "firefly_rain",
+        "scatter_prism",
+        "tidal_weave",
+        "rail_horizon"
+      ],
+      "frames": 900,
+      "milliseconds": {
+        "beat_enemy": {
+          "max": 21.44,
+          "median": 17.463,
+          "p95": 20.536
+        },
+        "dispatch": {
+          "max": 7.285,
+          "median": 0.004,
+          "p95": 0.428
+        },
+        "effects": {
+          "max": 1.322,
+          "median": 0.263,
+          "p95": 0.597
+        },
+        "enemy": {
+          "max": 21.44,
+          "median": 2.959,
+          "p95": 3.852
+        },
+        "frame": {
+          "max": 34.974,
+          "median": 10.814,
+          "p95": 16.725
+        },
+        "gpu": {
+          "max": 0.284999996423721,
+          "median": 0.263000011444092,
+          "p95": 0.270999997854233
+        },
+        "projectile": {
+          "max": 7.035,
+          "median": 1.049,
+          "p95": 2.325
+        },
+        "simulation": {
+          "max": 29.24,
+          "median": 5.524,
+          "p95": 8.539
+        },
+        "spatial": {
+          "max": 2.62,
+          "median": 1.116,
+          "p95": 1.296
+        }
+      },
+      "peaks": {
+        "enemies": 600,
+        "projectiles": 263,
+        "rendered": 450
+      },
+      "worst": [
+        {
+          "dispatch": 7.285,
+          "enemy": 19.159,
+          "planner": {
+            "backend": "native",
+            "build_ms": 6.464,
+            "native_ms": 9.601,
+            "time": 6.0
+          },
+          "projectile": 1.566,
+          "simulation": 29.24,
+          "time": 6.0
+        },
+        {
+          "dispatch": 6.807,
+          "enemy": 18.963,
+          "planner": {
+            "backend": "native",
+            "build_ms": 6.189,
+            "native_ms": 9.911,
+            "time": 2.0
+          },
+          "projectile": 2.142,
+          "simulation": 28.97,
+          "time": 2.0
+        },
+        {
+          "dispatch": 6.965,
+          "enemy": 17.463,
+          "planner": {
+            "backend": "native",
+            "build_ms": 6.732,
+            "native_ms": 7.497,
+            "time": 10.0
+          },
+          "projectile": 1.817,
+          "simulation": 27.601,
+          "time": 10.0
+        },
+        {
+          "dispatch": 2.663,
+          "enemy": 20.274,
+          "planner": {
+            "backend": "native",
+            "build_ms": 6.015,
+            "native_ms": 11.449,
+            "time": 3.0
+          },
+          "projectile": 2.063,
+          "simulation": 26.451,
+          "time": 3.0
+        },
+        {
+          "dispatch": 3.322,
+          "enemy": 18.963,
+          "planner": {
+            "backend": "native",
+            "build_ms": 5.821,
+            "native_ms": 10.317,
+            "time": 2.5
+          },
+          "projectile": 2.494,
+          "simulation": 26.08,
+          "time": 2.5
+        },
+        {
+          "dispatch": 2.832,
+          "enemy": 20.536,
+          "planner": {
+            "backend": "native",
+            "build_ms": 7.0,
+            "native_ms": 10.425,
+            "time": 4.0
+          },
+          "projectile": 1.245,
+          "simulation": 25.883,
+          "time": 4.0
+        },
+        {
+          "dispatch": 0.961,
+          "enemy": 21.44,
+          "planner": {
+            "backend": "native",
+            "build_ms": 7.272,
+            "native_ms": 10.643,
+            "time": 5.0
+          },
+          "projectile": 1.76,
+          "simulation": 25.883,
+          "time": 5.0
+        },
+        {
+          "dispatch": 3.036,
+          "enemy": 18.808,
+          "planner": {
+            "backend": "native",
+            "build_ms": 6.938,
+            "native_ms": 8.644,
+            "time": 15.0
+          },
+          "projectile": 2.042,
+          "simulation": 25.705,
+          "time": 15.0
+        }
+      ]
+    }
+  },
+  "scope": "Isolated native1920x1080,600high-HP ordinary hulls,eightLv4 weapons,attributes24,two16second manual60Hz simulations (deployment and encirclement),first60frames discarded per scenario. Current production250ms sequence. Audio muted,no captures. Controlled crowd test,not sustained campaign FPS.",
+  "sequence_step_seconds": 0.25
+}

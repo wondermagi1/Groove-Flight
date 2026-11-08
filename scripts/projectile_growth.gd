@@ -11,6 +11,7 @@ static func quality(row: Dictionary,level: int=1) -> int:
 
 static func count_limit(row: Dictionary) -> int:
 	if bool(row.get("linear_projectiles",false)):
+		if str(row.get("visual_class",""))=="feather_projectile": return 256
 		return 128 if str(row.get("family",""))=="beam" else (64 if str(row.get("family",""))=="chain" else 256)
 	return 8 if str(row.get("family",""))=="chain" else (12 if str(row.get("family",""))=="beam" else 96)
 

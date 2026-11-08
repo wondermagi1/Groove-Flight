@@ -4,6 +4,7 @@ extends RefCounted
 const PRISM_CROSS="prism_cross"
 const BROADSIDE="hull_broadside"
 const STERN_FAN="stern_fan"
+const FORWARD_PATTERNS=["forward_twin","forward_fan","forward_weave","forward_rain"]
 const PRISM_OFFSET=Vector2(0,-64)
 const PRISM_AXES=[Vector2(-1,-1),Vector2(-1,1),Vector2(1,-1),Vector2(1,1)]
 const PRISM_COLORS=[Color("57e8ff"),Color("ff69bc"),Color("ffe477"),Color("ad85ff"),Color("71ffb8"),Color("ff955e"),Color("709fff")]
@@ -17,7 +18,34 @@ static func weapon_reach(speed: float,lifetime: float) -> float:
 	return minf(2400.,maxf(120.,speed*lifetime))
 
 static func mounted(pattern: String) -> bool:
-	return pattern in [BROADSIDE,STERN_FAN]
+	return pattern in [BROADSIDE,STERN_FAN] or pattern in FORWARD_PATTERNS
+
+static func forward_shot(pattern: String,forward: Vector2,index: int,count: int,spread: float,time: float=0.) -> Dictionary:
+	forward=forward.normalized() if forward.length_squared()>.01 else Vector2.UP
+	var right=Vector2(-forward.y,forward.x)
+	if pattern=="forward_fan":
+		var plume=mounted_shot(STERN_FAN,-forward,index,count,spread)
+		plume.rear_axis=plume.axis
+		plume.offset=forward*34.+right*(float(index%columns(count))/maxf(1.,columns(count)-1)-.5)*20.
+		plume.guide_phase=time*2.2+floorf(float(index)/columns(count))*.32
+		plume.guide_amplitude=.10; plume.guide_frequency=2.2
+		return plume
+	if pattern in ["forward_twin","forward_weave"]:
+		var arm=index%2; var rank=index/2; var arm_count=ceili(float(count-arm)/2.)
+		var side=-1. if arm==0 else 1.
+		var guide=forward.rotated(side*(.16 if pattern=="forward_twin" else .10))
+		var plume=mounted_shot(STERN_FAN,-guide,rank,arm_count,spread*.65)
+		plume.offset=forward*30.+right*(side*23.+sin(rank*.71)*4.)
+		plume.tint=Color("6ee9ff") if arm==0 else Color("f494db")
+		plume.guide_phase=time*2.7+arm*PI+floorf(float(rank)/columns(maxi(1,arm_count)))*.35
+		plume.guide_amplitude=.17 if pattern=="forward_twin" else .28
+		plume.guide_frequency=2.35 if pattern=="forward_twin" else 2.9
+		return plume
+	var lanes=columns(count); var row=index/lanes; var lane=index%lanes
+	var t=(float(lane)+.5)/lanes
+	var sweep=.18*sin(time*3.5+lane*.72+row*.45)
+	var axis=forward.rotated((t-.5)*spread+sweep)
+	return {"axis":axis,"offset":forward*32.+right*(t-.5)*30.,"delay":row*.065+float(lane%3)*.012,"rear_axis":axis,"speed_scale":1.,"tint":Color.from_hsv(fposmod(.30+t*.30+row*.035,1.),.60,1.),"guide_phase":time*3.5+lane*.72+row*.45,"guide_amplitude":.16,"guide_frequency":2.7}
 
 static func mounted_shot(pattern: String,forward: Vector2,index: int,count: int,spread: float,serial: int=0) -> Dictionary:
 	forward=forward.normalized() if forward.length_squared()>.01 else Vector2.UP

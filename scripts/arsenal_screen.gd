@@ -337,7 +337,7 @@ func _build_top(view: Vector2) -> void:
 	if mode != "combat":
 		var codex_button=_button("音色图鉴",open_weapon_codex,Color("8edfda"),34)
 		codex_button.name="WeaponCodexOpen"
-		codex_button.tooltip_text="查看全部36件武器的实际音源、八音样本和节奏型"
+		codex_button.tooltip_text="查看全部%d件现役武器的实际音源、八音样本和固定扫描规则"%DATA.playable_weapons().size()
 		toggles.add_child(codex_button)
 	if mode != "combat":
 		var resume := _button("继续下一波 →" if mode == "shop" else "应用并返回  /  TAB", _resume, Color("94f0d6"), 47)
@@ -756,7 +756,7 @@ func _update_detail() -> void:
 			actual=row.duplicate(true); actual.growth=projectile_preview(str(row.id),detail_level); actual.count=actual.growth.count
 		_detail_text("所在拍预览 · 第 %d 格" % (head % 8 + 1) if head >= 0 else "基础参数", 18, row.color)
 		if actual.has("growth"):
-			_detail_text("每次发射 %d %s"%[int(actual.count),"束" if str(row.family) in ["beam","chain"] or str(row.get("emission",""))=="prism_cross" else "发"],26,DATA.quality_color(row,detail_level))
+			_detail_text("每次发射 %d %s"%[int(actual.count),"束" if str(row.family) in ["beam","chain"] and str(row.get("visual_class",""))!="feather_projectile" else "发"],26,DATA.quality_color(row,detail_level))
 			_detail_text(DATA.GROWTH.formula(actual.growth),18,DATA.quality_color(row,int(module.get("level",1))))
 			if bool(actual.growth.capped): _detail_text("已达单次发射上限 %d"%int(actual.growth.cap),16,Color("ffd478"))
 

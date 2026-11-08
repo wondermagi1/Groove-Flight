@@ -18,7 +18,7 @@ func _initialize() -> void:
 			digest.start(HashingContext.HASH_SHA256); digest.update(bytes)
 			samples.append({"pitch":i,"path":path,"bytes":bytes.size(),"sha256":digest.finish().hex_encode()})
 		weapons.append({"id":str(row.id),"name":str(row.name),"family":str(row.family),"voice":str(row.voice),"instrument":str(row.instrument),"recorded_audio":false,"reference_layer":"sampled_instrument","cadence":L.cadence_profile_for(row),"cadence_total":1.,"samples":samples})
-	FileAccess.open("res://audio/weapon_codex.json",FileAccess.WRITE).store_string(JSON.stringify({"schema":1,"version":version,"sequence_step_seconds":L.SEQUENCE_STEP_SECONDS,"sequence_loop_seconds":L.SEQUENCE_LOOP_SECONDS,"scope":"Sixteen active fixed instruments. Fixed pitch0 battle sounds; no automatic strength or melody cycles.","weapon_count":weapons.size(),"sample_file_count":weapons.size()*8,"weapons":weapons},"\t"))
+	FileAccess.open("res://audio/weapon_codex.json",FileAccess.WRITE).store_string(JSON.stringify({"schema":1,"version":version,"sequence_step_seconds":L.SEQUENCE_STEP_SECONDS,"sequence_loop_seconds":L.SEQUENCE_LOOP_SECONDS,"scope":"Active fixed instruments. Fixed pitch0 battle sounds; no automatic strength or melody cycles.","weapon_count":weapons.size(),"sample_file_count":weapons.size()*8,"weapons":weapons},"\t"))
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(snapshot_dir))
 	var boons: Array=[]
 	for boon in L.WAVE_BOONS:

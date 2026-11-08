@@ -8,6 +8,7 @@ import hashlib
 import json
 import subprocess
 import wave
+import argparse
 
 import numpy as np
 from scipy.signal import butter, sosfilt
@@ -39,13 +40,18 @@ def sync_catalog(entries):
         'const INSTRUMENT_FAMILIES=' + literal({e['id']: e['instrument_family'] for e in entries}),
         'const PERCUSSION_IDS=[]',
         'const NEW_INSTRUMENTS=' + literal({e['id']: e['instrument'] for e in entries
-            if e['id'] in ['gilded_helix', 'weave_cross', 'crown_orbit', 'stern_fan']})]
+            if e['id'] in ['gilded_helix', 'weave_cross', 'crown_orbit', 'stern_fan'] or e.get('fleet_barrage', False)})]
     path.write_text(text[:start] + '\n'.join(lines) + '\n' + text[end:], encoding='utf-8', newline='\n')
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--ids', help='Comma-separated IDs to render, retaining existing samples for other voices.')
+    args = parser.parse_args()
     policy = json.loads((ROOT / 'audio/instruments/CHAMBER_PALETTE.json').read_text(encoding='utf-8'))
-    assert len(policy['weapons']) == 16
+    assert len(policy['weapons']) > 0 and len({e['id'] for e in policy['weapons']}) == len(policy['weapons'])
+    selected = set(args.ids.split(',')) if args.ids else {e['id'] for e in policy['weapons']}
+    assert selected <= {e['id'] for e in policy['weapons']}
     assert all(e['instrument_family'] in policy['allowed_families'] and e['bank'] == 0
                and e['program'] in [0, 1, 40, 41, 42, 46] and e['electronic_mix'] == 0
                for e in policy['weapons'])
@@ -54,6 +60,7 @@ def main():
                     str(ROOT / 'tools/render_instrument_note.c'), '-o', str(exe), '-lm'], check=True, timeout=60)
     manifest_path = ROOT / 'audio/instruments/MANIFEST.json'
     old_manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+    existing = {e['id']: e for e in old_manifest['instruments']}
     historical = ROOT / 'audio/instruments/archives/MANIFEST-before-v25.json'
     if not historical.exists():
         historical.parent.mkdir(parents=True, exist_ok=True)
@@ -62,6 +69,9 @@ def main():
     assert hashlib.sha256(font.read_bytes()).hexdigest() == old_manifest['soundfont_sha256']
     records, demo, timeline = [], [], []
     for entry in policy['weapons']:
+        if entry['id'] not in selected:
+            records.append(existing[entry['id']])
+            continue
         sounds = []
         for degree in policy['scale_semitones']:
             raw = SOURCE / 'chamber-note.f32'
@@ -90,8 +100,8 @@ def main():
             data *= gain
             path = ROOT / f'audio/arsenal/notes/inst_{entry["id"]}_{index}.wav'
             write_wav(path, data)
-            # Preserve Godot import UIDs; existing sidecars already use raw PCM16.
-            assert path.with_suffix('.wav.import').exists()
+            # Never touch existing Godot import UIDs. New raw PCM files also
+            # load directly at runtime before the editor creates import sidecars.
             samples.append({'pitch_index': index, 'root_midi': entry['root_midi'] + policy['scale_semitones'][index],
                 'file': path.relative_to(ROOT).as_posix(), 'seconds': len(data) / RATE,
                 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(), 'peak': float(np.max(np.abs(data))),
@@ -117,11 +127,11 @@ def main():
                     instruments=records)
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     sync_catalog(policy['weapons'])
-    preview = ROOT / 'docs/audio-v25/sixteen-chamber-voices.wav'
+    preview = ROOT / ('docs/audio-v30/three-forward-voices.wav' if args.ids else 'docs/audio-current/chamber-voices.wav')
     write_wav(preview, np.concatenate(demo))
     preview.with_suffix('.json').write_text(json.dumps({'scope': 'Sequential offline current fixed-voice auditions; each repeats after250ms. No gameplay feedback/backing or live timing claim.',
         'seconds': len(demo) * 1.7, 'timeline': timeline}, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    print('Built128 samples; preserved import UIDs and archived previous manifest')
+    print(f'Built{len(selected)*8} samples; palette now{len(records)} instruments; existing unselected samples preserved')
 
 
 if __name__ == '__main__':

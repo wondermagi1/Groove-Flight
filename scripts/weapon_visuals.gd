@@ -1,8 +1,8 @@
 extends RefCounted
 ## Class profiles and independent flight dynamics. Hit resolution lives in main.
 const PALETTE=[Color("ffe98a"),Color("8effb5"),Color("57eaff"),Color("b99aff"),Color("ff8bd7"),Color("ffba79")]
-const STANDARD_IDS=["pulse","scatter","rail","pulse_needle","rail_horizon","recorded_heavy","gilded_helix","weave_cross","stern_fan","scatter_prism"]
-const MOVING_IDS=["pulse","scatter","rail","pulse_needle","rail_horizon","recorded_heavy","gilded_helix","weave_cross","stern_fan","scatter_prism","missile","nova","crown_orbit"]
+const STANDARD_IDS=["pulse","scatter","rail","pulse_needle","rail_horizon","recorded_heavy","gilded_helix","weave_cross","stern_fan","scatter_prism","beam_split","dawn_fan","tidal_weave","firefly_rain"]
+const MOVING_IDS=STANDARD_IDS+["missile","nova","crown_orbit"]
 # The selected gold-helix baseline, including its existing glow shader. Only
 # tint, emission geometry and motion distinguish the active solid projectiles.
 const STANDARD={"style":1,"size":Vector2(48,16),"tail":165.,"width":3.2,"variant":.92,"trail_alpha":.36}
@@ -24,7 +24,10 @@ const PROFILES={
 	"gilded_helix":{"style":1,"size":Vector2(48,16),"tail":165.,"width":3.2,"variant":.92,"color":Color("fff09a")},
 	"weave_cross":{"style":1,"size":Vector2(42,16),"tail":145.,"width":3.,"variant":.92,"color":Color("b2ffb4")},
 	"crown_orbit":{"style":1,"size":Vector2(46,18),"tail":120.,"width":2.4,"trail_alpha":.32,"variant":.92,"color":Color("9fffe2")},
-	"stern_fan":{"color":Color("ff9ecb")}
+	"stern_fan":{"color":Color("ff9ecb")},
+	"dawn_fan":{"color":Color("ffe4a0")},
+	"tidal_weave":{"color":Color("7ee9f2")},
+	"firefly_rain":{"color":Color("a8ffbb")}
 }
 
 static func profile(id: String) -> Dictionary:
@@ -50,7 +53,7 @@ static func individualize(bullet: Dictionary,index: int,time: float,uid: int,ser
 	var nozzle=sin((time+delay)*7.1+uid*.73)*.11+sin(index*.49+(time+delay)*3.3)*.065
 	var jitter=(_grain(seed,2)-.5)*.09
 	var kind=str(bullet.kind); var strength=.25 if kind=="gilded_helix" else (.55 if kind=="weave_cross" else 1.)
-	if kind in ["stern_fan","scatter_prism"]: nozzle*=.22; jitter*=.3
+	if bullet.has("stern_axis"): nozzle*=.22; jitter*=.3
 	if kind=="nova":
 		var angular_gap=TAU/maxf(1.,float(bullet.get("volley_count",12)))
 		nozzle=clampf(nozzle,-angular_gap*.14,angular_gap*.14); jitter*=.3
@@ -66,6 +69,9 @@ static func individualize(bullet: Dictionary,index: int,time: float,uid: int,ser
 	if kind=="rail_horizon":
 		bullet.flight_cruise=float(bullet.original_speed)*float(bullet.flight_speed_scale)
 		bullet.v*=.34+_grain(seed,11)*.10
+	if kind=="firefly_rain":
+		bullet.flight_cruise=float(bullet.original_speed)*float(bullet.flight_speed_scale)
+		bullet.v*=.48+_grain(seed,11)*.13
 	if kind=="nova": bullet.curve_rate=(.18+_grain(seed,15)*.22)*(-1. if posmod(floori(float(serial)/8.),2)==1 else 1.)
 	if bullet.has("stern_axis"):
 		bullet.stern_launch_axis=axis; bullet.flight_axis=bullet.stern_axis
@@ -94,8 +100,10 @@ static func _flight_step(bullet: Dictionary,delta: float) -> Vector2:
 		force+=axis*maxf(0.,float(bullet.flight_cruise)-before.dot(axis))*1.85
 	if bullet.has("stern_axis"):
 		var guide=Vector2(bullet.stern_axis)
-		if bullet.has("plume_phase"): guide=guide.rotated(.14*sin(age*3.1+float(bullet.plume_phase)))
+		if bullet.has("plume_phase"):
+			guide=guide.rotated(float(bullet.get("guide_amplitude",.14))*sin(age*float(bullet.get("guide_frequency",3.1))+float(bullet.plume_phase)))
 		var desired=guide*float(bullet.original_speed)*float(bullet.flight_speed_scale)
+		if str(bullet.kind)=="firefly_rain": desired*=minf(1.,.52+age*1.4)
 		force+=(desired-before)*3.2
 	bullet.v+=force/mass*delta
 	bullet.flight_lateral+=(before+Vector2(bullet.v)).dot(side)*.5*delta

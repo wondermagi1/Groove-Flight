@@ -1242,14 +1242,14 @@ func fire_weapon(trigger: Dictionary) -> void:
 	var speed=float(trigger.get("speed",700)); var lifetime=float(trigger.get("life",2))
 	var spread=float(trigger.get("spread",.1)); var pierce=int(trigger.get("pierce",0))
 	var reach=EMISSION.weapon_reach(speed,lifetime)
-	if family=="beam": rebuild_spatial()
+	if family=="beam" and kind not in VISUALS.MOVING_IDS: rebuild_spatial()
 	fx.volley(origin,direction,color,family,count)
 	if prism_cross:
 		fx.ring(origin,Color("f0f6ff"),22.,.16)
 		for arm in range(4):
 			fx.muzzle(origin,EMISSION.prism_axis(arm,4,0.,float(trigger.get("angle",0.))),EMISSION.PRISM_COLORS[arm],.75)
 	elif mounted:
-		for axis in [Vector2(-direction.y,direction.x),Vector2(direction.y,-direction.x)] if pattern==EMISSION.BROADSIDE else [-direction]:
+		for axis in [Vector2(-direction.y,direction.x),Vector2(direction.y,-direction.x)] if pattern==EMISSION.BROADSIDE else ([direction] if pattern in EMISSION.FORWARD_PATTERNS else [-direction]):
 			fx.muzzle(origin+axis*32.,axis,color,.8)
 	else:
 		fx.muzzle(origin+direction*25,direction,color,1.25 if family in ["rail","beam","missile"] else 1.)
@@ -1266,7 +1266,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 				fx.beam(start,enemy.at,EMISSION.volley_color(color,branch,int(trigger.get("quality",0))),optical.width,true,optical.duration,optical); hit.append(enemy.uid); hurt_enemy(enemy,damage,kind,context)
 				if float(trigger.get("explosion",0))>0: explosion(enemy.at,float(trigger.explosion),damage*.5,color,kind,context,enemy.uid)
 				start=enemy.at
-	elif family=="beam":
+	elif family=="beam" and kind not in VISUALS.MOVING_IDS:
 		for i in range(count):
 			var axis=direction.rotated((float(i)/maxf(1,count-1)-.5)*spread if count>1 else 0.)
 			var optical=EMISSION.optical_profile(i,int(context.get("uid",0)),int(context.get("serial",0)),EMISSION.beam_width(count))
@@ -1293,7 +1293,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 				mount=EMISSION.prism_shot(i,count,spread,float(trigger.get("angle",0.)))
 				axis=mount.axis; muzzle=origin+Vector2(mount.offset)
 			elif mounted:
-				mount=EMISSION.mounted_shot(pattern,direction,i,count,spread,int(trigger.get("serial",0)))
+				mount=EMISSION.forward_shot(pattern,direction,i,count,spread,music.timeline) if pattern in EMISSION.FORWARD_PATTERNS else EMISSION.mounted_shot(pattern,direction,i,count,spread,int(trigger.get("serial",0)))
 				axis=mount.axis; muzzle=origin+Vector2(mount.offset)
 			var bullet=shot(muzzle,axis,speed,damage,color,kind,lifetime,pierce)
 			if bullet.is_empty(): break
@@ -1313,6 +1313,8 @@ func fire_weapon(trigger: Dictionary) -> void:
 				if mount.has("rear_axis"):
 					bullet.stern_axis=mount.rear_axis; bullet.stern_launch_axis=axis
 					bullet.stern_speed_scale=mount.speed_scale
+					if mount.has("guide_phase"):
+						bullet.plume_phase=mount.guide_phase; bullet.guide_amplitude=mount.guide_amplitude; bullet.guide_frequency=mount.guide_frequency
 					var rear_axis=Vector2(mount.rear_axis); var rear_side=rear_axis.orthogonal()
 					bullet.v=rear_axis*Vector2(bullet.v).dot(rear_axis)*float(mount.speed_scale)+rear_side*Vector2(bullet.v).dot(rear_side)
 			VISUALS.individualize(bullet,i,music.timeline,int(trigger.get("uid",0)),int(trigger.get("serial",0)))

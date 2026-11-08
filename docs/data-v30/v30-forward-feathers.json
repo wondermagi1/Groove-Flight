@@ -1,0 +1,223 @@
+{
+  "checks": 404,
+  "facts": {
+    "beam_split": [
+      {
+        "ahead": 51,
+        "count": 51,
+        "curved": 51,
+        "heading": -1.5707963267949
+      },
+      {
+        "ahead": 51,
+        "count": 51,
+        "curved": 51,
+        "heading": 0.0
+      },
+      {
+        "ahead": 51,
+        "count": 51,
+        "curved": 51,
+        "heading": 0.785398163397448
+      }
+    ],
+    "dawn_fan": [
+      {
+        "ahead": 67,
+        "count": 67,
+        "curved": 67,
+        "heading": -1.5707963267949
+      },
+      {
+        "ahead": 67,
+        "count": 67,
+        "curved": 67,
+        "heading": 0.0
+      },
+      {
+        "ahead": 67,
+        "count": 67,
+        "curved": 67,
+        "heading": 0.785398163397448
+      }
+    ],
+    "ensemble_peak": 0.151336669921875,
+    "firefly_rain": [
+      {
+        "ahead": 79,
+        "count": 79,
+        "curved": 79,
+        "heading": -1.5707963267949
+      },
+      {
+        "ahead": 79,
+        "count": 79,
+        "curved": 79,
+        "heading": 0.0
+      },
+      {
+        "ahead": 79,
+        "count": 79,
+        "curved": 79,
+        "heading": 0.785398163397448
+      }
+    ],
+    "prism": {
+      "arms": 4,
+      "curved_trails": 61,
+      "high_count": 61,
+      "physical": true,
+      "still_flying_at_seconds": 0.8
+    },
+    "rings": {
+      "crown_breathing_rounds": 20,
+      "crown_first_frame_max_displacement": 28.8465538024902,
+      "nova_distinct_turn_rates": 59,
+      "nova_sectors": 8
+    },
+    "samples": 152,
+    "tidal_weave": [
+      {
+        "ahead": 73,
+        "count": 73,
+        "curved": 73,
+        "heading": -1.5707963267949
+      },
+      {
+        "ahead": 73,
+        "count": 73,
+        "curved": 73,
+        "heading": 0.0
+      },
+      {
+        "ahead": 73,
+        "count": 73,
+        "curved": 73,
+        "heading": 0.785398163397448
+      }
+    ],
+    "voice_families": {
+      "harp": 4,
+      "piano": 11,
+      "strings": 4
+    },
+    "weapons": {
+      "beam": {
+        "class": "laser_beam",
+        "count": 3,
+        "name": "棱镜光束",
+        "physical": false
+      },
+      "beam_split": {
+        "class": "feather_projectile",
+        "count": 6,
+        "name": "双生棱镜",
+        "physical": true
+      },
+      "chain": {
+        "class": "electric_arc",
+        "count": 3,
+        "name": "跃迁电弧",
+        "physical": false
+      },
+      "crown_orbit": {
+        "class": "orbital_guard",
+        "count": 20,
+        "name": "星冕回旋阵",
+        "physical": true
+      },
+      "dawn_fan": {
+        "class": "feather_projectile",
+        "count": 20,
+        "name": "晨羽前奏",
+        "physical": true
+      },
+      "firefly_rain": {
+        "class": "feather_projectile",
+        "count": 34,
+        "name": "流萤织雨",
+        "physical": true
+      },
+      "gilded_helix": {
+        "class": "feather_projectile",
+        "count": 52,
+        "name": "鎏金螺旋阵",
+        "physical": true
+      },
+      "missile": {
+        "class": "missile_shell",
+        "count": 3,
+        "name": "彗星导弹",
+        "physical": true
+      },
+      "nova": {
+        "class": "energy_orb",
+        "count": 12,
+        "name": "新星环炮",
+        "physical": true
+      },
+      "pulse": {
+        "class": "feather_projectile",
+        "count": 3,
+        "name": "脉冲机炮",
+        "physical": true
+      },
+      "pulse_needle": {
+        "class": "feather_projectile",
+        "count": 3,
+        "name": "星针狙击器",
+        "physical": true
+      },
+      "rail": {
+        "class": "feather_projectile",
+        "count": 3,
+        "name": "苍穹轨炮",
+        "physical": true
+      },
+      "rail_horizon": {
+        "class": "feather_projectile",
+        "count": 8,
+        "name": "地平线终奏",
+        "physical": true
+      },
+      "recorded_heavy": {
+        "class": "feather_projectile",
+        "count": 7,
+        "name": "终压攻城铳",
+        "physical": true
+      },
+      "scatter": {
+        "class": "feather_projectile",
+        "count": 5,
+        "name": "星砂霰弹",
+        "physical": true
+      },
+      "scatter_prism": {
+        "class": "feather_projectile",
+        "count": 16,
+        "name": "七彩折光匣",
+        "physical": true
+      },
+      "stern_fan": {
+        "class": "feather_projectile",
+        "count": 26,
+        "name": "尾羽回响",
+        "physical": true
+      },
+      "tidal_weave": {
+        "class": "feather_projectile",
+        "count": 28,
+        "name": "潮汐弦歌",
+        "physical": true
+      },
+      "weave_cross": {
+        "class": "feather_projectile",
+        "count": 70,
+        "name": "虹织十字炮",
+        "physical": true
+      }
+    }
+  },
+  "failures": [],
+  "scope": "Current19weapon motion classes,forward headings/counts/forces/real arrival/range retirement and152sample hashes,acoustic voices and3+3availability. Controlled fixtures,no human balance or sustained FPS claim."
+}

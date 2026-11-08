@@ -1,0 +1,24 @@
+{
+  "scope": "Sequential offline current fixed-voice auditions; each repeats after250ms. No gameplay feedback/backing or live timing claim.",
+  "seconds": 5.1,
+  "timeline": [
+    {
+      "id": "dawn_fan",
+      "instrument": "柔亮高音钢琴",
+      "start_seconds": 0.0,
+      "end_seconds": 1.7
+    },
+    {
+      "id": "tidal_weave",
+      "instrument": "柔奏高音小提琴",
+      "start_seconds": 1.7,
+      "end_seconds": 3.4
+    },
+    {
+      "id": "firefly_rain",
+      "instrument": "晶润中音竖琴",
+      "start_seconds": 3.4,
+      "end_seconds": 5.1
+    }
+  ]
+}

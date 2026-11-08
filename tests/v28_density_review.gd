@@ -11,9 +11,11 @@ func run() -> void:
 	game.SWARM.use_native=not "--force-script" in OS.get_cmdline_user_args()
 	var results: Dictionary={}
 	for scenario in ["deployment","encirclement"]:
-		fixture(""); game.invulnerable=1000.; game.rng.seed=2808
+		fixture(""); game.fire_log.clear(); game.invulnerable=1000.; game.rng.seed=2808
 		game.loadout._fleet_stats={"ballistic":24.,"energy":24.,"support":24.,"power":24.}
-		for entry in [["gilded_helix",0],["weave_cross",3],["beam",6],["crown_orbit",8],["scatter_prism",11],["stern_fan",14],["pulse",16],["rail_horizon",17]]:
+		var entries=[["gilded_helix",0],["weave_cross",3],["beam",6],["crown_orbit",8],["scatter_prism",11],["stern_fan",14],["pulse",16],["rail_horizon",17]]
+		if "--forward-loadout" in OS.get_cmdline_user_args(): entries=[["dawn_fan",0],["beam_split",2],["tidal_weave",4],["firefly_rain",8],["stern_fan",11],["rail_horizon",13],["scatter_prism",16],["nova",18]]
+		for entry in entries:
 			var uid=game.loadout.add_module(str(entry[0]),int(entry[1])); game.loadout.find(uid).level=4
 		game.refresh_loadout_stats()
 		var unit_count=600 if "--600" in OS.get_cmdline_user_args() else 1024
@@ -26,7 +28,7 @@ func run() -> void:
 		var samples: Dictionary={}
 		for key in ["frame","simulation","enemy","spatial","projectile","effects","dispatch","gpu","beat_enemy"]: samples[key]=[]
 		var last_step=-1; var previous=Time.get_ticks_usec(); var peaks={"enemies":0,"projectiles":0,"rendered":0}; var worst: Array=[]
-		for frame in range(120 if "--profile-short" in OS.get_cmdline_user_args() else 720):
+		for frame in range(120 if "--profile-short" in OS.get_cmdline_user_args() else (960 if "--forward-loadout" in OS.get_cmdline_user_args() else 720)):
 			var t=float(frame)/60.; var delta=1./60.; var started=Time.get_ticks_usec()
 			game.music.timeline=t; game.player=Vector2(sin(t*.35)*90.,cos(t*.28)*55.)
 			game.camera.position=game.player; game.camera.force_update_scroll()
@@ -53,11 +55,14 @@ func run() -> void:
 		for key in samples: timing[key]=distribution(samples[key])
 		check(game.enemies.size()==unit_count and game.enemy_bullets.is_empty(),scenario+": preserve all ordinary enemies and no hostile bullets")
 		check(game.pending_projectiles.is_empty(),scenario+": no deferred projectile backlog")
-		results[scenario]={"milliseconds":timing,"peaks":peaks,"worst":worst,"frames":samples.frame.size()}
+		var fired: Dictionary={}
+		for shot in game.fire_log: fired[str(shot.kind)]=true
+		if "--forward-loadout" in OS.get_cmdline_user_args(): check(fired.size()==8,scenario+": all eight weapons fire,including the slowest charged broadside")
+		results[scenario]={"milliseconds":timing,"peaks":peaks,"worst":worst,"frames":samples.frame.size(),"fired_weapons":fired.keys()}
 		print("V28_SCENARIO ",scenario," ",JSON.stringify(results[scenario]))
 	var tag="current"
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--perf-tag="): tag=arg.trim_prefix("--perf-tag=")
-	var result={"checks":checks,"failures":failures,"scenarios":results,"gpu":RenderingServer.get_video_adapter_name(),"cpu":OS.get_processor_name(),"renderer":RenderingServer.get_current_rendering_method(),"sequence_step_seconds":game.LOADOUT.SEQUENCE_STEP_SECONDS,"scope":"Isolated native1920x1080,"+str(results.deployment.peaks.enemies)+"high-HP ordinary hulls,eightLv4 weapons,attributes24,two12second manual60Hz simulations (deployment and encirclement),first60frames discarded per scenario. Current production250ms sequence. Audio muted,no captures. Controlled crowd test,not sustained campaign FPS."}
+	var result={"checks":checks,"failures":failures,"scenarios":results,"gpu":RenderingServer.get_video_adapter_name(),"cpu":OS.get_processor_name(),"renderer":RenderingServer.get_current_rendering_method(),"sequence_step_seconds":game.LOADOUT.SEQUENCE_STEP_SECONDS,"scope":"Isolated native1920x1080,"+str(results.deployment.peaks.enemies)+"high-HP ordinary hulls,eightLv4 weapons,attributes24,two"+str((results.deployment.frames+60)/60)+"second manual60Hz simulations (deployment and encirclement),first60frames discarded per scenario. Current production250ms sequence. Audio muted,no captures. Controlled crowd test,not sustained campaign FPS."}
 	FileAccess.open("res://tests/results-v28-density-"+tag+".json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	stop_audio(game); current_scene=null; game.queue_free(); await frames(6); quit(0 if failures.is_empty() else 1)

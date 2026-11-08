@@ -1,0 +1,17 @@
+{
+  "version": "0.30.0-forward-feathers",
+  "backup_commit": "5e52ee0b6ebd74c0f941935fa915d5edf8439121",
+  "checks": 824,
+  "failures": [],
+  "reports": [
+    "v30-forward-feathers.json",
+    "v27-sequencer.json",
+    "v29-music-shop-hud.json",
+    "forward-density.json"
+  ],
+  "weapons": 19,
+  "sample_files": 152,
+  "old_samples_preserved": 128,
+  "new_samples": 24,
+  "note": "Current motion/arrival/range/sample/composer/scan/shop checks plus isolated600enemy new-weapon loadout. Preview is controlled native capture with source-sample audition soundtrack; no sustained60FPS or human balance claim."
+}

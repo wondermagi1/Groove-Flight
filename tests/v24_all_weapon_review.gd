@@ -21,7 +21,7 @@ func roster_checks() -> void:
 			check(seeds.size()>1 and durations.size()>1,"separate rays retain independent phase and flash duration / "+str(row.id))
 		check(event.pitch==0 and event.cadence_beats==1,"fixed instrument trigger remains singular / "+str(row.id))
 		covered[str(row.id)]={"name":row.name,"class":row.visual_class,"count":event.count,"physical":physical}
-	check(covered.size()==16,"all sixteen active weapons are covered")
+	check(covered.size()==C.playable_weapons().size(),"all current active weapons are covered")
 	facts.weapons=covered
 
 func ring_checks() -> void:
