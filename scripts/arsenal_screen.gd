@@ -493,7 +493,7 @@ func _build_sequencer(rect: Rect2) -> void:
 		content.add_child(panel)
 		panel.add_child(rows_area)
 	else:
-		var column := _panel(rect, "三轨音序", "每轨8格 · 每格0.125秒 · 一轮1秒")
+		var column := _panel(rect, "三轨音序", "每轨8格 · 每格0.25秒 · 一轮2秒")
 		rows_area.custom_minimum_size.y = 188.0 if rect.size.y > 270.0 else 148.0
 		rows_area.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		column.add_child(rows_area)
@@ -757,7 +757,7 @@ func _update_detail() -> void:
 		if not actual.get("calculation",{}).is_empty():
 			var f: Dictionary=actual.calculation
 			_detail_text("计算明细\n基础 %.1f × 舰体 %.2f × 等级 %.2f\n× 属性 %.2f × 单发倍率 %.2f × 改装 %.2f"%[f.base_damage,f.ship_multiplier,f.level_multiplier,f.attribute_multiplier,f.damage_multiplier,f.mod_multiplier],16)
-			_detail_text("弹数 %d + %d → %d  上限 %d\n充能 %d → %d 小节  每轮1秒"%[f.base_count,f.extra_count,actual.count,f.count_cap,actual.charge_base,actual.charge],16,Color("9dcdd8"))
+			_detail_text("弹数 %d + %d → %d  上限 %d\n充能 %d → %d 小节  每轮2秒"%[f.base_count,f.extra_count,actual.count,f.count_cap,actual.charge_base,actual.charge],16,Color("9dcdd8"))
 			_detail_text("其中属性换算弹数 %d"%int(f.get("attribute_count",0)),15,Color("829eb5"))
 			for rule_text in game.loadout.rule_explanation(preview_uid,serial): _detail_text(rule_text,14,Color("7e9caf"))
 		if preview_uid>=0 and game.get("receipt")!=null:
@@ -879,7 +879,7 @@ func _process(delta: float) -> void:
 	tick = 0.0
 	_update_live()
 func _update_sequence_cursor() -> void:
-	var step: int = int(game.music.timeline / 0.125) % 8 if game.music != null else -1
+	var step: int = int(game.music.timeline / game.LOADOUT.SEQUENCE_STEP_SECONDS) % 8 if game.music != null else -1
 	for cell in step_cells:
 		if is_instance_valid(cell): cell.modulate = Color("a8e9e7") if cell.slot_index % 8 == step and mode == "combat" else Color.WHITE
 	for index in range(step_lights.size()):
@@ -894,7 +894,7 @@ func _update_live() -> void:
 		var stats: Dictionary = game.loadout.stats()
 		for key in stat_labels:
 			if is_instance_valid(stat_labels[key]): stat_labels[key].text = _format_stat(str(key), float(stats.get(key, 0.0)))
-	var step: int = int(game.music.timeline / 0.125) % 8 if game.music != null else -1
+	var step: int = int(game.music.timeline / game.LOADOUT.SEQUENCE_STEP_SECONDS) % 8 if game.music != null else -1
 	for card in step_cards:
 		if is_instance_valid(card):
 			card.modulate = Color("c8faff") if card.slot_index % 8 == step and mode == "combat" else Color.WHITE

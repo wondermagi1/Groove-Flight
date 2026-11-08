@@ -36,7 +36,7 @@ func run() -> void:
 		var model=L.new(); model.set_starters([str(config.id)])
 		var notes: Array=[]
 		for serial in range(32): notes.append_array(model.schedule(serial))
-		check(notes.size()==4 and notes.all(func(e): return e.pitch==0 and e.cadence_beats==1 and e.voice==row.voice),"fixed sound remains one unchanged voice per one-second scan / "+str(config.id))
+		check(notes.size()==4 and notes.all(func(e): return e.pitch==0 and e.cadence_beats==1 and e.voice==row.voice),"fixed sound remains one unchanged voice per two-second scan / "+str(config.id))
 	check(families=={"piano":10,"strings":3,"harp":3} and sample_count==128 and hashes.size()==128,"ten piano variants three bowed strings and three harps have128distinct samples")
 	var synth=MUSIC.new(); root.add_child(synth); synth.backing_gain=0.; synth.groove_gain=0.; synth.weapon_gain=.34
 	var model=L.new(); model.audio_guard_enabled=false; model.set_starters([])

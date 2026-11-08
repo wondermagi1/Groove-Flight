@@ -128,7 +128,7 @@ func _process(delta: float) -> void:
 	sync_elapsed+=delta
 	if sync_elapsed>=.15: sync_elapsed=0.; sync()
 	if is_instance_valid(arena):
-		if loop_bar and arena.music.timeline>=1.: replay()
+		if loop_bar and arena.music.timeline>=source_game.LOADOUT.SEQUENCE_LOOP_SECONDS: replay()
 		for target in arena.enemies: target.hp=target.max_hp
 
 func select_sample(index: int) -> void:

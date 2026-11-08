@@ -1023,9 +1023,9 @@ func spawn_for_step(serial: int) -> void:
 		if serial%16!=0 or enemies.size()>=120: return
 		spawn_wave_group(16,"battalion_grid")
 		return
-	if serial%4!=0: return
+	if serial%maxi(1,roundi(.5/LOADOUT.SEQUENCE_STEP_SECONDS))!=0: return
 	if wave==wave_count():
-		if not boss_down and serial%16==0:
+		if not boss_down and serial%maxi(1,roundi(2./LOADOUT.SEQUENCE_STEP_SECONDS))==0:
 			spawn_wave_group(9,"battalion_grid",true)
 		return
 	var config=wave_profile(); var elapsed=music.timeline-wave_start
@@ -1829,7 +1829,7 @@ func update_tutorial() -> void:
 	if tutorial_stage>=4:
 		tutorial_active=false; settings.tutorial_done=true; save_settings(); return
 	var movement=" / ".join([binding_name("up"),binding_name("left"),binding_name("down"),binding_name("right")])
-	var tips=[movement+" 自由飞行 · 武器跟随1秒音序自动开火","观察下方8格 · 每格0.125秒，一轮1秒",binding_name("editor")+" 打开三轨音序工坊 · 把武器拖到另一个扫描格",binding_name("dash")+" 冲刺穿过缺口 · "+binding_name("overload")+" 满充能后超载"]
+	var tips=[movement+" 自由飞行 · 武器跟随2秒音序自动开火","观察下方8格 · 每格0.25秒，一轮2秒",binding_name("editor")+" 打开三轨音序工坊 · 把武器拖到另一个扫描格",binding_name("dash")+" 冲刺穿过缺口 · "+binding_name("overload")+" 满充能后超载"]
 	notice=tips[tutorial_stage]; notice_until=INF
 
 func apply_input_bindings() -> void:

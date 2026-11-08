@@ -2,12 +2,13 @@ extends AudioStreamPlayer
 ## One native stereo score and a shared event manifest. Cancellable preparation
 ## runs off the main thread; cached adoption preserves the native audio phase.
 const CLOCK=preload("res://scripts/music_clock.gd")
+const SEQUENCE=preload("res://scripts/arsenal_loadout.gd")
 signal step_fired(index: int,serial: int,deadline: float)
 signal prepared(key: String)
-const RENDER_VERSION=4
+const RENDER_VERSION=5
 const RATE=22050
 const BPM=120.
-const STEP=.125
+const STEP=SEQUENCE.SEQUENCE_STEP_SECONDS
 const LENGTH=128.
 const GROOVE_LENGTH=8.
 var samples: Dictionary={}

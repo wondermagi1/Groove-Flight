@@ -48,16 +48,16 @@ func run() -> void:
 	var synth=game.standard_music; synth.weapon_gain=.34; synth.track_mutes=[false,false,false]
 	var snapshot=synth._snapshot(model)
 	var first=snapshot.events.filter(func(e): return float(e.deadline)<1.)
-	check(first.size()==2 and first[0].uid==a and first[1].uid==b and is_equal_approx(first[1].deadline-first[0].deadline,.25),"same-type12/34 emits at both heads,250ms apart")
+	check(first.size()==2 and first[0].uid==a and first[1].uid==b and is_equal_approx(first[1].deadline-first[0].deadline,.5),"same-type12/34 emits at both heads,500ms apart")
 	check(first.size()==2 and first[0].sample_key==first[1].sample_key and first[0].gain==first[1].gain,"both copies play the same timbre and level")
 	var wav=synth.compose(model); var pcm=wav.data
 	var instrument_pcm=snapshot.instruments[first[0].sample_key]
-	check(instrument_pcm.size()>int(.25*synth.RATE),"the test voice has an audible tail overlapping the second copy")
+	check(instrument_pcm.size()>int(.5*synth.RATE),"the test voice has an audible tail overlapping the second copy")
 	# Compare the actual PCM against the sum of every overlapping source,
 	# including soft limiting; replacing the first voice would fail this.
 	var max_error=0.; var frame_count=int(synth.LENGTH*synth.RATE)
 	for n in range(60):
-		var frame=int((4.27+n*.001)*synth.RATE); var left=0.
+		var frame=int((4.52+n*.001)*synth.RATE); var left=0.
 		for event in snapshot.events:
 			var sample=snapshot.instruments[event.sample_key]
 			var source_index=posmod(frame-roundi(event.deadline*synth.RATE),frame_count)
@@ -87,7 +87,7 @@ func run() -> void:
 	a=game.loadout.add_module("beam",0); b=game.loadout.add_module("beam",2)
 	game.loadout.audio_guard_enabled=true; game.refresh_loadout_stats(); game.music.begin(game.loadout)
 	var waited=0.
-	while game.music.timeline<2.6 and waited<25.:
+	while game.music.timeline<4.7 and waited<25.:
 		await create_timer(.1).timeout; waited+=.1
 	var shots=game.fire_log.filter(func(e): return int(e.uid) in [a,b])
 	check(shots.size()>=6,"both copies fire repeatedly under the real native transport")
@@ -106,10 +106,10 @@ func run() -> void:
 	game.state="editor"; game.editor_return="combat"; game.editing_changed=false; game.ensure_lab()
 	var wanted=synth._wanted; var campaign=JSON.stringify([game.loadout.modules,game.loadout.slots,game.dust])
 	game.lab.begin_preview("beam"); waited=0.
-	while game.lab.arena.music.timeline<1.15 and waited<20.:
+	while game.lab.arena.music.timeline<2.15 and waited<20.:
 		await create_timer(.1).timeout; waited+=.1
 	facts.preview_state={"state":game.state,"status":game.lab.status,"timeline":game.lab.arena.music.timeline,"campaign_wanted_before":wanted,"campaign_wanted_after":synth._wanted,"preview_key":game.lab.signature,"actual_key":game.lab.arena.music.key_for(game.lab.arena.loadout),"compiling":game.lab.arena.music.compiling}
-	check(game.lab.arena.music.timeline>=1. and synth._wanted==wanted,"preview uses its own compiler without replacing the campaign's pending audio")
+	check(game.lab.arena.music.timeline>=2. and synth._wanted==wanted,"preview uses its own compiler without replacing the campaign's pending audio")
 	check(JSON.stringify([game.loadout.modules,game.loadout.slots,game.dust])==campaign,"same-type preview does not change equipment or currency")
 	game.lab.toggle_track(0); game.close_editor(); waited=0.
 	while (game.state!="combat" or not synth.is_current(game.loadout)) and waited<20.:

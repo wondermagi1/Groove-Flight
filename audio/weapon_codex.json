@@ -1,7 +1,10 @@
 {
 	"sample_file_count": 128,
 	"schema": 1,
-	"scope": "Original twelve instruments plus four new weapons, including the rear fan. Fixed pitch0 battle sounds; no automatic strength or melody cycles.",
+	"scope": "Sixteen active fixed instruments. Fixed pitch0 battle sounds; no automatic strength or melody cycles.",
+	"sequence_loop_seconds": 2.0,
+	"sequence_step_seconds": 0.25,
+	"version": "0.27.0-two-second-sequencer",
 	"weapon_count": 16,
 	"weapons": [
 		{

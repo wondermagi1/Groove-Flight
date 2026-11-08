@@ -23,17 +23,17 @@ func run() -> void:
 	# The two normal starters have two-loop charge gates. Add an uncharged
 	# instrument to observe every beat as a real projectile dispatch.
 	var observed_uid=game.loadout.add_module("pulse",16); game.refresh_loadout_stats()
-	check(game.loadout.active_tracks==3 and is_equal_approx(game.music.STEP,.125),"all three visible tracks share the actual125ms clock")
+	check(game.loadout.active_tracks==3 and is_equal_approx(game.music.STEP,.25),"all three visible tracks share the actual250ms clock")
 	# Exercise the real Main callback, not a second model of the scheduler.
 	game.fire_log.clear()
 	for serial in range(64):
-		game.music.timeline=serial*.125; game.music.last_step=serial
-		game.on_step(serial%8,serial,serial*.125)
+		game.music.timeline=serial*game.LOADOUT.SEQUENCE_STEP_SECONDS; game.music.last_step=serial
+		game.on_step(serial%8,serial,serial*game.LOADOUT.SEQUENCE_STEP_SECONDS)
 	var uid=observed_uid; var second=int(game.loadout.slots[8])
 	var shots=game.fire_log.filter(func(e): return int(e.uid)==uid and str(e.pilot)!="echo")
-	check(shots.size()==8,"real dispatch fires one salvo per loop for eight seconds")
+	check(shots.size()==8,"real dispatch fires one salvo per loop for sixteen seconds")
 	check(shots.map(func(e): return int(e.cadence_step))==[0,0,0,0,0,0,0,0],"real fire log spans the same fixed voice on every scan")
-	for i in range(1,shots.size()): check(is_equal_approx(shots[i].actual-shots[i-1].actual,1.),"real salvos stay one second apart")
+	for i in range(1,shots.size()): check(is_equal_approx(shots[i].actual-shots[i-1].actual,2.),"real salvos stay two seconds apart")
 	game.state="editor"; game.music.last_step=64
 	game.weapon_beat_state[str(uid)]=2; game.weapon_beat_state[str(second)]=1
 	check(game.loadout.move_module(uid,4),"move fixture changes the weapon scan position")
@@ -88,10 +88,10 @@ func run() -> void:
 	game.start_run(1705,"mercury"); game.invulnerable=1000.
 	var native_uid=game.loadout.add_module("pulse",16); game.refresh_loadout_stats(); game.music.begin(game.loadout)
 	var waited=0.
-	while game.music.timeline<8.15 and waited<30.:
+	while game.music.timeline<16.15 and waited<30.:
 		await create_timer(.1).timeout; waited+=.1
 	shots=game.fire_log.filter(func(e): return int(e.uid)==native_uid and str(e.pilot)!="echo")
-	check(game.music.timeline>=8. and shots.size()>=8,"native audio transport drives at least eight real seconds of weapon dispatch")
+	check(game.music.timeline>=16. and shots.size()>=8,"native audio transport drives at least sixteen real seconds of weapon dispatch")
 	if shots.size()>=8: check(shots.slice(0,8).map(func(e): return int(e.cadence_step))==[0,0,0,0,0,0,0,0],"native transport preserves the fixed voices without an automatic phrase")
 	facts.native_fire_log=shots; facts.native_seconds=game.music.timeline
 	game.music.hold(true); var held_time=game.music.timeline; var held_count=game.fire_log.size()
@@ -102,7 +102,7 @@ func run() -> void:
 	game.state="editor"; game.music.hold(true); game.ensure_lab()
 	var campaign=JSON.stringify([game.loadout.modules,game.loadout.slots,game.loadout.phrase_offsets,game.dust,game.rng.state])
 	game.lab.begin_preview(); waited=0.
-	while (not is_instance_valid(game.lab.arena) or game.lab.arena.music.timeline<4.15) and waited<25.:
+	while (not is_instance_valid(game.lab.arena) or game.lab.arena.music.timeline<8.15) and waited<25.:
 		await create_timer(.1).timeout; waited+=.1
 	var preview_shots=game.lab.arena.fire_log.filter(func(e): return int(e.uid)==native_uid)
 	check(preview_shots.size()>=4 and preview_shots.slice(0,4).map(func(e): return int(e.cadence_step))==[0,0,0,0],"real shop preview uses the same fixed-voice scan rule")
