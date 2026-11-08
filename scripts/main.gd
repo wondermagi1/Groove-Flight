@@ -20,7 +20,7 @@ const EMISSION=preload("res://scripts/weapon_emission.gd")
 const VISUALS=preload("res://scripts/weapon_visuals.gd")
 const ARRIVAL=preload("res://scripts/enemy_arrival.gd")
 const PATHS=preload("res://scripts/build_paths.gd")
-const LEVEL_MUSIC_PATH="res://audio/authorized/uranus_amber_loop.ogg"
+const LEVEL_MUSIC_PATH="res://audio/authorized/scott_buckley/filaments.ogg"
 const URANUS_MUSIC_PATH=LEVEL_MUSIC_PATH
 const RECORDED_WEAPON_GROUPS={
 	"recorded_crude":"res://audio/authorized/weapon_crude_fire_group_6s.wav",
@@ -189,15 +189,11 @@ func _ready() -> void:
 	composer_player.playback_started.connect(_composer_started)
 	composer_player.failed.connect(_composer_failed)
 	menu_music=AudioStreamPlayer.new(); menu_music.name="MenuMusic"
-	var menu_path="res://audio/authorized/menu_theme.ogg"
-	var menu_stream=load(menu_path) if ResourceLoader.exists(menu_path) else null
-	if menu_stream==null:
-		var absolute_menu_path=ProjectSettings.globalize_path(menu_path)
-		if FileAccess.file_exists(absolute_menu_path) and ClassDB.class_has_method("AudioStreamOggVorbis","load_from_file"):
-			menu_stream=AudioStreamOggVorbis.load_from_file(absolute_menu_path)
+	var menu_stream=_load_audio(LEVEL_MUSIC_PATH) if not is_preview else null
 	if menu_stream!=null:
 		if menu_stream is AudioStreamOggVorbis: menu_stream.loop=true
-		menu_music.stream=menu_stream; add_child(menu_music)
+		menu_music.stream=menu_stream
+	add_child(menu_music)
 	planet_music=AudioStreamPlayer.new(); planet_music.name="PlanetMusic"
 	planet_music.volume_db=-14.; add_child(planet_music)
 	audio_transcriber=load("res://scripts/audio_transcriber.gd").new(); add_child(audio_transcriber)
@@ -750,12 +746,20 @@ func shop_reroll() -> bool:
 	if locked.size()==shop_offers.size(): return false
 	var excluded: Array=[]
 	for offer in locked: excluded.append(str(offer.id))
-	var pool=loadout.make_shop(rng,wave,excluded)
-	var replacement: Array=[]; var next=0
+	var locked_weapons=0
+	for offer in locked:
+		if str(C.item(str(offer.id)).category)=="weapon": locked_weapons+=1
+	var pool=loadout.make_shop(rng,wave,excluded,maxi(0,3-locked_weapons),maxi(0,3-(locked.size()-locked_weapons)))
+	var replacement: Array=[]
 	for i in range(6):
 		var offer: Dictionary=shop_offers[i] if i<shop_offers.size() else {}
 		if bool(offer.get("locked",false)) and not bool(offer.get("sold",false)): replacement.append(offer)
-		else: replacement.append(pool[next]); next+=1
+		else:
+			var next=-1
+			for candidate in range(pool.size()):
+				if (str(C.item(str(pool[candidate].id)).category)=="weapon")== (i<3): next=candidate; break
+			if next<0: return false
+			replacement.append(pool[next]); pool.remove_at(next)
 	dust-=shop_reroll_cost; shop_reroll_cost+=4; shop_offers=replacement
 	sound("pickup",-15); ui.refresh(); return true
 

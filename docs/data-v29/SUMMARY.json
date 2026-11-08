@@ -1,0 +1,14 @@
+{
+  "version": "0.29.0-filaments-shop-hud",
+  "backup_commit": "2ea3f58af86b793996a2fe05e29f2939a77db607",
+  "current_checks": 453,
+  "current_failures": [],
+  "reports": [
+    "v29-music-shop-hud.json",
+    "v27-sequencer.json",
+    "v26-audio-controls.json"
+  ],
+  "legacy_note": "Two legacy suites were also attempted:93 and6obsolete assertion failures,identical on2ea3f58baseline andcurrent. These are not reported as passes. See legacy-baseline-audit.json.",
+  "music_source": "../../audio/authorized/scott_buckley/SOURCE.json",
+  "local_recovery": "User profile sequencer restored true,background fader0→0.65; other configuration and progress bytes preserved. Private original retained only under ignored work/."
+}

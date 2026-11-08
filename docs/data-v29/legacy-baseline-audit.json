@@ -1,0 +1,18 @@
+[
+  {
+    "test": "arsenal_loadout_review",
+    "baseline_commit": "2ea3f58",
+    "baseline_failures": 93,
+    "current_failures": 93,
+    "identical_failures": true,
+    "new_failures": []
+  },
+  {
+    "test": "v11_upgrade_review",
+    "baseline_commit": "2ea3f58",
+    "baseline_failures": 6,
+    "current_failures": 6,
+    "identical_failures": true,
+    "new_failures": []
+  }
+]

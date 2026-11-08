@@ -248,6 +248,10 @@ func settings_screen() -> void:
 	fullscreen.toggle_mode=true; fullscreen.button_pressed=DisplayServer.window_get_mode()==DisplayServer.WINDOW_MODE_FULLSCREEN
 	fullscreen.toggled.connect(func(value):game.settings.fullscreen=value; fullscreen.text="显示：全屏" if value else "显示：窗口"; DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if value else DisplayServer.WINDOW_MODE_WINDOWED)); content.add_child(fullscreen)
 	content.add_child(label("背景素材：Solar System Scope / INOVE · CC BY4.0",14,Color("758da3")))
+	var music_credit=RichTextLabel.new(); music_credit.name="MusicAttribution"; music_credit.bbcode_enabled=true; music_credit.fit_content=true
+	music_credit.text="背景音乐：Filaments — Scott Buckley · CC BY 4.0\n[url=https://www.scottbuckley.com.au/library/filaments/]www.scottbuckley.com.au[/url] · [url=https://creativecommons.org/licenses/by/4.0/]许可与署名[/url]"
+	music_credit.add_theme_font_size_override("normal_font_size",14)
+	music_credit.meta_clicked.connect(func(url): OS.shell_open(str(url))); content.add_child(music_credit)
 	shell.add_child(button("保存并返回",game.close_settings))
 func results_screen() -> void:
 	var shell=panel(760,minf(850.,get_viewport().get_visible_rect().size.y-48.))

@@ -4,8 +4,8 @@
   "target_game": "Groove Flight",
   "updated_at": "2026-11-08",
   "source_records": 9,
-  "sources_used_at_runtime": 7,
-  "runtime_clip_count": 30,
+  "sources_used_at_runtime": 5,
+  "runtime_clip_count": 28,
   "items": [
     {
       "catalog_id": "music_menu",
@@ -13,7 +13,7 @@
       "source_file": "audio/library/groove_core/raw/music_menu/菜单背景音乐.mp4.mp3",
       "source_sha256": "28d231694c0172ba3d267b344869fb5f75ab48694926f572e47d81797c698b4a",
       "processing": "ffmpeg PCM16 48kHz stereo; loudness normalized to about -18 LUFS; OGG Vorbis q6",
-      "groove_flight_use": "标题页、霓虹港、机库与星球航图背景音乐",
+      "groove_flight_use": "V29前背景音乐；素材保留，当前背景改为Scott Buckley的Filaments。",
       "runtime_files": [
         "audio/authorized/menu_theme.ogg"
       ],
@@ -24,7 +24,7 @@
           "use": "full menu theme"
         }
       ],
-      "status": "runtime"
+      "status": "archived_v29_replaced_by_filaments"
     },
     {
       "catalog_id": "events_enemy_collision",
@@ -82,7 +82,7 @@
       "source_file": "audio/library/groove_core/raw/music_uranus_amber/天王星关卡 安泊尔背景音乐.mp4",
       "source_sha256": "ea73b72e3a463887454b63127408ece6f17ee9ea0568086c5ee087c50a8fc6a4",
       "processing": "0.32-20.32秒；10小节120 BPM；首尾8ms淡化；约-19 LUFS；48kHz双声道；OGG Vorbis q5",
-      "groove_flight_use": "所有星球共用的战斗、编辑器与波间商店背景音乐；暂停和编辑器保持当前位置，离开关卡状态时停止",
+      "groove_flight_use": "V29前背景音乐；素材保留，当前背景改为Scott Buckley的Filaments。",
       "runtime_files": [
         "audio/authorized/uranus_amber_loop.ogg"
       ],
@@ -93,7 +93,7 @@
           "use": "ten-bar 120 BPM combat loop"
         }
       ],
-      "status": "runtime"
+      "status": "archived_v29_replaced_by_filaments"
     },
     {
       "catalog_id": "weapon_crude_fire",
@@ -236,5 +236,12 @@
       ],
       "status": "runtime"
     }
-  ]
+  ],
+  "external_background_music": {
+    "title": "Filaments",
+    "artist": "Scott Buckley",
+    "source": "audio/authorized/scott_buckley/SOURCE.json",
+    "runtime_file": "audio/authorized/scott_buckley/filaments.ogg",
+    "license": "CC BY4.0"
+  }
 }

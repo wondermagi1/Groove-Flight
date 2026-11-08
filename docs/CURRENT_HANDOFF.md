@@ -2,7 +2,9 @@
 
 武器改动先查[武器特效与音频对应表](WEAPON_VFX_AUDIO_REFERENCE.md)。用户要求本表长期维护；武器特效、声音或触发规则变更必须在同一提交同步更新表格、日期、版本与迭代记录。
 
-2026-11-08，工程版本 `0.28.0-crowd-performance`，开发分支 `codex/v28-crowd-performance`。远程仓库：https://github.com/wondermagi1/Groove-Flight 。本轮修改前备份`ce780a6`已上传并核验。后续每轮游戏修改前必须先上传Git备份并核验SHA，规则见根目录 `AGENTS.md`。
+2026-11-08，工程版本 `0.29.0-filaments-shop-hud`，开发分支 `codex/v29-filaments-hud`。远程仓库：https://github.com/wondermagi1/Groove-Flight 。本轮修改前备份`2ea3f58`已上传并核验。后续每轮游戏修改前必须先上传Git备份并核验SHA，规则见根目录 `AGENTS.md`。
+
+V29背景采用Filaments（Scott Buckley，CC BY4.0），设置与CREDITS保留署名和来源；原文件与完整OGG转换入库。本地音序隐藏开关已按用户要求恢复，并加入左下“显示音序器”入口；白点在装备卡片上方绘制。商店每次3武器＋3道具，刷新保留锁定的原位置/报价且维持配比。清波主属性奖励由+3改为+5，仍三选一。最新界面、商店与音乐验证见`docs/data-v29/SUMMARY.json`；其他项目仍按下方各版记录区分。见[V29说明](V29_FILAMENTS_SHOP_HUD.md)。
 
 V28将密集敌群的数值避让热点迁到Windows64原生模块，保留同一套个体路线、分组与扫掠净空规则。打包时必须携带`native/crowd/crowd.gdextension`和同目录DLL；构建源与MSVC脚本均在库内。其他平台沿用脚本后备。见[性能报告](V28_CROWD_PERFORMANCE.md)与[模块说明](../native/crowd/README.md)。
 

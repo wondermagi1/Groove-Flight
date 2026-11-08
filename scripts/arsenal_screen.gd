@@ -258,7 +258,8 @@ func refresh() -> void:
 	if mode == "combat":
 		var flight_width: float = minf(780.0, sequence_width)
 		var flight_height: float = minf(128.0, view.y * 0.15)
-		panel_rects.sequencer = Rect2(sequence_x + (sequence_width - flight_width) * 0.5, view.y - flight_height - 18.0, flight_width, flight_height)
+		var flight_x: float=22.0 if not _panel_visible("panel_inventory") else sequence_x
+		panel_rects.sequencer = Rect2(flight_x, view.y - flight_height - 18.0, flight_width, flight_height)
 	panel_rects.buffs = Rect2(view.x - right_width - 22.0, top, right_width, minf(630.0, view.y - top - 22.0))
 	if mode != "combat":
 		var shade := ColorRect.new()
@@ -276,6 +277,10 @@ func refresh() -> void:
 	if _panel_visible("panel_buffs"): _build_buffs(panel_rects.buffs)
 	if _panel_visible("panel_inventory"): _build_inventory(panel_rects.inventory)
 	if _panel_visible("panel_sequencer"): _build_sequencer(panel_rects.sequencer)
+	elif mode=="combat":
+		var restore=_button("显示音序器",_toggle_panel.bind("panel_sequencer"),Color("95c9cf"),34.)
+		restore.name="RestoreCombatSequencer"; restore.position=Vector2(22.,view.y-54.); restore.size.x=150.
+		content.add_child(restore)
 	if mode == "shop": _build_shop(Rect2(sequence_x, top, sequence_width, maxf(300.0, view.y - bottom_height - top - 40.0)))
 	_build_inspector(view, sequence_x, sequence_width, top, bottom_height)
 	if game.selected_uid >= 0 and not game.loadout.find(game.selected_uid).is_empty():
@@ -527,6 +532,7 @@ func _build_sequencer(rect: Rect2) -> void:
 		light.position=Vector2(cell_width*.5-4.,row_height-10.)
 		light.size=Vector2(8.,8.)
 		light.name="StepLight_%02d"%at
+		light.z_index=2
 		cell.add_child(light)
 		step_lights.append(light)
 	for at in range(game.loadout.active_tracks*8):
@@ -595,7 +601,7 @@ func _build_shop(rect: Rect2) -> void:
 	var reserved: float = inspector_width + 18.0
 	var columns: int = 2
 	var width: float = (rect.size.x - reserved - gap) / float(columns)
-	var height: float = clampf((rect.size.y - 58.0 - gap * 2.0) / 3.0, 146.0, 202.0)
+	var height: float = clampf((rect.size.y - 58.0 - gap * 2.0) / 3.0, 182.0, 228.0)
 	var scroll := ScrollContainer.new()
 	scroll.name = "ShopOffersScroll"
 	scroll.position = rect.position + Vector2(reserved, 52.0)
@@ -635,10 +641,15 @@ func _build_shop(rect: Rect2) -> void:
 		card.sold = bool(offer.sold)
 		card.name = "ShopOffer_%d" % index
 		card.position = Vector2(float(index % columns) * (width + gap), float(index / columns) * (height + gap))
-		card.position.y+=27.+boon_height
-		card.size = Vector2(width, height-28.)
-		var lock_button=_button("已锁定" if bool(offer.get("locked",false)) else "锁定",game.toggle_offer_lock.bind(index),Color("e7c88d"),24.)
-		lock_button.name="ShopLock_%d"%index; lock_button.position=card.position-Vector2(0,27); lock_button.size=Vector2(width,25.); lock_button.disabled=bool(offer.sold); area.add_child(lock_button)
+		card.position.y+=38.+boon_height
+		card.size = Vector2(width, height-38.)
+		var lock_button=_button("已锁定" if bool(offer.get("locked",false)) else "锁定",game.toggle_offer_lock.bind(index),Color("e7c88d"),30.)
+		lock_button.add_theme_font_size_override("font_size",14)
+		for style_name in ["normal","hover","pressed","disabled"]:
+			var lock_style: StyleBoxFlat=lock_button.get_theme_stylebox(style_name).duplicate()
+			lock_style.content_margin_top=3.; lock_style.content_margin_bottom=3.
+			lock_button.add_theme_stylebox_override(style_name,lock_style)
+		lock_button.name="ShopLock_%d"%index; lock_button.position=card.position-Vector2(0,38); lock_button.size=Vector2(width,30.); lock_button.disabled=bool(offer.sold); area.add_child(lock_button)
 		card.disabled = card.sold or game.dust < card.price or game.loadout.modules.size() >= 64
 		decorate_card(card, DATA.quality_color(row,card.item_level))
 		area.add_child(card)

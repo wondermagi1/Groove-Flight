@@ -1,0 +1,13 @@
+{
+	"checks": 54,
+	"facts": {
+		"preview": {
+			"loops": 4,
+			"scope": "Production music renderer, controlled9-module chamber ensemble with repeated piano UID. Background/feedback excluded. Not recorded gameplay or retimed old audio.",
+			"seconds": 8,
+			"step_seconds": 0.25
+		}
+	},
+	"failures": [],
+	"scope": "All16 production schedules and charge gates, native clock and visible24scan dots at2seconds, independent same-type placement, pause/resume and8second actual-renderer ensemble preview. Enemy movement/background audio and explicit composer tempo remain separate."
+}

@@ -40,10 +40,10 @@ const WAVE_BOONS=[
 	{"id":"boon_regen","name":"纳米修复","key":"regen","value":.012,"detail":"每秒再生 +0.012 生命","tag":"生存","color":Color("91edbe")},
 	{"id":"boon_magnet","name":"回收磁场","key":"magnet","value":.15,"detail":"拾取范围 +15%","tag":"经济","color":Color("b7d88e")},
 	{"id":"boon_luck","name":"航路直觉","key":"luck","value":1.5,"detail":"幸运 +1.5，改善补给品质","tag":"经济","color":Color("f2cd8a")},
-	{"id":"boon_ballistic","name":"实弹标定","key":"ballistic","value":3.,"detail":"实弹属性 +3","tag":"主属性","color":Color("63e7df")},
-	{"id":"boon_energy","name":"能量调谐","key":"energy","value":3.,"detail":"能量属性 +3","tag":"主属性","color":Color("ada2ff")},
-	{"id":"boon_power","name":"动力增幅","key":"power","value":3.,"detail":"动力属性 +3","tag":"主属性","color":Color("ffc16b")},
-	{"id":"boon_support","name":"支援协议","key":"support","value":3.,"detail":"支援属性 +3","tag":"主属性","color":Color("8ed7bf")}
+	{"id":"boon_ballistic","name":"实弹标定","key":"ballistic","value":5.,"detail":"实弹属性 +5","tag":"主属性","color":Color("63e7df")},
+	{"id":"boon_energy","name":"能量调谐","key":"energy","value":5.,"detail":"能量属性 +5","tag":"主属性","color":Color("ada2ff")},
+	{"id":"boon_power","name":"动力增幅","key":"power","value":5.,"detail":"动力属性 +5","tag":"主属性","color":Color("ffc16b")},
+	{"id":"boon_support","name":"支援协议","key":"support","value":5.,"detail":"支援属性 +5","tag":"主属性","color":Color("8ed7bf")}
 ]
 var modules: Array=[]
 var slots: Array[int]=[]
@@ -455,7 +455,7 @@ func salvage(uid: int) -> int:
 	var refund=maxi(1,roundi(float(_row(str(module.kind)).get("cost",10))*.4*(1.+.5*(int(module.level)-1))))
 	unequip_uid(uid); modules.erase(module); return refund
 
-func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[]) -> Array[Dictionary]:
+func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[],weapon_count: int=3,item_count: int=3) -> Array[Dictionary]:
 	var pool: Array=[]; var result: Array[Dictionary]=[]
 	var max_rarity=clampi(1+floori(float(maxi(wave,1)-1)/3.),1,3)
 	for row in C.rows():
@@ -465,24 +465,27 @@ func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[]) -> Array
 	var luck=float(stats().luck)
 	var owned: Array=[]
 	for module in modules: owned.append(str(module.kind))
-	while result.size()<6 and not pool.is_empty():
+	while result.size()<weapon_count+item_count and not pool.is_empty():
 		# Luck changes the odds within the wave's unlocked rarity pool. It never
 		# bypasses that unlock or creates duplicate offers within one shop.
-		# Reserve the first offer for a weapon so a large support catalogue cannot
-		# produce several shops in a row with no opportunity to change firepower.
+		# Quotas remain exact on initial shops and after keeping locked offers.
+		var wants_weapon=result.size()<weapon_count
 		var candidates: Array[int]=[]; var total=0.
-		var mechanism_bag=result.size()==1 and wave>=2 and rng.randf()<.75
-		var survival_bag=result.size()==2 and rng.randf()<.65
+		var preferred: Array[int]=[]
+		var mechanism_bag=result.size()==weapon_count and wave>=2 and rng.randf()<.75
+		var survival_bag=result.size()==weapon_count+1 and rng.randf()<.65
 		for candidate in range(pool.size()):
-			if result.is_empty() and str(pool[candidate].category)!="weapon": continue
+			if (str(pool[candidate].category)=="weapon")!=wants_weapon: continue
+			candidates.append(candidate)
 			if mechanism_bag:
 				var spatial=false
 				for rule in pool[candidate].get("rules",[]):
 					if str(rule.type)=="trajectory" or (str(rule.type)=="beat" and str(rule.key) in ["repeat","charge_reduce","chord"]): spatial=true
-				if not spatial: continue
-			if survival_bag and str(pool[candidate].category)!="defense": continue
-			candidates.append(candidate); total+=(1.+float(pool[candidate].rarity)*luck*.04)*PATHS.affinity(str(pool[candidate].id),owned)
+				if spatial: preferred.append(candidate)
+			elif survival_bag and str(pool[candidate].category)=="defense": preferred.append(candidate)
+		if not preferred.is_empty(): candidates=preferred
 		if candidates.is_empty(): break
+		for candidate in candidates: total+=(1.+float(pool[candidate].rarity)*luck*.04)*PATHS.affinity(str(pool[candidate].id),owned)
 		var roll=rng.randf()*total; var index=candidates[-1]
 		for candidate in candidates:
 			roll-=(1.+float(pool[candidate].rarity)*luck*.04)*PATHS.affinity(str(pool[candidate].id),owned)

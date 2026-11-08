@@ -1,12 +1,12 @@
 {
   "schema": 1,
-  "authorization": "User confirms original-author permission; see audio/library/groove_core/AUTHORIZATION.md",
+  "authorization": "Per-source authorization: original Groove Core clips follow audio/library/groove_core/AUTHORIZATION.md; Filaments is CC BY4.0 with attribution, see scott_buckley/SOURCE.json and LICENSE.md.",
   "clips": [
     {
       "id": "menu_theme",
       "file": "res://audio/authorized/menu_theme.ogg",
       "source_catalog_id": "music_menu",
-      "role": "title_hub_hangar_solar_bgm"
+      "role": "archived former title_hub_hangar_solar_bgm"
     },
     {
       "id": "crude_shot",
@@ -69,7 +69,7 @@
       "loop_seconds": 20.0,
       "bpm": 120,
       "bars": 10,
-      "role": "shared combat/editor/shop background loop for all planets"
+      "role": "archived former shared combat/editor/shop background loop for all planets"
     },
     {
       "id": "feedback_kill_low_strong",
@@ -120,6 +120,16 @@
       "role": "pickup_coin",
       "processing": "Butterworth3 bandpass 3000-9500Hz; 2ms attack/14ms release boundary fades; fixed gain 7.692835; no pitch/time change",
       "sha256": "cb11675ea2078cdaae6bd34d3e0626e8b3a05b71d0a827625f1b0787deeb3b46"
+    },
+    {
+      "id": "filaments",
+      "file": "res://audio/authorized/scott_buckley/filaments.ogg",
+      "source_catalog_id": "scott_buckley_filaments",
+      "role": "title/hub/hangar/solar and combat/shop/editor background; background music volume bus",
+      "license": "CC BY4.0",
+      "credit": "'Filaments' by Scott Buckley - released under CC-BY 4.0. www.scottbuckley.com.au",
+      "source_page": "https://www.scottbuckley.com.au/library/filaments/",
+      "provenance": "res://audio/authorized/scott_buckley/SOURCE.json"
     }
   ]
 }

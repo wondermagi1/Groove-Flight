@@ -4,7 +4,7 @@
 	"scope": "Sixteen active fixed instruments. Fixed pitch0 battle sounds; no automatic strength or melody cycles.",
 	"sequence_loop_seconds": 2.0,
 	"sequence_step_seconds": 0.25,
-	"version": "0.27.0-two-second-sequencer",
+	"version": "0.29.0-filaments-shop-hud",
 	"weapon_count": 16,
 	"weapons": [
 		{

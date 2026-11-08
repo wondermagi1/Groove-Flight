@@ -2,7 +2,7 @@
 
 长期维护的[武器特效与音频对应表](docs/WEAPON_VFX_AUDIO_REFERENCE.md)：16种现役武器的发射形式、运动、光色、乐器音色与原声试听。以后武器迭代与本表同步提交更新。
 
-当前版本 **0.28.0-crowd-performance**：优化大量敌机汇聚时的避让计算，保留敌机密度、个体包围和防重叠。见[性能对比与验证](docs/V28_CROWD_PERFORMANCE.md)。音序器仍为**每格0.25秒、2秒一轮**，声音、白点、发射与商店试射同步；[8秒试听与说明](docs/V27_TWO_SECOND_SEQUENCE.md)。
+当前版本 **0.29.0-filaments-shop-hud**：背景音乐采用Scott Buckley的Filaments；恢复左下音序与白点，增加隐藏后的恢复入口；商店固定3武器＋3道具，锁定独占一行；回合主属性强化从+3提高到+5。见[本版说明](docs/V29_FILAMENTS_SHOP_HUD.md)和[音乐署名](CREDITS.md)。V28敌群性能优化保留，见[性能报告](docs/V28_CROWD_PERFORMANCE.md)。音序器仍为**每格0.25秒、2秒一轮**；[8秒武器节奏试听](docs/V27_TWO_SECOND_SEQUENCE.md)。
 
 音频与设置基础：护盾反馈按用户要求裁成干净的一击，去掉末尾小声音；设置中有总音量、背景音乐、武器声音、击杀鼓点、拾取、受击护盾、命中爆炸和界面警报8项独立控制，即时生效、0%静音并自动保存。见[分类音量说明](docs/V26_AUDIO_CONTROLS.md)。
 

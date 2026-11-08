@@ -1,0 +1,10 @@
+{
+	"checks": 353,
+	"facts": {
+		"lock_patterns": 64,
+		"native_music_rms": 0.0378880987963947,
+		"shop_samples": 256
+	},
+	"failures": [],
+	"scope": "Seeded3+3shops and all64lock masks,primary boons+5,bottom-left sequencer/recovery/cursor and separated lock layout at1080p/720p,120percent shop text,Filaments resource/state/category and optional actual native music capture. Isolated test profile,no human mix/balance claim."
+}

@@ -1,5 +1,7 @@
 # Groove Flight 录音来源与运行时对应表
 
+V29（2026-11-08）：用户选定[Filaments — Scott Buckley](https://www.scottbuckley.com.au/library/filaments/)，现用于菜单和战斗/商店背景。完整MP3源与339.88秒OGG转换、哈希和CC BY4.0署名见[素材记录](../audio/authorized/scott_buckley/SOURCE.json)、[署名与许可](../CREDITS.md)。原菜单曲与天王星20秒循环现为归档素材；下文加工链为历史记录，不代表当前背景选择。武器乐器样本和三类反馈未替换。
+
 2026-11-08更新：当前三类反馈沿用《音频资源.mp4》，护盾按用户指出的28秒附近改用28.745—28.940秒（V26.1单次主声，后续小声音已裁去）；击杀低鼓和清脆拾取素材保留。详见[V26分类音量与反馈](V26_AUDIO_CONTROLS.md)和[当前分析记录](../audio/library/groove_core/analysis/combat-feedback.json)。下文为来源历史。
 
 V17新增 `gameplay_feedback_audio`（用户提供《音频资源.mp4》），提取3种低鼓、护盾和拾取共5个运行文件。另入库的《实机演示.mp4》确认全静音，只作画面参考。源区间、处理与SHA256见 `audio/library/groove_core/analysis/combat-feedback.json`；触发规则见 [V17制作说明](V17_RHYTHM_AND_FEEDBACK.md)。下文7条来源为此前版本清单，当前完整索引以 `catalog.json` 与 `runtime_mapping.json` 为准。

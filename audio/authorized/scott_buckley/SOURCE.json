@@ -1,0 +1,29 @@
+{
+  "title": "Filaments",
+  "artist": "Scott Buckley",
+  "source_page": "https://www.scottbuckley.com.au/library/filaments/",
+  "source_download": "https://www.scottbuckley.com.au/library/wp-content/uploads/2019/10/sb_filaments.mp3",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "licensing_statement": "https://www.scottbuckley.com.au/library/using-this-music/",
+  "retrieved": "2026-11-08",
+  "credit": "'Filaments' by Scott Buckley - released under CC-BY 4.0. www.scottbuckley.com.au",
+  "duration_seconds": 339.880612,
+  "runtime": "res://audio/authorized/scott_buckley/filaments.ogg",
+  "conversion": "Full MP3 transcoded to stereo44100Hz Vorbis quality5; no cut, retime, pitch change or loudness processing. Runtime loop=true; player gain uses independent background music bus.",
+  "analysis": {
+    "source_integrated_lufs": -14.41,
+    "source_true_peak_dbfs": -0.98,
+    "source_lra_lu": 12.2
+  },
+  "files": {
+    "sb_filaments.mp3": {
+      "bytes": 13599523,
+      "sha256": "880686f9e39b326862b084c9ae4100c9a1c9e2e91bf94a239cd5c1226acada07"
+    },
+    "filaments.ogg": {
+      "bytes": 6283076,
+      "sha256": "075f02a6f81e5819f107616aefa86b96622dd7dee45eacb08faf943fa7ad4420"
+    }
+  }
+}
