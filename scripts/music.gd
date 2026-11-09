@@ -5,12 +5,16 @@ const CLOCK=preload("res://scripts/music_clock.gd")
 const SEQUENCE=preload("res://scripts/arsenal_loadout.gd")
 signal step_fired(index: int,serial: int,deadline: float)
 signal prepared(key: String)
-const RENDER_VERSION=6
+const RENDER_VERSION=7
 const RATE=22050
 const STEP=SEQUENCE.SEQUENCE_STEP_SECONDS
 const BPM=SEQUENCE.SEQUENCE_BPM
 # Keep the PCM loop on complete eight-cell cycles, including charge phases.
 const LENGTH=SEQUENCE.SEQUENCE_LOOP_SECONDS*64.
+# A real first phrase has no tail from a shot that has not happened yet.
+# The following96s repeat from a phase-aligned, naturally sustained boundary.
+const INTRO_SECONDS=SEQUENCE.SEQUENCE_LOOP_SECONDS*8.
+const STREAM_LENGTH=INTRO_SECONDS+LENGTH
 const GROOVE_LENGTH=8.
 var samples: Dictionary={}
 var base: PackedFloat32Array
@@ -67,11 +71,12 @@ func voice(kind: String,index: int) -> PackedFloat32Array:
 		samples[key]=decode(recording)
 	return samples[key]
 func key_for(loadout) -> String:
-	return str(hash(JSON.stringify([RENDER_VERSION,STEP,LENGTH,BPM,loadout.modules,loadout.slots,loadout.damage_scale,loadout.echo_repeat,loadout.stats(),track_mutes,backing_gain,weapon_gain,groove_gain])))
+	return str(hash(JSON.stringify([RENDER_VERSION,STEP,LENGTH,INTRO_SECONDS,STREAM_LENGTH,BPM,loadout.modules,loadout.slots,loadout.damage_scale,loadout.echo_repeat,loadout.stats(),track_mutes,backing_gain,weapon_gain,groove_gain])))
 func _snapshot(loadout) -> Dictionary:
 	var events: Array=[]; var instruments: Dictionary={}
-	for serial in range(int(LENGTH/STEP)):
+	for serial in range(int(STREAM_LENGTH/STEP)):
 		for event in loadout.schedule(serial):
+			if not bool(event.get("audio_eligible",true)): continue
 			var support=str(event.family)=="support"
 			var instrument="support_"+str(event.category) if support else str(event.voice)
 			var pitch=posmod(int(event.get("pitch",serial%8)),8)
@@ -79,7 +84,7 @@ func _snapshot(loadout) -> Dictionary:
 			if not instruments.has(id): instruments[id]=voice(instrument,pitch)
 			var note=event.duplicate(true); note.voice=instrument; note.sample_key=id
 			# The volume slider scales the entire voice, including level gain.
-			# Every pass uses the same sample and gain, even during charging.
+			# Every actual shot uses the same sample and gain; charge waits are quiet.
 			note.gain=maxf(0.,weapon_gain)*(.35 if support else 1.)*(1.+.035*maxi(0,int(event.level)-1))
 			if bool(event.get("recorded_audio",false)): note.gain=0.
 			if event.get("pilot","")=="echo": note.gain*=.55
@@ -92,7 +97,7 @@ func _cancel(value: bool) -> void:
 func _is_cancelled() -> bool:
 	_mutex.lock(); var result=_cancelled; _mutex.unlock(); return result
 func _render(data: Dictionary,cancellable: bool) -> Dictionary:
-	var started=Time.get_ticks_usec(); var frames=int(RATE*LENGTH)
+	var started=Time.get_ticks_usec(); var frames=int(RATE*STREAM_LENGTH)
 	var left=PackedFloat32Array(); left.resize(frames)
 	var right=PackedFloat32Array(); right.resize(frames)
 	var backing: PackedFloat32Array=data.backing
@@ -117,7 +122,8 @@ func _render(data: Dictionary,cancellable: bool) -> Dictionary:
 		var pan=[-.46,0.,.46][clampi(int(event.track),0,2)]
 		var lg=sqrt((1.-pan)*.5)*float(event.gain); var rg=sqrt((1.+pan)*.5)*float(event.gain)
 		for n in sample.size():
-			var at=posmod(offset+n,frames)
+			var at=offset+n
+			if at>=frames: break
 			left[at]+=sample[n]*lg; right[at]+=sample[n]*rg
 	var bytes=PackedByteArray(); bytes.resize(frames*4)
 	for n in frames:
@@ -185,7 +191,7 @@ func _remember(key: String,result: Dictionary) -> void:
 func _recording(result: Dictionary) -> AudioStreamWAV:
 	score_events=result.events.duplicate(true); compile_msec=float(result.msec)
 	var wav=AudioStreamWAV.new(); wav.format=AudioStreamWAV.FORMAT_16_BITS; wav.stereo=true; wav.mix_rate=RATE; wav.data=result.bytes
-	wav.loop_mode=AudioStreamWAV.LOOP_FORWARD; wav.loop_begin=0; wav.loop_end=int(RATE*LENGTH)
+	wav.loop_mode=AudioStreamWAV.LOOP_FORWARD; wav.loop_begin=int(RATE*INTRO_SECONDS); wav.loop_end=int(RATE*STREAM_LENGTH)
 	return wav
 func compose(loadout) -> AudioStreamWAV:
 	var key=key_for(loadout)
@@ -218,7 +224,7 @@ func _start_cached(key: String) -> void:
 func is_current(loadout) -> bool:
 	return stream!=null and active_key==key_for(loadout)
 func _replace_cached(key: String) -> void:
-	var position=fposmod(get_playback_position(),LENGTH); var held=stream_paused
+	var position=get_playback_position(); var held=stream_paused
 	stream=_recording(_cache[key]); active_key=key; play(position); stream_paused=held
 	_previous_raw=position; _refresh_pending=false
 func rebuild(loadout) -> void:

@@ -1322,6 +1322,9 @@ func fire_weapon(trigger: Dictionary) -> void:
 					var rear_axis=Vector2(mount.rear_axis); var rear_side=rear_axis.orthogonal()
 					bullet.v=rear_axis*Vector2(bullet.v).dot(rear_axis)*float(mount.speed_scale)+rear_side*Vector2(bullet.v).dot(rear_side)
 			VISUALS.individualize(bullet,i,music.timeline,int(trigger.get("uid",0)),int(trigger.get("serial",0)))
+			# Anchor each physical salvo on the audible onset; remaining particles
+			# retain independent delays, mass, speed, forces and curved trajectories.
+			if i==0: bullet.launch_delay=0.
 			bullet.muzzle_offset=Vector2(bullet.at)-player
 	if bool(trigger.get("chord",false)) and not target.is_empty():
 		var strength=float(trigger.get("chord_power",.22))

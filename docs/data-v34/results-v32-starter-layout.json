@@ -1,0 +1,28 @@
+{
+	"checks": 75,
+	"failures": [],
+	"layout": [
+		{
+			"cells": [
+				"A3"
+			],
+			"id": "pulse"
+		},
+		{
+			"cells": [
+				"B4"
+			],
+			"id": "scatter"
+		},
+		{
+			"cells": [
+				"C6",
+				"C7",
+				"C8"
+			],
+			"id": "firefly_rain"
+		}
+	],
+	"run_cases": 64,
+	"scope": "Current production live reset,all five hulls and actual start_run across all8planets,2difficulties and4path presets. Rotation covers all hulls. Checks exact UID spans,only head scan events and retained nonweapon hull utility. No full campaign balance claim."
+}

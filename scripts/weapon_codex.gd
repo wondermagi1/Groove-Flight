@@ -198,7 +198,7 @@ func select_weapon(id: String) -> void:
 	rhythm_view.visible=false; rhythm_view.cadence=cadence; rhythm_view.accent=DATA.quality_color(row); rhythm_view.queue_redraw()
 	var strengths: PackedStringArray=[]
 	for value in cadence.get("scales",[.25,.25,.25,.25]): strengths.append("%d%%"%roundi(float(value)*100.))
-	cadence_label.text="固定音色 · 白点经过时发声一次\n同种武器独立发声；当前位置只决定触发时间。"
+	cadence_label.text="固定音色 · 实际发射时发声一次，充能等待轮静音\n同种武器独立发声；当前位置只决定触发时间。"
 	var samples=record.get("samples",[])
 	var recorded_group=_recorded_group(id)
 	var audio_ready=DATA.is_weapon_audio_ready(id)

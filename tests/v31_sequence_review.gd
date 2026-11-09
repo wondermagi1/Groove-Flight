@@ -18,7 +18,7 @@ func schedule_checks() -> void:
 	for entry in [["dawn_fan",8],["tidal_weave",16],["firefly_rain",19]]: model.add_module(entry[0],entry[1])
 	var wav=synth.compose(model); var clip=AudioStreamWAV.new(); clip.mix_rate=wav.mix_rate; clip.stereo=wav.stereo; clip.format=wav.format; clip.data=wav.data.slice(0,9*22050*4)
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://docs/audio-v31")); clip.save_to_wav("res://docs/audio-v31/one-half-second-sequence.wav")
-	check(wav.get_length()==96. and clip.get_length()==9.,"production audio renders a whole-cycle96second cache and six-loop9second audition")
+	check(wav.get_length()==MUSIC.STREAM_LENGTH and clip.get_length()==9.,"production audio renders its phase-aligned cache and six-loop9second audition")
 	synth.stop(); synth.stream=null; synth.queue_free()
 func ui_and_enemy_checks() -> void:
 	fixture("pulse"); game.settings.combat_panel_inventory=false; game.settings.combat_panel_sequencer=true
@@ -46,11 +46,12 @@ func native_checks() -> void:
 	check(shots.size()>=4 and range(1,4).all(func(i): return is_equal_approx(float(shots[i].deadline)-float(shots[i-1].deadline),1.5)),"native audio clock fires four1.5second salvos")
 	game.music.hold(true); var held=game.music.timeline; await create_timer(.15,true).timeout; check(game.music.timeline==held,"pause freezes the1.5second scan")
 	game.music.hold(false); await create_timer(.15,true).timeout; check(game.music.timeline>held,"resume retains the same scan")
-	game.fire_log.clear(); game.music.loop_count=0; game.music.timeline=95.6; game.music.source_time=95.6; game.music._previous_raw=95.6; game.music.last_step=509; game.music.play(95.6)
+	var edge=MUSIC.STREAM_LENGTH; var start=edge-.4
+	game.fire_log.clear(); game.music.loop_count=0; game.music.timeline=start; game.music.source_time=start; game.music._previous_raw=start; game.music.last_step=floori(start/MUSIC.STEP); game.music.play(start)
 	elapsed=0.
-	while game.music.timeline<96.25 and elapsed<3.:
+	while game.music.timeline<edge+.25 and elapsed<3.:
 		await create_timer(.025,true).timeout; elapsed+=.025
-	check(game.music.loop_count==1 and game.fire_log.any(func(e): return is_equal_approx(float(e.deadline),96.) and int(e.step)==0),"real PCM wrap at96seconds aligns the audio restart and cell1")
+	check(game.music.loop_count==1 and game.fire_log.any(func(e): return is_equal_approx(float(e.deadline),edge) and int(e.step)==0),"real PCM wrap aligns the audio restart and cell1")
 	facts.native_boundary=game.fire_log; facts.native_first_salvos=shots
 func run() -> void:
 	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_NO_FOCUS,true)
@@ -58,6 +59,6 @@ func run() -> void:
 	game=load("res://scenes/Main.tscn").instantiate(); game.is_preview=true; root.add_child(game); current_scene=game; await frames(4)
 	game.set_process(false); game.set_physics_process(false); game.set_process_unhandled_input(false); game.music.stop(); game.music._running=false; game.settings.master=0.; game.apply_audio()
 	await ui_and_enemy_checks(); await native_checks()
-	var result={"checks":checks,"failures":failures,"facts":facts,"loop_seconds":1.5,"cell_seconds":.1875,"enemy_seconds":.5,"scope":"All19 schedules/charge gates/fixed voices/metadata,visible24scan dots,unchanged enemy constants and native audio dispatch,pause/resume,real96second PCM boundary seek.9second production-renderer audition. Controlled timing checks,not full campaign balance."}
+	var result={"checks":checks,"failures":failures,"facts":facts,"loop_seconds":1.5,"cell_seconds":.1875,"enemy_seconds":.5,"scope":"All19 schedules/charge gates/fixed voices/metadata,visible24scan dots,unchanged enemy constants and native audio dispatch,pause/resume,real PCM repeat-boundary seek.9second production-renderer audition. Controlled timing checks,not full campaign balance."}
 	FileAccess.open("res://tests/results-v31-sequence.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("V31_SEQUENCE ",JSON.stringify(result))
 	stop_audio(game); current_scene=null; game.queue_free(); await frames(6); await create_timer(.2,true).timeout; quit(0 if failures.is_empty() else 1)

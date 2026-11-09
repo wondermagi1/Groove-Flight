@@ -1,0 +1,119 @@
+{
+  "scope": "Sample waveform start,not human audibility or device latency. All original files unchanged.",
+  "weapons": [
+    {
+      "id": "pulse",
+      "first_nonzero_ms": 0.36281179138321995,
+      "one_percent_peak_ms": 1.8594104308390023,
+      "sha256": "788a99360971a8f3385a500ef6014474903638763c2b950244eb41dbe887c4b8"
+    },
+    {
+      "id": "scatter",
+      "first_nonzero_ms": 0.7709750566893424,
+      "one_percent_peak_ms": 1.2244897959183674,
+      "sha256": "71b911f233bdd57a1ded9479ddc96fd72745d02922fe212327095e1fa3631358"
+    },
+    {
+      "id": "beam",
+      "first_nonzero_ms": 1.6326530612244898,
+      "one_percent_peak_ms": 9.47845804988662,
+      "sha256": "d1ba1f42562a0ac3ea2a1f23c6d2ad9d171cda682935abf651f93c008915a9b2"
+    },
+    {
+      "id": "missile",
+      "first_nonzero_ms": 0.6802721088435374,
+      "one_percent_peak_ms": 4.036281179138323,
+      "sha256": "9763bf81f4c4065be9a86856240556a4fd08935cc2f4a82ff19f0b81753746d9"
+    },
+    {
+      "id": "nova",
+      "first_nonzero_ms": 0.5442176870748299,
+      "one_percent_peak_ms": 3.401360544217687,
+      "sha256": "d5e6405c61548c6060c6ba02ac5471d03e7d7e00d90263d9bfc1d4ecd3c88b1b"
+    },
+    {
+      "id": "chain",
+      "first_nonzero_ms": 0.45351473922902497,
+      "one_percent_peak_ms": 1.5873015873015872,
+      "sha256": "b65317e38f8080c119b929d98b6de7861dd008fe60df74488e52c184845f2bd4"
+    },
+    {
+      "id": "rail",
+      "first_nonzero_ms": 2.857142857142857,
+      "one_percent_peak_ms": 9.206349206349206,
+      "sha256": "87016584c89f20a45c6745e3e0e3686e61b2bad61fd8756a5b6f68fed662697e"
+    },
+    {
+      "id": "pulse_needle",
+      "first_nonzero_ms": 0.7256235827664399,
+      "one_percent_peak_ms": 2.0408163265306123,
+      "sha256": "71307dcb1d7ef0ad8a538625d22c2940bb63a3705516b90e1ec1182bd97f1a47"
+    },
+    {
+      "id": "scatter_prism",
+      "first_nonzero_ms": 0.7709750566893424,
+      "one_percent_peak_ms": 1.2698412698412698,
+      "sha256": "e3486b80ec8680b258cc3abfdc4651bb238cbfde86345445640e7c056e8e5e6a"
+    },
+    {
+      "id": "beam_split",
+      "first_nonzero_ms": 1.1337868480725624,
+      "one_percent_peak_ms": 7.210884353741497,
+      "sha256": "e8757925045af7002a29651dfaac6e6fb3aa3c82478242f89553cca4812ce829"
+    },
+    {
+      "id": "rail_horizon",
+      "first_nonzero_ms": 1.0884353741496597,
+      "one_percent_peak_ms": 3.99092970521542,
+      "sha256": "51dc778680c127b5bab659537f0fcf46ae00f19a7f520404025b71690198294f"
+    },
+    {
+      "id": "recorded_heavy",
+      "first_nonzero_ms": 0.997732426303855,
+      "one_percent_peak_ms": 3.854875283446712,
+      "sha256": "76d2c6d71108f20dddc2afb5058ca3ea67df4d82fe4e1681cb5d5df631cb65f5"
+    },
+    {
+      "id": "gilded_helix",
+      "first_nonzero_ms": 0.5895691609977325,
+      "one_percent_peak_ms": 1.8594104308390023,
+      "sha256": "15ba03f76d7b6748749a29a17184e48d11ae0cc38b63dd861f4d774dce965cfb"
+    },
+    {
+      "id": "weave_cross",
+      "first_nonzero_ms": 0.6802721088435374,
+      "one_percent_peak_ms": 1.3605442176870748,
+      "sha256": "c56b493a5888611fe97d3b99f303e20ef14a67846884136d295e5df46968f27f"
+    },
+    {
+      "id": "crown_orbit",
+      "first_nonzero_ms": 0.45351473922902497,
+      "one_percent_peak_ms": 1.5419501133786848,
+      "sha256": "a898e0853778497c3329ee37592b933af6b3a8d2c4ca7cc35e8cb89e227c666b"
+    },
+    {
+      "id": "stern_fan",
+      "first_nonzero_ms": 1.179138321995465,
+      "one_percent_peak_ms": 6.575963718820862,
+      "sha256": "ed5c7366881552a63ced0201b03ce208e46fadf8d2b8af58218dab20e844ce1f"
+    },
+    {
+      "id": "dawn_fan",
+      "first_nonzero_ms": 0.5895691609977325,
+      "one_percent_peak_ms": 1.1337868480725624,
+      "sha256": "508a67483537ef755edf90a4483874f0d822ecb0d3167660dffb5668889d59af"
+    },
+    {
+      "id": "tidal_weave",
+      "first_nonzero_ms": 1.6780045351473922,
+      "one_percent_peak_ms": 9.659863945578232,
+      "sha256": "859b7b7d3fe2cd3b7942dcc0a019b91154e1bcf172398fe2a69e659355434735"
+    },
+    {
+      "id": "firefly_rain",
+      "first_nonzero_ms": 0.5895691609977325,
+      "one_percent_peak_ms": 2.857142857142857,
+      "sha256": "c84d63984f37a821f7c69d401671206a6f0fa75a3fae8c03585b0fd5fbfbc0e9"
+    }
+  ]
+}

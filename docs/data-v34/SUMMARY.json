@@ -1,0 +1,69 @@
+{
+  "version": "0.34.0-weapon-av-sync",
+  "date": "2026-11-09",
+  "backup_branch": "codex/backup-20261109-before-starter-sync",
+  "backup_sha": "f69d3528e42441bd1ecd778faf0d68c6aa7dab9c",
+  "checks": 540,
+  "failures": 0,
+  "reports": [
+    {
+      "report": "results-v34-weapon-sync.json",
+      "checks": 84,
+      "failures": 0
+    },
+    {
+      "report": "results-v32-starter-layout.json",
+      "checks": 75,
+      "failures": 0
+    },
+    {
+      "report": "results-v26-audio-controls.json",
+      "checks": 46,
+      "failures": 0
+    },
+    {
+      "report": "results-composer-score.json",
+      "checks": 112,
+      "failures": 0
+    },
+    {
+      "report": "results-weapon-cycle.json",
+      "checks": 223,
+      "failures": 0
+    }
+  ],
+  "active_weapons": 19,
+  "physical_weapons": 17,
+  "all152sample_hashes_unchanged": true,
+  "all_weapon_damage_count_charge_range_and_visual_parameters_unchanged": true,
+  "sound_trigger": "actual_fire",
+  "starter_layout": [
+    {
+      "kind": "pulse",
+      "slot": 2
+    },
+    {
+      "kind": "scatter",
+      "slot": 11
+    },
+    {
+      "kind": "firefly_rain",
+      "slot": 21
+    }
+  ],
+  "sequencer_seconds": 1.5,
+  "enemy_step_seconds": 0.5,
+  "cache": {
+    "intro_seconds": 12,
+    "repeat_seconds": 96,
+    "stream_seconds": 108,
+    "loop_begin_seconds": 12,
+    "loop_end_seconds": 108
+  },
+  "movement_files_unchanged": {
+    "scripts/contact_swarm.gd": "4aad354861629b90b0d2785fed516322309004ea1ecb0273e6832d2ab79e2c01",
+    "scripts/enemy_maneuver.gd": "33ca942f0ce7db8116200ca41e6095b9c2e1aba6f75ae92187ca28dccd27ea9c",
+    "native/crowd/groove_crowd.windows.x86_64.dll": "0046a79a8dd2eb63f7c13ea4d3e20720651b851aaa71892902701077c3c2c84e"
+  },
+  "limits": "Controlled all19schedule/render comparisons over16rounds,physical lead visibility,native dispatch/pause/PCM wrap/cache adoption,all64start combinations and compatibility regressions. Audio sample onset analysis is not end-to-end hardware latency measurement. No full campaign balance or sustained FPS claim."
+}

@@ -4,7 +4,7 @@
 	"scope": "Active fixed instruments. Fixed pitch0 battle sounds; no automatic strength or melody cycles.",
 	"sequence_loop_seconds": 1.5,
 	"sequence_step_seconds": 0.1875,
-	"version": "0.33.0-music-continuity",
+	"version": "0.34.0-weapon-av-sync",
 	"weapon_count": 19,
 	"weapons": [
 		{
@@ -75,6 +75,7 @@
 					"sha256": "bd4119def8942c8bc8ca0d92b64fde0d9cddf6bef5728ab6289a193ee0f54316"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_pulse"
 		},
 		{
@@ -145,6 +146,7 @@
 					"sha256": "35ab1842fde041c7b1301e599a179907aa73c1392ca894b7e7749531d80353b3"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_scatter"
 		},
 		{
@@ -215,6 +217,7 @@
 					"sha256": "9272728c2eec4654d96f36bb8fda670e004d157570baff7ae82f0c993a14fcb7"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_beam"
 		},
 		{
@@ -285,6 +288,7 @@
 					"sha256": "90a850aae7c320e3ed7f7fafc00d63d42f3881d599ef0dcde24deafced0cb1af"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_missile"
 		},
 		{
@@ -355,6 +359,7 @@
 					"sha256": "b3861ef1882100e93be50a56c1beb0d8046dbb0ff57f296ba7e83dcb0b58665a"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_nova"
 		},
 		{
@@ -425,6 +430,7 @@
 					"sha256": "4f195ee75ced8457a3e3b4e18695b0a009420c24e0cc4bd34e8559a545fa9d8f"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_chain"
 		},
 		{
@@ -495,6 +501,7 @@
 					"sha256": "d15dd0f952b450f426e09da37533ab648facedfd582c853e7fe7da980d09a110"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_rail"
 		},
 		{
@@ -565,6 +572,7 @@
 					"sha256": "171b74ea24de0b294fed55749d10a21fc555f2961a924dda41f170e13a24d9f4"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_pulse_needle"
 		},
 		{
@@ -635,6 +643,7 @@
 					"sha256": "6a0d82c4632a98190b54d3d8195b2c018f6b58a1178b761d3da3a6d42d51c347"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_scatter_prism"
 		},
 		{
@@ -705,6 +714,7 @@
 					"sha256": "712a82a9902bd3582e45da623db745b074f96b174123bf1e40002fe7afd7b058"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_beam_split"
 		},
 		{
@@ -775,6 +785,7 @@
 					"sha256": "787de353139d44fc538d4d92045d34e7036d1a2e6305614fa6693b123b927504"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_rail_horizon"
 		},
 		{
@@ -845,6 +856,7 @@
 					"sha256": "36c490c708c564e51f698e75dc139ea50d384412d404bab9a21c71bb19182e99"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_recorded_heavy"
 		},
 		{
@@ -915,6 +927,7 @@
 					"sha256": "f1cf02c02fb9b6433266904d8fc92e8b044a68449368e69eef0160fc653cf85f"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_gilded_helix"
 		},
 		{
@@ -985,6 +998,7 @@
 					"sha256": "33dee25d17a4e0d98a9ab646b7164834d1c0a9f2abb10ec2964a67c8fd1ba106"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_weave_cross"
 		},
 		{
@@ -1055,6 +1069,7 @@
 					"sha256": "c3111d05dc64df7f545463117c4ba58e9031c5a01405206d02e4fd8efb3f8c59"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_crown_orbit"
 		},
 		{
@@ -1125,6 +1140,7 @@
 					"sha256": "1722b37e100de32db35be1e3e7e9e33e3f9d2ac0eef97756e3c88e44a46843d9"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_stern_fan"
 		},
 		{
@@ -1195,6 +1211,7 @@
 					"sha256": "8b7862775fc695208f791e52e7b08ab95261f46043bba6b0f282582d6c2743ed"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_dawn_fan"
 		},
 		{
@@ -1265,6 +1282,7 @@
 					"sha256": "d54ca2934e7c42d3d423b73d86a8e0328b29b238b8b7c5864e1ced5ecb30e7d8"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_tidal_weave"
 		},
 		{
@@ -1335,6 +1353,7 @@
 					"sha256": "e49ce34880b0392c97ee7fe5411f1611d28b68564c1e7b101de13ca53a02b9e5"
 				}
 			],
+			"sound_trigger": "actual_fire",
 			"voice": "inst_firefly_rain"
 		}
 	]
