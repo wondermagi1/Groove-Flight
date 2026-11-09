@@ -1,0 +1,50 @@
+{
+	"checks": 59,
+	"facts": {
+		"native_capture": {
+			"alerts": {
+				"full_rms": 0.107909580089719,
+				"muted_rms": 0.0,
+				"quarter_rms": 0.0269766992140542
+			},
+			"combat": {
+				"full_rms": 0.107909580089719,
+				"muted_rms": 0.0,
+				"quarter_rms": 0.0270028438929913
+			},
+			"kill": {
+				"full_rms": 0.10789181499478,
+				"muted_rms": 0.0,
+				"quarter_rms": 0.0269720692285245
+			},
+			"music": {
+				"full_rms": 0.10789181499478,
+				"muted_rms": 0.0,
+				"quarter_rms": 0.0269649257262828
+			},
+			"pickup": {
+				"full_rms": 0.107909580089719,
+				"muted_rms": 0.0,
+				"quarter_rms": 0.0269766992140542
+			},
+			"shield": {
+				"full_rms": 0.107927266972417,
+				"muted_rms": 0.0,
+				"quarter_rms": 0.0269744558437451
+			},
+			"ui": {
+				"full_rms": 0.107909580089719,
+				"muted_rms": 0.0,
+				"quarter_rms": 0.0269766992140542
+			},
+			"weapons": {
+				"full_rms": 0.107909580089719,
+				"muted_rms": 0.0,
+				"quarter_rms": 0.0269766992140542
+			}
+		}
+	},
+	"failures": [],
+	"renderer": "forward_plus",
+	"scope": "Eight real settings sliders, isolated legacy config migration/roundtrip, production category routes including feedback/codex/composer/shop, runtime source hashes and actual195ms shield from28seconds, exact0 mute without touching siblings. Native mode captures actual Master output at full/quarter/muted gain for all7categories and background/weapon independence."
+}

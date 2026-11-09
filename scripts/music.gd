@@ -5,14 +5,14 @@ const CLOCK=preload("res://scripts/music_clock.gd")
 const SEQUENCE=preload("res://scripts/arsenal_loadout.gd")
 signal step_fired(index: int,serial: int,deadline: float)
 signal prepared(key: String)
-const RENDER_VERSION=7
+const RENDER_VERSION=8
 const RATE=22050
 const STEP=SEQUENCE.SEQUENCE_STEP_SECONDS
 const BPM=SEQUENCE.SEQUENCE_BPM
 # Keep the PCM loop on complete eight-cell cycles, including charge phases.
-const LENGTH=SEQUENCE.SEQUENCE_LOOP_SECONDS*64.
+const LENGTH=SEQUENCE.SEQUENCE_LOOP_SECONDS*96.
 # A real first phrase has no tail from a shot that has not happened yet.
-# The following96s repeat from a phase-aligned, naturally sustained boundary.
+# The following144s contain whole1/2/3/4/8-round charge phases.
 const INTRO_SECONDS=SEQUENCE.SEQUENCE_LOOP_SECONDS*8.
 const STREAM_LENGTH=INTRO_SECONDS+LENGTH
 const GROOVE_LENGTH=8.

@@ -1,0 +1,29 @@
+{
+  "scope": "Offline same starter equipment and20kill clusters with old/current weapon charge and drum scheduler traces; original/current voices,slower quieter drum tails and smooth background space. Same before/after15s Filaments excerpt. Both halves RMS-matched,not live gameplay capture or subjective listening acceptance.",
+  "before_seconds": [
+    0,
+    15
+  ],
+  "after_seconds": [
+    15,
+    30
+  ],
+  "sample_rate": 22050,
+  "channels": 2,
+  "matched_rms_dbfs": -24.0,
+  "peaks": [
+    0.46548182316476916,
+    0.5173912650855741
+  ],
+  "weapon_events_before": 25,
+  "weapon_events_after": 23,
+  "drums_before": 16,
+  "drums_after": 12,
+  "category_levels_before_matching": {
+    "master": 0.75,
+    "music": 0.48,
+    "weapons": 0.58,
+    "kill": 1.0
+  },
+  "credits": "Filaments by Scott Buckley,CC BY4.0. See CREDITS.md. Instrument and recorded feedback sources retain their existing credits."
+}

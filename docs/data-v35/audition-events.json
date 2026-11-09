@@ -1,0 +1,496 @@
+{
+	"after_drums": [
+		{
+			"at": 3.09999999999996,
+			"pitch": 1.0,
+			"sample": "kill_low_strong",
+			"tail": false,
+			"volume": -9.0
+		},
+		{
+			"at": 3.28999999999995,
+			"pitch": 1.0,
+			"sample": "kill_low_soft",
+			"tail": true,
+			"volume": -12.24
+		},
+		{
+			"at": 3.47999999999995,
+			"pitch": 1.0,
+			"sample": "kill_low_round",
+			"tail": true,
+			"volume": -12.24
+		},
+		{
+			"at": 6.09999999999989,
+			"pitch": 1.0,
+			"sample": "kill_low_soft",
+			"tail": false,
+			"volume": -9.0
+		},
+		{
+			"at": 6.28999999999989,
+			"pitch": 1.0,
+			"sample": "kill_low_strong",
+			"tail": true,
+			"volume": -12.24
+		},
+		{
+			"at": 6.47999999999988,
+			"pitch": 1.0,
+			"sample": "kill_low_soft",
+			"tail": true,
+			"volume": -12.24
+		},
+		{
+			"at": 9.10000000000002,
+			"pitch": 1.0,
+			"sample": "kill_low_round",
+			"tail": false,
+			"volume": -9.0
+		},
+		{
+			"at": 9.29000000000005,
+			"pitch": 1.0,
+			"sample": "kill_low_soft",
+			"tail": true,
+			"volume": -12.24
+		},
+		{
+			"at": 9.48000000000008,
+			"pitch": 1.0,
+			"sample": "kill_low_strong",
+			"tail": true,
+			"volume": -12.24
+		},
+		{
+			"at": 12.1000000000005,
+			"pitch": 1.0,
+			"sample": "kill_low_soft",
+			"tail": false,
+			"volume": -9.0
+		},
+		{
+			"at": 12.2900000000005,
+			"pitch": 1.0,
+			"sample": "kill_low_round",
+			"tail": true,
+			"volume": -12.24
+		},
+		{
+			"at": 12.4800000000006,
+			"pitch": 1.0,
+			"sample": "kill_low_soft",
+			"tail": true,
+			"volume": -12.24
+		}
+	],
+	"before_drums": [
+		{
+			"at": 3.09999999999996,
+			"pitch": 1.0,
+			"sample": "kill_low_strong",
+			"tail": false,
+			"volume": -9.0
+		},
+		{
+			"at": 3.22999999999995,
+			"pitch": 1.0,
+			"sample": "kill_low_soft",
+			"tail": true,
+			"volume": -8.86
+		},
+		{
+			"at": 3.35999999999995,
+			"pitch": 1.0,
+			"sample": "kill_low_round",
+			"tail": true,
+			"volume": -8.86
+		},
+		{
+			"at": 3.48999999999995,
+			"pitch": 1.0,
+			"sample": "kill_low_soft",
+			"tail": true,
+			"volume": -8.86
+		},
+		{
+			"at": 6.09999999999989,
+			"pitch": 1.0,
+			"sample": "kill_low_strong",
+			"tail": false,
+			"volume": -9.0
+		},
+		{
+			"at": 6.22999999999989,
+			"pitch": 1.0,
+			"sample": "kill_low_soft",
+			"tail": true,
+			"volume": -8.86
+		},
+		{
+			"at": 6.35999999999989,
+			"pitch": 1.0,
+			"sample": "kill_low_round",
+			"tail": true,
+			"volume": -8.86
+		},
+		{
+			"at": 6.48999999999988,
+			"pitch": 1.0,
+			"sample": "kill_low_soft",
+			"tail": true,
+			"volume": -8.86
+		},
+		{
+			"at": 9.10000000000002,
+			"pitch": 1.0,
+			"sample": "kill_low_strong",
+			"tail": false,
+			"volume": -9.0
+		},
+		{
+			"at": 9.22500000000004,
+			"pitch": 1.0,
+			"sample": "kill_low_soft",
+			"tail": true,
+			"volume": -8.86
+		},
+		{
+			"at": 9.35000000000006,
+			"pitch": 1.0,
+			"sample": "kill_low_round",
+			"tail": true,
+			"volume": -8.86
+		},
+		{
+			"at": 9.47500000000008,
+			"pitch": 1.0,
+			"sample": "kill_low_soft",
+			"tail": true,
+			"volume": -8.86
+		},
+		{
+			"at": 12.1000000000005,
+			"pitch": 1.0,
+			"sample": "kill_low_strong",
+			"tail": false,
+			"volume": -9.0
+		},
+		{
+			"at": 12.2250000000005,
+			"pitch": 1.0,
+			"sample": "kill_low_soft",
+			"tail": true,
+			"volume": -8.86
+		},
+		{
+			"at": 12.3500000000005,
+			"pitch": 1.0,
+			"sample": "kill_low_round",
+			"tail": true,
+			"volume": -8.86
+		},
+		{
+			"at": 12.4750000000006,
+			"pitch": 1.0,
+			"sample": "kill_low_soft",
+			"tail": true,
+			"volume": -8.86
+		}
+	],
+	"before_git": "699f22f71163975487a8b703b589d472bd014301",
+	"before_notes": [
+		{
+			"at": 0.375,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 0.5625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 1.875,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 2.0625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 2.4375,
+			"kind": "firefly_rain",
+			"pitch": 0,
+			"uid": 3
+		},
+		{
+			"at": 3.375,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 3.5625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 4.875,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 5.0625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 5.4375,
+			"kind": "firefly_rain",
+			"pitch": 0,
+			"uid": 3
+		},
+		{
+			"at": 6.375,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 6.5625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 7.875,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 8.0625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 8.4375,
+			"kind": "firefly_rain",
+			"pitch": 0,
+			"uid": 3
+		},
+		{
+			"at": 9.375,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 9.5625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 10.875,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 11.0625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 11.4375,
+			"kind": "firefly_rain",
+			"pitch": 0,
+			"uid": 3
+		},
+		{
+			"at": 12.375,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 12.5625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 13.875,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 14.0625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 14.4375,
+			"kind": "firefly_rain",
+			"pitch": 0,
+			"uid": 3
+		}
+	],
+	"notes": [
+		{
+			"at": 0.375,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 0.5625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 1.875,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 2.0625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 3.375,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 3.5625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 3.9375,
+			"kind": "firefly_rain",
+			"pitch": 0,
+			"uid": 3
+		},
+		{
+			"at": 4.875,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 5.0625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 6.375,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 6.5625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 7.875,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 8.0625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 8.4375,
+			"kind": "firefly_rain",
+			"pitch": 0,
+			"uid": 3
+		},
+		{
+			"at": 9.375,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 9.5625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 10.875,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 11.0625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 12.375,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 12.5625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		},
+		{
+			"at": 12.9375,
+			"kind": "firefly_rain",
+			"pitch": 0,
+			"uid": 3
+		},
+		{
+			"at": 13.875,
+			"kind": "pulse",
+			"pitch": 0,
+			"uid": 1
+		},
+		{
+			"at": 14.0625,
+			"kind": "scatter",
+			"pitch": 0,
+			"uid": 2
+		}
+	],
+	"scope": "Actual production renderer with same starter equipment,original2-round/current3-round rain and original/current voices; actual old/current drum schedulers for the same four20kill clusters. Offline audition,not captured gameplay."
+}

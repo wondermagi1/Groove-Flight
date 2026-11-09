@@ -3,7 +3,7 @@ const L=preload("res://scripts/arsenal_loadout.gd")
 const MUSIC=preload("res://scripts/music.gd")
 func schedule_checks() -> void:
 	check(L.SEQUENCE_LOOP_SECONDS==1.5 and L.SEQUENCE_STEP_SECONDS==.1875 and MUSIC.STEP==.1875,"all eight scan cells share a1.5second cycle")
-	check(MUSIC.LENGTH==96. and fposmod(MUSIC.LENGTH,L.SEQUENCE_LOOP_SECONDS*8.)==0.,"PCM cache ends on whole eight-cycle charge phases")
+	check(MUSIC.LENGTH==144. and fposmod(MUSIC.LENGTH,L.SEQUENCE_LOOP_SECONDS*8.)==0.,"PCM cache ends on whole eight-cycle charge phases")
 	for row in C.playable_weapons():
 		var model=L.new(); model.set_starters([str(row.id)]); var events: Array=[]
 		for serial in range(128): events.append_array(model.schedule(serial))

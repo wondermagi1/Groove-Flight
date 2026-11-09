@@ -936,7 +936,7 @@ func _build_lab(rect: Rect2) -> void:
 			if event is InputEventMouseButton and event.pressed and event.button_index==MOUSE_BUTTON_RIGHT: game.lab.toggle_track(i,true))
 		tracks.add_child(mute); lab_mutes.append(mute)
 	var options=HBoxContainer.new(); options.add_theme_constant_override("separation",4); column.add_child(options)
-	var loop=CheckButton.new(); loop.text="循环一轮"; loop.button_pressed=game.lab.loop_bar
+	var loop=CheckButton.new(); loop.text="自动循环"; loop.button_pressed=game.lab.loop_bar
 	loop.add_theme_font_size_override("font_size",13); loop.toggled.connect(func(value): game.lab.loop_bar=value); options.add_child(loop)
 	var ranges=CheckButton.new(); ranges.name="LabRanges"; ranges.text="显示射程"; ranges.button_pressed=game.lab.show_ranges
 	ranges.add_theme_font_size_override("font_size",13)

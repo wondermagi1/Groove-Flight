@@ -1,0 +1,48 @@
+{
+  "scope": "Sequential offline current fixed-voice auditions; each repeats after1.5s. Direct timbre audition,not charge eligibility or live capture.",
+  "seconds": 21.7,
+  "timeline": [
+    {
+      "id": "pulse",
+      "instrument": "延音中音钢琴",
+      "start_seconds": 0.0,
+      "end_seconds": 3.1
+    },
+    {
+      "id": "scatter",
+      "instrument": "明亮延音钢琴",
+      "start_seconds": 3.1,
+      "end_seconds": 6.2
+    },
+    {
+      "id": "beam",
+      "instrument": "清晰弓头小提琴",
+      "start_seconds": 6.2,
+      "end_seconds": 9.3
+    },
+    {
+      "id": "rail",
+      "instrument": "厚弓大提琴",
+      "start_seconds": 9.3,
+      "end_seconds": 12.4
+    },
+    {
+      "id": "beam_split",
+      "instrument": "绵奏中提琴",
+      "start_seconds": 12.4,
+      "end_seconds": 15.5
+    },
+    {
+      "id": "tidal_weave",
+      "instrument": "绵奏高音小提琴",
+      "start_seconds": 15.5,
+      "end_seconds": 18.6
+    },
+    {
+      "id": "firefly_rain",
+      "instrument": "绵长高音竖琴",
+      "start_seconds": 18.6,
+      "end_seconds": 21.7
+    }
+  ]
+}

@@ -14,11 +14,11 @@ const VISUALS=preload("res://scripts/weapon_visuals.gd")
 const GROWTH=preload("res://scripts/projectile_growth.gd")
 const ACTIVE_WEAPON_IDS=["pulse","scatter","beam","missile","nova","chain","rail","pulse_needle","scatter_prism","beam_split","rail_horizon","recorded_heavy","gilded_helix","weave_cross","crown_orbit","stern_fan","dawn_fan","tidal_weave","firefly_rain"]
 ## Generated from audio/instruments/CHAMBER_PALETTE.json by build_chamber_instruments.py.
-const INSTRUMENTS={"pulse":"柔和三角钢琴","scatter":"短奏钢琴","beam":"柔奏小提琴","missile":"温暖低音钢琴","nova":"圆润中音钢琴","chain":"柔和高音竖琴","rail":"柔奏大提琴","pulse_needle":"清亮高音钢琴","scatter_prism":"珠光钢琴","beam_split":"柔奏中提琴","rail_horizon":"深色低音钢琴","recorded_heavy":"厚实中低音钢琴","gilded_helix":"明亮三角钢琴","weave_cross":"轻巧断奏钢琴","crown_orbit":"通透竖琴","stern_fan":"温暖中音竖琴","dawn_fan":"柔亮高音钢琴","tidal_weave":"柔奏高音小提琴","firefly_rain":"晶润中音竖琴"}
-const INSTRUMENT_ROOTS={"pulse":60,"scatter":67,"beam":60,"missile":48,"nova":63,"chain":72,"rail":48,"pulse_needle":72,"scatter_prism":67,"beam_split":55,"rail_horizon":36,"recorded_heavy":43,"gilded_helix":60,"weave_cross":72,"crown_orbit":72,"stern_fan":60,"dawn_fan":67,"tidal_weave":67,"firefly_rain":63}
+const INSTRUMENTS={"pulse":"延音中音钢琴","scatter":"明亮延音钢琴","beam":"清晰弓头小提琴","missile":"温暖低音钢琴","nova":"圆润中音钢琴","chain":"柔和高音竖琴","rail":"厚弓大提琴","pulse_needle":"清亮高音钢琴","scatter_prism":"珠光钢琴","beam_split":"绵奏中提琴","rail_horizon":"深色低音钢琴","recorded_heavy":"厚实中低音钢琴","gilded_helix":"明亮三角钢琴","weave_cross":"轻巧断奏钢琴","crown_orbit":"通透竖琴","stern_fan":"温暖中音竖琴","dawn_fan":"柔亮高音钢琴","tidal_weave":"绵奏高音小提琴","firefly_rain":"绵长高音竖琴"}
+const INSTRUMENT_ROOTS={"pulse":60,"scatter":67,"beam":60,"missile":48,"nova":63,"chain":72,"rail":48,"pulse_needle":72,"scatter_prism":67,"beam_split":55,"rail_horizon":36,"recorded_heavy":43,"gilded_helix":60,"weave_cross":72,"crown_orbit":72,"stern_fan":60,"dawn_fan":67,"tidal_weave":67,"firefly_rain":75}
 const INSTRUMENT_FAMILIES={"pulse":"piano","scatter":"piano","beam":"strings","missile":"piano","nova":"piano","chain":"harp","rail":"strings","pulse_needle":"piano","scatter_prism":"piano","beam_split":"strings","rail_horizon":"piano","recorded_heavy":"piano","gilded_helix":"piano","weave_cross":"piano","crown_orbit":"harp","stern_fan":"harp","dawn_fan":"piano","tidal_weave":"strings","firefly_rain":"harp"}
 const PERCUSSION_IDS=[]
-const NEW_INSTRUMENTS={"gilded_helix":"明亮三角钢琴","weave_cross":"轻巧断奏钢琴","crown_orbit":"通透竖琴","stern_fan":"温暖中音竖琴","dawn_fan":"柔亮高音钢琴","tidal_weave":"柔奏高音小提琴","firefly_rain":"晶润中音竖琴"}
+const NEW_INSTRUMENTS={"gilded_helix":"明亮三角钢琴","weave_cross":"轻巧断奏钢琴","crown_orbit":"通透竖琴","stern_fan":"温暖中音竖琴","dawn_fan":"柔亮高音钢琴","tidal_weave":"绵奏高音小提琴","firefly_rain":"绵长高音竖琴"}
 const LEGACY_WEAPON_ALIASES={"recorded_light":"pulse","recorded_medium":"scatter","recorded_heavy_rare":"recorded_heavy","recorded_heavy_legend":"recorded_heavy"}
 const RECORDED_QUALITY_PROFILES=[
 	{"suffix":"","rarity":0,"damage":1.,"count":0,"speed":1.,"pierce":0,"cost":1.,"attribute_scale":.5},
@@ -134,9 +134,9 @@ static func _build_weapons() -> void:
 		["pulse","脉冲机炮","pulse",9.,3,900.,1.6,.075,0,0.,0.,0,1,1,0,14,"square",.11,.35,0,-3.],
 		["scatter","星砂霰弹","scatter",7.,5,690.,.95,.72,0,0.,0.,0,1,1,0,14,"noise",.15,.10,1,5.],
 		["beam","棱镜光束","beam",23.,1,1800.,.28,.12,12,0.,0.,0,1,2,1,20,"sine",.32,2.8,1,0.],
-		["missile","彗星导弹","missile",28.,1,410.,3.5,.10,0,110.,3.2,0,1,2,1,22,"saw",.26,1.6,-1,-5.],
-		["nova","新星环炮","nova",10.,10,560.,1.6,TAU,0,0.,0.,0,1,2,1,22,"triangle",.23,.6,0,7.],
-		["chain","跃迁电弧","chain",19.,1,1300.,.32,0.,0,0.,0.,3,1,2,1,22,"sine",.18,4.0,1,3.],
+		["missile","彗星导弹","missile",28.,1,410.,3.5,.10,0,110.,3.2,0,2,2,1,22,"saw",.26,1.6,-1,-5.],
+		["nova","新星环炮","nova",10.,10,560.,1.6,TAU,0,0.,0.,0,4,2,1,22,"triangle",.23,.6,0,7.],
+		["chain","跃迁电弧","chain",19.,1,1300.,.32,0.,0,0.,0.,3,2,2,1,22,"sine",.18,4.0,1,3.],
 		["rail","苍穹轨炮","rail",58.,1,2100.,1.3,.025,7,0.,0.,0,2,2,1,26,"triangle",.21,1.2,-1,0.],
 		["boomerang","回锋弯月","boomerang",18.,1,640.,2.4,.30,2,0.,0.,1,1,1,1,20,"triangle",.34,.85,0,-9.],
 		["orbit","轨道护卫","orbit",9.,3,245.,3.8,TAU,4,0.,0.,0,2,2,1,24,"sine",.42,.4,1,-7.],
@@ -145,9 +145,9 @@ static func _build_weapons() -> void:
 		["drone","蜂群侦击机","drone",10.,2,310.,4.0,.45,0,0.,2.3,0,2,2,1,25,"square",.16,.75,1,9.],
 		["pulse_ribbon","白矢连射器","pulse",5.5,6,1040.,1.9,.13,1,0.,0.,0,1,2,1,24,"square",.075,.55,1,-11.],
 		["pulse_needle","星针狙击器","pulse",27.,1,1500.,2.5,.01,4,0.,0.,0,1,2,1,24,"triangle",.12,1.9,2,1.],
-		["scatter_prism","七彩折光匣","scatter",77./12.,12,800.,1.4,.24,1,0.,0.,0,2,2,2,32,"noise",.19,1.5,2,-4.],
+		["scatter_prism","七彩折光匣","scatter",77./12.,12,800.,1.4,.24,1,0.,0.,0,4,2,2,32,"noise",.19,1.5,2,-4.],
 		["scatter_heavy","碎陨重霰炮","scatter",22.,4,490.,1.05,.48,2,35.,0.,0,2,2,2,31,"square",.24,.9,-2,6.],
-		["beam_split","双生棱镜","beam",18.,2,1700.,.35,.26,10,0.,0.,0,1,2,2,32,"sine",.39,3.4,0,-13.],
+		["beam_split","双生棱镜","beam",18.,2,1700.,.35,.26,10,0.,0.,0,2,2,2,32,"sine",.39,3.4,0,-13.],
 		["beam_lance","极昼光矛","beam",160.,1,2500.,.48,.015,28,50.,0.,0,8,3,3,48,"sine",.75,4.8,-1,4.],
 		["missile_swarm","萤火蜂巢","missile",15.,5,520.,3.4,.90,0,70.,5.,0,2,2,2,32,"saw",.18,2.3,1,-8.],
 		["missile_siege","破晓攻城弹","missile",170.,1,285.,4.6,.02,0,235.,1.5,0,8,3,3,48,"saw",.68,3.0,-2,-1.],
@@ -165,14 +165,14 @@ static func _build_weapons() -> void:
 		["drone_sentry","长夜哨兵","drone",24.,3,390.,6.0,.75,1,35.,3.5,0,4,3,2,36,"square",.47,1.65,-1,13.],
 		["recorded_crude","裂响火弹","pulse",15.,2,790.,1.7,.14,1,0.,0.,0,1,2,1,31,"noise",.17,.42,0,-4.],
 		["recorded_ballistic","实弹连奏炮","pulse",11.,3,900.,1.55,.12,1,0.,0.,0,1,2,1,34,"noise",.12,.38,0,0.],
-		["recorded_heavy","终压攻城铳","rail",88.,1,1900.,1.65,.018,14,90.,0.,0,1,3,3,52,"triangle",.42,2.5,-1,5.],
-		["gilded_helix","鎏金螺旋阵","nova",3.25,48,570.,2.0,TAU,1,0.,0.,0,2,3,2,42,"triangle",.22,.7,1,0.],
-		["weave_cross","虹织十字炮","pulse",2.4,64,740.,1.75,0.,1,0.,0.,0,2,3,3,54,"sine",.24,1.4,1,0.],
-		["crown_orbit","星冕回旋阵","orbit",6.,16,245.,3.0,TAU,3,0.,0.,0,2,3,2,44,"sine",.35,.4,1,0.],
-		["stern_fan","尾羽回响","pulse",3.6,24,720.,2.2,1.92,1,0.,0.,0,1,2,1,32,"triangle",.20,.5,0,0.],
-		["dawn_fan","晨羽前奏","pulse",4.,18,780.,2.05,1.35,1,0.,0.,0,1,2,1,30,"triangle",.2,.5,0,0.],
-		["tidal_weave","潮汐弦歌","pulse",3.8,24,850.,2.2,.90,2,0.,0.,0,2,3,2,40,"sine",.25,.5,0,0.],
-		["firefly_rain","流萤织雨","pulse",3.,30,940.,1.8,.65,1,0.,0.,0,2,3,2,42,"triangle",.2,.5,0,0.]
+		["recorded_heavy","终压攻城铳","rail",88.,1,1900.,1.65,.018,14,90.,0.,0,4,3,3,52,"triangle",.42,2.5,-1,5.],
+		["gilded_helix","鎏金螺旋阵","nova",3.25,48,570.,2.0,TAU,1,0.,0.,0,4,3,2,42,"triangle",.22,.7,1,0.],
+		["weave_cross","虹织十字炮","pulse",2.4,64,740.,1.75,0.,1,0.,0.,0,3,3,3,54,"sine",.24,1.4,1,0.],
+		["crown_orbit","星冕回旋阵","orbit",6.,16,245.,3.0,TAU,3,0.,0.,0,3,3,2,44,"sine",.35,.4,1,0.],
+		["stern_fan","尾羽回响","pulse",3.6,24,720.,2.2,1.92,1,0.,0.,0,3,2,1,32,"triangle",.20,.5,0,0.],
+		["dawn_fan","晨羽前奏","pulse",4.,18,780.,2.05,1.35,1,0.,0.,0,3,2,1,30,"triangle",.2,.5,0,0.],
+		["tidal_weave","潮汐弦歌","pulse",3.8,24,850.,2.2,.90,2,0.,0.,0,4,3,2,40,"sine",.25,.5,0,0.],
+		["firefly_rain","流萤织雨","pulse",3.,30,940.,1.8,.65,1,0.,0.,0,3,3,2,42,"triangle",.2,.5,0,0.]
 	]
 	var recorded_voices={"recorded_crude":"rec_crude","recorded_ballistic":"rec_ballistic"}
 	var recorded_sources={

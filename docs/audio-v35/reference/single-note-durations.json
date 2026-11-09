@@ -1,0 +1,59 @@
+{
+  "source_catalog_id": "weapon_ballistic_volume_ramp",
+  "source_container_sha256": "9cae3735d3781f263bda7cb32f011147ada3b5d96a2038e9ab00db2733ef572e",
+  "source_pcm_sha256": "240b32b2215c265d09e2a7457d1464fb84fa644b677e121922bece16dd347a23",
+  "sample_rate": 48000,
+  "channels": 2,
+  "method": "1ms RMS envelope;active threshold=max(peak-30dB,local10thpercentile noise+12dB). Body=frames within20dB of local peak. Includes8ms pre-roll and25ms tail where available. PCM16 direct source slices,no gain/fades/rate/pitch change. Late pair split at the visible quiet boundary40.485s. Threshold-based duration is not a hearing test.",
+  "clips": [
+    {
+      "id": "early-single",
+      "source_start_seconds": 0.618,
+      "source_end_seconds": 0.973,
+      "active_duration_ms": 355.0,
+      "body_above_minus20db_ms": 248,
+      "saved_clip_start_seconds": 0.61,
+      "saved_clip_end_seconds": 0.998,
+      "saved_duration_ms": 388.0,
+      "file": "docs/audio-v35/reference/early-single.wav",
+      "sha256": "3f14e434bb6d9582ee043a47ae0cbc51a66bc2a21cd65acc9e937af98c441d33"
+    },
+    {
+      "id": "middle-single",
+      "source_start_seconds": 22.118,
+      "source_end_seconds": 22.473,
+      "active_duration_ms": 355.0,
+      "body_above_minus20db_ms": 222,
+      "saved_clip_start_seconds": 22.11,
+      "saved_clip_end_seconds": 22.498,
+      "saved_duration_ms": 388.0,
+      "file": "docs/audio-v35/reference/middle-single.wav",
+      "sha256": "78be46d2d38a8a821d0489c99e258456e416ce24618d21b5a210783668904704"
+    },
+    {
+      "id": "late-first",
+      "source_start_seconds": 40.117,
+      "source_end_seconds": 40.471,
+      "active_duration_ms": 354.0,
+      "body_above_minus20db_ms": 227,
+      "saved_clip_start_seconds": 40.109,
+      "saved_clip_end_seconds": 40.485,
+      "saved_duration_ms": 376.0,
+      "file": "docs/audio-v35/reference/late-first.wav",
+      "sha256": "c630f7b17cc91b54076799dd33f1eb60f55897fd2d7a42e8c4c9cd275b5bed26"
+    },
+    {
+      "id": "late-second",
+      "source_start_seconds": 40.488,
+      "source_end_seconds": 40.839,
+      "active_duration_ms": 351.0,
+      "body_above_minus20db_ms": 211,
+      "saved_clip_start_seconds": 40.485,
+      "saved_clip_end_seconds": 40.864,
+      "saved_duration_ms": 379.0,
+      "file": "docs/audio-v35/reference/late-second.wav",
+      "sha256": "e842008b3a37f957e315aae43a214bbdbce7789afe3d480c99f87faf43d5cf2b"
+    }
+  ],
+  "role": "Reference-only audition and duration evidence;not installed as game weapon samples."
+}

@@ -47,6 +47,7 @@ def sync_catalog(entries):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--ids', help='Comma-separated IDs to render, retaining existing samples for other voices.')
+    parser.add_argument('--preview-dir', help='Repository-relative audition output directory; preserves historical previews.')
     args = parser.parse_args()
     policy = json.loads((ROOT / 'audio/instruments/CHAMBER_PALETTE.json').read_text(encoding='utf-8'))
     assert len(policy['weapons']) > 0 and len({e['id'] for e in policy['weapons']}) == len(policy['weapons'])
@@ -75,9 +76,12 @@ def main():
         sounds = []
         for degree in policy['scale_semitones']:
             raw = SOURCE / 'chamber-note.f32'
-            result = subprocess.run([str(exe), str(font), str(entry['bank']), str(entry['program']),
+            command = [str(exe), str(font), str(entry['bank']), str(entry['program']),
                 str(entry['root_midi'] + degree), str(entry['hold']), str(entry['release']), str(raw),
-                str(entry['velocity'])], check=True, capture_output=True, text=True, timeout=30)
+                str(entry['velocity'])]
+            if entry.get('source_attack_ms'):
+                command.append(str(entry['source_attack_ms'] / 1000.))
+            result = subprocess.run(command, check=True, capture_output=True, text=True, timeout=30)
             data = np.fromfile(raw, dtype='<f4').astype(np.float64)
             peak = float(np.max(np.abs(data)))
             assert peak > .001
@@ -109,28 +113,29 @@ def main():
                 'attack_300ms_rms': float(np.sqrt(np.mean(data[:window] ** 2)))})
         records.append({**entry, 'voice': 'inst_' + entry['id'], 'preset_name': result.stdout.strip(),
                         'percussion': False, 'gain': gain, 'samples': samples})
-        # A/B placement example: the same fixed note at 0 and .25 seconds.
-        block = np.zeros(round(RATE * 1.7))
-        for at in [0, .25]:
+        # Direct timbre audition at the current1.5s scan interval.
+        block_seconds = 3.1
+        block = np.zeros(round(RATE * block_seconds))
+        for at in [0, 1.5]:
             start = round(at * RATE)
             length = min(len(sounds[0]), len(block) - start)
             block[start:start + length] += sounds[0][:length] * .8
         timeline.append({'id': entry['id'], 'instrument': entry['instrument'],
-                         'start_seconds': len(demo) * 1.7, 'end_seconds': (len(demo) + 1) * 1.7})
+                         'start_seconds': len(demo) * block_seconds, 'end_seconds': (len(demo) + 1) * block_seconds})
         demo.append(block)
         print(entry['id'], result.stdout.strip(), 'peak', round(samples[0]['peak'], 3), flush=True)
     manifest = {k: old_manifest[k] for k in ['source', 'homepage', 'license', 'soundfont_sha256',
                                             'renderer', 'renderer_sha256', 'format', 'fixed_battle_pitch_index']}
     manifest.update(palette_revision=policy['revision'], allowed_families=policy['allowed_families'],
                     renderer_driver_sha256=hashlib.sha256((ROOT / 'tools/render_instrument_note.c').read_bytes()).hexdigest(),
-                    processing='Low-velocity sampled instruments, offline low-pass and onset/tail fades; shared per-instrument gain over all8 pitches. No synthetic layer.',
+                    processing='Acoustic sampled instruments with sustained note-on/body and natural note-off release,optional clear-bow attack,offline low-pass and onset/tail fades;shared gain across8pitches. No synthetic layer,time stretching or playback speed change.',
                     instruments=records)
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     sync_catalog(policy['weapons'])
-    preview = ROOT / ('docs/audio-v30/three-forward-voices.wav' if args.ids else 'docs/audio-current/chamber-voices.wav')
+    preview = ROOT / args.preview_dir / 'chamber-voices.wav' if args.preview_dir else ROOT / ('docs/audio-v30/three-forward-voices.wav' if args.ids else 'docs/audio-current/chamber-voices.wav')
     write_wav(preview, np.concatenate(demo))
-    preview.with_suffix('.json').write_text(json.dumps({'scope': 'Sequential offline current fixed-voice auditions; each repeats after250ms. No gameplay feedback/backing or live timing claim.',
-        'seconds': len(demo) * 1.7, 'timeline': timeline}, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    preview.with_suffix('.json').write_text(json.dumps({'scope': 'Sequential offline current fixed-voice auditions; each repeats after1.5s. Direct timbre audition,not charge eligibility or live capture.',
+        'seconds': len(demo) * block_seconds, 'timeline': timeline}, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     print(f'Built{len(selected)*8} samples; palette now{len(records)} instruments; existing unselected samples preserved')
 
 

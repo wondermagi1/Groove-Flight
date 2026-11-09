@@ -1,0 +1,100 @@
+{
+  "version": "0.35.0-chamber-combat-mix",
+  "date": "2026-11-09",
+  "backup_branch": "codex/backup-20261109-before-audio-upgrade",
+  "backup_sha": "699f22f71163975487a8b703b589d472bd014301",
+  "checks": 698,
+  "failures": 0,
+  "reports": [
+    {
+      "report": "results-v35-audio-upgrade.json",
+      "checks": 27,
+      "failures": 0
+    },
+    {
+      "report": "results-v34-weapon-sync.json",
+      "checks": 85,
+      "failures": 0
+    },
+    {
+      "report": "results-v33-music-continuity.json",
+      "checks": 36,
+      "failures": 0
+    },
+    {
+      "report": "results-v26-audio-controls-native.json",
+      "checks": 59,
+      "failures": 0
+    },
+    {
+      "report": "results-v32-starter-layout.json",
+      "checks": 75,
+      "failures": 0
+    },
+    {
+      "report": "results-composer-score.json",
+      "checks": 112,
+      "failures": 0
+    },
+    {
+      "report": "results-weapon-cycle.json",
+      "checks": 216,
+      "failures": 0
+    },
+    {
+      "report": "results-contact-swarm.json",
+      "checks": 88,
+      "failures": 0
+    }
+  ],
+  "samples": {
+    "total": 152,
+    "rebuilt": 56,
+    "unchanged": 96,
+    "longer_energy95_in_all7voices": true
+  },
+  "charge_rounds": {
+    "pulse": 1,
+    "scatter": 1,
+    "beam": 1,
+    "missile": 2,
+    "nova": 4,
+    "chain": 2,
+    "rail": 2,
+    "pulse_needle": 1,
+    "scatter_prism": 4,
+    "beam_split": 2,
+    "rail_horizon": 8,
+    "recorded_heavy": 4,
+    "gilded_helix": 4,
+    "weave_cross": 3,
+    "crown_orbit": 3,
+    "stern_fan": 3,
+    "dawn_fan": 3,
+    "tidal_weave": 4,
+    "firefly_rain": 3
+  },
+  "cache": {
+    "intro_seconds": 12,
+    "repeat_seconds": 144,
+    "stream_seconds": 156
+  },
+  "kill_interval_seconds": 0.1875,
+  "maximum_tail_hits": 2,
+  "audio_controls": 9,
+  "real_user_profile_levels_not_modified": true,
+  "weapon_counts_damage_motion_and_starter_spans_unchanged": true,
+  "unchanged_files": {
+    "scripts/contact_swarm.gd": "4aad354861629b90b0d2785fed516322309004ea1ecb0273e6832d2ab79e2c01",
+    "scripts/enemy_maneuver.gd": "33ca942f0ce7db8116200ca41e6095b9c2e1aba6f75ae92187ca28dccd27ea9c",
+    "scripts/weapon_visuals.gd": "dcf0c22cddd469288c0c89125e4a1967324c00c5b31d294846a5dd5653a252e1",
+    "scripts/weapon_emission.gd": "3bb606ab6f8abd9b1bff12a2e50084e343444f5983dcebe25a86298eacc0c372",
+    "native/crowd/groove_crowd.windows.x86_64.dll": "0046a79a8dd2eb63f7c13ea4d3e20720651b851aaa71892902701077c3c2c84e",
+    "audio/authorized/feedback/shield_impact.wav": "7fa70ca0d184772a7089048252ea651bfad630280ef3c1b5874b6cd944ee9fb2",
+    "audio/authorized/feedback/kill_low_strong.wav": "7d396a080eee88161e4c724e4980736bc1a4be970b01e9708b0d1ec60e5c2716",
+    "audio/authorized/feedback/kill_low_soft.wav": "b28abeffc74e8812c13cdde6a7559f7be4aaf0c7a7b6f3e4e7bb52752ddc7acd",
+    "audio/authorized/feedback/kill_low_round.wav": "0310dd22d776670a59d04c67e9d436a06d70a8f01dedf591b6dadc6d15f9ddfd",
+    "audio/authorized/feedback/pickup_coin.wav": "cb11675ea2078cdaae6bd34d3e0626e8b3a05b71d0a827625f1b0787deeb3b46"
+  },
+  "limits": "Native isolated gain/mute/transport/charge/preview checks plus measured WAV envelopes and complete reference-source inspection. No direct auditory input,subjective sound approval,full campaign balance or sustained FPS certification. Charge frequency was intentionally reduced without compensating projectile damage."
+}

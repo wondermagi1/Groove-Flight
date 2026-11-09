@@ -47,6 +47,8 @@ var music
 var standard_music
 var menu_music: AudioStreamPlayer
 var planet_music: AudioStreamPlayer
+var music_focus_until: float=-1.
+var music_duck_db: float=0.
 var recorded_weapon_player: AudioStreamPlayer
 var recorded_weapon_players: Dictionary={}
 var composer_player
@@ -139,7 +141,7 @@ var shop_reroll_cost: int=8
 var editor_return: String="combat"
 var notice: String=""
 var notice_until: float=0
-var settings={"backing":0.,"weapons":.255,"audio_schema":2,"kill":.55,"pickup":.55,"shield":.55,"combat":.55,"ui":.55,"groove":0.,"background_motion":.55,"text_scale":1.,"low_dynamic":false,"starting_path":0,"difficulty":0,"aim_mode":0,"input_bindings":{},"tutorial_done":false,"tutorial_skipped":false,"master":.75,"music":.75,"sfx":.55,"reduced_fx":false,"fullscreen":true,"background_quality":2,"background_exposure":.9,"panel_attributes":true,"panel_status":true,"panel_buffs":true,"panel_inventory":true,"panel_sequencer":true,"combat_panel_attributes":false,"combat_panel_status":false,"combat_panel_buffs":false,"combat_panel_inventory":false,"combat_panel_sequencer":true}
+var settings={"backing":0.,"weapons":.255,"audio_schema":3,"kill":.55,"pickup":.55,"shield":.55,"combat":.55,"ui":.55,"alerts":.55,"music_duck":true,"audio_mix_backup":{},"groove":0.,"background_motion":.55,"text_scale":1.,"low_dynamic":false,"starting_path":0,"difficulty":0,"aim_mode":0,"input_bindings":{},"tutorial_done":false,"tutorial_skipped":false,"master":.75,"music":.75,"sfx":.55,"reduced_fx":false,"fullscreen":true,"background_quality":2,"background_exposure":.9,"panel_attributes":true,"panel_status":true,"panel_buffs":true,"panel_inventory":true,"panel_sequencer":true,"combat_panel_attributes":false,"combat_panel_status":false,"combat_panel_buffs":false,"combat_panel_inventory":false,"combat_panel_sequencer":true}
 var voices: Array[AudioStreamPlayer]=[]
 var voice_index: int=0
 var sound_times: Dictionary={}
@@ -299,7 +301,7 @@ func apply_audio(update_levels: bool=true) -> void:
 		standard_music.bus=AUDIO.WEAPONS; standard_music.volume_db=-2.
 		standard_music.backing_gain=0.; standard_music.weapon_gain=1.; standard_music.groove_gain=0.
 	if is_instance_valid(menu_music): menu_music.bus=AUDIO.MUSIC; menu_music.volume_db=-6.
-	if is_instance_valid(planet_music): planet_music.bus=AUDIO.MUSIC; planet_music.volume_db=-10.
+	if is_instance_valid(planet_music): planet_music.bus=AUDIO.MUSIC; planet_music.volume_db=-10.+music_duck_db
 	for voice in voices: voice.bus=AUDIO.WEAPONS
 	for recorded_player in recorded_weapon_players.values():
 		if is_instance_valid(recorded_player): recorded_player.bus=AUDIO.WEAPONS; recorded_player.volume_db=-10.
@@ -313,6 +315,33 @@ func set_audio_volume(key: String,value: float) -> void:
 func reset_audio_volumes() -> void:
 	for key in AUDIO.DEFAULTS: settings[key]=AUDIO.DEFAULTS[key]
 	apply_audio(); save_settings(); ui.refresh()
+
+func apply_combat_mix() -> void:
+	if not (settings.get("audio_mix_backup",{}) is Dictionary) or settings.get("audio_mix_backup",{}).is_empty():
+		var prior: Dictionary={}
+		for key in AUDIO.DEFAULTS: prior[key]=settings[key]
+		settings.audio_mix_backup=prior
+	for key in AUDIO.COMBAT_PRESET: settings[key]=AUDIO.COMBAT_PRESET[key]
+	apply_audio(); save_settings(); ui.refresh()
+func restore_previous_mix() -> void:
+	var prior=settings.get("audio_mix_backup",{})
+	if not (prior is Dictionary) or prior.is_empty(): return
+	for key in AUDIO.DEFAULTS:
+		if prior.has(key): settings[key]=AUDIO.clean(prior[key],float(AUDIO.DEFAULTS[key]))
+	settings.audio_mix_backup={}; apply_audio(); save_settings(); ui.refresh()
+func set_music_ducking(value: bool) -> void:
+	settings.music_duck=value
+	if not value: music_duck_db=0.; apply_audio(false)
+	save_settings()
+func request_music_space(seconds: float=.24) -> void:
+	if is_preview or free_music_run or state!="combat": return
+	music_focus_until=maxf(music_focus_until,music.timeline+seconds)
+func update_background_mix(delta: float) -> void:
+	var focused=state=="combat" and not is_preview and not free_music_run and bool(settings.get("music_duck",true)) and music.timeline<music_focus_until
+	var target=-3. if focused else 0.
+	var smooth=.035 if target<music_duck_db else .38
+	music_duck_db=lerpf(music_duck_db,target,1.-exp(-maxf(0.,delta)/smooth))
+	if is_instance_valid(planet_music): planet_music.volume_db=-10.+music_duck_db
 
 func apply_background_quality() -> void:
 	settings.background_quality=clampi(int(settings.get("background_quality",2)),0,2)
@@ -395,7 +424,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	run_seed=rng.seed
 	weapon_beat_state.clear()
 	mixer.reset_feedback()
-	loadout.reset(); enemies.clear(); by_id.clear(); spatial.clear(); bullets.clear(); enemy_bullets.clear(); pickups.clear(); warnings.clear()
+	loadout.reset(); music_focus_until=-1.; music_duck_db=0.; enemies.clear(); by_id.clear(); spatial.clear(); bullets.clear(); enemy_bullets.clear(); pickups.clear(); warnings.clear()
 	var craft=FLEET.ship(selected_ship); selected_ship=str(craft.id)
 	selected_pilot=str(FLEET.pilot(selected_pilot).id)
 	var planet_number=int(PLANETS.planet(active_planet).index)
@@ -905,6 +934,7 @@ func overload() -> bool:
 
 func _process(delta: float) -> void:
 	_sync_screen_music()
+	update_background_mix(delta)
 	background.set_shader_parameter("travel",music.timeline*.15 if state in ["combat","editor","reward","paused"] else float(Time.get_ticks_msec())*.00015)
 	background.set_shader_parameter("music_pulse",music.pulse()*float(settings.background_motion) if state=="combat" else 0.)
 	if results_tail>0. and Time.get_ticks_msec()*.001>results_tail:
@@ -1241,6 +1271,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 	if not root_budgets.has(context.root_event): root_budgets[context.root_event]=128
 	while root_budgets.size()>2048: root_budgets.erase(root_budgets.keys()[0])
 	receipt.shot(context,count)
+	request_music_space(.24)
 	context.critical=rng.randf()<float(trigger.get("crit_chance",.05))
 	if context.critical: damage*=float(trigger.get("crit_damage",1.5))
 	var speed=float(trigger.get("speed",700)); var lifetime=float(trigger.get("life",2))
@@ -1510,6 +1541,7 @@ func hurt_enemy(enemy: Dictionary,damage: float,kind: String,context: Dictionary
 	fx.death(enemy.at,color,str(enemy.kind),(enemy.at-player).normalized(),kill_combo)
 	if enemy.kind in ["boss","elite"]: fx.blast(enemy.at,color,210. if enemy.kind=="boss" else 95.)
 	mixer.death(str(enemy.kind),kill_combo)
+	request_music_space(.32)
 	if enemy.has("boss_owner"):
 		var owner: Dictionary=by_id.get(int(enemy.boss_owner),{})
 		if not owner.is_empty() and owner.hp>0.:
@@ -1578,19 +1610,20 @@ func _grant_player_guard(duration: float) -> void:
 	player_guard_started=music.timeline; shield_renderer.impact(music.timeline)
 	fx.shield(player,Color("73e9ff"),112.)
 	sound("shield",-8.,1.)
+	request_music_space(.32)
 func hurt_player(amount: float) -> void:
 	if free_music_run: return
 	if state!="combat" or invulnerable>0 or dash_left>0 or music.timeline<player_guard_until: return
 	if shield_points>0 and music.timeline<shield_until:
 		shield_points=maxf(0,shield_points-1); invulnerable=.25
 		shield_renderer.impact(music.timeline)
-		fx.shield(player,Color("ffc45e"),96.); sound("shield",-8); return
+		fx.shield(player,Color("ffc45e"),96.); sound("shield",-8); request_music_space(.32); return
 	var received=float(amount)/(1.+.12*float(stats_snapshot.get("armor",0)))
 	receipt.received+=received; receipt.death_reason=last_damage_reason
 	health=maxf(0,health-received); invulnerable=.8
 	if health>0: _grant_player_guard(3.)
-	fx.burst(player,Color("ff779d"),16,220); sound("hit",-6)
-	if health<=0: finish_run(false)
+	fx.burst(player,Color("ff779d"),16,220)
+	if health<=0: sound("hit",-6); finish_run(false)
 func check_wave() -> void:
 	if free_music_run or is_preview: return
 	if state!="combat": return

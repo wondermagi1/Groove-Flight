@@ -1,0 +1,140 @@
+{
+  "scope": "5ms RMS envelope and95percent cumulative energy,not a subjective hearing test. All7selected voices have longer actual energy distribution;no speed/pitch warp or silence padding.",
+  "changed_files": 56,
+  "unchanged_files": 96,
+  "voices": [
+    {
+      "id": "pulse",
+      "instrument": "延音中音钢琴",
+      "root_midi": 60,
+      "before": {
+        "file_seconds": 0.8399546485260772,
+        "energy95_seconds": 0.22249433106575964,
+        "above_minus20db_seconds": 0.34476190476190477,
+        "peak_envelope_seconds": 0.03070294784580499,
+        "peak": 0.16888427734375
+      },
+      "after": {
+        "file_seconds": 1.3499773242630386,
+        "energy95_seconds": 0.42766439909297055,
+        "above_minus20db_seconds": 0.5841269841269842,
+        "peak_envelope_seconds": 0.03070294784580499,
+        "peak": 0.146942138671875
+      }
+    },
+    {
+      "id": "scatter",
+      "instrument": "明亮延音钢琴",
+      "root_midi": 67,
+      "before": {
+        "file_seconds": 0.46997732426303857,
+        "energy95_seconds": 0.18263038548752836,
+        "above_minus20db_seconds": 0.29229024943310655,
+        "peak_envelope_seconds": 0.057006802721088434,
+        "peak": 0.15704345703125
+      },
+      "after": {
+        "file_seconds": 1.22,
+        "energy95_seconds": 0.35909297052154193,
+        "above_minus20db_seconds": 0.5188662131519275,
+        "peak_envelope_seconds": 0.05687074829931973,
+        "peak": 0.137786865234375
+      }
+    },
+    {
+      "id": "beam",
+      "instrument": "清晰弓头小提琴",
+      "root_midi": 60,
+      "before": {
+        "file_seconds": 0.6777324263038549,
+        "energy95_seconds": 0.28820861678004533,
+        "above_minus20db_seconds": 0.3401814058956916,
+        "peak_envelope_seconds": 0.24770975056689343,
+        "peak": 0.197479248046875
+      },
+      "after": {
+        "file_seconds": 1.158095238095238,
+        "energy95_seconds": 0.3947845804988662,
+        "above_minus20db_seconds": 0.48480725623582765,
+        "peak_envelope_seconds": 0.31768707482993197,
+        "peak": 0.18475341796875
+      }
+    },
+    {
+      "id": "rail",
+      "instrument": "厚弓大提琴",
+      "root_midi": 48,
+      "before": {
+        "file_seconds": 0.7971428571428572,
+        "energy95_seconds": 0.27687074829931974,
+        "above_minus20db_seconds": 0.3531065759637188,
+        "peak_envelope_seconds": 0.1456235827664399,
+        "peak": 0.154205322265625
+      },
+      "after": {
+        "file_seconds": 1.2573242630385488,
+        "energy95_seconds": 0.4002267573696145,
+        "above_minus20db_seconds": 0.52281179138322,
+        "peak_envelope_seconds": 0.35351473922902493,
+        "peak": 0.16375732421875
+      }
+    },
+    {
+      "id": "beam_split",
+      "instrument": "绵奏中提琴",
+      "root_midi": 55,
+      "before": {
+        "file_seconds": 0.8180952380952381,
+        "energy95_seconds": 0.27319727891156464,
+        "above_minus20db_seconds": 0.3440362811791383,
+        "peak_envelope_seconds": 0.06662131519274377,
+        "peak": 0.1669921875
+      },
+      "after": {
+        "file_seconds": 1.1580498866213151,
+        "energy95_seconds": 0.3542403628117914,
+        "above_minus20db_seconds": 0.42634920634920637,
+        "peak_envelope_seconds": 0.06662131519274377,
+        "peak": 0.1595458984375
+      }
+    },
+    {
+      "id": "tidal_weave",
+      "instrument": "绵奏高音小提琴",
+      "root_midi": 67,
+      "before": {
+        "file_seconds": 0.7280272108843537,
+        "energy95_seconds": 0.2780952380952381,
+        "above_minus20db_seconds": 0.35219954648526075,
+        "peak_envelope_seconds": 0.1761904761904762,
+        "peak": 0.149261474609375
+      },
+      "after": {
+        "file_seconds": 1.1780045351473922,
+        "energy95_seconds": 0.37528344671201813,
+        "above_minus20db_seconds": 0.4605442176870748,
+        "peak_envelope_seconds": 0.3402721088435374,
+        "peak": 0.182403564453125
+      }
+    },
+    {
+      "id": "firefly_rain",
+      "instrument": "绵长高音竖琴",
+      "root_midi": 75,
+      "before": {
+        "file_seconds": 0.7699773242630386,
+        "energy95_seconds": 0.34671201814058955,
+        "above_minus20db_seconds": 0.59718820861678,
+        "peak_envelope_seconds": 0.05546485260770975,
+        "peak": 0.111358642578125
+      },
+      "after": {
+        "file_seconds": 1.4699773242630385,
+        "energy95_seconds": 0.5215419501133787,
+        "above_minus20db_seconds": 0.6802721088435374,
+        "peak_envelope_seconds": 0.010294784580498866,
+        "peak": 0.193267822265625
+      }
+    }
+  ]
+}

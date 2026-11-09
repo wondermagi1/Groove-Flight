@@ -17,7 +17,7 @@ func model_checks() -> void:
 	var notes: Array=[]
 	for serial in range(8): notes.append_array(model.schedule(serial).filter(func(e): return str(e.category)=="weapon" and str(e.pilot)!="echo"))
 	check(notes.size()==3 and notes[0].kind=="pulse" and notes[0].deadline==.375 and notes[1].kind=="scatter" and notes[1].deadline==.5625 and notes[2].kind=="firefly_rain" and notes[2].deadline==.9375 and not notes[2].audio_eligible,"only A3,B4,C6 schedule events; rain charge waits and occupied tail cells are silent")
-	check(L.SEQUENCE_LOOP_SECONDS==1.5 and C.item("firefly_rain").charge==2 and C.item("scatter_prism").charge==2,"scan timing and two-round charge counts are preserved")
+	check(L.SEQUENCE_LOOP_SECONDS==1.5 and C.item("firefly_rain").charge==3 and C.item("scatter_prism").charge==4,"scan timing stays1.5s while rain/prism use three/four rounds")
 func run() -> void:
 	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_NO_FOCUS,true); root.size=Vector2i(1920,1080)
 	model_checks(); game=load("res://scenes/Main.tscn").instantiate(); game.is_preview=true; root.add_child(game); current_scene=game; await frames(4)

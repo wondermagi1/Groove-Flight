@@ -128,7 +128,11 @@ func _process(delta: float) -> void:
 	sync_elapsed+=delta
 	if sync_elapsed>=.15: sync_elapsed=0.; sync()
 	if is_instance_valid(arena):
-		if loop_bar and arena.music.timeline>=source_game.LOADOUT.SEQUENCE_LOOP_SECONDS: replay()
+		# Native PCM looping preserves charge progress and sustained tails. A
+		# forced restart every scan would prevent3/4-round weapons from firing.
+		if arena.music.stream is AudioStreamWAV:
+			var repeat_mode=AudioStreamWAV.LOOP_FORWARD if loop_bar else AudioStreamWAV.LOOP_DISABLED
+			if arena.music.stream.loop_mode!=repeat_mode: arena.music.stream.loop_mode=repeat_mode
 		for target in arena.enemies: target.hp=target.max_hp
 
 func select_sample(index: int) -> void:

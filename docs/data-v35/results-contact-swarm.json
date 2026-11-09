@@ -1,0 +1,25 @@
+{
+	"checks": 88,
+	"facts": {
+		"ordinary_kinds": [
+			"mote",
+			"armor",
+			"shooter",
+			"dart",
+			"splitter",
+			"sentinel",
+			"lance",
+			"mirror"
+		],
+		"radial_sectors": 3,
+		"rhythm": {
+			"enemy_step_seconds": 0.5,
+			"hold_seconds": 0.28,
+			"move_seconds": 0.22,
+			"sequencer_seconds": 1.5
+		},
+		"spawn_cases": 8
+	},
+	"failures": [],
+	"scope": "Production square/circle births from upper-left, above and upper-right with boundary deferral, ordinary attack gates, half-second pacing/pause, 30/60/120Hz agreement and actual swept contact damage. Controlled fixtures, not a complete campaign or human balance review."
+}

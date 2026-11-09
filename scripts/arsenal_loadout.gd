@@ -318,7 +318,7 @@ func _previous_weapon(at: int) -> Dictionary:
 	return row if str(row.get("category",""))=="weapon" else {}
 
 func _effective_charge(value: float) -> int:
-	for allowed in [8,4,2,1]:
+	for allowed in [8,4,3,2,1]:
 		if value>=float(allowed): return int(allowed)
 	return 1
 

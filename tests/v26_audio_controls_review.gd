@@ -42,7 +42,7 @@ func routing_checks() -> void:
 func ui_checks() -> void:
 	game.state="title"; game.show_settings(); await frames(4)
 	var sliders=game.ui.root_control.find_children("Volume_*","HSlider",true,false)
-	check(sliders.size()==8,"settings exposes master and seven distinct sound categories")
+	check(sliders.size()==AUDIO.DEFAULTS.size(),"settings exposes master and every independent sound category")
 	for key in AUDIO.DEFAULTS:
 		var slider=game.ui.root_control.find_child("Volume_"+key,true,false)
 		slider.value=.41
@@ -74,8 +74,10 @@ func native_checks() -> void:
 	wav.data=bytes; test_player=AudioStreamPlayer.new(); game.add_child(test_player); test_player.stream=wav
 	for key in AUDIO.DEFAULTS: game.settings[key]=1.
 	game.apply_audio(); var measurements: Dictionary={}
-	for key in ["music","weapons","kill","pickup","shield","combat","ui"]:
-		test_player.bus=AUDIO.BUSES[key]; test_player.play(); var full=await native_rms()
+	for key in ["music","weapons","kill","pickup","shield","combat","ui","alerts"]:
+		# Let the audio thread remove the previous routed playback before changing
+		# buses; production feedback players already keep a fixed category bus.
+		test_player.stop(); await frames(3); test_player.bus=AUDIO.BUSES[key]; test_player.play(); var full=await native_rms()
 		game.set_audio_volume(key,.25); var quarter=await native_rms()
 		game.set_audio_volume(key,0.); var silent=await native_rms()
 		check(full>.02 and absf(quarter/full-.25)<.04 and silent<.000001,"native output audio_capture verifies full quarter and digital-silent gain / "+key)
@@ -93,7 +95,7 @@ func run() -> void:
 	game=load("res://scenes/Main.tscn").instantiate(); root.add_child(game); current_scene=game; await frames(4)
 	game.set_process(false); game.set_physics_process(false); game.set_process_unhandled_input(false); game.music.stop(); game.music._running=false
 	config_checks(); await routing_checks(); await ui_checks(); await native_checks()
-	var result={"checks":checks,"failures":failures,"facts":facts,"renderer":RenderingServer.get_current_rendering_method(),"scope":"Eight real settings sliders, isolated legacy config migration/roundtrip, production category routes including feedback/codex/composer/shop, runtime source hashes and actual195ms shield from28seconds, exact0 mute without touching siblings. Native mode captures actual Master output at full/quarter/muted gain for all7categories and background/weapon independence."}
+	var result={"checks":checks,"failures":failures,"facts":facts,"renderer":RenderingServer.get_current_rendering_method(),"scope":"Current9settings sliders,legacy config migration/roundtrip,production category routes including feedback/codex/composer/shop,source hashes and unchanged195ms shield,exact0mute without touching siblings. Native mode captures Master output at full/quarter/muted gain for all8child categories and background/weapon independence."}
 	FileAccess.open("res://tests/results-v26-audio-controls.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	if DisplayServer.get_name()!="headless": FileAccess.open("res://tests/results-v26-audio-controls-native.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	if DisplayServer.get_name()!="headless": FileAccess.open("res://tests/results-v26-audio-controls-"+RenderingServer.get_current_rendering_method()+".json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))

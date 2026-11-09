@@ -1,5 +1,6 @@
 extends Node
 const AUDIO=preload("res://scripts/audio_controls.gd")
+const SEQUENCE=preload("res://scripts/arsenal_loadout.gd")
 ## Recorded low-drum kill feedback; bounded rolls and reserved shield/pickup voices.
 const RATE=22050
 var groups={"hit":[],"kill":[],"ui":[],"alert":[],"pickup":[],"shield":[]}
@@ -13,8 +14,8 @@ var drum_queue: Array=[]
 var last_player: AudioStreamPlayer
 var gain: float=.4
 var low_dynamic: bool=false
-const KILL_INTERVAL=.125
-const MAX_TAIL_HITS=3
+const KILL_INTERVAL=SEQUENCE.SEQUENCE_STEP_SECONDS
+const MAX_TAIL_HITS=2
 var next_kill_at: float=-1.
 var drum_index: int=0
 var feedback_log: Array=[]
@@ -65,7 +66,7 @@ func set_combat_state(state: String) -> void:
 func _emit_drum(amount: int,combo: int,tail: bool=false) -> void:
 	var pattern=["kill_low_strong","kill_low_soft","kill_low_round","kill_low_soft"]
 	var sample_id=str(pattern[drum_index%pattern.size()]); drum_index+=1
-	var volume=(-12. if tail else -9.)+minf(2.,log(float(maxi(1,amount)))*.7)+minf(1.5,combo*.06)
+	var volume=(-15. if tail else -9.)+minf(2.,log(float(maxi(1,amount)))*.7)+minf(1.,combo*.04)
 	if low_dynamic: volume-=2.
 	play(samples[sample_id],"kill",volume,1.)
 	counters.kill_hits+=1

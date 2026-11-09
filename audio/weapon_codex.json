@@ -4,7 +4,7 @@
 	"scope": "Active fixed instruments. Fixed pitch0 battle sounds; no automatic strength or melody cycles.",
 	"sequence_loop_seconds": 1.5,
 	"sequence_step_seconds": 0.1875,
-	"version": "0.34.0-weapon-av-sync",
+	"version": "0.35.0-chamber-combat-mix",
 	"weapon_count": 19,
 	"weapons": [
 		{
@@ -19,60 +19,62 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 1,
 			"family": "pulse",
+			"fire_interval_seconds": 1.5,
 			"id": "pulse",
-			"instrument": "柔和三角钢琴",
+			"instrument": "延音中音钢琴",
 			"name": "脉冲机炮",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 37086,
+					"bytes": 59578,
 					"path": "res://audio/arsenal/notes/inst_pulse_0.wav",
 					"pitch": 0,
-					"sha256": "788a99360971a8f3385a500ef6014474903638763c2b950244eb41dbe887c4b8"
+					"sha256": "e1a07cd5017a9fa5a06e125e9cff3dc87410d363369e1cb771655eb1fca59ccb"
 				},
 				{
-					"bytes": 37086,
+					"bytes": 59578,
 					"path": "res://audio/arsenal/notes/inst_pulse_1.wav",
 					"pitch": 1,
-					"sha256": "48231f9dfecc44ded6aaa3947290a15dce6325cad57db586b7ac80673ed4ac86"
+					"sha256": "bc067667d941f251e227b2b23031c134ea6dbaeca3082bbc7a736783e0d4ed90"
 				},
 				{
-					"bytes": 37086,
+					"bytes": 59578,
 					"path": "res://audio/arsenal/notes/inst_pulse_2.wav",
 					"pitch": 2,
-					"sha256": "c482f2c3e25169cec93d6d8472e29f84fc1a05bf6cd82c56e931a5c60ae7017f"
+					"sha256": "c89593f07a7bb1263b4e09854ec07824ea818c633da30664bb086e17dd934a8a"
 				},
 				{
-					"bytes": 37086,
+					"bytes": 59578,
 					"path": "res://audio/arsenal/notes/inst_pulse_3.wav",
 					"pitch": 3,
-					"sha256": "645bbbcb0b7e9b6481d816086e6f937720dbc8ed5b86ebd4417bc38cf864478b"
+					"sha256": "21d7ecda295cbc09194528ef9c0f4e50502f14994692d31ebb94af9114bdc13f"
 				},
 				{
-					"bytes": 37086,
+					"bytes": 59578,
 					"path": "res://audio/arsenal/notes/inst_pulse_4.wav",
 					"pitch": 4,
-					"sha256": "cbc1244734d4b36530e00fcac09a667798fea6785eed08817301b0d274880482"
+					"sha256": "433e386034f07870857e9a16b58d0a4a8eaa0c480553ff6e2df1f28979c499ba"
 				},
 				{
-					"bytes": 37086,
+					"bytes": 59578,
 					"path": "res://audio/arsenal/notes/inst_pulse_5.wav",
 					"pitch": 5,
-					"sha256": "e7c67510a1178fe4b71f9f916a14b1d44f51f3fd1386c6851ba373e745bf9252"
+					"sha256": "b7eaf380face7d6a72e65e38ccca3cf8736f3c2d01bb6d10053528d3629e2a30"
 				},
 				{
-					"bytes": 37086,
+					"bytes": 59578,
 					"path": "res://audio/arsenal/notes/inst_pulse_6.wav",
 					"pitch": 6,
-					"sha256": "707d001ab8c35ca897f7e15b033c986a5136cc66ce61dd73eaa9ab2854c30c74"
+					"sha256": "7d7c0b773e11fdfe58eae52d786c5a4c5c3c2a03bbb03d49a880cbc1a6fb7441"
 				},
 				{
-					"bytes": 37086,
+					"bytes": 59578,
 					"path": "res://audio/arsenal/notes/inst_pulse_7.wav",
 					"pitch": 7,
-					"sha256": "bd4119def8942c8bc8ca0d92b64fde0d9cddf6bef5728ab6289a193ee0f54316"
+					"sha256": "b59201b3faa114afb80c09acc6ed9725fc2aa25b8dee6e61f81bdda9e3b9a76e"
 				}
 			],
 			"sound_trigger": "actual_fire",
@@ -90,60 +92,62 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 1,
 			"family": "scatter",
+			"fire_interval_seconds": 1.5,
 			"id": "scatter",
-			"instrument": "短奏钢琴",
+			"instrument": "明亮延音钢琴",
 			"name": "星砂霰弹",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 20770,
+					"bytes": 53846,
 					"path": "res://audio/arsenal/notes/inst_scatter_0.wav",
 					"pitch": 0,
-					"sha256": "71b911f233bdd57a1ded9479ddc96fd72745d02922fe212327095e1fa3631358"
+					"sha256": "afcfb52f07de61e670f1581cca47d7138a2917474fd859e2de0a16636f0a99d0"
 				},
 				{
-					"bytes": 20770,
+					"bytes": 53846,
 					"path": "res://audio/arsenal/notes/inst_scatter_1.wav",
 					"pitch": 1,
-					"sha256": "b36daceccd50b220695bab783a8f12a55f2dfa6a876750c78615a1bb174a9f28"
+					"sha256": "b2725816ca39b1721c6f1b8f4c367b40ef959ae46da50eb25043306c8f3163ea"
 				},
 				{
-					"bytes": 20770,
+					"bytes": 53846,
 					"path": "res://audio/arsenal/notes/inst_scatter_2.wav",
 					"pitch": 2,
-					"sha256": "be499b9497cd3a4b312d532a6599aae54f479f62fceb5ee6502aa48c7fb17493"
+					"sha256": "882c23bb7452af9aba81737a8e82a26e1d1359b899ff2dc477b126ed0f431dae"
 				},
 				{
-					"bytes": 20770,
+					"bytes": 53846,
 					"path": "res://audio/arsenal/notes/inst_scatter_3.wav",
 					"pitch": 3,
-					"sha256": "d46c9372790796f0443892b26c922081f68f917ce18eddb7dae9293b380b1014"
+					"sha256": "cc023339f41e47722b05212b92969d8157cdc3732a1aaced0026849bf451a1e0"
 				},
 				{
-					"bytes": 20770,
+					"bytes": 53846,
 					"path": "res://audio/arsenal/notes/inst_scatter_4.wav",
 					"pitch": 4,
-					"sha256": "9f55d6bb7edb25412f249fffabdf1a7961a10894ed0c365a5816cec672c2102a"
+					"sha256": "88ff7e9bc5cf46737e19d95ad97f19ab16ea238cb5e1b084df34f6cdd0c82b09"
 				},
 				{
-					"bytes": 20770,
+					"bytes": 53846,
 					"path": "res://audio/arsenal/notes/inst_scatter_5.wav",
 					"pitch": 5,
-					"sha256": "4ddf0cfd5742b8e6d2e60ef741e71ad6345aca24ad71f229060ce03da8ff4404"
+					"sha256": "66214501d839fcc82033d4f42b97a9429450a0caac598efaa84335fd57c2b094"
 				},
 				{
-					"bytes": 20770,
+					"bytes": 53846,
 					"path": "res://audio/arsenal/notes/inst_scatter_6.wav",
 					"pitch": 6,
-					"sha256": "a907140931d473d8e05d1c8d86052ac840f85b41facaa08e66a47b0c3cbee448"
+					"sha256": "27b6d11c15b5ac7f709a8968b6dacc83d382c789bc8299512803ad749ffe7302"
 				},
 				{
-					"bytes": 20770,
+					"bytes": 53846,
 					"path": "res://audio/arsenal/notes/inst_scatter_7.wav",
 					"pitch": 7,
-					"sha256": "35ab1842fde041c7b1301e599a179907aa73c1392ca894b7e7749531d80353b3"
+					"sha256": "62f733adc4b94b9d540a701deefe65088a9d13d95aeb4b182279510f1557dc0c"
 				}
 			],
 			"sound_trigger": "actual_fire",
@@ -161,60 +165,62 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 1,
 			"family": "beam",
+			"fire_interval_seconds": 1.5,
 			"id": "beam",
-			"instrument": "柔奏小提琴",
+			"instrument": "清晰弓头小提琴",
 			"name": "棱镜光束",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 29932,
+					"bytes": 51116,
 					"path": "res://audio/arsenal/notes/inst_beam_0.wav",
 					"pitch": 0,
-					"sha256": "d1ba1f42562a0ac3ea2a1f23c6d2ad9d171cda682935abf651f93c008915a9b2"
+					"sha256": "c89fd5d43e1db53dfc57184e3e3cee54bd0989fbade04e36e0cee58a26eff1d1"
 				},
 				{
-					"bytes": 29946,
+					"bytes": 51116,
 					"path": "res://audio/arsenal/notes/inst_beam_1.wav",
 					"pitch": 1,
-					"sha256": "c5574624b207d221fc51e6e5a5adf08477fea505bfafb007987aa8241928347f"
+					"sha256": "9432ec37499be920eb512dcf9dc9e7a1a21353eb366622baf2e999b865491638"
 				},
 				{
-					"bytes": 29942,
+					"bytes": 51114,
 					"path": "res://audio/arsenal/notes/inst_beam_2.wav",
 					"pitch": 2,
-					"sha256": "3a5108085b1a0e88d071da3bb36ffe182b7dca4fd8da19248ec269008d00a6ca"
+					"sha256": "0d315b568e3c915d1bbadf8f811eab79df42d46ca84c00a1dfa0cc0f34a968bb"
 				},
 				{
-					"bytes": 29942,
+					"bytes": 51114,
 					"path": "res://audio/arsenal/notes/inst_beam_3.wav",
 					"pitch": 3,
-					"sha256": "c2997958866cee1c029ea42d9e6476f429410c8573b3b76fd54cbececf6b3be6"
+					"sha256": "c066cd0c558049f3cdc75c2700dc844168d6c721efc929f7ff51e94e7d330687"
 				},
 				{
-					"bytes": 29946,
+					"bytes": 51116,
 					"path": "res://audio/arsenal/notes/inst_beam_4.wav",
 					"pitch": 4,
-					"sha256": "8ed48997a31f23f48abc00015746386bff3cd5d20489982ba0506c7ed5614b6e"
+					"sha256": "66888d84756be01f44deb11d7bce72e83d302e47b952d5e316abf5e9dc848db7"
 				},
 				{
-					"bytes": 29946,
+					"bytes": 51116,
 					"path": "res://audio/arsenal/notes/inst_beam_5.wav",
 					"pitch": 5,
-					"sha256": "84de27f1049c17b6b7d5e7010224c000b97e4313aacb26d66ea250540f2a05a7"
+					"sha256": "f40f637af0662dc2606533a80b9f79921bb80721f841e2a58a2c5bc2f27bc238"
 				},
 				{
-					"bytes": 29944,
+					"bytes": 51114,
 					"path": "res://audio/arsenal/notes/inst_beam_6.wav",
 					"pitch": 6,
-					"sha256": "2a88e59d4acbcc334b39fcc988e4a825bee14776c6fb753d33e15a666b354fe0"
+					"sha256": "9f2dbfb67f9546c1ae65a08567e2a293deaf7f85e58a811c2f01a085532076ab"
 				},
 				{
-					"bytes": 29946,
+					"bytes": 51116,
 					"path": "res://audio/arsenal/notes/inst_beam_7.wav",
 					"pitch": 7,
-					"sha256": "9272728c2eec4654d96f36bb8fda670e004d157570baff7ae82f0c993a14fcb7"
+					"sha256": "0755b98047f5f6b5a5b222f8a769f55ae887111a64ec4b163c0b9a63b81cfbc6"
 				}
 			],
 			"sound_trigger": "actual_fire",
@@ -232,7 +238,9 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 2,
 			"family": "missile",
+			"fire_interval_seconds": 3.0,
 			"id": "missile",
 			"instrument": "温暖低音钢琴",
 			"name": "彗星导弹",
@@ -303,7 +311,9 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 4,
 			"family": "nova",
+			"fire_interval_seconds": 6.0,
 			"id": "nova",
 			"instrument": "圆润中音钢琴",
 			"name": "新星环炮",
@@ -374,7 +384,9 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 2,
 			"family": "chain",
+			"fire_interval_seconds": 3.0,
 			"id": "chain",
 			"instrument": "柔和高音竖琴",
 			"name": "跃迁电弧",
@@ -445,60 +457,62 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 2,
 			"family": "rail",
+			"fire_interval_seconds": 3.0,
 			"id": "rail",
-			"instrument": "柔奏大提琴",
+			"instrument": "厚弓大提琴",
 			"name": "苍穹轨炮",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 35198,
+					"bytes": 55492,
 					"path": "res://audio/arsenal/notes/inst_rail_0.wav",
 					"pitch": 0,
-					"sha256": "87016584c89f20a45c6745e3e0e3686e61b2bad61fd8756a5b6f68fed662697e"
+					"sha256": "2aa238b07dbad06a1eb9fe5224999b034528c29f91bbc1b6a2b7d8b44e0d0ce1"
 				},
 				{
-					"bytes": 35238,
+					"bytes": 55524,
 					"path": "res://audio/arsenal/notes/inst_rail_1.wav",
 					"pitch": 1,
-					"sha256": "c3d453f948c3ca997746a3019d3fb69008741aa6e0caf604683a4aa6cdc4f1cf"
+					"sha256": "80dbbdebea3bbee904e6aa4ccf078ad26b5e8df6b3bb98f222c77fe290e70ba7"
 				},
 				{
-					"bytes": 35238,
+					"bytes": 55524,
 					"path": "res://audio/arsenal/notes/inst_rail_2.wav",
 					"pitch": 2,
-					"sha256": "8ae64c52c309b361da607813b48f1bd9eceabdbd63896f45299fb8f115b632a9"
+					"sha256": "114f44c0f7e7ecf7e5d89ebd1414ce02b530fc0fb4ac4f968657cfc9945172d3"
 				},
 				{
-					"bytes": 35164,
+					"bytes": 55524,
 					"path": "res://audio/arsenal/notes/inst_rail_3.wav",
 					"pitch": 3,
-					"sha256": "afd71761b219859b101f9de07160d9a834d6011add9f1df6b4fffba8390ec3c8"
+					"sha256": "24da681a17182543ac8f71788f4523b4c036c0f136e715eef8e5c634f83d25dd"
 				},
 				{
-					"bytes": 35186,
+					"bytes": 55522,
 					"path": "res://audio/arsenal/notes/inst_rail_4.wav",
 					"pitch": 4,
-					"sha256": "d8f2e068569b1b34369e060c73dd3be6f00ee3017f4ce8e971db36e21faee858"
+					"sha256": "54c6f6fb2308aa7f6243dc69b34ad8f2720de373947a61feb857d006a4327e8f"
 				},
 				{
-					"bytes": 35192,
+					"bytes": 55524,
 					"path": "res://audio/arsenal/notes/inst_rail_5.wav",
 					"pitch": 5,
-					"sha256": "582464986d3831812f5c3e7e15c4b6ecbf10c39521969b84304cbc4963403c7f"
+					"sha256": "dabf50df3c6beef88d8c668f607601fa0194b24ad8b76e48eb3698c02f069213"
 				},
 				{
-					"bytes": 35238,
+					"bytes": 55524,
 					"path": "res://audio/arsenal/notes/inst_rail_6.wav",
 					"pitch": 6,
-					"sha256": "7a57da04adc68837303ecac2fbfddd7e8bba8804dc1ab191f28a3c4386de7981"
+					"sha256": "a79b0d794c12f0b15050a4129ab856ac476ee49b68369565f59df416d50d41ce"
 				},
 				{
-					"bytes": 35238,
+					"bytes": 55524,
 					"path": "res://audio/arsenal/notes/inst_rail_7.wav",
 					"pitch": 7,
-					"sha256": "d15dd0f952b450f426e09da37533ab648facedfd582c853e7fe7da980d09a110"
+					"sha256": "e784a971274e8f2e5d7ec355c2374cadbf2f0c7f6611454bf01ba63b1407a02a"
 				}
 			],
 			"sound_trigger": "actual_fire",
@@ -516,7 +530,9 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 1,
 			"family": "pulse",
+			"fire_interval_seconds": 1.5,
 			"id": "pulse_needle",
 			"instrument": "清亮高音钢琴",
 			"name": "星针狙击器",
@@ -587,7 +603,9 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 4,
 			"family": "scatter",
+			"fire_interval_seconds": 6.0,
 			"id": "scatter_prism",
 			"instrument": "珠光钢琴",
 			"name": "七彩折光匣",
@@ -658,60 +676,62 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 2,
 			"family": "beam",
+			"fire_interval_seconds": 3.0,
 			"id": "beam_split",
-			"instrument": "柔奏中提琴",
+			"instrument": "绵奏中提琴",
 			"name": "双生棱镜",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 36122,
+					"bytes": 51114,
 					"path": "res://audio/arsenal/notes/inst_beam_split_0.wav",
 					"pitch": 0,
-					"sha256": "e8757925045af7002a29651dfaac6e6fb3aa3c82478242f89553cca4812ce829"
+					"sha256": "50e50d180ebc6d507e3dc4be7964b23ab5384743e690ad6fe31f831398014c58"
 				},
 				{
-					"bytes": 36080,
+					"bytes": 51114,
 					"path": "res://audio/arsenal/notes/inst_beam_split_1.wav",
 					"pitch": 1,
-					"sha256": "e9c67240bd3a6817b87dc02d2efc6c42e362fae368fcf2d8294b44760f812c13"
+					"sha256": "4b177060d80fb2103bec955be1f26ccc24010677ccf206cd607a6807b6105b4a"
 				},
 				{
-					"bytes": 36088,
+					"bytes": 51114,
 					"path": "res://audio/arsenal/notes/inst_beam_split_2.wav",
 					"pitch": 2,
-					"sha256": "4c5b715a97e87fc9badc7d8a68c08f11acf284ece3d768baf8544a57d1a82fd6"
+					"sha256": "1811cd4d53c3aff0d84226542f891ed45676b2dd2499651bcc1bbbb26a3a1a35"
 				},
 				{
-					"bytes": 36122,
+					"bytes": 51114,
 					"path": "res://audio/arsenal/notes/inst_beam_split_3.wav",
 					"pitch": 3,
-					"sha256": "250d10d5053543e2cd21b17e2280ac570025f181c7ea19e838b126b30bdd92d6"
+					"sha256": "07c2328fff5b46b186f26a5f4895e4b38665513a0e5794b663880e8f0a7aa3bc"
 				},
 				{
-					"bytes": 36122,
+					"bytes": 51114,
 					"path": "res://audio/arsenal/notes/inst_beam_split_4.wav",
 					"pitch": 4,
-					"sha256": "d56eb8a506ac819f77a761aed6d80b88183eb39c9a7b39de3caeb16e1394208d"
+					"sha256": "69b78455e7d5b6c614049ce415f878928a3218090be4c6b5b4baa1bdd126a0cd"
 				},
 				{
-					"bytes": 36122,
+					"bytes": 51114,
 					"path": "res://audio/arsenal/notes/inst_beam_split_5.wav",
 					"pitch": 5,
-					"sha256": "815f6d0fdcbc5b93ccda80b7fec29bffac15c915788ac8b469a73149433e2bba"
+					"sha256": "4e3c5b59718828208e03010412ea0cb3e3c0c813d40693ebe925afffca95324a"
 				},
 				{
-					"bytes": 36122,
+					"bytes": 51114,
 					"path": "res://audio/arsenal/notes/inst_beam_split_6.wav",
 					"pitch": 6,
-					"sha256": "0e623969e8062cc95e55263f57e2f70650b0339c67a57cad5e950da196e218c4"
+					"sha256": "33e403a874da89e9ab2fbd4ce5825b5ccd5a54d482b1e1069979b6ebf034d787"
 				},
 				{
-					"bytes": 36122,
+					"bytes": 51114,
 					"path": "res://audio/arsenal/notes/inst_beam_split_7.wav",
 					"pitch": 7,
-					"sha256": "712a82a9902bd3582e45da623db745b074f96b174123bf1e40002fe7afd7b058"
+					"sha256": "f3e580f5c4f83d5c67d499f25eab65cc5a8e66f1bbbe6a818bece001bd10f508"
 				}
 			],
 			"sound_trigger": "actual_fire",
@@ -729,7 +749,9 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 8,
 			"family": "rail",
+			"fire_interval_seconds": 12.0,
 			"id": "rail_horizon",
 			"instrument": "深色低音钢琴",
 			"name": "地平线终奏",
@@ -800,7 +822,9 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 4,
 			"family": "rail",
+			"fire_interval_seconds": 6.0,
 			"id": "recorded_heavy",
 			"instrument": "厚实中低音钢琴",
 			"name": "终压攻城铳",
@@ -871,7 +895,9 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 4,
 			"family": "nova",
+			"fire_interval_seconds": 6.0,
 			"id": "gilded_helix",
 			"instrument": "明亮三角钢琴",
 			"name": "鎏金螺旋阵",
@@ -942,7 +968,9 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 3,
 			"family": "pulse",
+			"fire_interval_seconds": 4.5,
 			"id": "weave_cross",
 			"instrument": "轻巧断奏钢琴",
 			"name": "虹织十字炮",
@@ -1013,7 +1041,9 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 3,
 			"family": "orbit",
+			"fire_interval_seconds": 4.5,
 			"id": "crown_orbit",
 			"instrument": "通透竖琴",
 			"name": "星冕回旋阵",
@@ -1084,7 +1114,9 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 3,
 			"family": "pulse",
+			"fire_interval_seconds": 4.5,
 			"id": "stern_fan",
 			"instrument": "温暖中音竖琴",
 			"name": "尾羽回响",
@@ -1155,7 +1187,9 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 3,
 			"family": "pulse",
+			"fire_interval_seconds": 4.5,
 			"id": "dawn_fan",
 			"instrument": "柔亮高音钢琴",
 			"name": "晨羽前奏",
@@ -1226,60 +1260,62 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 4,
 			"family": "pulse",
+			"fire_interval_seconds": 6.0,
 			"id": "tidal_weave",
-			"instrument": "柔奏高音小提琴",
+			"instrument": "绵奏高音小提琴",
 			"name": "潮汐弦歌",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 32150,
+					"bytes": 51994,
 					"path": "res://audio/arsenal/notes/inst_tidal_weave_0.wav",
 					"pitch": 0,
-					"sha256": "859b7b7d3fe2cd3b7942dcc0a019b91154e1bcf172398fe2a69e659355434735"
+					"sha256": "f4c29fa632d17a88cfba10ba1e91a874de02939967c58fb4f6771de779678864"
 				},
 				{
-					"bytes": 32150,
+					"bytes": 51994,
 					"path": "res://audio/arsenal/notes/inst_tidal_weave_1.wav",
 					"pitch": 1,
-					"sha256": "0db11c7aadae042c9b48ed8b9e2d819c4a5df419deeabac93ac530a10e1a8854"
+					"sha256": "ca1128c4119a4c2013e837c0e27f3921fb76860b9343aa31418cdeba0d44a02e"
 				},
 				{
-					"bytes": 32148,
+					"bytes": 51992,
 					"path": "res://audio/arsenal/notes/inst_tidal_weave_2.wav",
 					"pitch": 2,
-					"sha256": "0f0a3d2e2e74af4041fd6b3897546d2cb1cab8610c17b3a85b48c91bbba6efc4"
+					"sha256": "48f5d0628a0135913c9bb7f4359fb65a35584587ae9a2bbcc807bf24e4059bdc"
 				},
 				{
-					"bytes": 32150,
+					"bytes": 51994,
 					"path": "res://audio/arsenal/notes/inst_tidal_weave_3.wav",
 					"pitch": 3,
-					"sha256": "4c47e34a1853864b34288eb3f1764d56a3752c3fd08234d03e8cbd9d430d156d"
+					"sha256": "b21360b87b4f019c53b1f2cf4683337e4f6f077b8dda17e2c845d194035a8931"
 				},
 				{
-					"bytes": 32150,
+					"bytes": 51994,
 					"path": "res://audio/arsenal/notes/inst_tidal_weave_4.wav",
 					"pitch": 4,
-					"sha256": "16bd7e71379ae5015a06e8ba4ef000c3842213cdcd8421b4950568724c5d2d62"
+					"sha256": "b014136661ba0fd8e9c193a900be3e04559bab8a7ffbb7b7dbf769dca4e15078"
 				},
 				{
-					"bytes": 32148,
+					"bytes": 51994,
 					"path": "res://audio/arsenal/notes/inst_tidal_weave_5.wav",
 					"pitch": 5,
-					"sha256": "c30c74bf7d3be6c9fff97727d56835e6f2dec1a6b5648ba87d152d91c029b717"
+					"sha256": "a81714fb2cd5fcead61228dfbece5ac8637ba4d9d48f24d7c504dcd41682f204"
 				},
 				{
-					"bytes": 32150,
+					"bytes": 51994,
 					"path": "res://audio/arsenal/notes/inst_tidal_weave_6.wav",
 					"pitch": 6,
-					"sha256": "644541473ff5e617beffb2b93efc0b0544001e0066e92d3091c6c6817c63e849"
+					"sha256": "00680aeabb476bfe75f2e1766be63f4ea869686b76d3bc59e7ba9c6eafbcd439"
 				},
 				{
-					"bytes": 32150,
+					"bytes": 51994,
 					"path": "res://audio/arsenal/notes/inst_tidal_weave_7.wav",
 					"pitch": 7,
-					"sha256": "d54ca2934e7c42d3d423b73d86a8e0328b29b238b8b7c5864e1ced5ecb30e7d8"
+					"sha256": "5702c799a2baa18c2a8aaf3d363e283832d7d4e624264110394e97de3fe0b161"
 				}
 			],
 			"sound_trigger": "actual_fire",
@@ -1297,60 +1333,62 @@
 				]
 			},
 			"cadence_total": 1.0,
+			"charge_rounds": 3,
 			"family": "pulse",
+			"fire_interval_seconds": 4.5,
 			"id": "firefly_rain",
-			"instrument": "晶润中音竖琴",
+			"instrument": "绵长高音竖琴",
 			"name": "流萤织雨",
 			"recorded_audio": false,
 			"reference_layer": "sampled_instrument",
 			"samples": [
 				{
-					"bytes": 34000,
+					"bytes": 64870,
 					"path": "res://audio/arsenal/notes/inst_firefly_rain_0.wav",
 					"pitch": 0,
-					"sha256": "c84d63984f37a821f7c69d401671206a6f0fa75a3fae8c03585b0fd5fbfbc0e9"
+					"sha256": "1b5528ad83546c7e0f80775c460f6832620c9d77ae57bbb72f9accb3c3ff133c"
 				},
 				{
-					"bytes": 34000,
+					"bytes": 64870,
 					"path": "res://audio/arsenal/notes/inst_firefly_rain_1.wav",
 					"pitch": 1,
-					"sha256": "f92427b2a808eb45269685e89b08ae493aeb2f458233ecb168360d6fcac43af4"
+					"sha256": "0cc1328b0fbbd2986b6bf59af16c8d46d2f0c284573e561edcb84f9f56dd7bf5"
 				},
 				{
-					"bytes": 34000,
+					"bytes": 64870,
 					"path": "res://audio/arsenal/notes/inst_firefly_rain_2.wav",
 					"pitch": 2,
-					"sha256": "3622f9d98c0849f41a3fdc9743a2e76323aa3934ca278ab96aed4a5dfa5f3d7c"
+					"sha256": "fb0838f1cbe362436717e78ba45ec34eacf674d0c5d01632da91aeb0f66260c6"
 				},
 				{
-					"bytes": 34000,
+					"bytes": 64870,
 					"path": "res://audio/arsenal/notes/inst_firefly_rain_3.wav",
 					"pitch": 3,
-					"sha256": "598824f658e4b07421559141f1921d8cd127b02eb4ed2df4c30d9cc4af3676b5"
+					"sha256": "a1f87d4b5e3b8c3f50c3c01ea30711f51368b7115fb4259e1ee278a7d628feca"
 				},
 				{
-					"bytes": 34000,
+					"bytes": 64870,
 					"path": "res://audio/arsenal/notes/inst_firefly_rain_4.wav",
 					"pitch": 4,
-					"sha256": "1d1c965d028dcc7e96c18d29d7a9014dfe015d82ea6f221be3822f6dbf7c376e"
+					"sha256": "1f50c8ad9c2fef4db8da8529d2dc0d975154af8cef38869978acc6ceb4eea476"
 				},
 				{
-					"bytes": 34000,
+					"bytes": 64870,
 					"path": "res://audio/arsenal/notes/inst_firefly_rain_5.wav",
 					"pitch": 5,
-					"sha256": "551dd423e85bf2765bb0843c9d018139e5e9684858ad1aaa476da0d3ffd3d67f"
+					"sha256": "b17f8f0c608af3bef913e088fb60401ada67d39942ab92b03a8274abadc6023d"
 				},
 				{
-					"bytes": 34000,
+					"bytes": 64870,
 					"path": "res://audio/arsenal/notes/inst_firefly_rain_6.wav",
 					"pitch": 6,
-					"sha256": "5b1b0225ee3dcdb9700364b3a041a97d7361c6839d293a104ca8d1e634f02656"
+					"sha256": "13d0d394b46fa3bec283fa623761bef985c84cfe2a9f66e8e204ee33fd216031"
 				},
 				{
-					"bytes": 34000,
+					"bytes": 64870,
 					"path": "res://audio/arsenal/notes/inst_firefly_rain_7.wav",
 					"pitch": 7,
-					"sha256": "e49ce34880b0392c97ee7fe5411f1611d28b68564c1e7b101de13ca53a02b9e5"
+					"sha256": "a88c58bc836a4efd16ce06271170ee2ba1ef432a075fd2fba8da5edb450bb7b7"
 				}
 			],
 			"sound_trigger": "actual_fire",
