@@ -33,3 +33,5 @@
 当前生产状态以[V39声音说明](V39_HALF_SECOND_VOICES.md)及[V38发射编排](V38_ONE_SECOND_GRAND_SALVOS.md)、[实际音色索引](../audio/weapon_codex.json)和[对应表](WEAPON_VFX_AUDIO_REFERENCE.md)为准。
 
 V40图鉴已按主乐器与充能分组，覆盖表见[data-v40/run-foundation.json](data-v40/run-foundation.json)。6轮调度已支持，尚无基础6轮现役武器。新增乐器先安排1轮和至少一档3/4/6/8轮，整体补齐覆盖；遵守[统一开发规范](WEAPON_DEVELOPMENT_STANDARD.md)。
+
+V41新增珠光高音钢琴万花筒，已补实际6轮档；具体乐器/充能当前覆盖见[data-v41/run-foundation.json](data-v41/run-foundation.json)。其他未安装乐器仍为未来方向。

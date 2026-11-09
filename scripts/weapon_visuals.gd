@@ -1,7 +1,8 @@
 extends RefCounted
 ## Class profiles and independent flight dynamics. Hit resolution lives in main.
+const FIELDS=preload("res://scripts/projectile_fields.gd")
 const PALETTE=[Color("ffe98a"),Color("8effb5"),Color("57eaff"),Color("b99aff"),Color("ff8bd7"),Color("ffba79")]
-const STANDARD_IDS=["pulse","scatter","rail","pulse_needle","rail_horizon","recorded_heavy","gilded_helix","weave_cross","stern_fan","scatter_prism","beam_split","dawn_fan","tidal_weave","firefly_rain"]
+const STANDARD_IDS=["pulse","scatter","rail","pulse_needle","rail_horizon","recorded_heavy","gilded_helix","weave_cross","stern_fan","scatter_prism","beam_split","dawn_fan","tidal_weave","firefly_rain","kaleidoscope"]
 const MOVING_IDS=STANDARD_IDS+["missile","nova","crown_orbit"]
 # The selected gold-helix baseline, including its existing glow shader. Only
 # tint, emission geometry and motion distinguish the active solid projectiles.
@@ -27,12 +28,14 @@ const PROFILES={
 	"stern_fan":{"color":Color("ff9ecb")},
 	"dawn_fan":{"color":Color("ffe4a0")},
 	"tidal_weave":{"color":Color("7ee9f2")},
-	"firefly_rain":{"color":Color("ff9ecb")}
+	"firefly_rain":{"color":Color("ff9ecb")},
+	"kaleidoscope":{"color":Color("c7b4ff")}
 }
 
 static func profile(id: String) -> Dictionary:
 	var result: Dictionary=PROFILES.get(id,{}).duplicate()
 	if id in STANDARD_IDS: result.merge(STANDARD,true)
+	if id=="kaleidoscope": result.size=Vector2(52,15)
 	return result
 
 static func life_scale(bullet: Dictionary) -> float:
@@ -105,6 +108,8 @@ static func _flight_step(bullet: Dictionary,delta: float) -> Vector2:
 		var desired=guide*float(bullet.original_speed)*float(bullet.flight_speed_scale)
 		if str(bullet.kind)=="firefly_rain": desired*=minf(1.,.52+age*1.4)
 		force+=(desired-before)*3.2
+	if bullet.has("kaleido_center"): force*=.15
+	force*=1.-FIELDS.wind_weight(bullet)*.80
 	bullet.v+=force/mass*delta
 	bullet.flight_lateral+=(before+Vector2(bullet.v)).dot(side)*.5*delta
 	# Trapezoidal displacement keeps the independent forces stable across
@@ -155,6 +160,7 @@ static func travel_offset(bullet: Dictionary,delta: float) -> Vector2:
 			if bullet.trail_points.size()>8: bullet.trail_points.pop_front()
 	if bullet.has("curve_rate"): bullet.v=Vector2(bullet.v).rotated(float(bullet.curve_rate)*delta)
 	var correction=_flight_step(bullet,delta)
+	correction+=FIELDS.step(bullet,delta)
 	if bullet.has("weave_side"):
 		var phase=float(bullet.weave_phase); var age=float(bullet.age)
 		var side: Vector2=bullet.weave_side

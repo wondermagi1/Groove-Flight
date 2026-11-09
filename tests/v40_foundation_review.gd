@@ -53,7 +53,7 @@ func codex_checks() -> void:
 	fixture(""); game.state="title"
 	game.ui.root_control.show(); game.open_weapon_codex()
 	var codex=game.weapon_codex_overlay; await frames(4); codex.set_process(false)
-	check(codex.card_buttons.size()==19 and G.ROWS.size()==13,"nineteen real playable weapons with thirteen named instrument categories")
+	check(codex.card_buttons.size()==C.playable_weapons().size() and G.ROWS.size()==13,"all real playable weapons with thirteen named instrument categories")
 	for mode in [0,1]:
 		codex.group_mode.select(mode); codex._refresh_cards()
 		for group_index in range(14):
@@ -69,8 +69,9 @@ func codex_checks() -> void:
 		if DisplayServer.get_name()!="headless":
 			for dimensions in [Vector2i(1920,1080),Vector2i(1280,720)]:
 				root.size=dimensions; codex._layout(); await frames(4); await RenderingServer.frame_post_draw
+				check(is_instance_valid(codex) and game.weapon_codex_overlay==codex,"window resize retains the production codex instance and current selection")
 				for node in [codex.group_mode,codex.charge_filter,codex.instrument_filter]: check(Rect2(Vector2.ZERO,Vector2(dimensions)).encloses(node.get_global_rect()),"filter control remains visible at "+str(dimensions))
-				var path="res://docs/screenshots/v40-codex-%s-%d.png"%["instrument" if mode==0 else "charge",dimensions.x]
+				var path="res://docs/screenshots/v%s-codex-%s-%d.png"%[str(ProjectSettings.get_setting("application/config/version")).split(".")[1],"instrument" if mode==0 else "charge",dimensions.x]
 				root.get_texture().get_image().save_png(path); images.append(path)
 	codex.queue_free(); await frames(3)
 

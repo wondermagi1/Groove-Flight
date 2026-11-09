@@ -56,6 +56,14 @@ static func _barrel(canvas: CanvasItem,at: Vector2,length_value: float,width: fl
 
 static func _weapon(canvas: CanvasItem,data: Dictionary,accent: Color,alpha: float) -> void:
 	var id: String=str(data.id)
+	if id=="kaleidoscope":
+		canvas.draw_circle(Vector2(0,4),15.,Color(DARK,alpha))
+		for petal in range(6):
+			var axis=Vector2.from_angle(petal*TAU/6.); var side=axis.orthogonal()
+			_poly(canvas,[axis*9.,axis*23.+side*9.,axis*38.,axis*25.-side*5.],Color(accent,.8*alpha))
+			canvas.draw_line(axis*12.,axis*32.,Color(LIGHT,alpha),2.,true)
+		canvas.draw_circle(Vector2.ZERO,9.,accent); canvas.draw_circle(Vector2(-2,-2),4.,Color("f9edff",alpha))
+		return
 	var variant: int=1 if id.contains("_") else 0
 	var family: String=str(data.family)
 	if str(data.get("emission",""))=="hull_broadside":
@@ -188,6 +196,14 @@ static func _rocket(canvas: CanvasItem,at: Vector2,accent: Color,size_value: flo
 	canvas.draw_rect(Rect2(at+Vector2(-32,-4)*size_value,Vector2(5,8)*size_value),accent.darkened(.4))
 
 static func _component(canvas: CanvasItem,data: Dictionary,accent: Color,alpha: float) -> void:
+	if str(data.id)=="westwind":
+		_plate(canvas,Vector2(-30,-20),Vector2(60,40),accent)
+		for lane in range(3):
+			var points=PackedVector2Array()
+			for i in range(20): points.append(Vector2(-25.+i*2.5,(lane-1)*10.+sin(float(i)*.20+lane*.8)*4.))
+			canvas.draw_polyline(points,Color(accent,alpha),2.5,true)
+			var tip=points[-1]; canvas.draw_polyline(PackedVector2Array([tip+Vector2(-7,-5),tip,tip+Vector2(-7,5)]),Color(LIGHT,alpha),2.,true)
+		return
 	var hash_value: int=absi(str(data.id).hash())
 	var category: String=str(data.category)
 	var variation: int=hash_value%5

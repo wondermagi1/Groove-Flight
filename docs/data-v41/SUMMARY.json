@@ -1,0 +1,89 @@
+{
+  "version": "0.41.0-westwind-kaleidoscope",
+  "date": "2026-11-09",
+  "backup": "fa855416abb9f7976ee1e64a3958cc2b1d038e50",
+  "reports": [
+    {
+      "file": "results-v41-fields.json",
+      "checks": 51,
+      "failures": []
+    },
+    {
+      "file": "results-v40-foundation.json",
+      "checks": 885,
+      "failures": []
+    },
+    {
+      "file": "results-v40-balance.json",
+      "checks": null,
+      "failures": []
+    },
+    {
+      "file": "results-v36-weapon-expression.json",
+      "checks": 338,
+      "failures": []
+    },
+    {
+      "file": "results-v34-weapon-sync.json",
+      "checks": 89,
+      "failures": []
+    },
+    {
+      "file": "results-weapon-cycle.json",
+      "checks": 227,
+      "failures": []
+    },
+    {
+      "file": "results-composer-score.json",
+      "checks": 112,
+      "failures": []
+    },
+    {
+      "file": "results-v29-music-shop-hud.json",
+      "checks": 351,
+      "failures": []
+    }
+  ],
+  "preservation": "asset-preservation.json",
+  "demo": "../video-v41/kaleidoscope-westwind.mp4",
+  "reference_analysis": {
+    "clips": [
+      {
+        "file": "安泊尔57天王.mp4",
+        "duration_seconds": 782.266625,
+        "observed_seconds": [
+          245,
+          247,
+          249,
+          251,
+          253,
+          255
+        ]
+      },
+      {
+        "file": "屏幕录制 2026-11-01 234745.mp4",
+        "duration_seconds": 267.2333,
+        "observed_seconds": [
+          206,
+          208,
+          210,
+          212
+        ]
+      }
+    ],
+    "scope": "Visual reference only;own force parameters and sampled music,no copied game assets."
+  },
+  "limits": [
+    "Native192particle gallery is a controlled single salvo,not starter entitlement or sustained60FPS certification.",
+    "Three numerical routes with modeled15s shops are not human win-rate/all-planets/hard-mode guarantees.",
+    "Balance simulation has resource-release warnings at process exit;assertions pass.",
+    "This agent cannot provide human subjective audio approval."
+  ],
+  "current_layouts": [
+    "../screenshots/v41-codex-instrument-1280.png",
+    "../screenshots/v41-codex-instrument-1920.png",
+    "../screenshots/v41-codex-charge-1280.png",
+    "../screenshots/v41-codex-charge-1920.png",
+    "../screenshots/v41-kaleidoscope-codex.png"
+  ]
+}

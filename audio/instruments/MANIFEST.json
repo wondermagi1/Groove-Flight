@@ -7,7 +7,7 @@
   "renderer_sha256": "70d55963c98f60ebb81518eaa1f25d46888d5180eb5f5289fd6b74ffc177d197",
   "format": "mono PCM16 22050Hz",
   "fixed_battle_pitch_index": 0,
-  "palette_revision": "chamber-v35-sustained-voices",
+  "palette_revision": "chamber-v41-kaleidoscope",
   "allowed_families": [
     "piano",
     "strings",
@@ -1958,6 +1958,109 @@
           "peak": 0.21330055893152047,
           "rms": 0.022705787627481468,
           "attack_300ms_rms": 0.0495353067300501
+        }
+      ]
+    },
+    {
+      "id": "kaleidoscope",
+      "instrument": "珠光高音三角钢琴",
+      "instrument_family": "piano",
+      "bank": 0,
+      "program": 1,
+      "root_midi": 79,
+      "hold": 0.28,
+      "release": 0.22,
+      "velocity": 0.52,
+      "lowpass_hz": 5000,
+      "attack_ms": 8,
+      "target_rms": 0.055,
+      "peak_limit": 0.34,
+      "electronic_mix": 0.0,
+      "fleet_barrage": true,
+      "voice": "inst_kaleidoscope",
+      "preset_name": "Bright Grand Piano",
+      "percussion": false,
+      "gain": 0.4516312399716847,
+      "samples": [
+        {
+          "pitch_index": 0,
+          "root_midi": 79,
+          "file": "audio/arsenal/notes/inst_kaleidoscope_0.wav",
+          "seconds": 0.5,
+          "sha256": "a8f8569859c31752d009e3c07e19d13e404e07244bd993539f8bded3568748b0",
+          "peak": 0.20234023250444588,
+          "rms": 0.05188645806351984,
+          "attack_300ms_rms": 0.06684876319216922
+        },
+        {
+          "pitch_index": 1,
+          "root_midi": 81,
+          "file": "audio/arsenal/notes/inst_kaleidoscope_1.wav",
+          "seconds": 0.5,
+          "sha256": "197978bf4d0767116769a648ab06c33d30f126b52e91dc844abc15532118c757",
+          "peak": 0.20165997397832142,
+          "rms": 0.050006794041340424,
+          "attack_300ms_rms": 0.06449410178684926
+        },
+        {
+          "pitch_index": 2,
+          "root_midi": 82,
+          "file": "audio/arsenal/notes/inst_kaleidoscope_2.wav",
+          "seconds": 0.5,
+          "sha256": "f5e44f6b16e711145f081ae0cea172d21da5ef814e0f02546970bc27f64c1af7",
+          "peak": 0.20167935658141795,
+          "rms": 0.049184048323847346,
+          "attack_300ms_rms": 0.06344625642928134
+        },
+        {
+          "pitch_index": 3,
+          "root_midi": 84,
+          "file": "audio/arsenal/notes/inst_kaleidoscope_3.wav",
+          "seconds": 0.5,
+          "sha256": "090a88158614d35b8d88a6f74d3514326514834d8179cc6bbff210ac8afaf4c2",
+          "peak": 0.21446054959479735,
+          "rms": 0.043422542570710106,
+          "attack_300ms_rms": 0.05566365793257071
+        },
+        {
+          "pitch_index": 4,
+          "root_midi": 86,
+          "file": "audio/arsenal/notes/inst_kaleidoscope_4.wav",
+          "seconds": 0.5,
+          "sha256": "7e7584c5e68eb6fded01a933db693fbdd7bc95f5e3bf74a5c5d2c73c07719b32",
+          "peak": 0.21450216820586718,
+          "rms": 0.04205864076148445,
+          "attack_300ms_rms": 0.053849688240432236
+        },
+        {
+          "pitch_index": 5,
+          "root_midi": 87,
+          "file": "audio/arsenal/notes/inst_kaleidoscope_5.wav",
+          "seconds": 0.5,
+          "sha256": "a7eb1f0ed8c4befac4dd02552672074054d20f9a094f116db680a0575374e684",
+          "peak": 0.21637931342786262,
+          "rms": 0.04136315363216517,
+          "attack_300ms_rms": 0.052947211458231
+        },
+        {
+          "pitch_index": 6,
+          "root_midi": 89,
+          "file": "audio/arsenal/notes/inst_kaleidoscope_6.wav",
+          "seconds": 0.5,
+          "sha256": "5775dd2ea5395e71bb5172ce63d0ddb29937be077804d2cb34b26ebe47512613",
+          "peak": 0.2137352318506022,
+          "rms": 0.03986173986491952,
+          "attack_300ms_rms": 0.05047430843796449
+        },
+        {
+          "pitch_index": 7,
+          "root_midi": 91,
+          "file": "audio/arsenal/notes/inst_kaleidoscope_7.wav",
+          "seconds": 0.5,
+          "sha256": "a244fbd6ac6a6a41152d6ab2d69b2985fc2763bd68e465a8742fbc43be76fbc5",
+          "peak": 0.18801850594189368,
+          "rms": 0.042507702164533354,
+          "attack_300ms_rms": 0.054336342067429294
         }
       ]
     }

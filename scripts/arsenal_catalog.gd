@@ -14,15 +14,15 @@ const RECORDED_WEAPONS_ENABLED=false
 const VISUALS=preload("res://scripts/weapon_visuals.gd")
 const GROWTH=preload("res://scripts/projectile_growth.gd")
 const SALVOS=preload("res://scripts/salvo_patterns.gd")
-const ACTIVE_WEAPON_IDS=["pulse","scatter","beam","missile","nova","chain","rail","pulse_needle","scatter_prism","beam_split","rail_horizon","recorded_heavy","gilded_helix","weave_cross","crown_orbit","stern_fan","dawn_fan","tidal_weave","firefly_rain"]
+const ACTIVE_WEAPON_IDS=["pulse","scatter","beam","missile","nova","chain","rail","pulse_needle","scatter_prism","beam_split","rail_horizon","recorded_heavy","gilded_helix","weave_cross","crown_orbit","stern_fan","dawn_fan","tidal_weave","firefly_rain","kaleidoscope"]
 ## Generated from audio/instruments/CHAMBER_PALETTE.json by build_chamber_instruments.py.
-const INSTRUMENTS={"pulse":"延音中音钢琴","scatter":"明亮延音钢琴","beam":"清晰弓头小提琴","missile":"温暖低音钢琴","nova":"圆润中音钢琴","chain":"柔和高音竖琴","rail":"厚弓大提琴","pulse_needle":"清亮高音钢琴","scatter_prism":"珠光钢琴","beam_split":"绵奏中提琴","rail_horizon":"深色低音钢琴","recorded_heavy":"厚实中低音钢琴","gilded_helix":"明亮三角钢琴","weave_cross":"轻巧断奏钢琴","crown_orbit":"通透竖琴","stern_fan":"温暖中音竖琴","dawn_fan":"柔亮高音钢琴","tidal_weave":"绵奏高音小提琴","firefly_rain":"绵长高音竖琴"}
-const INSTRUMENT_ROOTS={"pulse":60,"scatter":67,"beam":60,"missile":48,"nova":63,"chain":72,"rail":48,"pulse_needle":72,"scatter_prism":67,"beam_split":55,"rail_horizon":36,"recorded_heavy":43,"gilded_helix":60,"weave_cross":72,"crown_orbit":72,"stern_fan":60,"dawn_fan":67,"tidal_weave":67,"firefly_rain":75}
-const INSTRUMENT_FAMILIES={"pulse":"piano","scatter":"piano","beam":"strings","missile":"piano","nova":"piano","chain":"harp","rail":"strings","pulse_needle":"piano","scatter_prism":"piano","beam_split":"strings","rail_horizon":"piano","recorded_heavy":"piano","gilded_helix":"piano","weave_cross":"piano","crown_orbit":"harp","stern_fan":"harp","dawn_fan":"piano","tidal_weave":"strings","firefly_rain":"harp"}
-const INSTRUMENT_PROGRAMS={"pulse":0,"scatter":1,"beam":40,"missile":0,"nova":0,"chain":46,"rail":42,"pulse_needle":1,"scatter_prism":1,"beam_split":41,"rail_horizon":0,"recorded_heavy":0,"gilded_helix":1,"weave_cross":0,"crown_orbit":46,"stern_fan":46,"dawn_fan":1,"tidal_weave":40,"firefly_rain":46}
+const INSTRUMENTS={"pulse":"延音中音钢琴","scatter":"明亮延音钢琴","beam":"清晰弓头小提琴","missile":"温暖低音钢琴","nova":"圆润中音钢琴","chain":"柔和高音竖琴","rail":"厚弓大提琴","pulse_needle":"清亮高音钢琴","scatter_prism":"珠光钢琴","beam_split":"绵奏中提琴","rail_horizon":"深色低音钢琴","recorded_heavy":"厚实中低音钢琴","gilded_helix":"明亮三角钢琴","weave_cross":"轻巧断奏钢琴","crown_orbit":"通透竖琴","stern_fan":"温暖中音竖琴","dawn_fan":"柔亮高音钢琴","tidal_weave":"绵奏高音小提琴","firefly_rain":"绵长高音竖琴","kaleidoscope":"珠光高音三角钢琴"}
+const INSTRUMENT_ROOTS={"pulse":60,"scatter":67,"beam":60,"missile":48,"nova":63,"chain":72,"rail":48,"pulse_needle":72,"scatter_prism":67,"beam_split":55,"rail_horizon":36,"recorded_heavy":43,"gilded_helix":60,"weave_cross":72,"crown_orbit":72,"stern_fan":60,"dawn_fan":67,"tidal_weave":67,"firefly_rain":75,"kaleidoscope":79}
+const INSTRUMENT_FAMILIES={"pulse":"piano","scatter":"piano","beam":"strings","missile":"piano","nova":"piano","chain":"harp","rail":"strings","pulse_needle":"piano","scatter_prism":"piano","beam_split":"strings","rail_horizon":"piano","recorded_heavy":"piano","gilded_helix":"piano","weave_cross":"piano","crown_orbit":"harp","stern_fan":"harp","dawn_fan":"piano","tidal_weave":"strings","firefly_rain":"harp","kaleidoscope":"piano"}
+const INSTRUMENT_PROGRAMS={"pulse":0,"scatter":1,"beam":40,"missile":0,"nova":0,"chain":46,"rail":42,"pulse_needle":1,"scatter_prism":1,"beam_split":41,"rail_horizon":0,"recorded_heavy":0,"gilded_helix":1,"weave_cross":0,"crown_orbit":46,"stern_fan":46,"dawn_fan":1,"tidal_weave":40,"firefly_rain":46,"kaleidoscope":1}
 const INSTRUMENT_GROUP_OVERRIDES={}
 const PERCUSSION_IDS=[]
-const NEW_INSTRUMENTS={"gilded_helix":"明亮三角钢琴","weave_cross":"轻巧断奏钢琴","crown_orbit":"通透竖琴","stern_fan":"温暖中音竖琴","dawn_fan":"柔亮高音钢琴","tidal_weave":"绵奏高音小提琴","firefly_rain":"绵长高音竖琴"}
+const NEW_INSTRUMENTS={"gilded_helix":"明亮三角钢琴","weave_cross":"轻巧断奏钢琴","crown_orbit":"通透竖琴","stern_fan":"温暖中音竖琴","dawn_fan":"柔亮高音钢琴","tidal_weave":"绵奏高音小提琴","firefly_rain":"绵长高音竖琴","kaleidoscope":"珠光高音三角钢琴"}
 const LEGACY_WEAPON_ALIASES={"recorded_light":"pulse","recorded_medium":"scatter","recorded_heavy_rare":"recorded_heavy","recorded_heavy_legend":"recorded_heavy"}
 const RECORDED_QUALITY_PROFILES=[
 	{"suffix":"","rarity":0,"damage":1.,"count":0,"speed":1.,"pierce":0,"cost":1.,"attribute_scale":.5},
@@ -129,7 +129,7 @@ static func _support(id: String,name: String,category: String,rarity: int,cost: 
 
 static func _build() -> void:
 	_build_weapons(); _build_mods(); _build_rhythm(); _build_defense(); _build_cores(); _upgrade_trajectories()
-	assert(_records.size()==254,"Archived catalogue plus seven added weapons")
+	assert(_records.size()==256,"Archived catalogue plus eight added weapons and Westwind")
 
 static func _build_weapons() -> void:
 	# id, name, family, damage, count, speed, life, spread(rad), pierce,
@@ -176,7 +176,8 @@ static func _build_weapons() -> void:
 		["stern_fan","尾羽回响","pulse",3.6,24,720.,2.2,1.92,1,0.,0.,0,3,2,1,32,"triangle",.20,.5,0,0.],
 		["dawn_fan","晨羽前奏","pulse",4.,18,780.,2.05,1.35,1,0.,0.,0,3,2,1,30,"triangle",.2,.5,0,0.],
 		["tidal_weave","潮汐弦歌","pulse",3.8,24,850.,2.2,.90,2,0.,0.,0,4,3,2,40,"sine",.25,.5,0,0.],
-		["firefly_rain","流萤织雨","pulse",3.,30,940.,1.8,.65,1,0.,0.,0,3,3,2,42,"triangle",.2,.5,0,0.]
+		["firefly_rain","流萤织雨","pulse",3.,30,940.,1.8,.65,1,0.,0.,0,3,3,2,42,"triangle",.2,.5,0,0.],
+		["kaleidoscope","万花筒","pulse",6.,44,780.,2.95,TAU,2,0.,0.,0,6,3,2,48,"triangle",.2,.5,0,0.]
 	]
 	var recorded_voices={"recorded_crude":"rec_crude","recorded_ballistic":"rec_ballistic"}
 	var recorded_sources={
@@ -238,6 +239,8 @@ static func _build_weapons() -> void:
 			if str(data.id)=="beam_split": data.speed=520.; data.life=1.15; data.spread=.9
 			elif str(data.id)=="tidal_weave": data.attr="energy"
 			elif str(data.id)=="firefly_rain": data.attr="power"
+		if str(data.id)=="kaleidoscope":
+			data.emission="kaleidoscope"; data.rules.append(_rule("trajectory","kaleidoscope",1.,"row")); data.tags.append("同轨旋转甩射")
 		data.active=str(data.id) in ACTIVE_WEAPON_IDS
 		if data.active and SALVOS.PROFILES.has(str(data.id)):
 			data.salvo=SALVOS.PROFILES[str(data.id)].duplicate(true)
@@ -255,6 +258,7 @@ static func _build_weapons() -> void:
 			data.percussion=str(data.id) in PERCUSSION_IDS
 			data.audio_status="sampled_instrument"
 			if str(data.family)!="orbit": data.life*=1.3
+			if str(data.id)=="kaleidoscope": data.life=float(SALVOS.PROFILES.kaleidoscope.reach)/float(data.speed)
 			data.visual=VISUALS.profile(str(data.id)).duplicate()
 			data.visual_class="feather_projectile" if str(data.id) in VISUALS.STANDARD_IDS else {"beam":"laser_beam","chain":"electric_arc","missile":"missile_shell","nova":"energy_orb","orbit":"orbital_guard","scatter":"laser_beam"}.get(str(data.family),str(data.family))
 			if data.visual.has("color"): data.color=data.visual.color
@@ -273,6 +277,7 @@ static func weapon_description(data: Dictionary) -> String:
 	elif str(data.get("emission",""))=="forward_fan": parts.append("向机头前方展开绿金粉多排U形羽扇，边翼略慢、中心更快，柔和呼吸摇摆")
 	elif str(data.get("emission",""))=="forward_weave": parts.append("前方两股青紫羽流反相摆动，分排交错编织；每颗独立惯性飞行")
 	elif str(data.get("emission",""))=="forward_rain": parts.append("前方错峰喷出绿黄橙粉紫彩虹羽弹，与尾羽同色系；出膛较慢后渐加速，喷口按列柔和扫动")
+	elif str(data.get("emission",""))=="kaleidoscope": parts.append("自身甩出六瓣旋转花海；装备期间同轨自由飞行的实体弹都采用该甩射形式，各自弹数、伤害、充能和声音保留，可与西风叠加")
 	if str(data.id)=="gilded_helix": parts.append("金色羽状弹向四周展开并弯转，形成双层螺旋弹幕")
 	elif str(data.id)=="weave_cross": parts.append("四个方向同时射出彩色编织弹流，弹道左右交错")
 	elif str(data.id)=="crown_orbit": parts.append("星冕弹形成三至八层防线，各自呼吸、环绕并带惯性跟随战机")
@@ -298,6 +303,7 @@ static func weapon_description(data: Dictionary) -> String:
 	return "；".join(parts)+"。"
 
 static func _build_mods() -> void:
+	_support("westwind","西风","mod",1,23,1,"support",[_rule("trajectory","westwind",1.)],Color("9edfc8"),"全舰自由飞行的实体弹在射程后段逐渐向右偏转并再次加速，保留各自材质与真实尾迹。")
 	# Six mechanically different parts for each family. Target specificity matters:
 	# installing one never becomes a universal damage/rarity reskin.
 	var names=[
@@ -494,6 +500,8 @@ static func _number(value: float) -> String:
 	while out.ends_with("0"): out=out.left(-1)
 	return out.left(-1) if out.ends_with(".") else out
 static func describe_rule(rule: Dictionary) -> String:
+	if str(rule.get("key",""))=="westwind": return "右向气流强度 +"+_number(float(rule.value))
+	if str(rule.get("key",""))=="kaleidoscope": return "同轨实体弹以旋转花瓣曲线甩出；充能、声音和弹数各自保留"
 	if str(rule.get("type",""))=="trajectory":
 		var labels={"count_per_attribute":"每点归属属性增加弹数 向下取整","chain_per_attribute":"每点归属属性增加传导次数 向下取整","split_count":"命中四向衍生 深度最多2 单发26%伤害","accel_forward":"前向加速度","accel_side":"侧向加速度","offset_forward":"出生点前移","offset_side":"出生点侧移","turn_after":"延时转向秒数","turn_deg":"转向角度","conduct":"能量标记3秒 电弧引爆倍率"}
 		return str(labels.get(str(rule.key),str(rule.key)))+("" if str(rule.key)=="split_count" else " "+_number(float(rule.value)))+" · "+str(rule.get("scope","all"))

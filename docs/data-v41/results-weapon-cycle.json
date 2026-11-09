@@ -1,0 +1,6 @@
+{
+  "checks": 227,
+  "failures": [],
+  "loop_seconds": 1.5,
+  "scope": "Pure production scheduling of every active weapon for eight complete rounds; separate UID scheduling, configured loop deadlines, fixed voices, damage conservation and pure snapshot/clone behavior."
+}

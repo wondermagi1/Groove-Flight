@@ -1,0 +1,17 @@
+{
+  "checks": 885,
+  "facts": {
+    "planning_window_seconds": [
+      306.0,
+      363.0
+    ]
+  },
+  "failures": [],
+  "images": [
+    "res://docs/screenshots/v41-codex-instrument-1920.png",
+    "res://docs/screenshots/v41-codex-instrument-1280.png",
+    "res://docs/screenshots/v41-codex-charge-1920.png",
+    "res://docs/screenshots/v41-codex-charge-1280.png"
+  ],
+  "scope": "Production route/HP/economy/clear-supply/real purchase prices/unlimited shops, pause-aware total clock, six-round real firing plus phase continuity, all intersections of codex charge/instrument filters and native layouts. Not human win rate or sustained FPS certification."
+}

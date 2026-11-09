@@ -83,6 +83,6 @@ func run() -> void:
 	game=load("res://scenes/Main.tscn").instantiate(); game.is_preview=true; root.add_child(game); current_scene=game; await frames(4)
 	game.set_process(false); game.set_physics_process(false); game.set_process_unhandled_input(false); game.music.stop(); game.music._running=false; game.settings.master=0.; game.apply_audio()
 	catalogue_checks(); await native_checks()
-	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"All19production weapon schedules versus rendered note IDs,17physical lead launches and independent delays,beam/arc onsets,charged PCM silence,same-type layering,phase-aligned intro/repeat cache and native starter dispatch,pause and actual boundary seek. Controlled timing fixtures,not human mix or full campaign balance."}
+	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"All current production weapon schedules versus rendered note IDs,All current physical lead launches and independent delays,beam/arc onsets,charged PCM silence,same-type layering,phase-aligned intro/repeat cache and native starter dispatch,pause and actual boundary seek. Controlled timing fixtures,not human mix or full campaign balance."}
 	FileAccess.open("res://tests/results-v34-weapon-sync.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("V34_SYNC ",JSON.stringify(result))
 	stop_audio(game); current_scene=null; game.queue_free(); await frames(5); quit(0 if failures.is_empty() else 1)

@@ -1,5 +1,5 @@
 {
-  "revision": "chamber-v35-sustained-voices",
+  "revision": "chamber-v41-kaleidoscope",
   "source": "GeneralUser GS 2.0.3",
   "format": "mono PCM16 22050Hz",
   "fixed_battle_pitch_index": 0,
@@ -328,6 +328,23 @@
       "attack_ms": 7,
       "target_rms": 0.048,
       "peak_limit": 0.25,
+      "electronic_mix": 0.0,
+      "fleet_barrage": true
+    },
+    {
+      "id": "kaleidoscope",
+      "instrument": "珠光高音三角钢琴",
+      "instrument_family": "piano",
+      "bank": 0,
+      "program": 1,
+      "root_midi": 79,
+      "hold": 0.28,
+      "release": 0.22,
+      "velocity": 0.52,
+      "lowpass_hz": 5000,
+      "attack_ms": 8,
+      "target_rms": 0.055,
+      "peak_limit": 0.34,
       "electronic_mix": 0.0,
       "fleet_barrage": true
     }

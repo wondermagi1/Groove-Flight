@@ -1,0 +1,28 @@
+{
+  "checks": 51,
+  "facts": {
+    "gallery": "Controlled192physical particles to inspect geometry/density,one real salvo;not a free starter,additional sounds or balance benchmark.",
+    "wind": {
+      "plain_late_velocity": [
+        -50.9502639770508,
+        -821.745971679688
+      ],
+      "retirement_difference_50_100hz": 3.63265776634216,
+      "wind_late_velocity": [
+        632.959228515625,
+        -824.217651367188
+      ]
+    }
+  },
+  "failures": [],
+  "images": [
+    "res://docs/screenshots/v41-kaleidoscope-plain-035.png",
+    "res://docs/screenshots/v41-kaleidoscope-plain-065.png",
+    "res://docs/screenshots/v41-kaleidoscope-plain-110.png",
+    "res://docs/screenshots/v41-kaleidoscope-wind-035.png",
+    "res://docs/screenshots/v41-kaleidoscope-wind-065.png",
+    "res://docs/screenshots/v41-kaleidoscope-wind-110.png",
+    "res://docs/screenshots/v41-kaleidoscope-codex.png"
+  ],
+  "scope": "Actual force/path/range/retirement/collision,count1/8/64/256,track-only passive routing,unaffected laser/arc/orbit classes and six-round sound eligibility. Controlled native192particle gallery;not sustained campaign FPS or human mix/balance approval."
+}

@@ -29,7 +29,7 @@ const FAMILY_CADENCE={
 	"orbit":"steady","mine":"accent","flame":"swell","drone":"steady"
 }
 const WEAPON_KEYS=["damage_percent","count","pierce","speed_percent","range_percent","explosion","spread_percent","chain_count","homing","bounces"]
-const TRAJECTORY_KEYS=["split_count","accel_forward","accel_side","offset_forward","offset_side","turn_after","turn_deg","conduct","count_per_attribute","chain_per_attribute"]
+const TRAJECTORY_KEYS=["split_count","accel_forward","accel_side","offset_forward","offset_side","turn_after","turn_deg","conduct","count_per_attribute","chain_per_attribute","westwind","kaleidoscope"]
 const BEAT_KEYS=["charge_reduce","repeat","rotate","streak","chord"]
 const EVENT_KEYS=["heal_bar","shield_dash","heal_pickup","explode_kill","charge_kill","missiles_dash","heal_kill"]
 const WAVE_BOONS=[

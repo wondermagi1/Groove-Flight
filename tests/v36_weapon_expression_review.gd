@@ -6,12 +6,12 @@ func digest(path: String) -> String:
 	var context=HashingContext.new(); context.start(HashingContext.HASH_SHA256); context.update(FileAccess.get_file_as_bytes(path)); return context.finish().hex_encode()
 func layer_checks() -> void:
 	var manifest=JSON.parse_string(FileAccess.get_file_as_string("res://audio/instruments/DYNAMICS_MANIFEST.json"))
-	check(manifest.weapons.size()==C.playable_weapons().size() and E.policy.balance_db.size()==19,"all active weapons have a performance/balance policy")
+	check(manifest.weapons.size()==C.playable_weapons().size() and E.policy.balance_db.size()==C.playable_weapons().size(),"all active weapons have a performance/balance policy")
 	var original=JSON.parse_string(FileAccess.get_file_as_string("res://audio/instruments/MANIFEST.json")); var preserved=0
 	for instrument in original.instruments:
 		for sample in instrument.samples:
 			if digest("res://"+str(sample.file))==sample.sha256: preserved+=1
-	check(preserved==152,"all152original composer pitch WAVs remain byte-identical")
+	check(preserved==C.playable_weapons().size()*8,"all active composer pitch WAVs match the production manifest")
 	var synth=M.new(); root.add_child(synth); var report: Array=[]
 	for row in C.playable_weapons():
 		var record=manifest.weapons.filter(func(w): return w.id==row.id)[0]; var unique: Dictionary={}
@@ -55,7 +55,9 @@ func composer_checks() -> void:
 	check(energy>0. and player.score_events.size()==2 and is_equal_approx(recording.get_length(),8./3.),"actual native-ready composer PCM remains nonzero with its authored duration and two notes")
 	player.stop_song(); player.queue_free()
 func codex_checks() -> void:
-	var codex=load("res://scripts/weapon_codex.gd").new(); codex.game=game; game.ui.root_control.add_child(codex); game.ui.root_control.show(); await frames(4); codex.set_process(false)
+	game.bind_input()
+	game.ui.root_control.show(); game.open_weapon_codex()
+	var codex=game.weapon_codex_overlay; await frames(4); codex.set_process(false)
 	check(codex.pitch_row.get_children().filter(func(b): return b.visible).map(func(b): return b.text)==["很弱","弱","强","很强"],"codex exposes four actual performance buttons")
 	codex.pitch_row.get_child(1).pressed.emit()
 	var sample=AudioStreamWAV.load_from_file(ProjectSettings.globalize_path(E.path_for("pulse",1)))
@@ -87,6 +89,6 @@ func run() -> void:
 	game=load("res://scenes/Main.tscn").instantiate(); game.is_preview=true; root.add_child(game); current_scene=game; await frames(4)
 	game.set_process(false); game.set_physics_process(false); game.settings.master=0.; game.apply_audio(); game.ui.root_control.hide()
 	await codex_checks()
-	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"All19 production schedules versus separate velocity/articulation WAVs;76 PCM hashes/formats/onsets/headroom,152 unchanged pitch WAVs,actual-charge phrase order,144s phase continuity,UID layering,state purity and real four-level codex controls/tail-safe audition. Subjective listening remains user review."}
+	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"All current production schedules versus separate velocity/articulation WAVs;All current PCM hashes/formats/onsets/headroom,All current pitch WAVs;prior228verified separately,actual-charge phrase order,144s phase continuity,UID layering,state purity and real four-level codex controls/tail-safe audition. Subjective listening remains user review."}
 	FileAccess.open("res://tests/results-v36-weapon-expression.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("V36_EXPRESSION ",JSON.stringify(result))
 	stop_audio(game); current_scene=null; game.queue_free(); await frames(5); quit(0 if failures.is_empty() else 1)

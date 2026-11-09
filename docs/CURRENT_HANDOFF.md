@@ -4,7 +4,10 @@
 
 2026-11-09后续配器决定：用户最新合并为[统一13种乐器组开发总体框架](ORCHESTRAL_AUDIO_DIRECTION.md)：钢琴、弦乐4种、竖琴、木管4种、三角铁/钟琴/定音鼓。覆盖此前A/B划分；先建立音源和演奏力度，再按武器定位分配。当前V38素材与乐器尚未替换，圆号不计入最新核心清单。
 
-2026-11-09，工程版本 `0.40.0-balance-codex-foundation`，开发分支 `codex/v40-balance-codex-foundation`。远程仓库：https://github.com/wondermagi1/Groove-Flight 。本轮修改前备份`63385cb`已上传并核验。后续每轮游戏修改前必须先上传Git备份并核验SHA，规则见根目录 `AGENTS.md`。
+2026-11-09，工程版本 `0.41.0-westwind-kaleidoscope`，开发分支 `codex/v41-westwind-kaleidoscope`。V40完成上传`6778a96`；本轮前备份`fa85541`已上传核验。远程仓库 https://github.com/wondermagi1/Groove-Flight ，每轮先上传备份再改动，见根目录AGENTS.md。
+
+V41：西风`westwind`稀有1格改装，实际里程后段渐强向右受力；万花筒`kaleidoscope`3格史诗实弹，6轮/9秒、六瓣甩射、珠光紫钢琴0.5秒，同轨自由实体弹保留自身充能/声音/弹数/伤害并继承形式。全舰自由实体弹受西风；真激光/电弧/绑定环绕保留。240WAV，旧228和19件基础参数/原生crowd不变。图鉴窗口缩放不再销毁实例。见[V41说明](V41_WESTWIND_KALEIDOSCOPE.md)、[当前验证](data-v41/SUMMARY.json)和[三类重点模组方向](WEAPON_MODULE_ROADMAP.md)。
+
 
 V40：所有星球七波+Boss，普通波20/20/20/27/27/33/40秒；商店不限时，典型含购物目标5–6分钟。中央耐久/预算/掉落/补给/价格政策在 `run_balance.gd`。图鉴按具体乐器/充能分组和交叉筛选，支持6轮有效充能；没有增加武器或替换音源。以后武器开发先读[统一规范](WEAPON_DEVELOPMENT_STANDARD.md)。见[V40说明](V40_BALANCE_CODEX_FOUNDATION.md)与[当前验证](data-v40/SUMMARY.json)。
 

@@ -52,6 +52,11 @@ func style_button(node: Button,color: Color) -> void:
 	node.add_theme_stylebox_override("disabled",box(Color("10151e"),Color("26313e"),7))
 	node.add_theme_color_override("font_color",Color("edf3ff")); node.add_theme_color_override("font_hover_color",Color.WHITE)
 func refresh() -> void:
+	# Window resize refreshes the underlying screen. A live codex owns its
+	# responsive layout and auditions until it closes; never destroy it here.
+	if game.state=="weapon_codex" and is_instance_valid(game.weapon_codex_overlay):
+		game.weapon_codex_overlay._layout()
+		return
 	if game.test_mode and game.simulation_only: return
 	if not is_instance_valid(root_control): return
 	# Buttons can request a new screen from inside their own pressed signal.

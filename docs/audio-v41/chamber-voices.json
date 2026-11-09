@@ -1,0 +1,12 @@
+{
+  "scope": "Sequential offline current fixed-voice auditions; each repeats after1.5s. Direct timbre audition,not charge eligibility or live capture.",
+  "seconds": 3.1,
+  "timeline": [
+    {
+      "id": "kaleidoscope",
+      "instrument": "珠光高音三角钢琴",
+      "start_seconds": 0.0,
+      "end_seconds": 3.1
+    }
+  ]
+}

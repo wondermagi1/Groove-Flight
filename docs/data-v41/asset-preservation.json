@@ -1,0 +1,30 @@
+{
+  "baseline_commit": "fa855416abb9f7976ee1e64a3958cc2b1d038e50",
+  "old_samples_verified": 228,
+  "old_weapon_profiles_verified": 19,
+  "fields": [
+    "family",
+    "damage",
+    "count",
+    "speed",
+    "life",
+    "spread",
+    "pierce",
+    "explosion",
+    "homing",
+    "bounces",
+    "charge",
+    "width",
+    "rarity",
+    "cost",
+    "voice",
+    "instrument",
+    "sample_root",
+    "visual_class",
+    "emission",
+    "color"
+  ],
+  "native_crowd_sha256": "0046a79a8dd2eb63f7c13ea4d3e20720651b851aaa71892902701077c3c2c84e",
+  "failures": [],
+  "scope": "Immutable uploaded V40 source comparison;new12WAVs and explicit equipped projectile-field effects are separately checked."
+}

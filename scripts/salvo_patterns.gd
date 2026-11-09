@@ -1,6 +1,7 @@
 extends RefCounted
 ## Actual deployment/motion of long-charge salvos;never adds projectiles/audio.
 const PROFILES={
+	"kaleidoscope":{"label":"六瓣旋转甩射花海","reach":2300.},
 	"nova":{"label":"三层交错星环","reach":1850.},
 	"scatter_prism":{"label":"四斜向绽放羽冠","reach":2050.},
 	"recorded_heavy":{"label":"三列交叉攻城齐射","reach":2400.},
@@ -20,7 +21,7 @@ static func coverage(kind: String,forward: Vector2,count: int,reach: float) -> A
 	var result: Array=[]
 	if kind=="crown_orbit":
 		for ring in range(clampi(ceili(float(count)/10.),3,8)):result.append({"circle":true,"radius":230.+ring*52.})
-	elif kind in ["nova","gilded_helix"]:result.append({"circle":true,"radius":reach})
+	elif kind in ["nova","gilded_helix","kaleidoscope"]:result.append({"circle":true,"radius":reach})
 	else:
 		var axes: Array=[-forward if kind=="stern_fan" else forward]
 		var half=deg_to_rad(22. if kind=="recorded_heavy" else (70. if kind in ["stern_fan","dawn_fan"] else 52.))
@@ -30,6 +31,7 @@ static func coverage(kind: String,forward: Vector2,count: int,reach: float) -> A
 	return result
 static func apply(b: Dictionary,kind: String,index: int,count: int,forward: Vector2,origin: Vector2,time: float) -> void:
 	if not PROFILES.has(kind):return
+	if kind=="kaleidoscope": b.salvo_pattern=PROFILES[kind].label; return
 	var lanes=mini(count,8 if count<64 else 12);var row=index/lanes;var lane=index%lanes
 	var rows=ceili(float(count)/lanes);var t=float(lane)/maxf(1.,mini(lanes,count-row*lanes)-1)
 	var right=Vector2(-forward.y,forward.x)

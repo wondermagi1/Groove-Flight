@@ -19,6 +19,7 @@ const BOSS_SCORE=preload("res://scripts/boss_score.gd")
 const RECEIPT=preload("res://scripts/combat_receipt.gd")
 const EMISSION=preload("res://scripts/weapon_emission.gd")
 const VISUALS=preload("res://scripts/weapon_visuals.gd")
+const PROJECTILE_FIELDS=preload("res://scripts/projectile_fields.gd")
 const SALVOS=preload("res://scripts/salvo_patterns.gd")
 const ARRIVAL=preload("res://scripts/enemy_arrival.gd")
 const PATHS=preload("res://scripts/build_paths.gd")
@@ -1365,6 +1366,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 					bullet.v=rear_axis*Vector2(bullet.v).dot(rear_axis)*float(mount.speed_scale)+rear_side*Vector2(bullet.v).dot(rear_side)
 			VISUALS.individualize(bullet,i,music.timeline,int(trigger.get("uid",0)),int(trigger.get("serial",0)))
 			SALVOS.apply(bullet,kind,i,count,direction,origin,music.timeline)
+			if kind in VISUALS.MOVING_IDS and family!="orbit": PROJECTILE_FIELDS.setup(bullet,motion,i,count,player,music.timeline,track)
 			# Anchor each physical salvo on the audible onset; remaining particles
 			# retain independent delays, mass, speed, forces and curved trajectories.
 			if i==0: bullet.launch_delay=0.
@@ -1449,6 +1451,7 @@ func update_bullets(frame_delta: float) -> void:
 			var waited=float(bullet.launch_delay)
 			bullet.launch_delay=maxf(0.,waited-delta)
 			if bullet.has("muzzle_offset") and str(bullet.kind)!="crown_orbit": bullet.at=player+Vector2(bullet.muzzle_offset)
+			if bullet.has("kaleido_center") and bullet.has("muzzle_offset"): bullet.kaleido_center=player
 			if bullet.has("trail_points"): bullet.trail_points=[Vector2(bullet.at)]
 			if waited>=delta: continue
 			delta-=waited
@@ -1813,6 +1816,9 @@ func draw_preview_ranges() -> void:
 		var color=Color(colors[track],.34)
 		var origin=player+direction.orthogonal()*[-17.,0.,17.][track]
 		var pattern=str(C.item(str(row.kind)).get("emission",""))
+		if float(actual.get("trajectory",{}).get("kaleidoscope",0.))>0. and str(row.kind) in VISUALS.MOVING_IDS and family!="orbit":
+			draw_arc(player,reach,0.,TAU,96,Color(color,.40),1.5,true)
+			continue
 		if SALVOS.PROFILES.has(str(row.kind)):
 			var forward=facing.normalized() if facing.length_squared()>.01 else Vector2.UP
 			if int(settings.aim_mode)==1:forward=movement_facing
@@ -1885,6 +1891,7 @@ func split_projectile(bullet: Dictionary,enemy: Dictionary) -> void:
 		child.family=bullet.get("family","pulse"); child.context=context.duplicate(true); child.context.depth=depth+1
 		child.context.trajectory={}; child.hit[enemy.uid]=true
 		VISUALS.individualize(child,i,music.timeline,int(bullet.get("flight_seed",context.get("root_uid",0))),int(context.get("serial",0)),true)
+		if str(child.kind) in VISUALS.MOVING_IDS and str(child.family)!="orbit": PROJECTILE_FIELDS.setup(child,motion,i,count,Vector2(bullet.at),music.timeline,clampi(floori(float(context.get("slot",0))/8.),0,2))
 		child.at=Vector2(bullet.at); child.trail_points=[Vector2(child.at)]
 		receipt.count("derived_projectiles")
 func toggle_offer_lock(index: int) -> bool:

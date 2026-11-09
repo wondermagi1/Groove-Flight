@@ -6,7 +6,7 @@ const SEQUENCE=preload("res://scripts/arsenal_loadout.gd")
 const EXPRESSION=preload("res://scripts/weapon_expression.gd")
 signal step_fired(index: int,serial: int,deadline: float)
 signal prepared(key: String)
-const RENDER_VERSION=13
+const RENDER_VERSION=14
 const RATE=22050
 const STEP=SEQUENCE.SEQUENCE_STEP_SECONDS
 const BPM=SEQUENCE.SEQUENCE_BPM

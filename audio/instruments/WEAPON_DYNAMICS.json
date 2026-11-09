@@ -1,5 +1,5 @@
 {
-  "revision": "chamber-v40-charge-foundation",
+  "revision": "chamber-v41-westwind-kaleidoscope",
   "description": "Four independently rendered acoustic performances at the same weapon root note. Velocity, onset, note-on duration, release and spectral shaping change together; not scaled copies of one WAV. Composer keeps its authored pitches and original152 samples.",
   "levels": [
     {
@@ -98,7 +98,8 @@
     "stern_fan": -0.2,
     "dawn_fan": -0.2,
     "tidal_weave": -1.0,
-    "firefly_rain": -0.5
+    "firefly_rain": -0.5,
+    "kaleidoscope": -1.0
   },
   "sustained_salvos": {
     "strengths": [
@@ -193,6 +194,13 @@
         "hold_seconds": 0.28,
         "sustain_onset_seconds": 0.035,
         "sustain_fade_seconds": 0.1
+      },
+      "kaleidoscope": {
+        "hold": 0.28,
+        "release": 0.22,
+        "voice_label": "珠光高音三角钢琴",
+        "duration_seconds": 0.5,
+        "hold_seconds": 0.28
       }
     }
   }
