@@ -1,6 +1,15 @@
 {
-	"checks": 64,
+	"checks": 78,
 	"facts": {
+		"capture_hashes": {
+			"res://docs/screenshots/v44-combat-1280.png": "263e7a649d337227c8a9e7726f2b323911a07cdc0ae5c5ac3519fb6685848e18",
+			"res://docs/screenshots/v44-combat-1920.png": "9f6996291b105dfdc1cb66983a5707e5438020549e07bef3be9533b5ac457e4e",
+			"res://docs/screenshots/v44-doctrine-1280.png": "de38801c869f11ab8f9bbbbf983d086507ca8f7a312170c66c93c5038e087ef0",
+			"res://docs/screenshots/v44-doctrine-1920.png": "ba145e179d7050395bd880aa215eef0b17698642cc5eaf57b7c77aa365b85c20",
+			"res://docs/screenshots/v44-hangar.png": "4a9bac030c83017cb49d2c1f74f3ea38355ec08dd9ed4d007635ef78773bae1f",
+			"res://docs/screenshots/v44-shop-1280.png": "52a2945ce4bdb31be1285a256474a2ec8ec34b9d96ef63596a5b127bd451d410",
+			"res://docs/screenshots/v44-shop-1920.png": "6d589811affd25e79e46545a284e398399dff4b95995a10719e1cb3269786c26"
+		},
 		"enemy_meshes": [
 			{
 				"kind": "mote",

@@ -49,13 +49,19 @@ func material_checks() -> void:
 
 func capture(path: String) -> void:
 	if DisplayServer.get_name()=="headless":return
+	check(game.ui.root_control.is_visible_in_tree(),"actual UI layer is visible in exported preview / "+path)
+	game.queue_redraw()
 	await frames(3);await RenderingServer.frame_post_draw
 	var img=root.get_texture().get_image();check(img!=null and not img.is_empty(),"GPU produced actual screen / "+path)
+	var digest=HashingContext.new();digest.start(HashingContext.HASH_SHA256);digest.update(img.get_data());var sha=digest.finish().hex_encode()
+	if not facts.has("capture_hashes"):facts.capture_hashes={}
+	check(not facts.capture_hashes.values().has(sha),"each exported UI state has distinct actual pixels / "+path);facts.capture_hashes[path]=sha
 	img.save_png(path);images.append(path)
 
 func screen_checks() -> void:
 	game.simulation_only=true;game.loadout.configure_live_rules();game.selected_doctrine="ballistic";game.start_run(4401,"mercury")
 	game.music.stop();game.music._running=false;game.set_process(false);game.simulation_only=false
+	game.ui.root_control.show()
 	for size_value in [Vector2i(1920,1080),Vector2i(1280,720)]:
 		root.size=size_value;game.state="reward";game.wave=3;game.rewards=[];game.reward_taken=true;game.shop_offers=game.loadout.make_shop(game.rng,3,[],3,3,3.,game.featured_shop_item())
 		game.settings.text_scale=1.2;game.ui.refresh();await frames(6)
