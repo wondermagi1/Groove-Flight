@@ -80,9 +80,12 @@ def main():
                 body=np.fromfile(body_raw,dtype='<f4').astype(np.float64)
                 body=sosfilt(butter(2,min(6500,cutoff),fs=RATE,output='sos'),body)
                 reference_rms=np.sqrt(np.mean(x[:round(.3*RATE)]**2))
-                body_rms=np.sqrt(np.mean(body[round(.4*RATE):round(.9*RATE)]**2))
+                window_start=.4 if hold>=.6 else hold*.40
+                window_end=.9 if hold>=.6 else hold*.90
+                body_rms=np.sqrt(np.mean(body[round(window_start*RATE):round(window_end*RATE)]**2))
                 body*=reference_rms*profile['sustain_mix']/max(1e-12,body_rms)
-                fade=np.sin(np.clip((np.arange(len(body))/RATE-.06)/.22,0,1)*np.pi/2)**2
+                onset=profile.get('sustain_onset_seconds',.06);fade_seconds=profile.get('sustain_fade_seconds',.22)
+                fade=np.sin(np.clip((np.arange(len(body))/RATE-onset)/fade_seconds,0,1)*np.pi/2)**2
                 body*=fade
                 n=min(len(x),len(body));x[:n]+=body[:n]
             if profile:
@@ -104,7 +107,7 @@ def main():
             layers.append({'strength':index,'label':level['label'],'file':path.relative_to(ROOT).as_posix(),'sha256':digest(path),'root_midi':entry['root_midi'],'program':entry['program'],'velocity':level['velocity'],'hold':hold,'release':release,'attack_ms':attack,'cutoff_hz':cutoff,'harmonic_tilt_db':level['harmonic_tilt_db'],'tone_split_hz':split,'seconds':len(x)/RATE,'peak':float(np.max(np.abs(x))),'rms':float(np.sqrt(np.mean(x*x))),'attack_300ms_rms':float(np.sqrt(np.mean(x[:round(.3*RATE)]**2))),'preset':result.stdout.strip(),'normalization_gain':float(gain)})
             if profile:layers[-1].update(sustained_salvo=True,body_swell=sustained['body_swell'],requested_onset_gain_db=sustained['onset_gain_db'])
             if fixed_duration:layers[-1]['duration_seconds']=fixed_duration['duration_seconds']
-            if profile and 'sustain_program' in profile:layers[-1].update(acoustic_sustain_layer={"program":profile['sustain_program'],"root_midi":entry['root_midi'],"mix":profile['sustain_mix'],"onset_seconds":.06,"fade_seconds":.22})
+            if profile and 'sustain_program' in profile:layers[-1].update(acoustic_sustain_layer={"program":profile['sustain_program'],"root_midi":entry['root_midi'],"mix":profile['sustain_mix'],"onset_seconds":profile.get('sustain_onset_seconds',.06),"fade_seconds":profile.get('sustain_fade_seconds',.22)})
         output.append({'id':entry['id'],'instrument':entry['instrument'],'family':entry['instrument_family'],'balance_db':policy['balance_db'][entry['id']],'layers':layers})
         if entry['id'] in policy.get('sustained_salvos',{}).get('profiles',{}):output[-1]['performance_instrument']=policy['sustained_salvos']['profiles'][entry['id']]['voice_label']
         print(entry['id'],[round(s['attack_300ms_rms'],4) for s in layers],flush=True)

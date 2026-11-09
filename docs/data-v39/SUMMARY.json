@@ -1,0 +1,49 @@
+{
+  "version": "0.39.0-half-second-voices",
+  "date": "2026-11-09",
+  "backup_branch": "codex/backup-20261109-before-half-second-voices",
+  "backup_sha": "5e32ac7cd195a63b1f6c9638f3b5b54830425660",
+  "checks": 904,
+  "failures": 0,
+  "reports": [
+    {
+      "report": "results-v36-weapon-expression.json",
+      "checks": 320,
+      "failures": 0
+    },
+    {
+      "report": "results-v34-weapon-sync.json",
+      "checks": 85,
+      "failures": 0
+    },
+    {
+      "report": "results-v38-rain.json",
+      "checks": 499,
+      "failures": 0
+    }
+  ],
+  "changed_half_second_performances": 40,
+  "preserved_performances": 36,
+  "preserved_composer_pitches": 152,
+  "native_codex_duration_buttons_verified": 40,
+  "pcm_frames_each": 11025,
+  "rate": 22050,
+  "unchanged_files_sha256": {
+    "scripts/salvo_patterns.gd": "31f47d715a80d41bb38b257ac9bfbf983dca4052b93c6fe9ea12d3c577c3bb91",
+    "scripts/weapon_emission.gd": "ee4aa66a7deb37f46dccfa4b87542b187bdc12a0f41b5fabe09de5d133d40a45",
+    "scripts/weapon_visuals.gd": "ef27d2f85d16880af1810966fd288f497553690e719f9adaaca0e52504004c0f",
+    "scripts/weapon_render.gd": "a2d8bd7d1a74c95e63543b1e1b5665fc3c0780e3889f60a91683c651dd18568f",
+    "scripts/main.gd": "51385e628575bdc80f27f72d615e368c16f2e83b7226bcf65212ce53c95cfa16",
+    "scripts/arsenal_catalog.gd": "4edbd90117a250b6f723d7e9fca370178d51d1277fcaaa5d0510e673a93e18c3",
+    "scripts/arsenal_loadout.gd": "0b9194f9eec33ab438de1d77f8e4445a8bbf7aa43f7b578252629669ec406071",
+    "scripts/audio_controls.gd": "0f1a1ce49d23bc1a3d2ad6f47c9a473c632ac9846f74c9d93be003728c20298e",
+    "scripts/event_mixer.gd": "252b2314a5756a7d7a4b047d904914bbde6c86081613c0e26ef80b0b700444c9",
+    "scripts/composer_score.gd": "169e95bbc1314ea45a0f0c461ca2025114060d6ec67d74c1f5fb59cc85e754e5",
+    "scripts/composer_player.gd": "2f3aca80785fd0991de659664a903a77d1a45cc3596f07c76a53abc79146f344",
+    "native/crowd/groove_crowd.windows.x86_64.dll": "0046a79a8dd2eb63f7c13ea4d3e20720651b851aaa71892902701077c3c2c84e",
+    "audio/authorized/feedback/shield_impact.wav": "7fa70ca0d184772a7089048252ea651bfad630280ef3c1b5874b6cd944ee9fb2",
+    "audio/authorized/feedback/kill_low_strong.wav": "7d396a080eee88161e4c724e4980736bc1a4be970b01e9708b0d1ec60e5c2716",
+    "audio/authorized/feedback/pickup_coin.wav": "cb11675ea2078cdaae6bd34d3e0626e8b3a05b71d0a827625f1b0787deeb3b46"
+  },
+  "limits": "Measured PCM/native import/codex-button/charge/clock checks. Current environment cannot hear audio;subjective tone remains user review. No VFX,range,balance or instrument-library expansion in this change."
+}

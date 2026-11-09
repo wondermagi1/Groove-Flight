@@ -67,7 +67,14 @@ func codex_checks() -> void:
 	check(codex.audition_players.size()==4 and codex.audition_players.all(func(p): return p.bus==game.AUDIO.WEAPONS and p.pitch_scale==1.),"separate audition voices preserve tails and the live weapon bus")
 	codex.select_weapon("beam_split"); codex.play_cadence(); codex._process(0.); codex._process(3.)
 	check(codex.play_log[-2].strength==1 and codex.play_log[-1].strength==2 and codex.queue_timer==3.,"two-round audition gives weak/strong at3second spacing")
+	for kind in C.SALVOS.PROFILES:
+		codex.select_weapon(kind)
+		for strength in range(4):
+			codex.pitch_row.get_child(strength).pressed.emit()
+			var expected=float(E.policy.sustained_salvos.profiles[kind].duration_seconds)
+			check(absf(codex.audio_player.stream.get_length()-expected)<.0001 and codex.status.text.contains("%.2f秒"%expected),"real codex button plays the current duration and reports it / %s:%d"%[kind,strength])
 	codex.select_weapon("firefly_rain")
+	codex.play_one(3)
 	if DisplayServer.get_name()!="headless":
 		for size_value in [Vector2i(1920,1080),Vector2i(1280,720)]:
 			root.size=size_value; codex._layout(); await frames(4); await RenderingServer.frame_post_draw

@@ -4,8 +4,11 @@ func audio_checks() -> void:
 	for kind in C.SALVOS.PROFILES:
 		for strength in [0,1,2,3]:
 			var wav=AudioStreamWAV.load_from_file(ProjectSettings.globalize_path("res://audio/arsenal/dynamics/dyn_%s_%d.wav"%[kind,strength]))
-			check(absf(wav.get_length()-1.0)<=1./22050. and wav.mix_rate==22050 and wav.format==AudioStreamWAV.FORMAT_16_BITS,"long-charge actual PCM ends at1second / %s:%d"%[kind,strength])
+			var expected=float(game_duration(kind))
+			check(absf(wav.get_length()-expected)<.0001 and wav.mix_rate==22050 and wav.format==AudioStreamWAV.FORMAT_16_BITS,"long-charge actual PCM follows the current duration / %s:%d"%[kind,strength])
 			check(wav.data.decode_s16(0)==0 and wav.data.decode_s16(wav.data.size()-2)==0,"shortened voice has smooth zero endpoints / %s:%d"%[kind,strength])
+func game_duration(kind: String) -> float:
+	return float(preload("res://scripts/weapon_expression.gd").policy.sustained_salvos.profiles[kind].duration_seconds)
 func palette_checks() -> void:
 	for count in [1,2,3,8,9,64,65,256]:
 		var colors: Dictionary={}
@@ -35,6 +38,6 @@ func run() -> void:
 	game=load("res://scenes/Main.tscn").instantiate();game.is_preview=true;root.add_child(game);current_scene=game;await frames(4)
 	game.set_process(false);game.set_physics_process(false);game.fx.set_process(false);game.music.stop();game.music._running=false;game.settings.master=0.;game.apply_audio()
 	await actual_checks()
-	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"All40long-charge actual1s PCM layers/endpoints;exact Stern Fan palette parity for1–256projectiles including partial rows;real charged salvo count,individual motion,body/glow/residual trail rendering. Visual fixture,not human audio approval."}
+	var result={"checks":checks,"failures":failures,"facts":facts,"scope":"All40long-charge configured-duration PCM layers/endpoints;exact Stern Fan palette parity for1–256projectiles including partial rows;real charged salvo count,individual motion,body/glow/residual trail rendering. Visual fixture,not human audio approval."}
 	FileAccess.open("res://tests/results-v38-rain.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"));print("V38_RAIN ",JSON.stringify(result))
 	stop_audio(game);current_scene=null;game.queue_free();await frames(5);quit(0 if failures.is_empty() else 1)

@@ -32,7 +32,7 @@ var play_log: Array[Dictionary]=[]
 var manifest: Dictionary={}
 
 func _recording_tag(id: String) -> String:
-	if bool(DATA.item(id).get("instrument_samples",false)): return str(DATA.item(id).get("instrument","乐器音色"))
+	if bool(DATA.item(id).get("instrument_samples",false)): return str(_record(id).get("dynamics",{}).get("performance_instrument",DATA.item(id).get("instrument","乐器音色")))
 	var record=_record(id)
 	if not str(record.get("recorded_group","")).is_empty(): return "录音原声组"
 	if not DATA.is_weapon_audio_ready(id): return "音源停用"
@@ -201,14 +201,14 @@ func select_weapon(id: String) -> void:
 		if node is CodexArt: art=node; break
 	if art: art.item_id=id; art.queue_redraw()
 	detail_title.text=str(row.name)
-	detail_meta.text="%s / %s / //%s / 占用 %d 格 / 每 %d 轮发射\n%s · 同一音高的四档演奏" % [str(DATA.FAMILY_NAMES[DATA.family_index(str(row.family))]),str(DATA.CATEGORY_NAMES.get(str(row.category),"武器")),DATA.quality_name(row),int(row.width),int(row.charge),str(row.instrument)]
+	detail_meta.text="%s / %s / //%s / 占用 %d 格 / 每 %d 轮发射\n%s · 同一音高的四档演奏" % [str(DATA.FAMILY_NAMES[DATA.family_index(str(row.family))]),str(DATA.CATEGORY_NAMES.get(str(row.category),"武器")),DATA.quality_name(row),int(row.width),int(row.charge),str(record.get("dynamics",{}).get("performance_instrument",row.instrument))]
 	_refresh_quality_selector(row)
 	rhythm_view.visible=false; rhythm_view.cadence=cadence; rhythm_view.accent=DATA.quality_color(row); rhythm_view.queue_redraw()
 	var strengths: PackedStringArray=[]
 	for value in cadence.get("scales",[.25,.25,.25,.25]): strengths.append("%d%%"%roundi(float(value)*100.))
 	cadence_label.text="%s · 每次发射推进一次\n每 %.1f 秒发声；充能等待轮静音，尾音自然延续。"%[EXPRESSION.describe(int(row.charge)),float(row.charge)*LOADOUT.SEQUENCE_LOOP_SECONDS]
 	if record.get("dynamics",{}).has("performance_instrument"):
-		cadence_label.text+="\n长音演奏："+str(record.dynamics.performance_instrument)
+		cadence_label.text+="\n重音演奏："+str(record.dynamics.performance_instrument)
 	var samples=record.get("samples",[])
 	var recorded_group=_recorded_group(id)
 	var audio_ready=DATA.is_weapon_audio_ready(id)
@@ -314,7 +314,7 @@ func play_one(pitch: int) -> void:
 	audio_player.stop()
 	audio_player.stream=stream; audio_player.pitch_scale=1.; audio_player.play()
 	play_log.append({"weapon":selected_id,"pitch":0,"strength":selected_pitch,"time":Time.get_ticks_msec()})
-	status.text="正在试听："+str(EXPRESSION.policy.levels[selected_pitch].label)
+	status.text="正在试听：%s · %.2f秒"%[str(EXPRESSION.policy.levels[selected_pitch].label),stream.get_length()]
 
 func play_cadence() -> void:
 	for player in audition_players: player.stop()
@@ -333,7 +333,7 @@ func play_one_from_queue(pitch: int) -> void:
 	var player=audition_players[audition_index%audition_players.size()]; audition_index+=1
 	player.stream=stream; player.pitch_scale=1.; player.play()
 	play_log.append({"weapon":selected_id,"pitch":0,"strength":pitch,"time":Time.get_ticks_msec()})
-	status.text="乐句演奏："+str(EXPRESSION.policy.levels[pitch].label)
+	status.text="乐句演奏：%s · %.2f秒"%[str(EXPRESSION.policy.levels[pitch].label),stream.get_length()]
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode==KEY_ESCAPE:
