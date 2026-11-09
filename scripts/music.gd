@@ -3,9 +3,10 @@ extends AudioStreamPlayer
 ## runs off the main thread; cached adoption preserves the native audio phase.
 const CLOCK=preload("res://scripts/music_clock.gd")
 const SEQUENCE=preload("res://scripts/arsenal_loadout.gd")
+const EXPRESSION=preload("res://scripts/weapon_expression.gd")
 signal step_fired(index: int,serial: int,deadline: float)
 signal prepared(key: String)
-const RENDER_VERSION=8
+const RENDER_VERSION=9
 const RATE=22050
 const STEP=SEQUENCE.SEQUENCE_STEP_SECONDS
 const BPM=SEQUENCE.SEQUENCE_BPM
@@ -61,17 +62,17 @@ func decode(recording: AudioStreamWAV) -> PackedFloat32Array:
 func voice(kind: String,index: int) -> PackedFloat32Array:
 	var key=kind+"_"+str(index)
 	if not samples.has(key):
-		var path="res://audio/arsenal/notes/"+key+".wav"
+		var path=("res://audio/arsenal/dynamics/" if kind.begins_with("dyn_") else "res://audio/arsenal/notes/")+key+".wav"
 		var recording: AudioStreamWAV=null
 		var absolute=ProjectSettings.globalize_path(path)
-		if (kind.begins_with("rec_") or kind.begins_with("inst_")) and FileAccess.file_exists(absolute) and ClassDB.class_has_method("AudioStreamWAV","load_from_file"):
+		if (kind.begins_with("rec_") or kind.begins_with("inst_") or kind.begins_with("dyn_")) and FileAccess.file_exists(absolute) and ClassDB.class_has_method("AudioStreamWAV","load_from_file"):
 			recording=AudioStreamWAV.load_from_file(absolute)
 		if recording==null and ResourceLoader.exists(path): recording=load(path) as AudioStreamWAV
 		assert(recording!=null,"Missing weapon sample: "+path)
 		samples[key]=decode(recording)
 	return samples[key]
 func key_for(loadout) -> String:
-	return str(hash(JSON.stringify([RENDER_VERSION,STEP,LENGTH,INTRO_SECONDS,STREAM_LENGTH,BPM,loadout.modules,loadout.slots,loadout.damage_scale,loadout.echo_repeat,loadout.stats(),track_mutes,backing_gain,weapon_gain,groove_gain])))
+	return str(hash(JSON.stringify([RENDER_VERSION,EXPRESSION.policy.revision,STEP,LENGTH,INTRO_SECONDS,STREAM_LENGTH,BPM,loadout.modules,loadout.slots,loadout.damage_scale,loadout.echo_repeat,loadout.stats(),track_mutes,backing_gain,weapon_gain,groove_gain])))
 func _snapshot(loadout) -> Dictionary:
 	var events: Array=[]; var instruments: Dictionary={}
 	for serial in range(int(STREAM_LENGTH/STEP)):
@@ -80,12 +81,18 @@ func _snapshot(loadout) -> Dictionary:
 			var support=str(event.family)=="support"
 			var instrument="support_"+str(event.category) if support else str(event.voice)
 			var pitch=posmod(int(event.get("pitch",serial%8)),8)
-			var id=instrument+"_"+str(pitch)
-			if not instruments.has(id): instruments[id]=voice(instrument,pitch)
+			var expression={} if support else EXPRESSION.for_event(event)
+			var sample_voice=instrument if support else "dyn_"+str(event.kind)
+			var sample_index=pitch if support else int(expression.strength)
+			var id=sample_voice+"_"+str(sample_index)
+			if not instruments.has(id): instruments[id]=voice(sample_voice,sample_index)
 			var note=event.duplicate(true); note.voice=instrument; note.sample_key=id
 			# The volume slider scales the entire voice, including level gain.
-			# Every actual shot uses the same sample and gain; charge waits are quiet.
+			# Dynamics select different performances,not copies with changed volume.
 			note.gain=maxf(0.,weapon_gain)*(.35 if support else 1.)*(1.+.035*maxi(0,int(event.level)-1))
+			if not support:
+				note.expression=expression
+				note.gain*=db_to_linear(float(expression.balance_db))
 			if bool(event.get("recorded_audio",false)): note.gain=0.
 			if event.get("pilot","")=="echo": note.gain*=.55
 			if int(event.get("repeat_index",0))>0: note.gain*=.75

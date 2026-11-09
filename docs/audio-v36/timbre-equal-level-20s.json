@@ -1,0 +1,77 @@
+{
+  "scope": "Three instrument examples,pp/p/mf/f four performances each at1.7s spacing. First300ms RMS matched so tone/envelope differences can be heard without the original dynamic gain difference. Not captured gameplay or human loudness matching.",
+  "timeline": [
+    {
+      "id": "pulse",
+      "strength": 0,
+      "start": 0.0,
+      "normalization": "first300ms RMS=.04,not a perceptual loudness certification"
+    },
+    {
+      "id": "pulse",
+      "strength": 1,
+      "start": 1.7,
+      "normalization": "first300ms RMS=.04,not a perceptual loudness certification"
+    },
+    {
+      "id": "pulse",
+      "strength": 2,
+      "start": 3.4,
+      "normalization": "first300ms RMS=.04,not a perceptual loudness certification"
+    },
+    {
+      "id": "pulse",
+      "strength": 3,
+      "start": 5.1,
+      "normalization": "first300ms RMS=.04,not a perceptual loudness certification"
+    },
+    {
+      "id": "beam",
+      "strength": 0,
+      "start": 6.8,
+      "normalization": "first300ms RMS=.04,not a perceptual loudness certification"
+    },
+    {
+      "id": "beam",
+      "strength": 1,
+      "start": 8.5,
+      "normalization": "first300ms RMS=.04,not a perceptual loudness certification"
+    },
+    {
+      "id": "beam",
+      "strength": 2,
+      "start": 10.2,
+      "normalization": "first300ms RMS=.04,not a perceptual loudness certification"
+    },
+    {
+      "id": "beam",
+      "strength": 3,
+      "start": 11.9,
+      "normalization": "first300ms RMS=.04,not a perceptual loudness certification"
+    },
+    {
+      "id": "firefly_rain",
+      "strength": 0,
+      "start": 13.6,
+      "normalization": "first300ms RMS=.04,not a perceptual loudness certification"
+    },
+    {
+      "id": "firefly_rain",
+      "strength": 1,
+      "start": 15.299999999999999,
+      "normalization": "first300ms RMS=.04,not a perceptual loudness certification"
+    },
+    {
+      "id": "firefly_rain",
+      "strength": 2,
+      "start": 17.0,
+      "normalization": "first300ms RMS=.04,not a perceptual loudness certification"
+    },
+    {
+      "id": "firefly_rain",
+      "strength": 3,
+      "start": 18.7,
+      "normalization": "first300ms RMS=.04,not a perceptual loudness certification"
+    }
+  ]
+}

@@ -1,0 +1,803 @@
+{
+  "scope": "76independently rendered performances,first150ms comparison after least-squares scalar gain removal. Nonzero residual disproves a gain-only copy but does not certify subjective realism. No claim of four independent acoustic recordings.",
+  "weapons": [
+    {
+      "id": "pulse",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 1.2700680272108844,
+          "peak": 0.0416259765625,
+          "onset_300ms_rms": 0.01728697122168862,
+          "first150ms_spectral_centroid_hz": 467.7542032386118
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 1.333968253968254,
+          "peak": 0.0693359375,
+          "onset_300ms_rms": 0.02643876394919864,
+          "first150ms_spectral_centroid_hz": 470.6203231775602
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 1.386439909297052,
+          "peak": 0.11480712890625,
+          "onset_300ms_rms": 0.03915010261525975,
+          "first150ms_spectral_centroid_hz": 632.9370000598608
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 1.446984126984127,
+          "peak": 0.16290283203125,
+          "onset_300ms_rms": 0.050843986200619515,
+          "first150ms_spectral_centroid_hz": 793.4464889897314
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.9710606981004446,
+        0.6392811685107737,
+        0.5678054848664534
+      ]
+    },
+    {
+      "id": "scatter",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 1.1500680272108843,
+          "peak": 0.04119873046875,
+          "onset_300ms_rms": 0.01967960389130891,
+          "first150ms_spectral_centroid_hz": 474.47180974667094
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 1.2071655328798185,
+          "peak": 0.060699462890625,
+          "onset_300ms_rms": 0.03009838385399854,
+          "first150ms_spectral_centroid_hz": 481.3973761951718
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 1.2533786848072563,
+          "peak": 0.113555908203125,
+          "onset_300ms_rms": 0.04456863928677656,
+          "first150ms_spectral_centroid_hz": 574.259877438559
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 1.3059410430839002,
+          "peak": 0.163299560546875,
+          "onset_300ms_rms": 0.05788139239605162,
+          "first150ms_spectral_centroid_hz": 685.2024082374303
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.9965769840158415,
+        0.4770514249076089,
+        0.48984198980259075
+      ]
+    },
+    {
+      "id": "beam",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 1.0888888888888888,
+          "peak": 0.060302734375,
+          "onset_300ms_rms": 0.02681676656366727,
+          "first150ms_spectral_centroid_hz": 521.9060431559457
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 1.1428571428571428,
+          "peak": 0.089935302734375,
+          "onset_300ms_rms": 0.04101395798062735,
+          "first150ms_spectral_centroid_hz": 474.58796810616616
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 1.1890249433106577,
+          "peak": 0.13726806640625,
+          "onset_300ms_rms": 0.060731975907023734,
+          "first150ms_spectral_centroid_hz": 488.84963645203413
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 1.2447165532879818,
+          "peak": 0.197235107421875,
+          "onset_300ms_rms": 0.07887294388325534,
+          "first150ms_spectral_centroid_hz": 495.4291471777856
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.5913895837240309,
+        0.2504667352727195,
+        0.9914368715872961
+      ]
+    },
+    {
+      "id": "missile",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 0.8332426303854875,
+          "peak": 0.055572509765625,
+          "onset_300ms_rms": 0.016747387719658616,
+          "first150ms_spectral_centroid_hz": 325.0001505874718
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 0.8735147392290249,
+          "peak": 0.078643798828125,
+          "onset_300ms_rms": 0.025613792997548096,
+          "first150ms_spectral_centroid_hz": 363.9076471503629
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 0.9047619047619048,
+          "peak": 0.12176513671875,
+          "onset_300ms_rms": 0.03792790847477202,
+          "first150ms_spectral_centroid_hz": 492.2659738061437
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 0.9391383219954649,
+          "peak": 0.157012939453125,
+          "onset_300ms_rms": 0.049257116981004004,
+          "first150ms_spectral_centroid_hz": 552.5703677525843
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.920719702379895,
+        0.5990095661015975,
+        0.49953786493936614
+      ]
+    },
+    {
+      "id": "nova",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 0.7750566893424037,
+          "peak": 0.04205322265625,
+          "onset_300ms_rms": 0.015047682470514547,
+          "first150ms_spectral_centroid_hz": 386.84283023057066
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 0.8131519274376418,
+          "peak": 0.0615234375,
+          "onset_300ms_rms": 0.0230137794290317,
+          "first150ms_spectral_centroid_hz": 413.0679653702764
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 0.8428571428571429,
+          "peak": 0.1072998046875,
+          "onset_300ms_rms": 0.03407832271010741,
+          "first150ms_spectral_centroid_hz": 551.0292676108542
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 0.8759637188208617,
+          "peak": 0.138671875,
+          "onset_300ms_rms": 0.04425763868629082,
+          "first150ms_spectral_centroid_hz": 674.1967850530366
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.7132201919251231,
+        0.616088808638775,
+        0.5440164171121615
+      ]
+    },
+    {
+      "id": "chain",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 0.7139682539682539,
+          "peak": 0.057464599609375,
+          "onset_300ms_rms": 0.016438877527510838,
+          "first150ms_spectral_centroid_hz": 626.2905818409758
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 0.7459410430839002,
+          "peak": 0.10882568359375,
+          "onset_300ms_rms": 0.025141597160604715,
+          "first150ms_spectral_centroid_hz": 676.3573143829735
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 0.7714739229024943,
+          "peak": 0.16131591796875,
+          "onset_300ms_rms": 0.037229082234316646,
+          "first150ms_spectral_centroid_hz": 728.092455880304
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 0.7989569160997733,
+          "peak": 0.2296142578125,
+          "onset_300ms_rms": 0.04834974045167324,
+          "first150ms_spectral_centroid_hz": 784.661526692008
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.3147411731098453,
+        0.3850866577883095,
+        0.314612658823632
+      ]
+    },
+    {
+      "id": "rail",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 1.1853061224489796,
+          "peak": 0.05328369140625,
+          "onset_300ms_rms": 0.017580122929061498,
+          "first150ms_spectral_centroid_hz": 265.49654264480534
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 1.2429478458049887,
+          "peak": 0.081878662109375,
+          "onset_300ms_rms": 0.02688761834533698,
+          "first150ms_spectral_centroid_hz": 294.70597510242715
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 1.2941496598639455,
+          "peak": 0.12939453125,
+          "onset_300ms_rms": 0.03981418204653609,
+          "first150ms_spectral_centroid_hz": 242.43998322637503
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 1.3499319727891157,
+          "peak": 0.14788818359375,
+          "onset_300ms_rms": 0.051706750001046575,
+          "first150ms_spectral_centroid_hz": 294.101813217405
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.1911615792868288,
+        0.9992749785021127,
+        0.732738736783407
+      ]
+    },
+    {
+      "id": "pulse_needle",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 0.6070748299319728,
+          "peak": 0.054473876953125,
+          "onset_300ms_rms": 0.01618857331612766,
+          "first150ms_spectral_centroid_hz": 561.8227265435805
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 0.6363718820861678,
+          "peak": 0.082855224609375,
+          "onset_300ms_rms": 0.024758928421363666,
+          "first150ms_spectral_centroid_hz": 557.9322618406287
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 0.6582766439909297,
+          "peak": 0.135345458984375,
+          "onset_300ms_rms": 0.03666211410820292,
+          "first150ms_spectral_centroid_hz": 632.0178888066118
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 0.6819501133786848,
+          "peak": 0.17169189453125,
+          "onset_300ms_rms": 0.04761291745441711,
+          "first150ms_spectral_centroid_hz": 675.5675966249074
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.21696604557062485,
+        0.4945130063330487,
+        0.4671788384447877
+      ]
+    },
+    {
+      "id": "scatter_prism",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 0.7294331065759637,
+          "peak": 0.041473388671875,
+          "onset_300ms_rms": 0.0166512452328116,
+          "first150ms_spectral_centroid_hz": 447.801715774366
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 0.7647619047619048,
+          "peak": 0.063232421875,
+          "onset_300ms_rms": 0.025466237808071782,
+          "first150ms_spectral_centroid_hz": 474.4592398613517
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 0.7917460317460318,
+          "peak": 0.1109619140625,
+          "onset_300ms_rms": 0.03770973019301778,
+          "first150ms_spectral_centroid_hz": 548.087152871379
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 0.8213605442176871,
+          "peak": 0.156219482421875,
+          "onset_300ms_rms": 0.04897366893258503,
+          "first150ms_spectral_centroid_hz": 633.9101386693102
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.9932563977654161,
+        0.49765596744456486,
+        0.4735147187008189
+      ]
+    },
+    {
+      "id": "beam_split",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 1.09124716553288,
+          "peak": 0.05145263671875,
+          "onset_300ms_rms": 0.019239663108416096,
+          "first150ms_spectral_centroid_hz": 407.4532635577601
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 1.1444444444444444,
+          "peak": 0.081268310546875,
+          "onset_300ms_rms": 0.029425756609025445,
+          "first150ms_spectral_centroid_hz": 423.05202083900645
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 1.1894331065759638,
+          "peak": 0.122344970703125,
+          "onset_300ms_rms": 0.043572486477737024,
+          "first150ms_spectral_centroid_hz": 445.9574795491924
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 1.2412244897959184,
+          "peak": 0.159576416015625,
+          "onset_300ms_rms": 0.0565877249568734,
+          "first150ms_spectral_centroid_hz": 467.07651092468416
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.29903634764636533,
+        0.26542851281868346,
+        0.19550351397194865
+      ]
+    },
+    {
+      "id": "rail_horizon",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 1.126031746031746,
+          "peak": 0.051727294921875,
+          "onset_300ms_rms": 0.014830294267873778,
+          "first150ms_spectral_centroid_hz": 355.1243444543333
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 1.1803628117913831,
+          "peak": 0.085052490234375,
+          "onset_300ms_rms": 0.022681780325309805,
+          "first150ms_spectral_centroid_hz": 485.30629105634523
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 1.223219954648526,
+          "peak": 0.124237060546875,
+          "onset_300ms_rms": 0.033586596644139204,
+          "first150ms_spectral_centroid_hz": 564.4783102204432
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 1.2709750566893423,
+          "peak": 0.15869140625,
+          "onset_300ms_rms": 0.043618890043443805,
+          "first150ms_spectral_centroid_hz": 619.8288882709767
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.9987261929597935,
+        0.7296639911691005,
+        0.5156468667240015
+      ]
+    },
+    {
+      "id": "recorded_heavy",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 0.9460770975056689,
+          "peak": 0.043975830078125,
+          "onset_300ms_rms": 0.016368996125026035,
+          "first150ms_spectral_centroid_hz": 237.6103305753267
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 0.9919727891156462,
+          "peak": 0.0743408203125,
+          "onset_300ms_rms": 0.025035226251050362,
+          "first150ms_spectral_centroid_hz": 306.66666366342776
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 1.0279818594104309,
+          "peak": 0.1207275390625,
+          "onset_300ms_rms": 0.037071172421776,
+          "first150ms_spectral_centroid_hz": 452.46548442600323
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 1.067981859410431,
+          "peak": 0.166290283203125,
+          "onset_300ms_rms": 0.04814448143377889,
+          "first150ms_spectral_centroid_hz": 533.03214310342
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.998481250663868,
+        0.5916187326863739,
+        0.5010581717401242
+      ]
+    },
+    {
+      "id": "gilded_helix",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 0.8230385487528344,
+          "peak": 0.0440673828125,
+          "onset_300ms_rms": 0.015260550929947167,
+          "first150ms_spectral_centroid_hz": 467.89601717080313
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 0.8631292517006802,
+          "peak": 0.07159423828125,
+          "onset_300ms_rms": 0.02333975545238608,
+          "first150ms_spectral_centroid_hz": 501.0773457349294
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 0.8943764172335601,
+          "peak": 0.11566162109375,
+          "onset_300ms_rms": 0.03456072325604439,
+          "first150ms_spectral_centroid_hz": 664.2959294455235
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 0.9289795918367347,
+          "peak": 0.157257080078125,
+          "onset_300ms_rms": 0.04488407608417331,
+          "first150ms_spectral_centroid_hz": 776.6941531957048
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.9704451679701852,
+        0.596481505386829,
+        0.5290251468493724
+      ]
+    },
+    {
+      "id": "weave_cross",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 0.46426303854875284,
+          "peak": 0.050506591796875,
+          "onset_300ms_rms": 0.013527146490070557,
+          "first150ms_spectral_centroid_hz": 541.703841485895
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 0.4871201814058957,
+          "peak": 0.07025146484375,
+          "onset_300ms_rms": 0.02068869089453619,
+          "first150ms_spectral_centroid_hz": 537.8470153510805
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 0.5039455782312925,
+          "peak": 0.11407470703125,
+          "onset_300ms_rms": 0.030635219600272733,
+          "first150ms_spectral_centroid_hz": 587.7386298670496
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 0.5221315192743764,
+          "peak": 0.155426025390625,
+          "onset_300ms_rms": 0.03978598751899363,
+          "first150ms_spectral_centroid_hz": 699.0603944703882
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.2413900045249953,
+        0.5213421763150042,
+        0.5140295481360387
+      ]
+    },
+    {
+      "id": "crown_orbit",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 0.7811337868480726,
+          "peak": 0.065155029296875,
+          "onset_300ms_rms": 0.016823813986174815,
+          "first150ms_spectral_centroid_hz": 633.479624050829
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 0.8159183673469388,
+          "peak": 0.111419677734375,
+          "onset_300ms_rms": 0.025730297311669943,
+          "first150ms_spectral_centroid_hz": 680.9757722563126
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 0.8435827664399093,
+          "peak": 0.163665771484375,
+          "onset_300ms_rms": 0.03810088727424891,
+          "first150ms_spectral_centroid_hz": 731.3986512733659
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 0.8731519274376417,
+          "peak": 0.249664306640625,
+          "onset_300ms_rms": 0.04948148589384521,
+          "first150ms_spectral_centroid_hz": 786.4995401125303
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.2944468616012866,
+        0.3778504039849769,
+        0.30612778655100237
+      ]
+    },
+    {
+      "id": "stern_fan",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 0.819546485260771,
+          "peak": 0.03289794921875,
+          "onset_300ms_rms": 0.016405104492736387,
+          "first150ms_spectral_centroid_hz": 267.396765467628
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 0.8559637188208616,
+          "peak": 0.04962158203125,
+          "onset_300ms_rms": 0.025090454946741433,
+          "first150ms_spectral_centroid_hz": 271.09858472873907
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 0.8847619047619047,
+          "peak": 0.072235107421875,
+          "onset_300ms_rms": 0.03715296745325139,
+          "first150ms_spectral_centroid_hz": 276.02685074084803
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 0.9155555555555556,
+          "peak": 0.095703125,
+          "onset_300ms_rms": 0.048250426899574456,
+          "first150ms_spectral_centroid_hz": 281.4977649038413
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.19254850519617536,
+        0.2262212934265243,
+        0.1892017892303838
+      ]
+    },
+    {
+      "id": "dawn_fan",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 0.8152380952380952,
+          "peak": 0.043853759765625,
+          "onset_300ms_rms": 0.01744079073713044,
+          "first150ms_spectral_centroid_hz": 459.03157872082954
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 0.8543310657596372,
+          "peak": 0.06463623046875,
+          "onset_300ms_rms": 0.026674221758340656,
+          "first150ms_spectral_centroid_hz": 478.6542962009873
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 0.8843537414965986,
+          "peak": 0.1158447265625,
+          "onset_300ms_rms": 0.03949810539987001,
+          "first150ms_spectral_centroid_hz": 563.132259418251
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 0.9171428571428571,
+          "peak": 0.16644287109375,
+          "onset_300ms_rms": 0.051296073070396825,
+          "first150ms_spectral_centroid_hz": 663.931837957371
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.9952536459667882,
+        0.4875336061791951,
+        0.4839550660331884
+      ]
+    },
+    {
+      "id": "tidal_weave",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 1.1092063492063493,
+          "peak": 0.04571533203125,
+          "onset_300ms_rms": 0.016054972095404473,
+          "first150ms_spectral_centroid_hz": 492.5665099648162
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 1.1636281179138321,
+          "peak": 0.077911376953125,
+          "onset_300ms_rms": 0.02455478734181929,
+          "first150ms_spectral_centroid_hz": 553.1186189435793
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 1.20984126984127,
+          "peak": 0.12725830078125,
+          "onset_300ms_rms": 0.036359991821890376,
+          "first150ms_spectral_centroid_hz": 645.5388537631391
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 1.265124716553288,
+          "peak": 0.164093017578125,
+          "onset_300ms_rms": 0.04722073454522665,
+          "first150ms_spectral_centroid_hz": 701.6451112464721
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.9048048050012537,
+        0.3658761656213178,
+        0.9542531964293225
+      ]
+    },
+    {
+      "id": "firefly_rain",
+      "layers": [
+        {
+          "strength": 0,
+          "label": "很弱",
+          "seconds": 1.3919727891156464,
+          "peak": 0.06097412109375,
+          "onset_300ms_rms": 0.016504730989814167,
+          "first150ms_spectral_centroid_hz": 741.9711683109699
+        },
+        {
+          "strength": 1,
+          "label": "弱",
+          "seconds": 1.457142857142857,
+          "peak": 0.098907470703125,
+          "onset_300ms_rms": 0.025242611348483268,
+          "first150ms_spectral_centroid_hz": 809.0685877709844
+        },
+        {
+          "strength": 2,
+          "label": "强",
+          "seconds": 1.5108843537414967,
+          "peak": 0.146820068359375,
+          "onset_300ms_rms": 0.03737819878791915,
+          "first150ms_spectral_centroid_hz": 869.462120227592
+        },
+        {
+          "strength": 3,
+          "label": "很强",
+          "seconds": 1.5709297052154194,
+          "peak": 0.2340087890625,
+          "onset_300ms_rms": 0.0485432838080454,
+          "first150ms_spectral_centroid_hz": 932.927477918241
+        }
+      ],
+      "adjacent_best_gain_copy_residual": [
+        0.3137459017605906,
+        0.41295241062673343,
+        0.3227900372924866
+      ]
+    }
+  ]
+}

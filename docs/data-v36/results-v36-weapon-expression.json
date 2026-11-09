@@ -1,0 +1,207 @@
+{
+	"checks": 280,
+	"facts": {
+		"weapons": [
+			{
+				"balance_db": 0.0,
+				"charge": 1,
+				"id": "pulse",
+				"pattern": [
+					0,
+					1,
+					2,
+					3
+				],
+				"phrase": "很弱 → 弱 → 强 → 很强"
+			},
+			{
+				"balance_db": -0.8,
+				"charge": 1,
+				"id": "scatter",
+				"pattern": [
+					0,
+					1,
+					2,
+					3
+				],
+				"phrase": "很弱 → 弱 → 强 → 很强"
+			},
+			{
+				"balance_db": -2.5,
+				"charge": 1,
+				"id": "beam",
+				"pattern": [
+					0,
+					1,
+					2,
+					3
+				],
+				"phrase": "很弱 → 弱 → 强 → 很强"
+			},
+			{
+				"balance_db": -0.5,
+				"charge": 2,
+				"id": "missile",
+				"pattern": [
+					1,
+					2
+				],
+				"phrase": "弱 → 强"
+			},
+			{
+				"balance_db": -0.6,
+				"charge": 4,
+				"id": "nova",
+				"pattern": [
+					3,
+					2
+				],
+				"phrase": "很强 → 强"
+			},
+			{
+				"balance_db": -2.0,
+				"charge": 2,
+				"id": "chain",
+				"pattern": [
+					1,
+					2
+				],
+				"phrase": "弱 → 强"
+			},
+			{
+				"balance_db": -0.5,
+				"charge": 2,
+				"id": "rail",
+				"pattern": [
+					1,
+					2
+				],
+				"phrase": "弱 → 强"
+			},
+			{
+				"balance_db": -1.8,
+				"charge": 1,
+				"id": "pulse_needle",
+				"pattern": [
+					0,
+					1,
+					2,
+					3
+				],
+				"phrase": "很弱 → 弱 → 强 → 很强"
+			},
+			{
+				"balance_db": -1.0,
+				"charge": 4,
+				"id": "scatter_prism",
+				"pattern": [
+					3,
+					2
+				],
+				"phrase": "很强 → 强"
+			},
+			{
+				"balance_db": -2.0,
+				"charge": 2,
+				"id": "beam_split",
+				"pattern": [
+					1,
+					2
+				],
+				"phrase": "弱 → 强"
+			},
+			{
+				"balance_db": 0.0,
+				"charge": 8,
+				"id": "rail_horizon",
+				"pattern": [
+					2,
+					3
+				],
+				"phrase": "强 → 很强"
+			},
+			{
+				"balance_db": 0.0,
+				"charge": 4,
+				"id": "recorded_heavy",
+				"pattern": [
+					3,
+					2
+				],
+				"phrase": "很强 → 强"
+			},
+			{
+				"balance_db": -1.5,
+				"charge": 4,
+				"id": "gilded_helix",
+				"pattern": [
+					3,
+					2
+				],
+				"phrase": "很强 → 强"
+			},
+			{
+				"balance_db": -2.0,
+				"charge": 3,
+				"id": "weave_cross",
+				"pattern": [
+					2,
+					3
+				],
+				"phrase": "强 → 很强"
+			},
+			{
+				"balance_db": -2.5,
+				"charge": 3,
+				"id": "crown_orbit",
+				"pattern": [
+					2,
+					3
+				],
+				"phrase": "强 → 很强"
+			},
+			{
+				"balance_db": -1.2,
+				"charge": 3,
+				"id": "stern_fan",
+				"pattern": [
+					2,
+					3
+				],
+				"phrase": "强 → 很强"
+			},
+			{
+				"balance_db": -1.2,
+				"charge": 3,
+				"id": "dawn_fan",
+				"pattern": [
+					2,
+					3
+				],
+				"phrase": "强 → 很强"
+			},
+			{
+				"balance_db": -2.0,
+				"charge": 4,
+				"id": "tidal_weave",
+				"pattern": [
+					3,
+					2
+				],
+				"phrase": "很强 → 强"
+			},
+			{
+				"balance_db": -1.5,
+				"charge": 3,
+				"id": "firefly_rain",
+				"pattern": [
+					2,
+					3
+				],
+				"phrase": "强 → 很强"
+			}
+		]
+	},
+	"failures": [],
+	"scope": "All19 production schedules versus separate velocity/articulation WAVs;76 PCM hashes/formats/onsets/headroom,152 unchanged pitch WAVs,actual-charge phrase order,144s phase continuity,UID layering,state purity and real four-level codex controls/tail-safe audition. Subjective listening remains user review."
+}

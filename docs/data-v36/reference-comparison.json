@@ -1,0 +1,37 @@
+{
+  "source": "武器实弹的 音乐声音（由轻到重）.mp4",
+  "container_sha256": "9cae3735d3781f263bda7cb32f011147ada3b5d96a2038e9ab00db2733ef572e",
+  "pcm_sha256": "240b32b2215c265d09e2a7457d1464fb84fa644b677e121922bece16dd347a23",
+  "full_duration": 49.36533333333333,
+  "method": "First four regularly spaced source events,exact stereo PCM slices,no gain or filtering. Spectra and energy are measured;neither prove four clean velocity recordings nor rule out different pitches or mixed sounds. Use as user-provided reference,not installed weapon assets.",
+  "clips": [
+    {
+      "start": 0.61,
+      "end": 1.03,
+      "file": "docs/audio-v36/reference-note-1.wav",
+      "rms": 0.04779095095135442,
+      "spectral_centroid_hz": 729.7880796325876
+    },
+    {
+      "start": 1.61,
+      "end": 2.0300000000000002,
+      "file": "docs/audio-v36/reference-note-2.wav",
+      "rms": 0.03481790286704857,
+      "spectral_centroid_hz": 462.1600279719729
+    },
+    {
+      "start": 2.61,
+      "end": 3.03,
+      "file": "docs/audio-v36/reference-note-3.wav",
+      "rms": 0.04604736229170222,
+      "spectral_centroid_hz": 637.1617727854816
+    },
+    {
+      "start": 3.61,
+      "end": 4.03,
+      "file": "docs/audio-v36/reference-note-4.wav",
+      "rms": 0.047752590129789406,
+      "spectral_centroid_hz": 768.7014472862195
+    }
+  ]
+}

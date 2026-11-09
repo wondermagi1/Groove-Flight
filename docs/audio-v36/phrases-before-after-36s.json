@@ -1,0 +1,18 @@
+{
+  "scope": "0–18s V35fixed single samples,18–36s V36independent performance layers. Same weapon events and positions,weapon-only production PCM. Both halves matched to-25dBFS RMS. Not live gameplay capture.",
+  "halves": [
+    {
+      "name": "flat",
+      "gain": 2.866394067490316,
+      "rms_dbfs": -25.0,
+      "peak": 0.3450029968927553
+    },
+    {
+      "name": "expressive",
+      "gain": 4.1963667925313946,
+      "rms_dbfs": -25.0,
+      "peak": 0.5137885611461168
+    }
+  ],
+  "events": "docs/data-v36/audition-events.json"
+}

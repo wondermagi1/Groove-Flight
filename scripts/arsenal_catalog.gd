@@ -34,8 +34,8 @@ const AUDIO_READY_WEAPON_IDS={
 	"recorded_ballistic_rare":true,
 	"recorded_ballistic_legend":true
 }
-# Scale-degree motifs are intentionally authored per weapon. Values address the
-# eight samples of its own instrument; the slot transposes the motif's start.
+# Historical scale motifs are retained for archives;ordinary battle keeps the
+# instrument root fixed and selects its independent V36performance layer.
 const MELODIES=[
 	[0,0,2,4,2,0,5,2], [0,3,1,5,2,6,3,1], [0,2,4,7,6,4,2,0],
 	[0,1,2,4,3,2,1,5], [0,2,4,6,7,5,3,1], [0,4,1,5,2,6,3,7],
@@ -280,7 +280,7 @@ static func weapon_description(data: Dictionary) -> String:
 	parts.append("占%d格；%s独立音色"%[int(data.width),str(data.get("instrument",data.voice))])
 	var motif: Array[String]=[]
 	for degree in data.get("melody",[]): motif.append(str(int(degree)+1))
-	if bool(data.get("instrument_samples",false)): parts.append("固定乐器音色："+str(data.get("instrument","乐器"))+"；白点到格发声一次")
+	if bool(data.get("instrument_samples",false)): parts.append(str(data.get("instrument","乐器"))+"；充能满足才发声，逐次发射改变演奏力度，音高固定")
 	else: parts.append("历史八音素材 "+"-".join(motif))
 	if bool(data.get("recorded_audio",false)): parts.append("直接播放已授权连续原声组；四拍只分配伤害与触发")
 	elif not bool(data.get("audio_ready",false)): parts.append("电子占位音色暂时停用，等待录制音源替换")

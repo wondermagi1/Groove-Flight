@@ -1,0 +1,95 @@
+{
+  "version": "0.36.0-expressive-weapon-voices",
+  "date": "2026-11-09",
+  "backup_branch": "codex/backup-20261109-before-weapon-expression",
+  "backup_sha": "5f7a65d0f6850ce78e1e2b16b9f06f1a6d5717be",
+  "checks": 754,
+  "failures": 0,
+  "reports": [
+    {
+      "report": "results-v36-weapon-expression.json",
+      "checks": 280,
+      "failures": 0
+    },
+    {
+      "report": "results-v34-weapon-sync.json",
+      "checks": 85,
+      "failures": 0
+    },
+    {
+      "report": "results-v33-music-continuity.json",
+      "checks": 36,
+      "failures": 0
+    },
+    {
+      "report": "results-weapon-cycle.json",
+      "checks": 216,
+      "failures": 0
+    },
+    {
+      "report": "results-composer-score.json",
+      "checks": 112,
+      "failures": 0
+    },
+    {
+      "report": "results-v35-audio-upgrade.json",
+      "checks": 25,
+      "failures": 0
+    }
+  ],
+  "new_performance_samples": 76,
+  "preserved_pitch_samples": 152,
+  "total_samples": 228,
+  "minimum_adjacent_gain_copy_residual_first150ms": 0.1892017892303838,
+  "patterns": {
+    "1": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "2": [
+      1,
+      2
+    ],
+    "3": [
+      2,
+      3
+    ],
+    "4": [
+      3,
+      2
+    ],
+    "8": [
+      2,
+      3
+    ]
+  },
+  "reference_container_sha256": "9cae3735d3781f263bda7cb32f011147ada3b5d96a2038e9ab00db2733ef572e",
+  "unchanged_files_sha256": {
+    "scripts/arsenal_loadout.gd": "b97bba262f59386ebe6b00f2005e0bc5e0429897b9c75cd082e18a10a241ebaa",
+    "scripts/composer_score.gd": "169e95bbc1314ea45a0f0c461ca2025114060d6ec67d74c1f5fb59cc85e754e5",
+    "scripts/composer_player.gd": "2f3aca80785fd0991de659664a903a77d1a45cc3596f07c76a53abc79146f344",
+    "scripts/contact_swarm.gd": "4aad354861629b90b0d2785fed516322309004ea1ecb0273e6832d2ab79e2c01",
+    "scripts/enemy_maneuver.gd": "33ca942f0ce7db8116200ca41e6095b9c2e1aba6f75ae92187ca28dccd27ea9c",
+    "scripts/weapon_visuals.gd": "dcf0c22cddd469288c0c89125e4a1967324c00c5b31d294846a5dd5653a252e1",
+    "scripts/weapon_emission.gd": "3bb606ab6f8abd9b1bff12a2e50084e343444f5983dcebe25a86298eacc0c372",
+    "scripts/audio_controls.gd": "0f1a1ce49d23bc1a3d2ad6f47c9a473c632ac9846f74c9d93be003728c20298e",
+    "scripts/event_mixer.gd": "252b2314a5756a7d7a4b047d904914bbde6c86081613c0e26ef80b0b700444c9",
+    "native/crowd/groove_crowd.windows.x86_64.dll": "0046a79a8dd2eb63f7c13ea4d3e20720651b851aaa71892902701077c3c2c84e",
+    "audio/instruments/CHAMBER_PALETTE.json": "3a38fad8062a9eaf581e0fccd2cc01a07594af2b7186845ad4c18160f1bde08c",
+    "audio/instruments/MANIFEST.json": "ecfa742c6e75e57746d66c3f1788b873ce011b739f4f20e3a582e1a2278e3c0e",
+    "audio/authorized/feedback/shield_impact.wav": "7fa70ca0d184772a7089048252ea651bfad630280ef3c1b5874b6cd944ee9fb2",
+    "audio/authorized/feedback/kill_low_strong.wav": "7d396a080eee88161e4c724e4980736bc1a4be970b01e9708b0d1ec60e5c2716",
+    "audio/authorized/feedback/pickup_coin.wav": "cb11675ea2078cdaae6bd34d3e0626e8b3a05b71d0a827625f1b0787deeb3b46"
+  },
+  "text_comparison": "Git canonical LF;working copy SHA256 may differ only due to CRLF",
+  "legacy_test": {
+    "name": "composer_audio_review.gd",
+    "status": "incompatible historical two-recording fixture;failed,not included among passing checks",
+    "evidence": "legacy-composer-audio-incompatible.txt",
+    "reason": "Asserts only2recorded prototypes and pulse/beam unavailable;calls removed recorded_ballistic and accesses missing track. Center-channel exact-energy assertion also failed. Current composer source and152pitch WAVs unchanged;V36current authored-note/PCM checks and score tests pass."
+  },
+  "limits": "Waveform residuals establish non-gain-only rendering,not subjective realism. Current environment cannot hear audio. User should audition tone and mix. No campaign balance or sustained FPS certification. No game damage/count/motion/timing changes.",
+  "uncompressed_import_resources_verified": 76
+}

@@ -1,0 +1,15 @@
+{
+	"checks": 36,
+	"facts": {
+		"after_resume": 91.3308868408203,
+		"before": {
+			"has_playback": true,
+			"initial": 91.1393203735352,
+			"paused": 91.1509323120117,
+			"paused_flag": true,
+			"playing": false
+		}
+	},
+	"failures": [],
+	"scope": "Native Filaments playback at91seconds,actual pause/settings/all8sliders at three levels including0,default reset,return/resume,direct combat settings,shop,editor andmenu. Isolated profile; tests transport position rather than subjective mix."
+}

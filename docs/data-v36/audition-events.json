@@ -1,0 +1,211 @@
+{
+	"equipment": [
+		"pulse A1",
+		"scatter_prism A5-A7",
+		"beam_split B3-B4",
+		"firefly_rain C6-C8"
+	],
+	"notes": [
+		{
+			"at": 0.0,
+			"gain": 0.8,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_0",
+			"strength": 0,
+			"uid": 1
+		},
+		{
+			"at": 1.5,
+			"gain": 0.8,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_1",
+			"strength": 1,
+			"uid": 1
+		},
+		{
+			"at": 1.875,
+			"gain": 0.635462587779425,
+			"kind": "beam_split",
+			"sample_key": "dyn_beam_split_1",
+			"strength": 1,
+			"uid": 3
+		},
+		{
+			"at": 3.0,
+			"gain": 0.8,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_2",
+			"strength": 2,
+			"uid": 1
+		},
+		{
+			"at": 3.9375,
+			"gain": 0.673116113316156,
+			"kind": "firefly_rain",
+			"sample_key": "dyn_firefly_rain_2",
+			"strength": 2,
+			"uid": 4
+		},
+		{
+			"at": 4.5,
+			"gain": 0.8,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_3",
+			"strength": 3,
+			"uid": 1
+		},
+		{
+			"at": 4.875,
+			"gain": 0.635462587779425,
+			"kind": "beam_split",
+			"sample_key": "dyn_beam_split_2",
+			"strength": 2,
+			"uid": 3
+		},
+		{
+			"at": 5.25,
+			"gain": 0.713000750506997,
+			"kind": "scatter_prism",
+			"sample_key": "dyn_scatter_prism_3",
+			"strength": 3,
+			"uid": 2
+		},
+		{
+			"at": 6.0,
+			"gain": 0.8,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_0",
+			"strength": 0,
+			"uid": 1
+		},
+		{
+			"at": 7.5,
+			"gain": 0.8,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_1",
+			"strength": 1,
+			"uid": 1
+		},
+		{
+			"at": 7.875,
+			"gain": 0.635462587779425,
+			"kind": "beam_split",
+			"sample_key": "dyn_beam_split_1",
+			"strength": 1,
+			"uid": 3
+		},
+		{
+			"at": 8.4375,
+			"gain": 0.673116113316156,
+			"kind": "firefly_rain",
+			"sample_key": "dyn_firefly_rain_3",
+			"strength": 3,
+			"uid": 4
+		},
+		{
+			"at": 9.0,
+			"gain": 0.8,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_2",
+			"strength": 2,
+			"uid": 1
+		},
+		{
+			"at": 10.5,
+			"gain": 0.8,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_3",
+			"strength": 3,
+			"uid": 1
+		},
+		{
+			"at": 10.875,
+			"gain": 0.635462587779425,
+			"kind": "beam_split",
+			"sample_key": "dyn_beam_split_2",
+			"strength": 2,
+			"uid": 3
+		},
+		{
+			"at": 11.25,
+			"gain": 0.713000750506997,
+			"kind": "scatter_prism",
+			"sample_key": "dyn_scatter_prism_2",
+			"strength": 2,
+			"uid": 2
+		},
+		{
+			"at": 12.0,
+			"gain": 0.8,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_0",
+			"strength": 0,
+			"uid": 1
+		},
+		{
+			"at": 12.9375,
+			"gain": 0.673116113316156,
+			"kind": "firefly_rain",
+			"sample_key": "dyn_firefly_rain_2",
+			"strength": 2,
+			"uid": 4
+		},
+		{
+			"at": 13.5,
+			"gain": 0.8,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_1",
+			"strength": 1,
+			"uid": 1
+		},
+		{
+			"at": 13.875,
+			"gain": 0.635462587779425,
+			"kind": "beam_split",
+			"sample_key": "dyn_beam_split_1",
+			"strength": 1,
+			"uid": 3
+		},
+		{
+			"at": 15.0,
+			"gain": 0.8,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_2",
+			"strength": 2,
+			"uid": 1
+		},
+		{
+			"at": 16.5,
+			"gain": 0.8,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_3",
+			"strength": 3,
+			"uid": 1
+		},
+		{
+			"at": 16.875,
+			"gain": 0.635462587779425,
+			"kind": "beam_split",
+			"sample_key": "dyn_beam_split_2",
+			"strength": 2,
+			"uid": 3
+		},
+		{
+			"at": 17.25,
+			"gain": 0.713000750506997,
+			"kind": "scatter_prism",
+			"sample_key": "dyn_scatter_prism_3",
+			"strength": 3,
+			"uid": 2
+		},
+		{
+			"at": 17.4375,
+			"gain": 0.673116113316156,
+			"kind": "firefly_rain",
+			"sample_key": "dyn_firefly_rain_3",
+			"strength": 3,
+			"uid": 4
+		}
+	],
+	"scope": "Same production scheduler/same shot events,old fixed sample versus new performance layers;offline weapon-only review,not captured gameplay."
+}

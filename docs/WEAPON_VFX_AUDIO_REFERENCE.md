@@ -1,42 +1,67 @@
 # 武器特效与音频对应表（持续维护）
 
-最后更新：2026-11-09。核对版本：`0.35.0-chamber-combat-mix`；当前武器/初始配装/强化/商店快照见V35。重制7种乐器共56份样本，另外96份保留；修改前备份`699f22f`。
+最后更新：2026-11-09。核对版本：`0.36.0-expressive-weapon-voices`；当前目录与配装快照见V36。新增19×4份演奏力度样本，保留原152份作曲音高，共228份；修改前备份`5f7a65d`。
 
 这是当前现役武器的统一查阅入口。后续在同一份文档持续更新；历史版本说明和旧武器档案保留在原处。表中均为已经接入的内容，待开发设想另列。
 
-现役共**19种武器**：**14种共享羽状质感、17种实体弹、2种激光/电弧**。每件武器保留独立的固定乐器声音，共152份样本。**当前武器声音仅使用11种钢琴变化、4种弓弦和4种竖琴**；V35重制56份，另96份逐字节保留，延长可听主体与自然尾音。
+现役共**19种武器**：**14种共享羽状质感、17种实体弹、2种激光/电弧**。每件武器保留独立的乐器身份与固定音高，战斗按真实发射演奏力度乐句；共228份样本。**当前武器声音仅使用11种钢琴变化、4种弓弦和4种竖琴**；V36新增76份不同力度／起音／持音／明暗的演奏，V35的152份音高样本保留。见[V36说明与同响度试听](V36_EXPRESSIVE_WEAPON_VOICES.md)。
 
 ## 1. 武器、画面与声音对照
 
-“固定音色”链接指向普通战斗实际使用的索引0原声WAV，可单独打开试听。“弹体充能”表示每几轮音序器发射一次；V34起声音只跟随实际发射，等待轮不新增起音。
+下表乐器链接指向现役“强”档演奏WAV；每件四档的完整链接见第2节。“弹体充能”表示每几轮音序器发射一次；V34起声音只跟随实际发射，等待轮不新增起音。
 
 当前所有关卡初始武器固定为**脉冲机炮 A3、星砂霰弹 B4、流萤织雨 C6–C8**。脉冲与霰弹每轮分别在0.375秒/0.5625秒发射并发声；流萤改为3轮充能，首次在3.9375秒发射并发声，此后每4.5秒一次。舰体/预设道具放入其余空位。玩家之后可自由调整，进入下一波不重置。见[当前初始配装与声音节奏](V35_SUSTAINED_AUDIO_UPGRADE.md)。
 
-| 武器 / ID | 发射形式与运动 | 弹体、光色与尾迹 | 固定音色（点击试听） | 对应主属性 | 弹体充能 |
+| 武器 / ID | 发射形式与运动 | 弹体、光色与尾迹 | 乐器代表音色（强奏试听） | 对应主属性 | 弹体充能 |
 | --- | --- | --- | --- | --- | ---: |
-| 脉冲机炮<br>`pulse` | 朝瞄准方向错时喷射；各弹独立初速、偏角和摆动 | 青绿色羽状弹、柔光、细曲线尾迹 | [延音中音钢琴](../audio/arsenal/notes/inst_pulse_0.wav) | 实弹 | 1轮 |
-| 星砂霰弹<br>`scatter` | 前向扇面散射；各颗在扇面内独立推进、错位 | 暖金色羽状弹；共享鎏金基底 | [明亮延音钢琴](../audio/arsenal/notes/inst_scatter_0.wav) | 实弹 | 1轮 |
-| 棱镜光束<br>`beam` | 朝瞄准方向发射多条直束；各束微小方向、宽度和闪光差异 | 淡紫束芯与能量鞘，保留激光形态 | [清晰弓头小提琴](../audio/arsenal/notes/inst_beam_0.wav) | 能量 | 1轮 |
-| 彗星导弹<br>`missile` | 向前发射后独立追踪；各弹转向响应不同，命中爆破 | 粉红导弹实体、推进尾焰与弯曲残迹 | [温暖低音钢琴](../audio/arsenal/notes/inst_missile_0.wav) | 动力 | 2轮 |
-| 新星环炮<br>`nova` | 360°圆周展开；各颗独立弯转，保持完整圆周覆盖 | 浅绿能量珠、局部柔光、细弧形尾迹 | [圆润中音钢琴](../audio/arsenal/notes/inst_nova_0.wav) | 能量 | 4轮 |
-| 跃迁电弧<br>`chain` | 先连向目标，再向附近敌人跳跃；各段有稳定的独立相位 | 蓝色分支电流与局部辉光 | [柔和高音竖琴](../audio/arsenal/notes/inst_chain_0.wav) | 能量 | 2轮 |
-| 苍穹轨炮<br>`rail` | 朝瞄准方向高速贯穿；各弹独立受力、保留主方向 | 冰白羽状弹；实际路径尾迹 | [厚弓大提琴](../audio/arsenal/notes/inst_rail_0.wav) | 实弹 | 2轮 |
-| 星针狙击器<br>`pulse_needle` | 朝瞄准方向集中喷射；个体速度与细微弯转不同 | 青白羽状弹；共享羽状质感 | [清亮高音钢琴](../audio/arsenal/notes/inst_pulse_needle_0.wav) | 实弹 | 1轮 |
-| 七彩折光匣<br>`scatter_prism` | 机头前方的四个斜向，展开多排U形羽流；每组轻摆、每颗独立飞行 | 七彩羽状实体弹；与尾羽共享柔光和真实弯曲尾迹 | [珠光钢琴](../audio/arsenal/notes/inst_scatter_prism_0.wav) | 实弹 | 4轮 |
-| 双生棱镜<br>`beam_split` | 机头两侧向前喷出青粉双股羽流，各股反相摇摆，每颗独立飞行，抵达后才命中 | 与尾羽共享羽状实体、柔光、弯曲残迹；不再瞬时直束 | [绵奏中提琴](../audio/arsenal/notes/inst_beam_split_0.wav) | 能量 | 2轮 |
-| 地平线终奏<br>`rail_horizon` | 沿实际机身左右两翼喷射；低初速出膛，再各自加速和摆动 | 绿色羽状弹流；柔光与逐渐变细的实际尾迹 | [深色低音钢琴](../audio/arsenal/notes/inst_rail_horizon_0.wav) | 实弹 | 8轮 |
-| 终压攻城铳<br>`recorded_heavy` | 朝瞄准方向发射重型贯穿弹；独立出膛时差与惯性，命中爆破 | 暖橙羽状实体弹；当前使用统一羽状基底 | [厚实中低音钢琴](../audio/arsenal/notes/inst_recorded_heavy_0.wav) | 实弹 | 4轮 |
-| 鎏金螺旋阵<br>`gilded_helix` | 向四周展开，叠加不同弯转速率，形成螺旋包络 | 金色发光叶状弹头；同类羽弹的质感基准 | [明亮三角钢琴](../audio/arsenal/notes/inst_gilded_helix_0.wav) | 能量 | 4轮 |
-| 虹织十字炮<br>`weave_cross` | 上、下、左、右四向编织；实际横向摆动叠加个体受力 | 彩色羽状弹流、错位交织尾迹 | [轻巧断奏钢琴](../audio/arsenal/notes/inst_weave_cross_0.wav) | 实弹 | 3轮 |
-| 星冕回旋阵<br>`crown_orbit` | 三至八层环绕；每颗独立呼吸、角速度和惯性中心，跟随玩家 | 彩色环绕实体与柔光；细曲线残迹 | [通透竖琴](../audio/arsenal/notes/inst_crown_orbit_0.wav) | 支援 | 3轮 |
-| 尾羽回响<br>`stern_fan` | 沿机尾向后展开多排U形扇面；两翼先打开，再以不同惯性收向后方 | 左翼绿黄、中央橙黄、右翼粉紫的羽状弹流 | [温暖中音竖琴](../audio/arsenal/notes/inst_stern_fan_0.wav) | 实弹 | 3轮 |
-| 晨羽前奏<br>`dawn_fan` | 机头前方宽U形羽扇，分排出膛，中心较快、两翼略慢，每颗沿自身扇面方向轻摆 | 绿、金、橙、粉连续过渡的羽弹与曲线尾迹 | [柔亮高音钢琴](../audio/arsenal/notes/inst_dawn_fan_0.wav) | 实弹 | 3轮 |
-| 潮汐弦歌<br>`tidal_weave` | 前方两股反相摆动，分排错开形成较强的S形波浪编织 | 青粉羽弹、局部柔光与真实弯曲残迹 | [绵奏高音小提琴](../audio/arsenal/notes/inst_tidal_weave_0.wav) | 能量 | 4轮 |
-| 流萤织雨<br>`firefly_rain` | 前方多列错峰喷射，出膛较慢后渐加速；喷口按列扫动，每颗独立受力 | 绿青紫萤彩羽弹、收敛光晕与曲线残迹 | [绵长高音竖琴](../audio/arsenal/notes/inst_firefly_rain_0.wav) | 动力 | 3轮 |
+| 脉冲机炮<br>`pulse` | 朝瞄准方向错时喷射；各弹独立初速、偏角和摆动 | 青绿色羽状弹、柔光、细曲线尾迹 | [延音中音钢琴](../audio/arsenal/dynamics/dyn_pulse_2.wav) | 实弹 | 1轮 |
+| 星砂霰弹<br>`scatter` | 前向扇面散射；各颗在扇面内独立推进、错位 | 暖金色羽状弹；共享鎏金基底 | [明亮延音钢琴](../audio/arsenal/dynamics/dyn_scatter_2.wav) | 实弹 | 1轮 |
+| 棱镜光束<br>`beam` | 朝瞄准方向发射多条直束；各束微小方向、宽度和闪光差异 | 淡紫束芯与能量鞘，保留激光形态 | [清晰弓头小提琴](../audio/arsenal/dynamics/dyn_beam_2.wav) | 能量 | 1轮 |
+| 彗星导弹<br>`missile` | 向前发射后独立追踪；各弹转向响应不同，命中爆破 | 粉红导弹实体、推进尾焰与弯曲残迹 | [温暖低音钢琴](../audio/arsenal/dynamics/dyn_missile_2.wav) | 动力 | 2轮 |
+| 新星环炮<br>`nova` | 360°圆周展开；各颗独立弯转，保持完整圆周覆盖 | 浅绿能量珠、局部柔光、细弧形尾迹 | [圆润中音钢琴](../audio/arsenal/dynamics/dyn_nova_2.wav) | 能量 | 4轮 |
+| 跃迁电弧<br>`chain` | 先连向目标，再向附近敌人跳跃；各段有稳定的独立相位 | 蓝色分支电流与局部辉光 | [柔和高音竖琴](../audio/arsenal/dynamics/dyn_chain_2.wav) | 能量 | 2轮 |
+| 苍穹轨炮<br>`rail` | 朝瞄准方向高速贯穿；各弹独立受力、保留主方向 | 冰白羽状弹；实际路径尾迹 | [厚弓大提琴](../audio/arsenal/dynamics/dyn_rail_2.wav) | 实弹 | 2轮 |
+| 星针狙击器<br>`pulse_needle` | 朝瞄准方向集中喷射；个体速度与细微弯转不同 | 青白羽状弹；共享羽状质感 | [清亮高音钢琴](../audio/arsenal/dynamics/dyn_pulse_needle_2.wav) | 实弹 | 1轮 |
+| 七彩折光匣<br>`scatter_prism` | 机头前方的四个斜向，展开多排U形羽流；每组轻摆、每颗独立飞行 | 七彩羽状实体弹；与尾羽共享柔光和真实弯曲尾迹 | [珠光钢琴](../audio/arsenal/dynamics/dyn_scatter_prism_2.wav) | 实弹 | 4轮 |
+| 双生棱镜<br>`beam_split` | 机头两侧向前喷出青粉双股羽流，各股反相摇摆，每颗独立飞行，抵达后才命中 | 与尾羽共享羽状实体、柔光、弯曲残迹；不再瞬时直束 | [绵奏中提琴](../audio/arsenal/dynamics/dyn_beam_split_2.wav) | 能量 | 2轮 |
+| 地平线终奏<br>`rail_horizon` | 沿实际机身左右两翼喷射；低初速出膛，再各自加速和摆动 | 绿色羽状弹流；柔光与逐渐变细的实际尾迹 | [深色低音钢琴](../audio/arsenal/dynamics/dyn_rail_horizon_2.wav) | 实弹 | 8轮 |
+| 终压攻城铳<br>`recorded_heavy` | 朝瞄准方向发射重型贯穿弹；独立出膛时差与惯性，命中爆破 | 暖橙羽状实体弹；当前使用统一羽状基底 | [厚实中低音钢琴](../audio/arsenal/dynamics/dyn_recorded_heavy_2.wav) | 实弹 | 4轮 |
+| 鎏金螺旋阵<br>`gilded_helix` | 向四周展开，叠加不同弯转速率，形成螺旋包络 | 金色发光叶状弹头；同类羽弹的质感基准 | [明亮三角钢琴](../audio/arsenal/dynamics/dyn_gilded_helix_2.wav) | 能量 | 4轮 |
+| 虹织十字炮<br>`weave_cross` | 上、下、左、右四向编织；实际横向摆动叠加个体受力 | 彩色羽状弹流、错位交织尾迹 | [轻巧断奏钢琴](../audio/arsenal/dynamics/dyn_weave_cross_2.wav) | 实弹 | 3轮 |
+| 星冕回旋阵<br>`crown_orbit` | 三至八层环绕；每颗独立呼吸、角速度和惯性中心，跟随玩家 | 彩色环绕实体与柔光；细曲线残迹 | [通透竖琴](../audio/arsenal/dynamics/dyn_crown_orbit_2.wav) | 支援 | 3轮 |
+| 尾羽回响<br>`stern_fan` | 沿机尾向后展开多排U形扇面；两翼先打开，再以不同惯性收向后方 | 左翼绿黄、中央橙黄、右翼粉紫的羽状弹流 | [温暖中音竖琴](../audio/arsenal/dynamics/dyn_stern_fan_2.wav) | 实弹 | 3轮 |
+| 晨羽前奏<br>`dawn_fan` | 机头前方宽U形羽扇，分排出膛，中心较快、两翼略慢，每颗沿自身扇面方向轻摆 | 绿、金、橙、粉连续过渡的羽弹与曲线尾迹 | [柔亮高音钢琴](../audio/arsenal/dynamics/dyn_dawn_fan_2.wav) | 实弹 | 3轮 |
+| 潮汐弦歌<br>`tidal_weave` | 前方两股反相摆动，分排错开形成较强的S形波浪编织 | 青粉羽弹、局部柔光与真实弯曲残迹 | [绵奏高音小提琴](../audio/arsenal/dynamics/dyn_tidal_weave_2.wav) | 能量 | 4轮 |
+| 流萤织雨<br>`firefly_rain` | 前方多列错峰喷射，出膛较慢后渐加速；喷口按列扫动，每颗独立受力 | 绿青紫萤彩羽弹、收敛光晕与曲线残迹 | [绵长高音竖琴](../audio/arsenal/dynamics/dyn_firefly_rain_2.wav) | 动力 | 3轮 |
 
-## 2. 原声音频文件索引
+## 2. 四档演奏与原音高索引
 
-统一目录：`audio/arsenal/notes/`。每种武器有`_0.wav`至`_7.wav`共8份样本；**普通战斗固定使用`_0.wav`**，其他索引供显式作曲使用，不代表当前启用了四拍强弱。
+当前战斗使用`audio/arsenal/dynamics/dyn_<ID>_0…3.wav`，索引表示很弱／弱／强／很强，**不是四个音高**。四份均独立渲染，力度、起音、持音、释放和频谱一起变化。每件固定音高；1轮武器按四档渐强，2轮按弱→强，3轮强→很强，4轮很强→强，8轮强→很强，按实际齐射推进。音源与样本SHA见[力度清单](../audio/instruments/DYNAMICS_MANIFEST.json)。
+
+| 武器 | 四档实际演奏试听 | 平衡增益 |
+| --- | --- | ---: |
+| 脉冲机炮 | [很弱](../audio/arsenal/dynamics/dyn_pulse_0.wav) · [弱](../audio/arsenal/dynamics/dyn_pulse_1.wav) · [强](../audio/arsenal/dynamics/dyn_pulse_2.wav) · [很强](../audio/arsenal/dynamics/dyn_pulse_3.wav) | +0.0dB |
+| 星砂霰弹 | [很弱](../audio/arsenal/dynamics/dyn_scatter_0.wav) · [弱](../audio/arsenal/dynamics/dyn_scatter_1.wav) · [强](../audio/arsenal/dynamics/dyn_scatter_2.wav) · [很强](../audio/arsenal/dynamics/dyn_scatter_3.wav) | -0.8dB |
+| 棱镜光束 | [很弱](../audio/arsenal/dynamics/dyn_beam_0.wav) · [弱](../audio/arsenal/dynamics/dyn_beam_1.wav) · [强](../audio/arsenal/dynamics/dyn_beam_2.wav) · [很强](../audio/arsenal/dynamics/dyn_beam_3.wav) | -2.5dB |
+| 彗星导弹 | [很弱](../audio/arsenal/dynamics/dyn_missile_0.wav) · [弱](../audio/arsenal/dynamics/dyn_missile_1.wav) · [强](../audio/arsenal/dynamics/dyn_missile_2.wav) · [很强](../audio/arsenal/dynamics/dyn_missile_3.wav) | -0.5dB |
+| 新星环炮 | [很弱](../audio/arsenal/dynamics/dyn_nova_0.wav) · [弱](../audio/arsenal/dynamics/dyn_nova_1.wav) · [强](../audio/arsenal/dynamics/dyn_nova_2.wav) · [很强](../audio/arsenal/dynamics/dyn_nova_3.wav) | -0.6dB |
+| 跃迁电弧 | [很弱](../audio/arsenal/dynamics/dyn_chain_0.wav) · [弱](../audio/arsenal/dynamics/dyn_chain_1.wav) · [强](../audio/arsenal/dynamics/dyn_chain_2.wav) · [很强](../audio/arsenal/dynamics/dyn_chain_3.wav) | -2.0dB |
+| 苍穹轨炮 | [很弱](../audio/arsenal/dynamics/dyn_rail_0.wav) · [弱](../audio/arsenal/dynamics/dyn_rail_1.wav) · [强](../audio/arsenal/dynamics/dyn_rail_2.wav) · [很强](../audio/arsenal/dynamics/dyn_rail_3.wav) | -0.5dB |
+| 星针狙击器 | [很弱](../audio/arsenal/dynamics/dyn_pulse_needle_0.wav) · [弱](../audio/arsenal/dynamics/dyn_pulse_needle_1.wav) · [强](../audio/arsenal/dynamics/dyn_pulse_needle_2.wav) · [很强](../audio/arsenal/dynamics/dyn_pulse_needle_3.wav) | -1.8dB |
+| 七彩折光匣 | [很弱](../audio/arsenal/dynamics/dyn_scatter_prism_0.wav) · [弱](../audio/arsenal/dynamics/dyn_scatter_prism_1.wav) · [强](../audio/arsenal/dynamics/dyn_scatter_prism_2.wav) · [很强](../audio/arsenal/dynamics/dyn_scatter_prism_3.wav) | -1.0dB |
+| 双生棱镜 | [很弱](../audio/arsenal/dynamics/dyn_beam_split_0.wav) · [弱](../audio/arsenal/dynamics/dyn_beam_split_1.wav) · [强](../audio/arsenal/dynamics/dyn_beam_split_2.wav) · [很强](../audio/arsenal/dynamics/dyn_beam_split_3.wav) | -2.0dB |
+| 地平线终奏 | [很弱](../audio/arsenal/dynamics/dyn_rail_horizon_0.wav) · [弱](../audio/arsenal/dynamics/dyn_rail_horizon_1.wav) · [强](../audio/arsenal/dynamics/dyn_rail_horizon_2.wav) · [很强](../audio/arsenal/dynamics/dyn_rail_horizon_3.wav) | +0.0dB |
+| 终压攻城铳 | [很弱](../audio/arsenal/dynamics/dyn_recorded_heavy_0.wav) · [弱](../audio/arsenal/dynamics/dyn_recorded_heavy_1.wav) · [强](../audio/arsenal/dynamics/dyn_recorded_heavy_2.wav) · [很强](../audio/arsenal/dynamics/dyn_recorded_heavy_3.wav) | +0.0dB |
+| 鎏金螺旋阵 | [很弱](../audio/arsenal/dynamics/dyn_gilded_helix_0.wav) · [弱](../audio/arsenal/dynamics/dyn_gilded_helix_1.wav) · [强](../audio/arsenal/dynamics/dyn_gilded_helix_2.wav) · [很强](../audio/arsenal/dynamics/dyn_gilded_helix_3.wav) | -1.5dB |
+| 虹织十字炮 | [很弱](../audio/arsenal/dynamics/dyn_weave_cross_0.wav) · [弱](../audio/arsenal/dynamics/dyn_weave_cross_1.wav) · [强](../audio/arsenal/dynamics/dyn_weave_cross_2.wav) · [很强](../audio/arsenal/dynamics/dyn_weave_cross_3.wav) | -2.0dB |
+| 星冕回旋阵 | [很弱](../audio/arsenal/dynamics/dyn_crown_orbit_0.wav) · [弱](../audio/arsenal/dynamics/dyn_crown_orbit_1.wav) · [强](../audio/arsenal/dynamics/dyn_crown_orbit_2.wav) · [很强](../audio/arsenal/dynamics/dyn_crown_orbit_3.wav) | -2.5dB |
+| 尾羽回响 | [很弱](../audio/arsenal/dynamics/dyn_stern_fan_0.wav) · [弱](../audio/arsenal/dynamics/dyn_stern_fan_1.wav) · [强](../audio/arsenal/dynamics/dyn_stern_fan_2.wav) · [很强](../audio/arsenal/dynamics/dyn_stern_fan_3.wav) | -1.2dB |
+| 晨羽前奏 | [很弱](../audio/arsenal/dynamics/dyn_dawn_fan_0.wav) · [弱](../audio/arsenal/dynamics/dyn_dawn_fan_1.wav) · [强](../audio/arsenal/dynamics/dyn_dawn_fan_2.wav) · [很强](../audio/arsenal/dynamics/dyn_dawn_fan_3.wav) | -1.2dB |
+| 潮汐弦歌 | [很弱](../audio/arsenal/dynamics/dyn_tidal_weave_0.wav) · [弱](../audio/arsenal/dynamics/dyn_tidal_weave_1.wav) · [强](../audio/arsenal/dynamics/dyn_tidal_weave_2.wav) · [很强](../audio/arsenal/dynamics/dyn_tidal_weave_3.wav) | -2.0dB |
+| 流萤织雨 | [很弱](../audio/arsenal/dynamics/dyn_firefly_rain_0.wav) · [弱](../audio/arsenal/dynamics/dyn_firefly_rain_1.wav) · [强](../audio/arsenal/dynamics/dyn_firefly_rain_2.wav) · [很强](../audio/arsenal/dynamics/dyn_firefly_rain_3.wav) | -1.5dB |
+
+原152份音高样本继续保留供显式作曲，下面记录的是这组原样本，**不是当前战斗力度层**。
+统一目录：`audio/arsenal/notes/`。每种武器有`_0.wav`至`_7.wav`共8份样本；普通战斗固定根音但使用上表新演奏层；这8个音高由显式作曲选择，不自动轮换旋律。
 
 下列时长是原声文件长度，不是武器发射间隔、弹体寿命或充能时长。
 
@@ -66,7 +91,7 @@
 
 ## 3. 声音与弹道怎样对应
 
-当前为1.5秒一轮，按实际发射发声；大范围武器分为3–4轮齐射，长音主体与尾音延续。详见[V35说明与30秒对照](V35_SUSTAINED_AUDIO_UPGRADE.md)。[6秒新初始配装试听](audio-v35/starter-synchronized.wav)和[当前声音说明与验证](V35_SUSTAINED_AUDIO_UPGRADE.md)。V31每轮发声及V27的2秒试听保留作历史对比。
+当前为1.5秒一轮，按实际发射发声；V36按有效充能加入纯音频力度乐句，1轮四档渐强、2轮弱强、3–4轮疏重音。详见[V36说明与同响度试听](V36_EXPRESSIVE_WEAPON_VOICES.md)。[6秒当前初始配装试听](audio-v36/starter-synchronized.wav)。V31每轮发声及V27的2秒试听保留作历史对比。
 
 V26在“设置 → 声音”中独立控制背景、武器、击杀鼓点、拾取、受击护盾、命中爆炸和界面警报，总音量统一控制全部声音。武器滑块同时覆盖战斗、图鉴、商店与作曲试听；0%静音、调节自动保存。改音量直接作用于播放通道，保留当前PCM与音序位置，背景静音不再压低武器。详见[分类音量说明](V26_AUDIO_CONTROLS.md)。
 
@@ -78,15 +103,15 @@ V25使用同一组音区与质感协调的钢琴、弓弦和竖琴，撤下武�
 
 [8秒原生叠奏试听](audio-v25/native-ensemble.wav) · [16种音色逐件试听](audio-v25/sixteen-chamber-voices.wav) · [逐件试听时间表](audio-v25/sixteen-chamber-voices.json)。两份试听隔离了背景和反馈声，原生叠奏使用生产混音，包含两件钢琴实例。
 
-1. 音序器3轨×8格，每格0.1875秒，一轮1.5秒。白点到武器起始格且充能满足，实际发射与固定声音同时开始；等待轮不新增起音，占用的后续格不重复播放。
+1. 音序器3轨×8格，每格0.1875秒，一轮1.5秒。白点到武器起始格且充能满足，实际发射与当前档演奏同时开始；等待轮不新增起音，占用的后续格不重复播放。
 2. 同种武器的不同装备实例各自发声，尾音允许重叠。例如分别放在第1–2格与第3–4格，就在第1格和第3格分别发声，相隔0.375秒。
 3. 充能轮数保留。例如七彩折光匣每4轮（6秒）发射并发声，流萤每3轮（4.5秒），地平线仍每8轮（12秒）。PCM有12秒自然开场，再循环144秒完整区域，开局不带尚未发生的尾音，回卷保留真实尾音及扫描/充能相位。
 4. 同一次发射增加弹数、方向或弹排，只产生这一次扫描对应的声音，不按每颗弹或每排弹重复发声。
-5. 出膛时差、摆动、加速和弯转属于实际运动，不自动改变音高或轮换强弱样本。当前没有武器自己的四拍强弱周期。
+5. 出膛时差、摆动、加速和弯转属于实际运动。V36力度乐句只选择当前演奏样本，不能缩放伤害或弹数，不恢复旧拍序条；音高始终固定。
 6. 原声的尾音、弹体的飞行和光束的闪光可以有不同长度。实体弹按自身速度与射程运动，不能用音频结束时间直接裁掉弹体。
 7. 静音、独奏、武器音量覆盖实际播放路径。未来重做音色时，同步核对试听、普通战斗、同种重奏和显式作曲入口。
 
-详细时序约定见[固定声音约定](RHYTHM_CONTRACT.md)。
+详细时序约定见[声音与演奏时序约定](RHYTHM_CONTRACT.md)。
 
 V35提供9项独立音量，新增独立危险警报；推荐混音可一键恢复旧值。自动背景让位最多3dB，不改变播放进度。击杀首下即时、尾鼓最短187.5毫秒且最多两下；受伤只保留一次195毫秒护盾。长音样本、发射周期、源单音拆解和试听见[V35说明](V35_SUSTAINED_AUDIO_UPGRADE.md)。
 
@@ -133,6 +158,7 @@ V35提供9项独立音量，新增独立危险警报；推荐混音可一键恢�
 
 | 日期 | 游戏版本 / 基线 | 本表变更 |
 | --- | --- | --- |
+| 2026-11-09 | V36 / 备份`5f7a65d` | 全19件新增76份独立力度／演奏样本；1轮很弱→弱→强→很强、2轮弱→强、3/4/8轮疏重音；音高固定、声音跟随真实发射，不改变伤害与弹数。图鉴新增四档和真实间隔乐句试听；152份原作曲样本保留，144秒回卷相位连续。 |
 | 2026-11-09 | V35 / 备份`699f22f` | 延长7种乐器的真实主体与尾音（56份），大范围武器3–4轮，新增3轮与144秒重复相位。击杀滚奏降密度、受伤单次、背景平滑让位、独立警报和可恢复推荐混音；保持1.5秒扫描与固定齐射声音。 |
 | 2026-11-09 | V34 / 备份`f69d352` | 全19件仅实际发射发声，充能等待轮静音；实体弹首颗立即出膛，其余保持独立错峰。PCM自然开场12秒＋96秒重复，避免虚假开场尾音。初始改为脉冲 A3、霰弹 B4、流萤 C6–C8；样本、弹数、伤害与充能轮数保留。 |
 | 2026-11-09 | V33 / 备份`2056a0a` | 背景状态同步区分暂停与未启动，设置/音量/静音恢复不再重播Filaments；退出战斗停止暂停中的旧背景。武器、音源、初始占格与1.5秒扫描保留。 |
@@ -149,7 +175,7 @@ V35提供9项独立音量，新增独立危险警报；推荐混音可一键恢�
 
 ## 7. 核对来源
 
-- [当前武器/初始配装/回合强化/商店参数快照](data-v35/weapon-selection.json)、[武器生产目录](../scripts/arsenal_catalog.gd)：名单、ID、属性、充能和音色键。
+- [当前武器/初始配装/回合强化/商店参数快照](data-v36/weapon-selection.json)、[武器生产目录](../scripts/arsenal_catalog.gd)：名单、ID、属性、充能和音色键。
 - [发射与命中](../scripts/main.gd)、[发射几何](../scripts/weapon_emission.gd)、[个体运动与视觉类别](../scripts/weapon_visuals.gd)：真实方向、曲线路径、实体弹与光学分工。
 - [当前乐器索引](../audio/weapon_codex.json)、[音乐播放与混音](../scripts/music.gd)：样本、固定音色和实例重奏。
 - [V31扫描与兼容验证](data-v31/SUMMARY.json)：19件声音/充能时序、可见白点、原生播放与96秒缓存回卷；敌机0.5秒推进、显式作曲和音量兼容。
@@ -160,4 +186,4 @@ V35提供9项独立音量，新增独立危险警报；推荐混音可一键恢�
 
 击杀低鼓的机制背景见[反馈音频说明](GROOVE_CORE_KILL_FEEDBACK.md)，其余授权素材见[录音来源](AUDIO_SOURCE_MAP.md)；当前分类音量与28秒护盾以[V26说明](V26_AUDIO_CONTROLS.md)为准。
 
-当前专项核对：[V35验证及样本包络](data-v35/SUMMARY.json) · [参考单音拆解](audio-v35/reference/single-note-durations.json) · [30秒前后对照](audio-v35/combat-before-after-30s.wav)。
+当前专项核对：[V36演奏层/原生时序/图鉴与作曲验证](data-v36/SUMMARY.json) · [同响度音色试听](audio-v36/timbre-equal-level-20s.wav) · [36秒前后对照](audio-v36/phrases-before-after-36s.wav)。V35样本主体与参考单音的历史核对仍见[V35记录](data-v35/SUMMARY.json)。
