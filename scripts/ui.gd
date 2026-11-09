@@ -68,6 +68,7 @@ func refresh() -> void:
 		"hub": hub_screen()
 		"hangar": hangar_screen()
 		"solar": solar_screen()
+		"doctrine": doctrine_screen()
 		"composer","composer_loading": composer_screen()
 		"combat": hud()
 		"reward": reward_screen()
@@ -176,6 +177,7 @@ func update_hud() -> void:
 	if not is_instance_valid(wave_label): return
 	wave_label.text="乐谱试飞" if game.free_music_run else "%s%s %02d/%02d"%["棱镜灾变 · " if game.difficulty>0 else "",PLANETS.planet(game.active_planet).name,game.wave,game.wave_count()]
 	var remaining=maxf(0,float(game.wave_profile().seconds)-(game.music.timeline-game.wave_start))
+	wave_label.tooltip_text="当前流派："+str(game.DOCTRINES.row(game.active_doctrine).name) if not game.free_music_run else "显式乐谱试飞，不限制武器流派"
 	timer_label.text=("%02d:%02d"%[int(game.music.timeline)/60,int(game.music.timeline)%60]) if game.free_music_run else ("BOSS" if game.wave==game.wave_count() else ("清场" if remaining<=0 else str(int(ceil(remaining)))))
 	health_label.text="无敌练习 · 不计战绩" if game.free_music_run else "生命  %.1f / %d"%[game.health,game.loadout.max_health]
 	score_label.text="✦ %d   /   击破 %d"%[game.dust,game.kills]
@@ -201,6 +203,33 @@ func section_title(content: VBoxContainer,text_value: String,subtitle: String=""
 	if not subtitle.is_empty(): content.add_child(label(subtitle,17,Color("8c9db5")))
 func reward_screen() -> void:
 	arsenal_screen("shop")
+
+func doctrine_screen() -> void:
+	var view=get_viewport().get_visible_rect().size
+	var content=panel(minf(1080.,view.x-56.),minf(610.,view.y-56.))
+	section_title(content,"选择本局流派",str(PLANETS.planet(game.doctrine_planet).name)+" · 只出现本流派武器、适用改装和通用生存道具")
+	var cards=HBoxContainer.new();cards.add_theme_constant_override("separation",14);cards.size_flags_vertical=Control.SIZE_EXPAND_FILL;content.add_child(cards)
+	for doctrine in game.DOCTRINES.ROWS:
+		var chosen=game.doctrine_choice==str(doctrine.id)
+		var card=PanelContainer.new();card.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+		card.add_theme_stylebox_override("panel",box(Color("152838") if chosen else Color("101c2b"),Color(doctrine.color) if chosen else Color("324258"),9));cards.add_child(card)
+		var column=VBoxContainer.new();column.add_theme_constant_override("separation",12);card.add_child(column)
+		column.add_child(label(str(doctrine.name),28,Color(doctrine.color)))
+		var description=label(str(doctrine.detail),17,Color("b7c9da"));description.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;description.size_flags_vertical=Control.SIZE_EXPAND_FILL;column.add_child(description)
+		var count=game.DOCTRINES.weapon_ids(DATA.playable_weapons(),str(doctrine.id)).size()
+		column.add_child(label("武器池 %d种 · 初始2件"%count,16,Color("87b8c4")))
+		var starters: PackedStringArray=[]
+		for placement in doctrine.starters:
+			var row=DATA.item(str(placement.kind));var slot=int(placement.slot);var track=["A","B","C"][slot/8]
+			starters.append("%s%d%s  %s"%[track,slot%8+1,("–%s%d"%[track,slot%8+int(row.width)]) if int(row.width)>1 else "",str(row.name)])
+		column.add_child(label("\n".join(starters),16,Color("b4c8db")))
+		var select=button("已选择" if chosen else "选择此流派",game.choose_doctrine.bind(str(doctrine.id)),Color(doctrine.color),44);select.name="DoctrineChoice_"+str(doctrine.id);select.custom_minimum_size.x=0.;column.add_child(select)
+	content.add_child(label("流派在本局内固定。流萤织雨不再作为任何关卡的初始武器。",17,Color("8ba7bd")))
+	var actions=HBoxContainer.new();actions.add_theme_constant_override("separation",16);content.add_child(actions)
+	var back=button("返回",game.cancel_doctrine_selection,Color("9aaec1"),48);back.name="DoctrineBack";actions.add_child(back)
+	var selected=game.DOCTRINES.valid(game.doctrine_choice)
+	var launch=button("确认出击 · "+str(game.DOCTRINES.row(game.doctrine_choice).name) if selected else "先选择一个流派",game.confirm_doctrine,Color("9ce3cf"),48)
+	launch.name="DoctrineLaunch";launch.disabled=not selected;launch.size_flags_horizontal=Control.SIZE_EXPAND_FILL;actions.add_child(launch)
 func editor_screen() -> void:
 	arsenal_screen("editor")
 func pause_screen() -> void:
@@ -285,6 +314,6 @@ func results_screen() -> void:
 		content.add_child(button("下一航线 · "+PLANETS.planet(game.next_planet()).name,game.open_next_planet))
 	else: content.add_child(button("星球航图",game.open_solar_map))
 	var actions=HBoxContainer.new(); actions.add_theme_constant_override("separation",12); content.add_child(actions)
-	var again=button("重试本星球 / R",func():game.start_run(0,game.active_planet),Color("aab9e1"),48); again.size_flags_horizontal=Control.SIZE_EXPAND_FILL; actions.add_child(again)
+	var again=button("重试本星球 / R",func():game.open_doctrine_selection(game.active_planet),Color("aab9e1"),48); again.size_flags_horizontal=Control.SIZE_EXPAND_FILL; actions.add_child(again)
 	var harbor=button("返回霓光港",game.enter_hub,Color("7789a1"),48); harbor.size_flags_horizontal=Control.SIZE_EXPAND_FILL; actions.add_child(harbor)
 	content.add_child(button("选择其他星球",game.open_solar_map,Color("83cafa"),40))

@@ -1,0 +1,84 @@
+{
+  "version": "0.43.0-doctrine-campaigns",
+  "backup": "42187dc343a9cdf6bac51a2d27acb2349b8c55fc",
+  "date": "2026-11-09",
+  "reports": [
+    {
+      "file": "results-v43-doctrine.json",
+      "checks": 3181,
+      "failures": []
+    },
+    {
+      "file": "results-v42-energy.json",
+      "checks": 268,
+      "failures": []
+    },
+    {
+      "file": "results-v36-weapon-expression.json",
+      "checks": 394,
+      "failures": []
+    },
+    {
+      "file": "results-v34-weapon-sync.json",
+      "checks": 101,
+      "failures": []
+    },
+    {
+      "file": "results-v29-music-shop-hud.json",
+      "checks": 351,
+      "failures": []
+    },
+    {
+      "file": "results-composer-score.json",
+      "checks": 112,
+      "failures": []
+    }
+  ],
+  "preservation": "asset-preservation.json",
+  "pools": "doctrine-pools.json",
+  "auditions": "starter-auditions.json",
+  "campaign_observations": [
+    {
+      "planet": "mercury",
+      "doctrine": "ballistic",
+      "seed": 4301,
+      "result": "victory",
+      "total_seconds": 327.750000000016,
+      "boss_hp_left": 0.0
+    },
+    {
+      "planet": "mercury",
+      "doctrine": "laser",
+      "seed": 4302,
+      "result": "victory",
+      "total_seconds": 333.000000000018,
+      "boss_hp_left": 0.0
+    },
+    {
+      "planet": "mercury",
+      "doctrine": "lightning",
+      "seed": 4303,
+      "result": "combat",
+      "total_seconds": 472.250000000049,
+      "boss_hp_left": 56904.313335
+    },
+    {
+      "planet": "neptune",
+      "doctrine": "ballistic",
+      "seed": 4304,
+      "result": "combat",
+      "total_seconds": 472.250000000049,
+      "boss_hp_left": 18348.1132500016
+    }
+  ],
+  "visual_review": "User requested no further picture review;headless UI/functionality/PCM checks only.",
+  "limits": [
+    "Single scripted seed per case is not human win rate or sustained FPS.",
+    "Lightning Mercury and ballistic Neptune did not finish Boss within the180second observation window;balance remains distinct from functional pool correctness.",
+    "Doctrine test can report4ObjectDB instances/2resources retained at process exit;3181assertions pass and no script errors."
+  ],
+  "engine_import": {
+    "exit": 0,
+    "script_errors": []
+  }
+}

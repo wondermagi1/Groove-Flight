@@ -2,6 +2,7 @@ extends SceneTree
 const C=preload("res://scripts/arsenal_catalog.gd")
 const L=preload("res://scripts/arsenal_loadout.gd")
 const EXPRESSION=preload("res://scripts/weapon_expression.gd")
+const DOCTRINES=preload("res://scripts/combat_doctrines.gd")
 func _initialize() -> void:
 	var weapons: Array=[]; var selection: Array=[]
 	var dynamics=JSON.parse_string(FileAccess.get_file_as_string("res://audio/instruments/DYNAMICS_MANIFEST.json"))
@@ -28,5 +29,7 @@ func _initialize() -> void:
 	var boons: Array=[]
 	for boon in L.WAVE_BOONS:
 		var entry: Dictionary=boon.duplicate(true); entry.color=Color(boon.color).to_html(false); boons.append(entry)
-	FileAccess.open(snapshot_dir+"/weapon-selection.json",FileAccess.WRITE).store_string(JSON.stringify({"version":version,"weapons":selection,"wave_boons":boons,"shop_weapons":3,"shop_items":3,"starter_layout":L.LIVE_STARTER_LAYOUT,"sequence_step_seconds":L.SEQUENCE_STEP_SECONDS,"sequence_loop_seconds":L.SEQUENCE_LOOP_SECONDS},"\t"))
+	var doctrines: Array=[]
+	for entry in DOCTRINES.ROWS:doctrines.append({"id":entry.id,"name":entry.name,"starters":entry.starters,"weapons":DOCTRINES.weapon_ids(C.playable_weapons(),str(entry.id))})
+	FileAccess.open(snapshot_dir+"/weapon-selection.json",FileAccess.WRITE).store_string(JSON.stringify({"version":version,"weapons":selection,"wave_boons":boons,"shop_weapons":3,"shop_items":3,"starter_layout":L.LIVE_STARTER_LAYOUT,"starter_scope":"Default ballistic;see doctrines for other prebattle choices","doctrines":doctrines,"sequence_step_seconds":L.SEQUENCE_STEP_SECONDS,"sequence_loop_seconds":L.SEQUENCE_LOOP_SECONDS},"\t"))
 	print("LIVE_ARSENAL_EXPORT ",weapons.size()," weapons / ",weapons.size()*12," samples"); quit()

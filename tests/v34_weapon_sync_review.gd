@@ -50,10 +50,11 @@ func catalogue_checks() -> void:
 	var clip=AudioStreamWAV.new(); clip.format=starter_wav.format; clip.mix_rate=starter_wav.mix_rate; clip.stereo=starter_wav.stereo; clip.data=starter_wav.data.slice(0,6*MUSIC.RATE*4)
 	var audio_dir="res://docs/audio-v"+str(ProjectSettings.get_setting("application/config/version")).split(".")[1]
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(audio_dir)); clip.save_to_wav(audio_dir+"/starter-synchronized.wav")
-	check(starter.equipped_weapons()==3 and starter.find(starter.slots[2]).kind=="pulse" and starter.find(starter.slots[11]).kind=="rail" and starter.slots[12]==starter.slots[11] and starter.find(starter.slots[21]).kind=="firefly_rain" and starter.slots[21]==starter.slots[22] and starter.slots[22]==starter.slots[23],"new three-weapon starter arrangement occupies A3,B4-B5,C6-C8 exactly")
+	check(starter.equipped_weapons()==2 and starter.find(starter.slots[2]).kind=="pulse" and starter.find(starter.slots[11]).kind=="rail" and starter.slots[12]==starter.slots[11] and starter.slots[21]==-1 and starter.slots[22]==-1 and starter.slots[23]==-1,"default ballistic starters occupy A3,B4-B5 and leave former rain span empty")
 	synth.stop(); synth.stream=null; synth.queue_free()
 func native_checks() -> void:
-	fixture(""); game.loadout.configure_live_rules(); game.selected_pilot="mender"; game.music.begin(game.loadout); game.fire_log.clear()
+	# Rain is acquired explicitly in this sync fixture;it is no longer a starter.
+	fixture(""); game.loadout.configure_live_rules(); game.loadout.add_module("firefly_rain",21); game.selected_pilot="mender"; game.music.begin(game.loadout); game.fire_log.clear()
 	var waited=0.
 	while game.music.timeline<6.15 and waited<20.:
 		await create_timer(.025,true).timeout; waited+=.025

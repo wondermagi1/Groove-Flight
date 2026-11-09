@@ -1,0 +1,17 @@
+{
+  "baseline": "42187dc343a9cdf6bac51a2d27acb2349b8c55fc",
+  "old_wavs_verified": 288,
+  "unchanged_weapon_profiles": 24,
+  "unchanged_files": [
+    "scripts/projectile_fields.gd",
+    "scripts/energy_arsenal.gd",
+    "scripts/energy_growth.gd",
+    "scripts/weapon_visuals.gd",
+    "scripts/weapon_render.gd",
+    "scripts/salvo_patterns.gd",
+    "scripts/run_balance.gd",
+    "native/crowd/groove_crowd.windows.x86_64.dll",
+    "native/crowd/crowd.gdextension"
+  ],
+  "failures": []
+}

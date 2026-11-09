@@ -1,0 +1,2293 @@
+{
+	"date": "2026-11-09",
+	"doctrines": [
+		{
+			"id": "ballistic",
+			"items": [
+				{
+					"category": "mod",
+					"id": "westwind",
+					"name": "西风",
+					"rarity": 1
+				},
+				{
+					"category": "mod",
+					"id": "mod_pulse_1",
+					"name": "铜轨稳压芯",
+					"rarity": 0
+				},
+				{
+					"category": "mod",
+					"id": "mod_pulse_2",
+					"name": "三爪供弹器",
+					"rarity": 1
+				},
+				{
+					"category": "mod",
+					"id": "mod_pulse_3",
+					"name": "钨针弹帽",
+					"rarity": 1
+				},
+				{
+					"category": "mod",
+					"id": "mod_pulse_4",
+					"name": "高速进弹轮",
+					"rarity": 0
+				},
+				{
+					"category": "mod",
+					"id": "mod_pulse_5",
+					"name": "碎星弹仓",
+					"rarity": 2
+				},
+				{
+					"category": "mod",
+					"id": "mod_pulse_6",
+					"name": "尾拍补射栓",
+					"rarity": 2
+				},
+				{
+					"category": "mod",
+					"id": "mod_scatter_1",
+					"name": "蜂房压缩膛",
+					"rarity": 0
+				},
+				{
+					"category": "mod",
+					"id": "mod_scatter_2",
+					"name": "扩舱霰弹匣",
+					"rarity": 1
+				},
+				{
+					"category": "mod",
+					"id": "mod_scatter_3",
+					"name": "硬壳鹿弹",
+					"rarity": 1
+				},
+				{
+					"category": "mod",
+					"id": "mod_scatter_4",
+					"name": "长管导流罩",
+					"rarity": 0
+				},
+				{
+					"category": "mod",
+					"id": "mod_scatter_5",
+					"name": "爆裂砂罐",
+					"rarity": 2
+				},
+				{
+					"category": "mod",
+					"id": "mod_scatter_6",
+					"name": "聚束收口器",
+					"rarity": 2
+				},
+				{
+					"category": "mod",
+					"id": "mod_beam_1",
+					"name": "增益晶柱",
+					"rarity": 0
+				},
+				{
+					"category": "mod",
+					"id": "mod_beam_2",
+					"name": "双路分光镜",
+					"rarity": 1
+				},
+				{
+					"category": "mod",
+					"id": "mod_beam_3",
+					"name": "层析穿孔镜",
+					"rarity": 1
+				},
+				{
+					"category": "mod",
+					"id": "mod_beam_4",
+					"name": "远焦调谐环",
+					"rarity": 0
+				},
+				{
+					"category": "mod",
+					"id": "mod_beam_5",
+					"name": "灼光引爆晶",
+					"rarity": 2
+				},
+				{
+					"category": "mod",
+					"id": "mod_beam_6",
+					"name": "相邻折射座",
+					"rarity": 2
+				},
+				{
+					"category": "mod",
+					"id": "mod_missile_1",
+					"name": "热压燃烧室",
+					"rarity": 0
+				},
+				{
+					"category": "mod",
+					"id": "mod_missile_2",
+					"name": "双联导弹架",
+					"rarity": 1
+				},
+				{
+					"category": "mod",
+					"id": "mod_missile_3",
+					"name": "贯体弹锥",
+					"rarity": 1
+				},
+				{
+					"category": "mod",
+					"id": "mod_missile_4",
+					"name": "延程助推筒",
+					"rarity": 0
+				},
+				{
+					"category": "mod",
+					"id": "mod_missile_5",
+					"name": "超压战斗部",
+					"rarity": 2
+				},
+				{
+					"category": "mod",
+					"id": "mod_missile_6",
+					"name": "灵视追踪头",
+					"rarity": 2
+				},
+				{
+					"category": "mod",
+					"id": "mod_nova_1",
+					"name": "日冕聚能盘",
+					"rarity": 0
+				},
+				{
+					"category": "mod",
+					"id": "mod_nova_2",
+					"name": "环轨增殖栅",
+					"rarity": 1
+				},
+				{
+					"category": "mod",
+					"id": "mod_nova_3",
+					"name": "锐缘星片",
+					"rarity": 1
+				},
+				{
+					"category": "mod",
+					"id": "mod_nova_4",
+					"name": "远射旋盘",
+					"rarity": 0
+				},
+				{
+					"category": "mod",
+					"id": "mod_nova_5",
+					"name": "碎环触发器",
+					"rarity": 2
+				},
+				{
+					"category": "mod",
+					"id": "mod_nova_6",
+					"name": "错相轮盘",
+					"rarity": 2
+				},
+				{
+					"category": "mod",
+					"id": "mod_rail_1",
+					"name": "超导蓄流器",
+					"rarity": 0
+				},
+				{
+					"category": "mod",
+					"id": "mod_rail_2",
+					"name": "双轨发射座",
+					"rarity": 1
+				},
+				{
+					"category": "mod",
+					"id": "mod_rail_3",
+					"name": "深穿钨芯",
+					"rarity": 1
+				},
+				{
+					"category": "mod",
+					"id": "mod_rail_4",
+					"name": "光速滑轨",
+					"rarity": 0
+				},
+				{
+					"category": "mod",
+					"id": "mod_rail_5",
+					"name": "冲击溅射壳",
+					"rarity": 2
+				},
+				{
+					"category": "mod",
+					"id": "mod_rail_6",
+					"name": "旁路充能栓",
+					"rarity": 2
+				},
+				{
+					"category": "mod",
+					"id": "mod_orbit_1",
+					"name": "卫星增压器",
+					"rarity": 0
+				},
+				{
+					"category": "mod",
+					"id": "mod_orbit_2",
+					"name": "多星发射架",
+					"rarity": 1
+				},
+				{
+					"category": "mod",
+					"id": "mod_orbit_3",
+					"name": "近轨穿甲罩",
+					"rarity": 1
+				},
+				{
+					"category": "mod",
+					"id": "mod_orbit_4",
+					"name": "远轨稳定器",
+					"rarity": 0
+				},
+				{
+					"category": "mod",
+					"id": "mod_orbit_5",
+					"name": "陨星爆环",
+					"rarity": 2
+				},
+				{
+					"category": "mod",
+					"id": "mod_orbit_6",
+					"name": "伴星维持器",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_downbeat",
+					"name": "重拍标记",
+					"rarity": 0
+				},
+				{
+					"category": "rhythm",
+					"id": "r_backbeat",
+					"name": "反拍鼓垫",
+					"rarity": 0
+				},
+				{
+					"category": "rhythm",
+					"id": "r_upstroke",
+					"name": "扬拍触片",
+					"rarity": 0
+				},
+				{
+					"category": "rhythm",
+					"id": "r_coda",
+					"name": "尾奏复音器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_rush",
+					"name": "抢拍齿轮",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_double_time",
+					"name": "倍速采样器",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_triplet",
+					"name": "三连音拨片",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_rest",
+					"name": "休止充电片",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_meter",
+					"name": "偶拍偏转仪",
+					"rarity": 0
+				},
+				{
+					"category": "rhythm",
+					"id": "r_phase",
+					"name": "奇拍相位仪",
+					"rarity": 0
+				},
+				{
+					"category": "rhythm",
+					"id": "r_streak",
+					"name": "同频连奏",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_chord",
+					"name": "异色和弦",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_unison",
+					"name": "齐奏连杆",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_counterpoint",
+					"name": "对位棱镜",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_mirror",
+					"name": "尾拍镜像",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_canon",
+					"name": "奇拍卡农",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_fugue",
+					"name": "偶拍赋格",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_bass_anchor",
+					"name": "低音配重",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_treble_flight",
+					"name": "高音滑翼",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_silent_bar",
+					"name": "蓄势休止符",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_velocity",
+					"name": "速度推子",
+					"rarity": 0
+				},
+				{
+					"category": "rhythm",
+					"id": "r_compression",
+					"name": "压缩总线",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_density",
+					"name": "密度分频器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_focus",
+					"name": "单轨聚焦器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_cross",
+					"name": "交叉声像仪",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_aperture",
+					"name": "空间混响腔",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_cycle",
+					"name": "循环磁带轮",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_battery",
+					"name": "轨道充电槽",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_resonator",
+					"name": "双态共鸣腔",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_copper_beat",
+					"name": "铜管强音",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_prism_sync",
+					"name": "棱镜切分",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_engine_shuffle",
+					"name": "引擎摇摆",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_support_ostinato",
+					"name": "伴奏持续音",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_pulse_clock",
+					"name": "机炮节拍钟",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_scatter_swing",
+					"name": "霰弹摇摆器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_laser_bar",
+					"name": "激光长音条",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_missile_break",
+					"name": "导弹断奏盒",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_nova_waltz",
+					"name": "星冕圆舞盘",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_rail_rest",
+					"name": "轨炮延音踏板",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_satellite_clock",
+					"name": "卫星恒拍仪",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_soft_refrain",
+					"name": "温柔副歌",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_drum_fuel",
+					"name": "鼓点燃料罐",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_break_shield",
+					"name": "间奏护盾",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_roll_salvo",
+					"name": "滚奏导引轮",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_collect_beat",
+					"name": "拾音漏斗",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_crescendo",
+					"name": "渐强引爆器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_blood_pulse",
+					"name": "生命脉拍",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_recovery_bridge",
+					"name": "修复间奏",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_lucky_draw",
+					"name": "幸运即兴",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_tiny_ticks",
+					"name": "微分节拍器",
+					"rarity": 0
+				},
+				{
+					"category": "rhythm",
+					"id": "r_overclock",
+					"name": "禁限超频器",
+					"rarity": 3
+				},
+				{
+					"category": "rhythm",
+					"id": "r_wallpaper",
+					"name": "满屏织音梭",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_single_beat",
+					"name": "八拍重奏",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_wide_mix",
+					"name": "宽域混音台",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_slow_groove",
+					"name": "慢摇重锤",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_thin_mix",
+					"name": "锐声削波器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_short_hit",
+					"name": "短促强击器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_sustain",
+					"name": "长音维持器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_spark_timing",
+					"name": "切分重音针",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_dynamic_range",
+					"name": "动态扩展器",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_two_step",
+					"name": "双步重拍盘",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_opposites",
+					"name": "交替声像",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_swing_twin",
+					"name": "首尾呼应",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_last_word",
+					"name": "末拍裁定",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_first_word",
+					"name": "开场宣言",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_zigzag",
+					"name": "折线即兴",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_endless_reel",
+					"name": "不息磁带",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_even_charge",
+					"name": "偶数蓄能格",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_odd_charge",
+					"name": "奇数蓄能格",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_whole_echo",
+					"name": "首拍回声厅",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_eighth_echo",
+					"name": "尾拍回声厅",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_minor",
+					"name": "小调换能器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_major",
+					"name": "大调换能器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_grand",
+					"name": "终极合奏台",
+					"rarity": 3
+				},
+				{
+					"category": "defense",
+					"id": "d_ablative",
+					"name": "剥蚀装甲片",
+					"rarity": 0
+				},
+				{
+					"category": "defense",
+					"id": "d_ceramic",
+					"name": "陶瓷防弹衣",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_mesh",
+					"name": "蜂巢缓冲网",
+					"rarity": 0
+				},
+				{
+					"category": "defense",
+					"id": "d_dash_screen",
+					"name": "冲刺遮断幕",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_magnetic_armor",
+					"name": "磁层外壳",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_radiant_armor",
+					"name": "折光护板",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_feather_armor",
+					"name": "轻羽装甲",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_heavy_shell",
+					"name": "重型生命舱",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_reactive_skin",
+					"name": "反应护甲",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_crystal_skin",
+					"name": "结晶修复层",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_medkit",
+					"name": "随舰急救盒",
+					"rarity": 0
+				},
+				{
+					"category": "defense",
+					"id": "d_regenerator",
+					"name": "纳米再生仓",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_salvage_pump",
+					"name": "星屑输血泵",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_hunter_patch",
+					"name": "猎获修补器",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_rest_cradle",
+					"name": "休整摇篮",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_rescue_screen",
+					"name": "救援屏障",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_life_battery",
+					"name": "生命蓄电池",
+					"rarity": 0
+				},
+				{
+					"category": "defense",
+					"id": "d_blood_relay",
+					"name": "血色中继",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_calm_seal",
+					"name": "静心封条",
+					"rarity": 0
+				},
+				{
+					"category": "defense",
+					"id": "d_service_patch",
+					"name": "后勤织补片",
+					"rarity": 0
+				},
+				{
+					"category": "defense",
+					"id": "d_light_boots",
+					"name": "离子轻靴",
+					"rarity": 0
+				},
+				{
+					"category": "defense",
+					"id": "d_gravity_scoop",
+					"name": "引力回收斗",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_lucky_pin",
+					"name": "幸运别针",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_target_visor",
+					"name": "精密护目镜",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_predator_sight",
+					"name": "掠食瞄具",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_recovery_dynamo",
+					"name": "再启动发电机",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_escape_rack",
+					"name": "脱离反击架",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_safety_brake",
+					"name": "安全制动伞",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_rupture_vent",
+					"name": "裂解排压阀",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_life_weave",
+					"name": "生命编织网",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_guardian_bulkhead",
+					"name": "守护者舱壁",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_windrunner",
+					"name": "逐风翼膜",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_safe_hands",
+					"name": "稳运手套",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_wind_screen",
+					"name": "风障回收翼",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_medical_converter",
+					"name": "医疗换能器",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_aegis_plate",
+					"name": "宙盾护板",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_rampart",
+					"name": "磐城舱甲",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_coral_repair",
+					"name": "珊瑚修复丛",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_lifeline",
+					"name": "生命线缆",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_emergency_vault",
+					"name": "应急隔离舱",
+					"rarity": 2
+				},
+				{
+					"category": "core",
+					"id": "c_ballistic",
+					"name": "弹道总控核",
+					"rarity": 2
+				},
+				{
+					"category": "core",
+					"id": "c_power",
+					"name": "日心动力核",
+					"rarity": 2
+				},
+				{
+					"category": "core",
+					"id": "c_support",
+					"name": "方舟支援核",
+					"rarity": 2
+				},
+				{
+					"category": "core",
+					"id": "c_clockwork",
+					"name": "时序主控核",
+					"rarity": 3
+				},
+				{
+					"category": "core",
+					"id": "c_chorus",
+					"name": "万声共鸣核",
+					"rarity": 3
+				},
+				{
+					"category": "core",
+					"id": "c_glass_sun",
+					"name": "玻璃太阳核",
+					"rarity": 3
+				},
+				{
+					"category": "core",
+					"id": "c_bastion",
+					"name": "永昼堡垒核",
+					"rarity": 3
+				},
+				{
+					"category": "core",
+					"id": "c_swarm",
+					"name": "万翼蜂群核",
+					"rarity": 3
+				},
+				{
+					"category": "core",
+					"id": "c_solar_orbit",
+					"name": "日冕双轨核",
+					"rarity": 3
+				},
+				{
+					"category": "core",
+					"id": "c_overload",
+					"name": "雷暴跃迁核",
+					"rarity": 3
+				},
+				{
+					"category": "core",
+					"id": "c_life",
+					"name": "生命回响核",
+					"rarity": 3
+				},
+				{
+					"category": "core",
+					"id": "c_prism",
+					"name": "双频棱镜核",
+					"rarity": 3
+				},
+				{
+					"category": "core",
+					"id": "c_void_coda",
+					"name": "虚空首尾核",
+					"rarity": 3
+				}
+			],
+			"name": "实弹流",
+			"starters": [
+				{
+					"kind": "pulse",
+					"slot": 2
+				},
+				{
+					"kind": "rail",
+					"slot": 11
+				}
+			],
+			"weapons": [
+				{
+					"category": "weapon",
+					"id": "pulse",
+					"name": "脉冲机炮",
+					"rarity": 0
+				},
+				{
+					"category": "weapon",
+					"id": "scatter",
+					"name": "星砂霰弹",
+					"rarity": 0
+				},
+				{
+					"category": "weapon",
+					"id": "missile",
+					"name": "彗星导弹",
+					"rarity": 1
+				},
+				{
+					"category": "weapon",
+					"id": "nova",
+					"name": "新星环炮",
+					"rarity": 1
+				},
+				{
+					"category": "weapon",
+					"id": "rail",
+					"name": "苍穹轨炮",
+					"rarity": 1
+				},
+				{
+					"category": "weapon",
+					"id": "pulse_needle",
+					"name": "星针狙击器",
+					"rarity": 1
+				},
+				{
+					"category": "weapon",
+					"id": "scatter_prism",
+					"name": "七彩折光匣",
+					"rarity": 2
+				},
+				{
+					"category": "weapon",
+					"id": "beam_split",
+					"name": "双生棱镜",
+					"rarity": 2
+				},
+				{
+					"category": "weapon",
+					"id": "rail_horizon",
+					"name": "地平线终奏",
+					"rarity": 3
+				},
+				{
+					"category": "weapon",
+					"id": "recorded_heavy",
+					"name": "终压攻城铳",
+					"rarity": 3
+				},
+				{
+					"category": "weapon",
+					"id": "gilded_helix",
+					"name": "鎏金螺旋阵",
+					"rarity": 2
+				},
+				{
+					"category": "weapon",
+					"id": "weave_cross",
+					"name": "虹织十字炮",
+					"rarity": 3
+				},
+				{
+					"category": "weapon",
+					"id": "crown_orbit",
+					"name": "星冕回旋阵",
+					"rarity": 2
+				},
+				{
+					"category": "weapon",
+					"id": "stern_fan",
+					"name": "尾羽回响",
+					"rarity": 1
+				},
+				{
+					"category": "weapon",
+					"id": "dawn_fan",
+					"name": "晨羽前奏",
+					"rarity": 1
+				},
+				{
+					"category": "weapon",
+					"id": "tidal_weave",
+					"name": "潮汐弦歌",
+					"rarity": 2
+				},
+				{
+					"category": "weapon",
+					"id": "firefly_rain",
+					"name": "流萤织雨",
+					"rarity": 2
+				},
+				{
+					"category": "weapon",
+					"id": "kaleidoscope",
+					"name": "万花筒",
+					"rarity": 2
+				}
+			]
+		},
+		{
+			"id": "laser",
+			"items": [
+				{
+					"category": "mod",
+					"id": "mod_beam_1",
+					"name": "增益晶柱",
+					"rarity": 0
+				},
+				{
+					"category": "mod",
+					"id": "mod_beam_2",
+					"name": "双路分光镜",
+					"rarity": 1
+				},
+				{
+					"category": "mod",
+					"id": "mod_beam_3",
+					"name": "层析穿孔镜",
+					"rarity": 1
+				},
+				{
+					"category": "mod",
+					"id": "mod_beam_4",
+					"name": "远焦调谐环",
+					"rarity": 0
+				},
+				{
+					"category": "mod",
+					"id": "mod_beam_6",
+					"name": "相邻折射座",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_downbeat",
+					"name": "重拍标记",
+					"rarity": 0
+				},
+				{
+					"category": "rhythm",
+					"id": "r_backbeat",
+					"name": "反拍鼓垫",
+					"rarity": 0
+				},
+				{
+					"category": "rhythm",
+					"id": "r_upstroke",
+					"name": "扬拍触片",
+					"rarity": 0
+				},
+				{
+					"category": "rhythm",
+					"id": "r_coda",
+					"name": "尾奏复音器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_rush",
+					"name": "抢拍齿轮",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_double_time",
+					"name": "倍速采样器",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_triplet",
+					"name": "三连音拨片",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_rest",
+					"name": "休止充电片",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_meter",
+					"name": "偶拍偏转仪",
+					"rarity": 0
+				},
+				{
+					"category": "rhythm",
+					"id": "r_phase",
+					"name": "奇拍相位仪",
+					"rarity": 0
+				},
+				{
+					"category": "rhythm",
+					"id": "r_streak",
+					"name": "同频连奏",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_unison",
+					"name": "齐奏连杆",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_mirror",
+					"name": "尾拍镜像",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_canon",
+					"name": "奇拍卡农",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_fugue",
+					"name": "偶拍赋格",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_bass_anchor",
+					"name": "低音配重",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_silent_bar",
+					"name": "蓄势休止符",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_compression",
+					"name": "压缩总线",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_density",
+					"name": "密度分频器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_focus",
+					"name": "单轨聚焦器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_battery",
+					"name": "轨道充电槽",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_prism_sync",
+					"name": "棱镜切分",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_laser_bar",
+					"name": "激光长音条",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_soft_refrain",
+					"name": "温柔副歌",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_drum_fuel",
+					"name": "鼓点燃料罐",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_break_shield",
+					"name": "间奏护盾",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_collect_beat",
+					"name": "拾音漏斗",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_crescendo",
+					"name": "渐强引爆器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_blood_pulse",
+					"name": "生命脉拍",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_recovery_bridge",
+					"name": "修复间奏",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_overclock",
+					"name": "禁限超频器",
+					"rarity": 3
+				},
+				{
+					"category": "rhythm",
+					"id": "r_wallpaper",
+					"name": "满屏织音梭",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_single_beat",
+					"name": "八拍重奏",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_wide_mix",
+					"name": "宽域混音台",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_thin_mix",
+					"name": "锐声削波器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_short_hit",
+					"name": "短促强击器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_sustain",
+					"name": "长音维持器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_spark_timing",
+					"name": "切分重音针",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_dynamic_range",
+					"name": "动态扩展器",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_opposites",
+					"name": "交替声像",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_swing_twin",
+					"name": "首尾呼应",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_last_word",
+					"name": "末拍裁定",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_first_word",
+					"name": "开场宣言",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_even_charge",
+					"name": "偶数蓄能格",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_odd_charge",
+					"name": "奇数蓄能格",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_whole_echo",
+					"name": "首拍回声厅",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_eighth_echo",
+					"name": "尾拍回声厅",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_ablative",
+					"name": "剥蚀装甲片",
+					"rarity": 0
+				},
+				{
+					"category": "defense",
+					"id": "d_ceramic",
+					"name": "陶瓷防弹衣",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_mesh",
+					"name": "蜂巢缓冲网",
+					"rarity": 0
+				},
+				{
+					"category": "defense",
+					"id": "d_dash_screen",
+					"name": "冲刺遮断幕",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_magnetic_armor",
+					"name": "磁层外壳",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_radiant_armor",
+					"name": "折光护板",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_feather_armor",
+					"name": "轻羽装甲",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_heavy_shell",
+					"name": "重型生命舱",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_reactive_skin",
+					"name": "反应护甲",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_crystal_skin",
+					"name": "结晶修复层",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_medkit",
+					"name": "随舰急救盒",
+					"rarity": 0
+				},
+				{
+					"category": "defense",
+					"id": "d_regenerator",
+					"name": "纳米再生仓",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_salvage_pump",
+					"name": "星屑输血泵",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_hunter_patch",
+					"name": "猎获修补器",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_rest_cradle",
+					"name": "休整摇篮",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_rescue_screen",
+					"name": "救援屏障",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_life_battery",
+					"name": "生命蓄电池",
+					"rarity": 0
+				},
+				{
+					"category": "defense",
+					"id": "d_blood_relay",
+					"name": "血色中继",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_calm_seal",
+					"name": "静心封条",
+					"rarity": 0
+				},
+				{
+					"category": "defense",
+					"id": "d_gravity_scoop",
+					"name": "引力回收斗",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_lucky_pin",
+					"name": "幸运别针",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_target_visor",
+					"name": "精密护目镜",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_predator_sight",
+					"name": "掠食瞄具",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_recovery_dynamo",
+					"name": "再启动发电机",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_safety_brake",
+					"name": "安全制动伞",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_rupture_vent",
+					"name": "裂解排压阀",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_life_weave",
+					"name": "生命编织网",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_guardian_bulkhead",
+					"name": "守护者舱壁",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_windrunner",
+					"name": "逐风翼膜",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_safe_hands",
+					"name": "稳运手套",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_wind_screen",
+					"name": "风障回收翼",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_medical_converter",
+					"name": "医疗换能器",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_rampart",
+					"name": "磐城舱甲",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_coral_repair",
+					"name": "珊瑚修复丛",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_lifeline",
+					"name": "生命线缆",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_emergency_vault",
+					"name": "应急隔离舱",
+					"rarity": 2
+				},
+				{
+					"category": "core",
+					"id": "c_clockwork",
+					"name": "时序主控核",
+					"rarity": 3
+				},
+				{
+					"category": "core",
+					"id": "c_glass_sun",
+					"name": "玻璃太阳核",
+					"rarity": 3
+				},
+				{
+					"category": "core",
+					"id": "c_bastion",
+					"name": "永昼堡垒核",
+					"rarity": 3
+				},
+				{
+					"category": "core",
+					"id": "c_life",
+					"name": "生命回响核",
+					"rarity": 3
+				},
+				{
+					"category": "core",
+					"id": "c_void_coda",
+					"name": "虚空首尾核",
+					"rarity": 3
+				}
+			],
+			"name": "激光流",
+			"starters": [
+				{
+					"kind": "beam",
+					"slot": 2
+				},
+				{
+					"kind": "laser_fan",
+					"slot": 11
+				}
+			],
+			"weapons": [
+				{
+					"category": "weapon",
+					"id": "beam",
+					"name": "棱镜光束",
+					"rarity": 1
+				},
+				{
+					"category": "weapon",
+					"id": "laser_fan",
+					"name": "曦光束阵",
+					"rarity": 1
+				},
+				{
+					"category": "weapon",
+					"id": "laser_crown",
+					"name": "穹光轮舞",
+					"rarity": 2
+				}
+			]
+		},
+		{
+			"id": "lightning",
+			"items": [
+				{
+					"category": "mod",
+					"id": "mod_chain_1",
+					"name": "雷云电容",
+					"rarity": 0
+				},
+				{
+					"category": "mod",
+					"id": "mod_chain_2",
+					"name": "双极放电叉",
+					"rarity": 1
+				},
+				{
+					"category": "mod",
+					"id": "mod_chain_4",
+					"name": "长弧中继杆",
+					"rarity": 0
+				},
+				{
+					"category": "mod",
+					"id": "mod_chain_6",
+					"name": "分支电桥",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_downbeat",
+					"name": "重拍标记",
+					"rarity": 0
+				},
+				{
+					"category": "rhythm",
+					"id": "r_backbeat",
+					"name": "反拍鼓垫",
+					"rarity": 0
+				},
+				{
+					"category": "rhythm",
+					"id": "r_upstroke",
+					"name": "扬拍触片",
+					"rarity": 0
+				},
+				{
+					"category": "rhythm",
+					"id": "r_coda",
+					"name": "尾奏复音器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_rush",
+					"name": "抢拍齿轮",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_double_time",
+					"name": "倍速采样器",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_triplet",
+					"name": "三连音拨片",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_rest",
+					"name": "休止充电片",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_meter",
+					"name": "偶拍偏转仪",
+					"rarity": 0
+				},
+				{
+					"category": "rhythm",
+					"id": "r_streak",
+					"name": "同频连奏",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_unison",
+					"name": "齐奏连杆",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_mirror",
+					"name": "尾拍镜像",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_canon",
+					"name": "奇拍卡农",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_fugue",
+					"name": "偶拍赋格",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_bass_anchor",
+					"name": "低音配重",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_silent_bar",
+					"name": "蓄势休止符",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_density",
+					"name": "密度分频器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_battery",
+					"name": "轨道充电槽",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_prism_sync",
+					"name": "棱镜切分",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_chain_sync",
+					"name": "雷弧同步线",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_soft_refrain",
+					"name": "温柔副歌",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_drum_fuel",
+					"name": "鼓点燃料罐",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_break_shield",
+					"name": "间奏护盾",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_collect_beat",
+					"name": "拾音漏斗",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_crescendo",
+					"name": "渐强引爆器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_blood_pulse",
+					"name": "生命脉拍",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_recovery_bridge",
+					"name": "修复间奏",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_overclock",
+					"name": "禁限超频器",
+					"rarity": 3
+				},
+				{
+					"category": "rhythm",
+					"id": "r_single_beat",
+					"name": "八拍重奏",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_short_hit",
+					"name": "短促强击器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_sustain",
+					"name": "长音维持器",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_spark_timing",
+					"name": "切分重音针",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_dynamic_range",
+					"name": "动态扩展器",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_opposites",
+					"name": "交替声像",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_swing_twin",
+					"name": "首尾呼应",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_last_word",
+					"name": "末拍裁定",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_even_charge",
+					"name": "偶数蓄能格",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_odd_charge",
+					"name": "奇数蓄能格",
+					"rarity": 1
+				},
+				{
+					"category": "rhythm",
+					"id": "r_whole_echo",
+					"name": "首拍回声厅",
+					"rarity": 2
+				},
+				{
+					"category": "rhythm",
+					"id": "r_eighth_echo",
+					"name": "尾拍回声厅",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_ablative",
+					"name": "剥蚀装甲片",
+					"rarity": 0
+				},
+				{
+					"category": "defense",
+					"id": "d_ceramic",
+					"name": "陶瓷防弹衣",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_mesh",
+					"name": "蜂巢缓冲网",
+					"rarity": 0
+				},
+				{
+					"category": "defense",
+					"id": "d_dash_screen",
+					"name": "冲刺遮断幕",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_magnetic_armor",
+					"name": "磁层外壳",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_radiant_armor",
+					"name": "折光护板",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_feather_armor",
+					"name": "轻羽装甲",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_heavy_shell",
+					"name": "重型生命舱",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_reactive_skin",
+					"name": "反应护甲",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_crystal_skin",
+					"name": "结晶修复层",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_medkit",
+					"name": "随舰急救盒",
+					"rarity": 0
+				},
+				{
+					"category": "defense",
+					"id": "d_regenerator",
+					"name": "纳米再生仓",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_salvage_pump",
+					"name": "星屑输血泵",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_hunter_patch",
+					"name": "猎获修补器",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_rest_cradle",
+					"name": "休整摇篮",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_rescue_screen",
+					"name": "救援屏障",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_life_battery",
+					"name": "生命蓄电池",
+					"rarity": 0
+				},
+				{
+					"category": "defense",
+					"id": "d_blood_relay",
+					"name": "血色中继",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_calm_seal",
+					"name": "静心封条",
+					"rarity": 0
+				},
+				{
+					"category": "defense",
+					"id": "d_gravity_scoop",
+					"name": "引力回收斗",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_lucky_pin",
+					"name": "幸运别针",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_target_visor",
+					"name": "精密护目镜",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_predator_sight",
+					"name": "掠食瞄具",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_recovery_dynamo",
+					"name": "再启动发电机",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_safety_brake",
+					"name": "安全制动伞",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_rupture_vent",
+					"name": "裂解排压阀",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_life_weave",
+					"name": "生命编织网",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_guardian_bulkhead",
+					"name": "守护者舱壁",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_windrunner",
+					"name": "逐风翼膜",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_safe_hands",
+					"name": "稳运手套",
+					"rarity": 1
+				},
+				{
+					"category": "defense",
+					"id": "d_wind_screen",
+					"name": "风障回收翼",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_medical_converter",
+					"name": "医疗换能器",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_rampart",
+					"name": "磐城舱甲",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_coral_repair",
+					"name": "珊瑚修复丛",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_lifeline",
+					"name": "生命线缆",
+					"rarity": 2
+				},
+				{
+					"category": "defense",
+					"id": "d_emergency_vault",
+					"name": "应急隔离舱",
+					"rarity": 2
+				},
+				{
+					"category": "core",
+					"id": "c_energy",
+					"name": "量子反应核",
+					"rarity": 2
+				},
+				{
+					"category": "core",
+					"id": "c_clockwork",
+					"name": "时序主控核",
+					"rarity": 3
+				},
+				{
+					"category": "core",
+					"id": "c_glass_sun",
+					"name": "玻璃太阳核",
+					"rarity": 3
+				},
+				{
+					"category": "core",
+					"id": "c_bastion",
+					"name": "永昼堡垒核",
+					"rarity": 3
+				},
+				{
+					"category": "core",
+					"id": "c_life",
+					"name": "生命回响核",
+					"rarity": 3
+				}
+			],
+			"name": "闪电链流",
+			"starters": [
+				{
+					"kind": "chain",
+					"slot": 2
+				},
+				{
+					"kind": "arc_bough",
+					"slot": 11
+				}
+			],
+			"weapons": [
+				{
+					"category": "weapon",
+					"id": "chain",
+					"name": "跃迁电弧",
+					"rarity": 1
+				},
+				{
+					"category": "weapon",
+					"id": "arc_bough",
+					"name": "鸣雷枝杈",
+					"rarity": 1
+				},
+				{
+					"category": "weapon",
+					"id": "chain_loop",
+					"name": "风暴回路",
+					"rarity": 2
+				}
+			]
+		}
+	],
+	"scope": "Campaign pools by actual weapon visual class and supported item rules;shared survival remains available.2starters per doctrine,no starting firefly_rain.",
+	"version": "0.43.0-doctrine-campaigns"
+}

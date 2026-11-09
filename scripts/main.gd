@@ -9,6 +9,7 @@ const MACHINE_ART=preload("res://scripts/planet_machine_art.gd")
 const BACKDROP_ASSETS=preload("res://scripts/planet_backdrop_assets.gd")
 const PLAN=preload("res://scripts/wave_plan.gd")
 const BALANCE=preload("res://scripts/run_balance.gd")
+const DOCTRINES=preload("res://scripts/combat_doctrines.gd")
 const PLANETS=preload("res://scripts/planet_catalog.gd")
 const SCORE=preload("res://scripts/composer_score.gd")
 const CLOCK=preload("res://scripts/music_clock.gd")
@@ -40,6 +41,11 @@ const MAX_ENEMY_BULLETS=700
 const GRID=96.
 const MAX_PROJECTILE_RADIUS=13.
 var wave_rows: Array[Dictionary]=PLANETS.route("mercury")
+var selected_doctrine: String="ballistic"
+var active_doctrine: String="ballistic"
+var doctrine_choice: String=""
+var doctrine_planet: String="mercury"
+var doctrine_return_state: String="solar"
 var selected_planet: String="mercury"
 var active_planet: String="mercury"
 var planet_rules: Dictionary=PLANETS.combat("mercury")
@@ -150,7 +156,7 @@ var shop_reroll_cost: int=8
 var editor_return: String="combat"
 var notice: String=""
 var notice_until: float=0
-var settings={"backing":0.,"weapons":.255,"audio_schema":3,"kill":.55,"pickup":.55,"shield":.55,"combat":.55,"ui":.55,"alerts":.55,"music_duck":true,"audio_mix_backup":{},"groove":0.,"background_motion":.55,"text_scale":1.,"low_dynamic":false,"starting_path":0,"difficulty":0,"aim_mode":0,"input_bindings":{},"tutorial_done":false,"tutorial_skipped":false,"master":.75,"music":.75,"sfx":.55,"reduced_fx":false,"fullscreen":true,"background_quality":2,"background_exposure":.9,"panel_attributes":true,"panel_status":true,"panel_buffs":true,"panel_inventory":true,"panel_sequencer":true,"combat_panel_attributes":false,"combat_panel_status":false,"combat_panel_buffs":false,"combat_panel_inventory":false,"combat_panel_sequencer":true}
+var settings={"backing":0.,"weapons":.255,"audio_schema":3,"kill":.55,"pickup":.55,"shield":.55,"combat":.55,"ui":.55,"alerts":.55,"music_duck":true,"audio_mix_backup":{},"groove":0.,"background_motion":.55,"text_scale":1.,"low_dynamic":false,"starting_path":0,"combat_doctrine":"ballistic","difficulty":0,"aim_mode":0,"input_bindings":{},"tutorial_done":false,"tutorial_skipped":false,"master":.75,"music":.75,"sfx":.55,"reduced_fx":false,"fullscreen":true,"background_quality":2,"background_exposure":.9,"panel_attributes":true,"panel_status":true,"panel_buffs":true,"panel_inventory":true,"panel_sequencer":true,"combat_panel_attributes":false,"combat_panel_status":false,"combat_panel_buffs":false,"combat_panel_inventory":false,"combat_panel_sequencer":true}
 var voices: Array[AudioStreamPlayer]=[]
 var voice_index: int=0
 var sound_times: Dictionary={}
@@ -186,6 +192,7 @@ func _ready() -> void:
 	test_mode=is_preview or "--grooveflight-test" in test_args or "--beatdrift-test" in test_args
 	if not is_preview: bind_input()
 	loadout.configure_live_rules(); loadout.reset(); load_settings(); apply_input_bindings()
+	selected_doctrine=str(settings.combat_doctrine) if DOCTRINES.valid(str(settings.combat_doctrine)) else "ballistic"
 	background_layer=CanvasLayer.new(); background_layer.layer=-20; add_child(background_layer)
 	var back=ColorRect.new(); back.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	background=ShaderMaterial.new(); background.shader=load("res://shaders/planet_uhd.gdshader"); back.material=background
@@ -435,15 +442,14 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	run_seed=rng.seed
 	weapon_beat_state.clear()
 	mixer.reset_feedback()
+	active_doctrine="" if use_composition else (selected_doctrine if DOCTRINES.valid(selected_doctrine) else "ballistic")
+	loadout.set_doctrine(active_doctrine)
 	loadout.reset(); music_focus_until=-1.; music_duck_db=0.; enemies.clear(); by_id.clear(); spatial.clear(); bullets.clear(); enemy_bullets.clear(); pickups.clear(); warnings.clear()
 	var craft=FLEET.ship(selected_ship); selected_ship=str(craft.id)
 	selected_pilot=str(FLEET.pilot(selected_pilot).id)
 	var planet_number=int(PLANETS.planet(active_planet).index)
 	loadout.recorded_starter_quality=0 if planet_number<3 else (1 if planet_number<6 else 2)
 	loadout.set_fleet(craft,FLEET.pilot(selected_pilot)); loadout.set_starters(craft.start_modules)
-	var path_index=clampi(int(settings.starting_path),0,3)
-	if path_index>0:
-		loadout.set_starters([["pulse","scatter","r_cross","c_ballistic"],["beam","chain","r_arc_bridge","c_energy"],["missile","mine","r_slow_groove","c_power"]][path_index-1])
 	refresh_loadout_stats()
 	move_speed=float(craft.speed); dash_recharge=float(craft.dash_cooldown)
 	fx.particles.clear(); fx.marks.clear(); fire_log.clear(); weapon_damage.clear()
@@ -674,7 +680,25 @@ func close_solar_map() -> void:
 	else: enter_hub()
 func launch_selected_planet() -> bool:
 	if state!="solar" or not is_planet_unlocked(selected_planet): return false
-	start_run(0,selected_planet); return true
+	return open_doctrine_selection(selected_planet)
+
+func open_doctrine_selection(planet_id: String) -> bool:
+	if state not in ["solar","title","hub","hangar","victory","defeat"] or planet_id not in PLANETS.IDS or not is_planet_unlocked(planet_id): return false
+	doctrine_return_state=state; doctrine_planet=planet_id; doctrine_choice=""
+	state="doctrine"; music.hold(true); ui.refresh(); return true
+
+func choose_doctrine(id: String) -> bool:
+	if state!="doctrine" or not DOCTRINES.valid(id): return false
+	doctrine_choice=id; ui.refresh(); return true
+
+func confirm_doctrine() -> bool:
+	if state!="doctrine" or not DOCTRINES.valid(doctrine_choice): return false
+	selected_doctrine=doctrine_choice; settings.combat_doctrine=selected_doctrine; save_settings()
+	start_run(0,doctrine_planet); return true
+
+func cancel_doctrine_selection() -> void:
+	if state!="doctrine": return
+	state=doctrine_return_state; doctrine_choice=""; ui.refresh()
 func next_planet() -> String:
 	var index=int(PLANETS.planet(active_planet).index)
 	return str(PLANETS.rows()[mini(index+1,PLANETS.rows().size()-1)].id)
@@ -895,11 +919,12 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("pause"):
 		if state in ["composer","composer_loading"]: close_composer()
 		elif state=="solar": close_solar_map()
+		elif state=="doctrine": cancel_doctrine_selection()
 		elif state=="editor": close_editor()
 		elif state=="settings": close_settings()
 		elif state=="hangar": close_hangar()
 		else: pause_game()
-	elif event is InputEventKey and event.pressed and event.physical_keycode==KEY_R and state in ["defeat","victory"]: start_run(0,active_planet)
+	elif event is InputEventKey and event.pressed and event.physical_keycode==KEY_R and state in ["defeat","victory"]: open_doctrine_selection(active_planet)
 
 func _physics_process(delta: float) -> void:
 	if is_preview or state!="combat": return
@@ -1007,7 +1032,7 @@ func _sync_screen_music() -> void:
 	if state=="settings": candidate=previous_state
 	if is_instance_valid(mixer): mixer.set_combat_state("settings" if state=="settings" else candidate)
 	if is_instance_valid(menu_music) and menu_music.stream!=null:
-		var wants=candidate in ["title","hub","hangar","solar"] and not is_preview and not free_music_run
+		var wants=candidate in ["title","hub","hangar","solar","doctrine"] and not is_preview and not free_music_run
 		if wants and not menu_music.has_stream_playback(): menu_music.play()
 		elif not wants and menu_music.has_stream_playback(): menu_music.stop()
 	for recorded_player in recorded_weapon_players.values():
@@ -1647,7 +1672,7 @@ func hurt_player(amount: float) -> void:
 	fx.burst(player,Color("ff779d"),16,220)
 	if health<=0: sound("hit",-6); finish_run(false)
 func featured_shop_item() -> String:
-	return "westwind" if wave in [3,4] and not loadout.modules.any(func(module): return str(module.kind)=="westwind") else ""
+	return "westwind" if loadout.doctrine_id in ["","ballistic"] and wave in [3,4] and not loadout.modules.any(func(module): return str(module.kind)=="westwind") else ""
 
 func check_wave() -> void:
 	if free_music_run or is_preview: return

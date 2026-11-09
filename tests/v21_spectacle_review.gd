@@ -33,7 +33,7 @@ func fixture(kind: String="pulse") -> void:
 	game.health=10.; game.invulnerable=0.; game.dash_left=0.; game.shield_points=0.
 	game.player_guard_until=-1.; game.player_guard_started=-10.; game.shield_renderer.flash_at=-10.
 	game.selected_pilot="mender"; game.overload_until=-1.; game.pilot_amp_until=-1.
-	game.loadout.audio_guard_enabled=false; game.loadout.reset()
+	game.loadout.audio_guard_enabled=false; game.loadout.set_doctrine(""); game.loadout.reset()
 	game.loadout.set_fleet({"health":10,"damage_scale":1.},{"id":"mender"})
 	game.loadout.set_starters([kind] if not kind.is_empty() else [])
 	game.refresh_loadout_stats(); game.spawned=0; game.total_spawned=0; game.elite_spawned=false

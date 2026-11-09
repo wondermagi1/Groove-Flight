@@ -2,6 +2,7 @@ extends RefCounted
 ## Pure arsenal/sequence model. Currency, health changes and audio playback belong
 ## to the game. Occupied cells contain UIDs; only each item's head emits events.
 const ENERGY_GROWTH=preload("res://scripts/energy_growth.gd")
+const DOCTRINES=preload("res://scripts/combat_doctrines.gd")
 const C=preload("res://scripts/arsenal_catalog.gd")
 const CLOCK=preload("res://scripts/music_clock.gd")
 const PATHS=preload("res://scripts/build_paths.gd")
@@ -11,8 +12,9 @@ const STEPS=8
 const SEQUENCE_LOOP_SECONDS=1.5
 const SEQUENCE_STEP_SECONDS=SEQUENCE_LOOP_SECONDS/STEPS
 const SEQUENCE_BPM=60./(SEQUENCE_STEP_SECONDS*2.)
-const STARTER_WEAPON_LIMIT=3
-const LIVE_STARTER_LAYOUT=[{"kind":"pulse","slot":2},{"kind":"rail","slot":11},{"kind":"firefly_rain","slot":21}]
+const STARTER_WEAPON_LIMIT=2
+const LIVE_STARTER_LAYOUT=[{"kind":"pulse","slot":2},{"kind":"rail","slot":11}]
+var doctrine_id: String=""
 const INVENTORY_LIMIT=64
 const STAT_KEYS=["ballistic","energy","power","support","extra_projectiles","bullet_multiplier","crit_chance","crit_damage","max_health","regen","armor","move_percent","magnet","luck"]
 const CADENCE_PROFILES={
@@ -73,6 +75,12 @@ func _init() -> void:
 	for row in C.rows(): _catalog[str(row.id)]=row
 	slots.resize(TRACKS*STEPS); slots.fill(-1)
 
+func set_doctrine(id: String) -> bool:
+	if not id.is_empty() and not DOCTRINES.valid(id): return false
+	doctrine_id=id; return true
+func item_allowed(id: String) -> bool:
+	return DOCTRINES.item_allowed(_row(id),doctrine_id)
+
 func _row(id: String) -> Dictionary: return _catalog.get(id,{})
 func reset() -> void:
 	phrase_offsets.clear()
@@ -103,7 +111,7 @@ func set_starters(kinds: Array) -> void:
 	modules.clear(); slots.fill(-1); next_uid=1
 	if audio_guard_enabled:
 		# Reserve the universal weapon spans before placing ship/path utilities.
-		for placement in LIVE_STARTER_LAYOUT:
+		for placement in (LIVE_STARTER_LAYOUT if doctrine_id.is_empty() else DOCTRINES.starters(doctrine_id)):
 			add_module(str(placement.kind),int(placement.slot))
 		for kind in kinds:
 			var row=C.item(str(kind))
@@ -131,7 +139,7 @@ func item_width(uid: int) -> int:
 	return int(_row(str(module.get("kind",""))).get("width",1))
 
 func add_module(kind: String,at: int=-1) -> int:
-	if modules.size()>=INVENTORY_LIMIT or _row(kind).is_empty(): return -1
+	if modules.size()>=INVENTORY_LIMIT or _row(kind).is_empty() or not item_allowed(kind): return -1
 	if bool(_row(kind).get("unique",false)) and modules.any(func(module): return str(module.kind)==kind): return -1
 	if audio_guard_enabled and not C.is_item_available(kind): return -1
 	if at>=slots.size(): return -1
@@ -461,8 +469,17 @@ func salvage(uid: int) -> int:
 func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[],weapon_count: int=3,item_count: int=3,price_scale: float=1.,featured_item: String="") -> Array[Dictionary]:
 	var pool: Array=[]; var result: Array[Dictionary]=[]
 	var max_rarity=clampi(1+floori(float(maxi(wave,1)-1)/3.),1,3)
+	var weapon_rarity=max_rarity
+	if not doctrine_id.is_empty():
+		# Small dedicated pools still expose three distinct weapons;only weapon
+		# rarity unlock advances when needed,not the nonweapon economy.
+		while weapon_rarity<3:
+			var eligible=C.playable_weapons().filter(func(row):return item_allowed(str(row.id)) and not excluded.has(str(row.id)) and int(row.rarity)<=weapon_rarity)
+			if eligible.size()>=weapon_count: break
+			weapon_rarity+=1
 	for row in C.rows():
-		if int(row.rarity)<=max_rarity and not excluded.has(str(row.id)):
+		if not item_allowed(str(row.id)): continue
+		if int(row.rarity)<=(weapon_rarity if str(row.category)=="weapon" else max_rarity) and not excluded.has(str(row.id)):
 			if bool(row.get("unique",false)) and modules.any(func(module): return str(module.kind)==str(row.id)): continue
 			if audio_guard_enabled and not C.is_item_available(str(row.id)): continue
 			pool.append(row)
@@ -516,7 +533,7 @@ func reward_choices(rng: RandomNumberGenerator) -> Array:
 	return result
 
 func wave_boon_choices(rng: RandomNumberGenerator) -> Array[Dictionary]:
-	var pool: Array=WAVE_BOONS.duplicate(true)
+	var pool: Array=WAVE_BOONS.filter(func(boon):return DOCTRINES.boon_allowed(boon,doctrine_id)).duplicate(true)
 	for index in range(pool.size()-1,0,-1):
 		var swap=rng.randi_range(0,index)
 		var temporary=pool[index]; pool[index]=pool[swap]; pool[swap]=temporary
@@ -533,6 +550,7 @@ func add_boon(id: String) -> bool:
 	for boon in WAVE_BOONS:
 		if str(boon.id)==id: found=boon; break
 	if found.is_empty(): return false
+	if not DOCTRINES.boon_allowed(found,doctrine_id): return false
 	boons[id]=int(boons.get(id,0))+1
 	return true
 
@@ -560,6 +578,7 @@ func clone():
 	copy.phrase_offsets=phrase_offsets.duplicate(true)
 	copy.modules=modules.duplicate(true); copy.slots.assign(slots); copy.next_uid=next_uid
 	copy.perks=perks.duplicate(true); copy.boons=boons.duplicate(true); copy.damage_scale=damage_scale; copy.echo_repeat=echo_repeat
+	copy.doctrine_id=doctrine_id
 	copy.active_tracks=active_tracks; copy.audio_guard_enabled=audio_guard_enabled; copy.recorded_starter_quality=recorded_starter_quality
 	copy._base_health=_base_health; copy._base_extra=_base_extra; copy._fleet_stats=_fleet_stats.duplicate(true)
 	return copy
