@@ -1,10 +1,10 @@
 # 武器特效与音频对应表（持续维护）
 
-最后更新：2026-11-09。核对版本：`0.37.0-sustained-salvo-voices`；当前目录与配装快照见V37。三四轮武器重制20份强/很强长音，56份其他力度与152份作曲音高保留；修改前备份`31ed97e`。
+最后更新：2026-11-09。核对版本：`0.38.0-one-second-grand-salvos`；十件三四轮武器的40份演奏统一1秒，扩大实际发射形式与覆盖，流萤使用尾羽同系彩虹。修改前备份`b1fcc51`。
 
 这是当前现役武器的统一查阅入口。后续在同一份文档持续更新；历史版本说明和旧武器档案保留在原处。表中均为已经接入的内容，待开发设想另列。
 
-现役共**19种武器**：**14种共享羽状质感、17种实体弹、2种激光/电弧**。每件武器保留独立的乐器身份与固定音高，战斗按真实发射演奏力度乐句；共228份样本。**当前武器声音仅使用11种钢琴变化、4种弓弦和4种竖琴**；V36新增76份不同力度／起音／持音／明暗的演奏，V35的152份音高样本保留。V37再强化十件三四轮武器的强/很强档，约+3dB起音与2.2–3.2秒长音，部分融入同根音弓弦主体。见[V37说明与试听](V37_SUSTAINED_SALVO_VOICES.md)。
+现役共**19种武器**：**14种共享羽状质感、17种实体弹、2种激光/电弧**。每件武器保留独立的乐器身份与固定音高，战斗按真实发射演奏力度乐句；共228份样本。**当前武器声音仅使用11种钢琴变化、4种弓弦和4种竖琴**；V36新增76份不同力度／起音／持音／明暗的演奏，V35的152份音高样本保留。V38将这十件武器四档共40份演奏统一为1秒，保持不同触键/弓弦音头和明暗；其他36份力度与152份作曲音高保留。见[V38说明与十种齐射](V38_ONE_SECOND_GRAND_SALVOS.md)。
 
 ## 1. 武器、画面与声音对照
 
@@ -18,21 +18,21 @@
 | 星砂霰弹<br>`scatter` | 前向扇面散射；各颗在扇面内独立推进、错位 | 暖金色羽状弹；共享鎏金基底 | [明亮延音钢琴](../audio/arsenal/dynamics/dyn_scatter_2.wav) | 实弹 | 1轮 |
 | 棱镜光束<br>`beam` | 朝瞄准方向发射多条直束；各束微小方向、宽度和闪光差异 | 淡紫束芯与能量鞘，保留激光形态 | [清晰弓头小提琴](../audio/arsenal/dynamics/dyn_beam_2.wav) | 能量 | 1轮 |
 | 彗星导弹<br>`missile` | 向前发射后独立追踪；各弹转向响应不同，命中爆破 | 粉红导弹实体、推进尾焰与弯曲残迹 | [温暖低音钢琴](../audio/arsenal/dynamics/dyn_missile_2.wav) | 动力 | 2轮 |
-| 新星环炮<br>`nova` | 360°圆周展开；各颗独立弯转，保持完整圆周覆盖 | 浅绿能量珠、局部柔光、细弧形尾迹 | [延音圆润钢琴](../audio/arsenal/dynamics/dyn_nova_2.wav) | 能量 | 4轮 |
+| 新星环炮<br>`nova` | 三层错时全周星环，层间交错角度并有反向弯转；实际行程1850 | 浅绿能量珠、局部柔光、细弧形尾迹 | [延音圆润钢琴](../audio/arsenal/dynamics/dyn_nova_2.wav) | 能量 | 4轮 |
 | 跃迁电弧<br>`chain` | 先连向目标，再向附近敌人跳跃；各段有稳定的独立相位 | 蓝色分支电流与局部辉光 | [柔和高音竖琴](../audio/arsenal/dynamics/dyn_chain_2.wav) | 能量 | 2轮 |
 | 苍穹轨炮<br>`rail` | 朝瞄准方向高速贯穿；各弹独立受力、保留主方向 | 冰白羽状弹；实际路径尾迹 | [厚弓大提琴](../audio/arsenal/dynamics/dyn_rail_2.wav) | 实弹 | 2轮 |
 | 星针狙击器<br>`pulse_needle` | 朝瞄准方向集中喷射；个体速度与细微弯转不同 | 青白羽状弹；共享羽状质感 | [清亮高音钢琴](../audio/arsenal/dynamics/dyn_pulse_needle_2.wav) | 实弹 | 1轮 |
-| 七彩折光匣<br>`scatter_prism` | 机头前方的四个斜向，展开多排U形羽流；每组轻摆、每颗独立飞行 | 七彩羽状实体弹；与尾羽共享柔光和真实弯曲尾迹 | [延音珠光钢琴](../audio/arsenal/dynamics/dyn_scatter_prism_2.wav) | 实弹 | 4轮 |
+| 七彩折光匣<br>`scatter_prism` | 四个斜向羽冠分排绽放，扩大开口与摆幅，实际抵达后命中；行程2050 | 七彩羽状实体弹；与尾羽共享柔光和真实弯曲尾迹 | [延音珠光钢琴](../audio/arsenal/dynamics/dyn_scatter_prism_2.wav) | 实弹 | 4轮 |
 | 双生棱镜<br>`beam_split` | 机头两侧向前喷出青粉双股羽流，各股反相摇摆，每颗独立飞行，抵达后才命中 | 与尾羽共享羽状实体、柔光、弯曲残迹；不再瞬时直束 | [绵奏中提琴](../audio/arsenal/dynamics/dyn_beam_split_2.wav) | 能量 | 2轮 |
 | 地平线终奏<br>`rail_horizon` | 沿实际机身左右两翼喷射；低初速出膛，再各自加速和摆动 | 绿色羽状弹流；柔光与逐渐变细的实际尾迹 | [深色低音钢琴](../audio/arsenal/dynamics/dyn_rail_horizon_2.wav) | 实弹 | 8轮 |
-| 终压攻城铳<br>`recorded_heavy` | 朝瞄准方向发射重型贯穿弹；独立出膛时差与惯性，命中爆破 | 暖橙羽状实体弹；当前使用统一羽状基底 | [延音厚实中低音钢琴](../audio/arsenal/dynamics/dyn_recorded_heavy_2.wav) | 实弹 | 4轮 |
-| 鎏金螺旋阵<br>`gilded_helix` | 向四周展开，叠加不同弯转速率，形成螺旋包络 | 金色发光叶状弹头；同类羽弹的质感基准 | [延音三角钢琴](../audio/arsenal/dynamics/dyn_gilded_helix_2.wav) | 能量 | 4轮 |
-| 虹织十字炮<br>`weave_cross` | 上、下、左、右四向编织；实际横向摆动叠加个体受力 | 彩色羽状弹流、错位交织尾迹 | [断奏钢琴＋高音小提琴长音](../audio/arsenal/dynamics/dyn_weave_cross_2.wav) | 实弹 | 3轮 |
-| 星冕回旋阵<br>`crown_orbit` | 三至八层环绕；每颗独立呼吸、角速度和惯性中心，跟随玩家 | 彩色环绕实体与柔光；细曲线残迹 | [竖琴＋高音小提琴长音](../audio/arsenal/dynamics/dyn_crown_orbit_2.wav) | 支援 | 3轮 |
-| 尾羽回响<br>`stern_fan` | 沿机尾向后展开多排U形扇面；两翼先打开，再以不同惯性收向后方 | 左翼绿黄、中央橙黄、右翼粉紫的羽状弹流 | [中音竖琴＋中提琴长音](../audio/arsenal/dynamics/dyn_stern_fan_2.wav) | 实弹 | 3轮 |
-| 晨羽前奏<br>`dawn_fan` | 机头前方宽U形羽扇，分排出膛，中心较快、两翼略慢，每颗沿自身扇面方向轻摆 | 绿、金、橙、粉连续过渡的羽弹与曲线尾迹 | [延音高音钢琴](../audio/arsenal/dynamics/dyn_dawn_fan_2.wav) | 实弹 | 3轮 |
-| 潮汐弦歌<br>`tidal_weave` | 前方两股反相摆动，分排错开形成较强的S形波浪编织 | 青粉羽弹、局部柔光与真实弯曲残迹 | [长弓高音小提琴](../audio/arsenal/dynamics/dyn_tidal_weave_2.wav) | 能量 | 4轮 |
-| 流萤织雨<br>`firefly_rain` | 前方多列错峰喷射，出膛较慢后渐加速；喷口按列扫动，每颗独立受力 | 绿青紫萤彩羽弹、收敛光晕与曲线残迹 | [高音竖琴＋高音小提琴长音](../audio/arsenal/dynamics/dyn_firefly_rain_2.wav) | 动力 | 3轮 |
+| 终压攻城铳<br>`recorded_heavy` | 中轴和两侧三列交叉贯穿齐射，独立出膛/受力；行程上限2400 | 暖橙羽状实体弹；当前使用统一羽状基底 | [延音厚实中低音钢琴](../audio/arsenal/dynamics/dyn_recorded_heavy_2.wav) | 实弹 | 4轮 |
+| 鎏金螺旋阵<br>`gilded_helix` | 三层不同半径、交错角度和反向弯转的金色螺旋；实际行程2150 | 金色发光叶状弹头；同类羽弹的质感基准 | [延音三角钢琴](../audio/arsenal/dynamics/dyn_gilded_helix_2.wav) | 能量 | 4轮 |
+| 虹织十字炮<br>`weave_cross` | 四向各分双股，形成八翼交织阵列，扩大实际侧向摆动；行程2050 | 彩色羽状弹流、错位交织尾迹 | [断奏钢琴＋高音小提琴长音](../audio/arsenal/dynamics/dyn_weave_cross_2.wav) | 实弹 | 3轮 |
+| 星冕回旋阵<br>`crown_orbit` | 3–8层星冠从近舰位置渐次展开，交替转向、各自惯性呼吸；半径230起每层+52 | 彩色环绕实体与柔光；细曲线残迹 | [竖琴＋高音小提琴长音](../audio/arsenal/dynamics/dyn_crown_orbit_2.wav) | 支援 | 3轮 |
+| 尾羽回响<br>`stern_fan` | 机尾U形羽幕分层错时展开，开口更宽、独立弯转；实际行程2050 | 左翼绿黄、中央橙黄、右翼粉紫的羽状弹流 | [中音竖琴＋中提琴长音](../audio/arsenal/dynamics/dyn_stern_fan_2.wav) | 实弹 | 3轮 |
+| 晨羽前奏<br>`dawn_fan` | 机头前方左/中/右三瓣羽扇分排展开，各颗独立飞行；实际行程2050 | 绿、金、橙、粉连续过渡的羽弹与曲线尾迹 | [延音高音钢琴](../audio/arsenal/dynamics/dyn_dawn_fan_2.wav) | 实弹 | 3轮 |
+| 潮汐弦歌<br>`tidal_weave` | 前方四股反相潮汐编织，扩大横向摆幅；实际行程2250 | 青粉羽弹、局部柔光与真实弯曲残迹 | [长弓高音小提琴](../audio/arsenal/dynamics/dyn_tidal_weave_2.wav) | 能量 | 4轮 |
+| 流萤织雨<br>`firefly_rain` | 宽幅彩虹扫射幕，多列错峰、向前加速与独立摆动；实际行程2100 | 与尾羽同系绿黄橙粉紫彩虹羽弹，光晕与真实曲线尾迹同步着色 | [高音竖琴＋高音小提琴长音](../audio/arsenal/dynamics/dyn_firefly_rain_2.wav) | 动力 | 3轮 |
 
 ## 2. 四档演奏与原音高索引
 
@@ -59,6 +59,8 @@
 | 晨羽前奏 | [很弱](../audio/arsenal/dynamics/dyn_dawn_fan_0.wav) · [弱](../audio/arsenal/dynamics/dyn_dawn_fan_1.wav) · [强](../audio/arsenal/dynamics/dyn_dawn_fan_2.wav) · [很强](../audio/arsenal/dynamics/dyn_dawn_fan_3.wav) | -0.2dB |
 | 潮汐弦歌 | [很弱](../audio/arsenal/dynamics/dyn_tidal_weave_0.wav) · [弱](../audio/arsenal/dynamics/dyn_tidal_weave_1.wav) · [强](../audio/arsenal/dynamics/dyn_tidal_weave_2.wav) · [很强](../audio/arsenal/dynamics/dyn_tidal_weave_3.wav) | -1.0dB |
 | 流萤织雨 | [很弱](../audio/arsenal/dynamics/dyn_firefly_rain_0.wav) · [弱](../audio/arsenal/dynamics/dyn_firefly_rain_1.wav) · [强](../audio/arsenal/dynamics/dyn_firefly_rain_2.wav) · [很强](../audio/arsenal/dynamics/dyn_firefly_rain_3.wav) | -0.5dB |
+
+V38十件三四轮武器的四档均为1秒（每份22,050帧），强奏/很强保持声学弓弦层及已有起音力度。旧V37长音文件已由当前链接替换；历史试听保留于旧版文件夹。
 
 原152份音高样本继续保留供显式作曲，下面记录的是这组原样本，**不是当前战斗力度层**。
 统一目录：`audio/arsenal/notes/`。每种武器有`_0.wav`至`_7.wav`共8份样本；普通战斗固定根音但使用上表新演奏层；这8个音高由显式作曲选择，不自动轮换旋律。
@@ -91,7 +93,7 @@
 
 ## 3. 声音与弹道怎样对应
 
-当前为1.5秒一轮，按实际发射发声；V36按有效充能加入纯音频力度乐句，1轮四档渐强、2轮弱强、3–4轮疏重音。详见[V36说明与同响度试听](V36_EXPRESSIVE_WEAPON_VOICES.md)。[18秒当前初始配装试听](audio-v37/starter-voices-18s.wav)。V31每轮发声及V27的2秒试听保留作历史对比。
+当前为1.5秒一轮，按实际发射发声；V36按有效充能加入纯音频力度乐句，1轮四档渐强、2轮弱强、3–4轮疏重音。详见[V36说明与同响度试听](V36_EXPRESSIVE_WEAPON_VOICES.md)。[6秒当前初始配装试听](audio-v38/starter-synchronized.wav)。V31每轮发声及V27的2秒试听保留作历史对比。
 
 V26在“设置 → 声音”中独立控制背景、武器、击杀鼓点、拾取、受击护盾、命中爆炸和界面警报，总音量统一控制全部声音。武器滑块同时覆盖战斗、图鉴、商店与作曲试听；0%静音、调节自动保存。改音量直接作用于播放通道，保留当前PCM与音序位置，背景静音不再压低武器。详见[分类音量说明](V26_AUDIO_CONTROLS.md)。
 
@@ -158,6 +160,7 @@ V35提供9项独立音量，新增独立危险警报；推荐混音可一键恢�
 
 | 日期 | 游戏版本 / 基线 | 本表变更 |
 | --- | --- | --- |
+| 2026-11-09 | V38 / 备份`b1fcc51` | 最新统一十件三四轮武器的40份演奏为1秒；流萤使用尾羽同系彩虹；升级十种实际分层齐射和范围，1850–2400行程、星冠230起展开。共用原弹头/光晕/尾迹，不按分支加弹或加声音；单发伤害和充能保留。 |
 | 2026-11-09 | V37 / 备份`31ed97e` | 初始改为脉冲A3、苍穹B4–B5、流萤C6–C8。十件3/4轮武器重制20份强/很强档，起音约+3dB、总长2.2–3.2秒；四件加入同根音声学弓弦持音，保留原起音、一次齐射一声。56份其他力度与152音高保留。 |
 | 2026-11-09 | V36 / 备份`5f7a65d` | 全19件新增76份独立力度／演奏样本；1轮很弱→弱→强→很强、2轮弱→强、3/4/8轮疏重音；音高固定、声音跟随真实发射，不改变伤害与弹数。图鉴新增四档和真实间隔乐句试听；152份原作曲样本保留，144秒回卷相位连续。 |
 | 2026-11-09 | V35 / 备份`699f22f` | 延长7种乐器的真实主体与尾音（56份），大范围武器3–4轮，新增3轮与144秒重复相位。击杀滚奏降密度、受伤单次、背景平滑让位、独立警报和可恢复推荐混音；保持1.5秒扫描与固定齐射声音。 |
@@ -176,7 +179,7 @@ V35提供9项独立音量，新增独立危险警报；推荐混音可一键恢�
 
 ## 7. 核对来源
 
-- [当前武器/初始配装/回合强化/商店参数快照](data-v37/weapon-selection.json)、[武器生产目录](../scripts/arsenal_catalog.gd)：名单、ID、属性、充能和音色键。
+- [当前武器/初始配装/回合强化/商店参数快照](data-v38/weapon-selection.json)、[武器生产目录](../scripts/arsenal_catalog.gd)：名单、ID、属性、充能和音色键。
 - [发射与命中](../scripts/main.gd)、[发射几何](../scripts/weapon_emission.gd)、[个体运动与视觉类别](../scripts/weapon_visuals.gd)：真实方向、曲线路径、实体弹与光学分工。
 - [当前乐器索引](../audio/weapon_codex.json)、[音乐播放与混音](../scripts/music.gd)：样本、固定音色和实例重奏。
 - [V31扫描与兼容验证](data-v31/SUMMARY.json)：19件声音/充能时序、可见白点、原生播放与96秒缓存回卷；敌机0.5秒推进、显式作曲和音量兼容。
@@ -189,4 +192,6 @@ V35提供9项独立音量，新增独立危险警报；推荐混音可一键恢�
 
 V36历史专项核对：[V36演奏层/原生时序/图鉴与作曲验证](data-v36/SUMMARY.json) · [同响度音色试听](audio-v36/timbre-equal-level-20s.wav) · [36秒前后对照](audio-v36/phrases-before-after-36s.wav)。V35样本主体与参考单音的历史核对仍见[V35记录](data-v35/SUMMARY.json)。
 
-当前V37专项：[新配装与长音说明](V37_SUSTAINED_SALVO_VOICES.md) · [当前验证](data-v37/SUMMARY.json) · [20份长音能量测量](data-v37/sustain-review.json) · [新配装试听](audio-v37/starter-voices-18s.wav)。V36原同响度试听保持历史文件，不因本轮重建覆盖。
+V37历史专项：[新配装与长音说明](V37_SUSTAINED_SALVO_VOICES.md) · [当前验证](data-v37/SUMMARY.json) · [20份长音能量测量](data-v37/sustain-review.json) · [新配装试听](audio-v37/starter-voices-18s.wav)。V36原同响度试听保持历史文件，不因本轮重建覆盖。
+
+当前V38专项：[一秒音源与十种展开](V38_ONE_SECOND_GRAND_SALVOS.md) · [当前验证](data-v38/SUMMARY.json) · [十种原生齐射总览](screenshots/v38-grand-salvos.png)。

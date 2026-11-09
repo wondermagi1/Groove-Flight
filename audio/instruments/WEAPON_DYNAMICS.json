@@ -1,5 +1,5 @@
 {
-  "revision": "chamber-v37-sustained-salvos",
+  "revision": "chamber-v38-one-second-salvos",
   "description": "Four independently rendered acoustic performances at the same weapon root note. Velocity, onset, note-on duration, release and spectral shaping change together; not scaled copies of one WAV. Composer keeps its authored pitches and original152 samples.",
   "levels": [
     {
@@ -107,60 +107,80 @@
       "nova": {
         "hold": 1.42,
         "release": 1.0,
-        "voice_label": "延音圆润钢琴"
+        "voice_label": "延音圆润钢琴",
+        "duration_seconds": 1.0,
+        "hold_seconds": 0.6
       },
       "scatter_prism": {
         "hold": 1.5,
         "release": 1.15,
-        "voice_label": "延音珠光钢琴"
+        "voice_label": "延音珠光钢琴",
+        "duration_seconds": 1.0,
+        "hold_seconds": 0.6
       },
       "recorded_heavy": {
         "hold": 1.65,
         "release": 1.15,
-        "voice_label": "延音厚实中低音钢琴"
+        "voice_label": "延音厚实中低音钢琴",
+        "duration_seconds": 1.0,
+        "hold_seconds": 0.6
       },
       "gilded_helix": {
         "hold": 1.6,
         "release": 1.2,
-        "voice_label": "延音三角钢琴"
+        "voice_label": "延音三角钢琴",
+        "duration_seconds": 1.0,
+        "hold_seconds": 0.6
       },
       "weave_cross": {
         "hold": 1.35,
         "release": 1.0,
         "sustain_program": 40,
         "sustain_mix": 0.58,
-        "voice_label": "断奏钢琴＋高音小提琴长音"
+        "voice_label": "断奏钢琴＋高音小提琴长音",
+        "duration_seconds": 1.0,
+        "hold_seconds": 0.6
       },
       "crown_orbit": {
         "hold": 1.55,
         "release": 1.2,
         "sustain_program": 40,
         "sustain_mix": 0.62,
-        "voice_label": "竖琴＋高音小提琴长音"
+        "voice_label": "竖琴＋高音小提琴长音",
+        "duration_seconds": 1.0,
+        "hold_seconds": 0.6
       },
       "stern_fan": {
         "hold": 1.55,
         "release": 1.25,
         "sustain_program": 41,
         "sustain_mix": 0.58,
-        "voice_label": "中音竖琴＋中提琴长音"
+        "voice_label": "中音竖琴＋中提琴长音",
+        "duration_seconds": 1.0,
+        "hold_seconds": 0.6
       },
       "dawn_fan": {
         "hold": 1.45,
         "release": 1.15,
-        "voice_label": "延音高音钢琴"
+        "voice_label": "延音高音钢琴",
+        "duration_seconds": 1.0,
+        "hold_seconds": 0.6
       },
       "tidal_weave": {
         "hold": 1.8,
         "release": 1.05,
-        "voice_label": "长弓高音小提琴"
+        "voice_label": "长弓高音小提琴",
+        "duration_seconds": 1.0,
+        "hold_seconds": 0.6
       },
       "firefly_rain": {
         "hold": 1.7,
         "release": 1.35,
         "sustain_program": 40,
         "sustain_mix": 0.7,
-        "voice_label": "高音竖琴＋高音小提琴长音"
+        "voice_label": "高音竖琴＋高音小提琴长音",
+        "duration_seconds": 1.0,
+        "hold_seconds": 0.6
       }
     }
   }

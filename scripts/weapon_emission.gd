@@ -45,7 +45,10 @@ static func forward_shot(pattern: String,forward: Vector2,index: int,count: int,
 	var t=(float(lane)+.5)/lanes
 	var sweep=.18*sin(time*3.5+lane*.72+row*.45)
 	var axis=forward.rotated((t-.5)*spread+sweep)
-	return {"axis":axis,"offset":forward*32.+right*(t-.5)*30.,"delay":row*.065+float(lane%3)*.012,"rear_axis":axis,"speed_scale":1.,"tint":Color.from_hsv(fposmod(.30+t*.30+row*.035,1.),.60,1.),"guide_phase":time*3.5+lane*.72+row*.45,"guide_amplitude":.16,"guide_frequency":2.7}
+	# Match Stern Fan's green/yellow/orange/pink/purple rainbow per row.
+	var row_size=mini(lanes,count-row*lanes)
+	var color_t=float(lane)/maxf(1.,row_size-1) if row_size>1 else .5
+	return {"axis":axis,"offset":forward*32.+right*(t-.5)*30.,"delay":row*.065+float(lane%3)*.012,"rear_axis":axis,"speed_scale":1.,"tint":Color.from_hsv(fposmod(.30-.40*color_t,1.),.64,1.),"guide_phase":time*3.5+lane*.72+row*.45,"guide_amplitude":.16,"guide_frequency":2.7}
 
 static func mounted_shot(pattern: String,forward: Vector2,index: int,count: int,spread: float,serial: int=0) -> Dictionary:
 	forward=forward.normalized() if forward.length_squared()>.01 else Vector2.UP

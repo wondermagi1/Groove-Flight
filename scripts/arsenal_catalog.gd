@@ -12,6 +12,7 @@ const DEFAULT_RECORDED_WEAPON_IDS=["recorded_crude","recorded_ballistic"]
 const RECORDED_WEAPONS_ENABLED=false
 const VISUALS=preload("res://scripts/weapon_visuals.gd")
 const GROWTH=preload("res://scripts/projectile_growth.gd")
+const SALVOS=preload("res://scripts/salvo_patterns.gd")
 const ACTIVE_WEAPON_IDS=["pulse","scatter","beam","missile","nova","chain","rail","pulse_needle","scatter_prism","beam_split","rail_horizon","recorded_heavy","gilded_helix","weave_cross","crown_orbit","stern_fan","dawn_fan","tidal_weave","firefly_rain"]
 ## Generated from audio/instruments/CHAMBER_PALETTE.json by build_chamber_instruments.py.
 const INSTRUMENTS={"pulse":"延音中音钢琴","scatter":"明亮延音钢琴","beam":"清晰弓头小提琴","missile":"温暖低音钢琴","nova":"圆润中音钢琴","chain":"柔和高音竖琴","rail":"厚弓大提琴","pulse_needle":"清亮高音钢琴","scatter_prism":"珠光钢琴","beam_split":"绵奏中提琴","rail_horizon":"深色低音钢琴","recorded_heavy":"厚实中低音钢琴","gilded_helix":"明亮三角钢琴","weave_cross":"轻巧断奏钢琴","crown_orbit":"通透竖琴","stern_fan":"温暖中音竖琴","dawn_fan":"柔亮高音钢琴","tidal_weave":"绵奏高音小提琴","firefly_rain":"绵长高音竖琴"}
@@ -235,6 +236,9 @@ static func _build_weapons() -> void:
 			elif str(data.id)=="tidal_weave": data.attr="energy"
 			elif str(data.id)=="firefly_rain": data.attr="power"
 		data.active=str(data.id) in ACTIVE_WEAPON_IDS
+		if data.active and SALVOS.PROFILES.has(str(data.id)):
+			data.salvo=SALVOS.PROFILES[str(data.id)].duplicate(true)
+			if float(data.salvo.reach)>0.:data.life=maxf(float(data.life),float(data.salvo.reach)/float(data.speed))
 		if data.active:
 			data.linear_projectiles=true
 			data.attribute_count_scale=GROWTH.PER_ATTRIBUTE
@@ -255,13 +259,15 @@ static func _build_weapons() -> void:
 
 static func weapon_description(data: Dictionary) -> String:
 	var parts: Array[String]=["每%d小节在所在拍触发"%int(data.charge),"单发伤害%s × %d"%[_number(data.damage),int(data.count)],"弹速%s / 寿命%s秒"%[_number(data.speed),_number(data.life)]]
+	if data.has("salvo"):
+		parts.append(str(data.salvo.label)+("；基础弹道射程%s"%_number(data.salvo.reach) if float(data.salvo.reach)>0. else "；展开为多层宽幅环绕防线"))
 	if str(data.get("emission",""))=="prism_cross": parts.append("机头前方朝四个斜角展开多排彩色U形羽流；每颗实体弹独立喷射、弯转并留下柔光尾迹，到有效射程后才缩小消散")
 	elif str(data.get("emission",""))=="hull_broadside": parts.append("从机翼左右两侧同时发射并排弹列；总弹数分配到两侧，奇数额外弹逐轮交替；保持机身朝向")
 	elif str(data.get("emission",""))=="stern_fan": parts.append("从机尾向后展开多排彩色U形扇面；左翼绿黄、中央橙黄、右翼粉紫；达到有效射程后才缩小并淡出")
 	elif str(data.get("emission",""))=="forward_twin": parts.append("机头两侧喷出青粉双股羽流，独立摇摆并留下弯曲残迹；不再瞬时直线命中")
 	elif str(data.get("emission",""))=="forward_fan": parts.append("向机头前方展开绿金粉多排U形羽扇，边翼略慢、中心更快，柔和呼吸摇摆")
 	elif str(data.get("emission",""))=="forward_weave": parts.append("前方两股青紫羽流反相摆动，分排交错编织；每颗独立惯性飞行")
-	elif str(data.get("emission",""))=="forward_rain": parts.append("前方错峰喷出多束萤彩羽弹，出膛较慢后渐加速，喷口按列柔和扫动")
+	elif str(data.get("emission",""))=="forward_rain": parts.append("前方错峰喷出绿黄橙粉紫彩虹羽弹，与尾羽同色系；出膛较慢后渐加速，喷口按列柔和扫动")
 	if str(data.id)=="gilded_helix": parts.append("金色羽状弹向四周展开并弯转，形成双层螺旋弹幕")
 	elif str(data.id)=="weave_cross": parts.append("四个方向同时射出彩色编织弹流，弹道左右交错")
 	elif str(data.id)=="crown_orbit": parts.append("星冕弹形成三至八层防线，各自呼吸、环绕并带惯性跟随战机")

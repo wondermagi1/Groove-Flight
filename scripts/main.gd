@@ -18,6 +18,7 @@ const BOSS_SCORE=preload("res://scripts/boss_score.gd")
 const RECEIPT=preload("res://scripts/combat_receipt.gd")
 const EMISSION=preload("res://scripts/weapon_emission.gd")
 const VISUALS=preload("res://scripts/weapon_visuals.gd")
+const SALVOS=preload("res://scripts/salvo_patterns.gd")
 const ARRIVAL=preload("res://scripts/enemy_arrival.gd")
 const PATHS=preload("res://scripts/build_paths.gd")
 const LEVEL_MUSIC_PATH="res://audio/authorized/scott_buckley/filaments.ogg"
@@ -1353,6 +1354,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 					var rear_axis=Vector2(mount.rear_axis); var rear_side=rear_axis.orthogonal()
 					bullet.v=rear_axis*Vector2(bullet.v).dot(rear_axis)*float(mount.speed_scale)+rear_side*Vector2(bullet.v).dot(rear_side)
 			VISUALS.individualize(bullet,i,music.timeline,int(trigger.get("uid",0)),int(trigger.get("serial",0)))
+			SALVOS.apply(bullet,kind,i,count,direction,origin,music.timeline)
 			# Anchor each physical salvo on the audible onset; remaining particles
 			# retain independent delays, mass, speed, forces and curved trajectories.
 			if i==0: bullet.launch_delay=0.
@@ -1793,11 +1795,25 @@ func draw_preview_ranges() -> void:
 		var actual=loadout.item_stats(uid,head%8)
 		var family=str(actual.get("family",actual.get("kind","")))
 		if family in ["support","defense"]: continue
-		var reach=clampf(float(actual.get("speed",600.))*float(actual.get("life",2.)),140.,2200.)
+		var reach=EMISSION.weapon_reach(float(actual.get("speed",600.)),float(actual.get("life",2.)))
 		var track=clampi(floori(float(head)/8.),0,2)
 		var color=Color(colors[track],.34)
 		var origin=player+direction.orthogonal()*[-17.,0.,17.][track]
 		var pattern=str(C.item(str(row.kind)).get("emission",""))
+		if SALVOS.PROFILES.has(str(row.kind)):
+			var forward=facing.normalized() if facing.length_squared()>.01 else Vector2.UP
+			if int(settings.aim_mode)==1:forward=movement_facing
+			elif int(settings.aim_mode)==2:forward=Vector2.UP
+			forward=forward.rotated(float(actual.get("angle",0.)))
+			for envelope in SALVOS.coverage(str(row.kind),forward,int(actual.count),reach):
+				var radius=float(envelope.radius)
+				if envelope.circle:draw_arc(player,radius,0.,TAU,96,Color(color,.40),1.5,true)
+				else:
+					var angle=Vector2(envelope.axis).angle();var half=float(envelope.half)
+					draw_dashed_line(player,player+Vector2.from_angle(angle-half)*radius,Color(color,.48),1.4,14.,true)
+					draw_dashed_line(player,player+Vector2.from_angle(angle+half)*radius,Color(color,.48),1.4,14.,true)
+					draw_arc(player,radius,angle-half,angle+half,40,Color(color,.40),1.4,true)
+			continue
 		if EMISSION.mounted(pattern):
 			var forward=facing.normalized() if facing.length_squared()>.01 else Vector2.UP
 			if int(settings.aim_mode)==1: forward=movement_facing

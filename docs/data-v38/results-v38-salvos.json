@@ -1,0 +1,59 @@
+{
+	"checks": 190,
+	"facts": {
+		"patterns": [
+			{
+				"id": "nova",
+				"label": "三层交错星环",
+				"reach": 1850.0
+			},
+			{
+				"id": "scatter_prism",
+				"label": "四斜向绽放羽冠",
+				"reach": 2050.0
+			},
+			{
+				"id": "recorded_heavy",
+				"label": "三列交叉攻城齐射",
+				"reach": 2400.0
+			},
+			{
+				"id": "gilded_helix",
+				"label": "三重反向螺旋",
+				"reach": 2150.0
+			},
+			{
+				"id": "weave_cross",
+				"label": "八翼交织十字阵",
+				"reach": 2050.0
+			},
+			{
+				"id": "crown_orbit",
+				"label": "扩展多层星冠",
+				"reach": 0.0
+			},
+			{
+				"id": "stern_fan",
+				"label": "后射层叠彩虹幕",
+				"reach": 2050.0
+			},
+			{
+				"id": "dawn_fan",
+				"label": "前向三瓣羽扇",
+				"reach": 2050.0
+			},
+			{
+				"id": "tidal_weave",
+				"label": "四股反相潮汐",
+				"reach": 2250.0
+			},
+			{
+				"id": "firefly_rain",
+				"label": "宽幅彩虹扫射幕",
+				"reach": 2100.0
+			}
+		]
+	},
+	"failures": [],
+	"scope": "Ten long-charge actual emission patterns at1/8/64/256counts,immediate leading onset,bounded independent deployment,real physical coverage/range/orbital residency and retirement. Production native screenshots at controlled Lv4/attribute32. Not full campaign balance or sustained FPS."
+}

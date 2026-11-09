@@ -1,0 +1,292 @@
+{
+	"checks": 85,
+	"facts": {
+		"catalogue": [
+			{
+				"actual_shots": 16,
+				"charge": 1,
+				"id": "pulse",
+				"physical": true,
+				"sound_events": 16
+			},
+			{
+				"actual_shots": 16,
+				"charge": 1,
+				"id": "scatter",
+				"physical": true,
+				"sound_events": 16
+			},
+			{
+				"actual_shots": 16,
+				"charge": 1,
+				"id": "beam",
+				"physical": false,
+				"sound_events": 16
+			},
+			{
+				"actual_shots": 8,
+				"charge": 2,
+				"id": "missile",
+				"physical": true,
+				"sound_events": 8
+			},
+			{
+				"actual_shots": 4,
+				"charge": 4,
+				"id": "nova",
+				"physical": true,
+				"sound_events": 4
+			},
+			{
+				"actual_shots": 8,
+				"charge": 2,
+				"id": "chain",
+				"physical": false,
+				"sound_events": 8
+			},
+			{
+				"actual_shots": 8,
+				"charge": 2,
+				"id": "rail",
+				"physical": true,
+				"sound_events": 8
+			},
+			{
+				"actual_shots": 16,
+				"charge": 1,
+				"id": "pulse_needle",
+				"physical": true,
+				"sound_events": 16
+			},
+			{
+				"actual_shots": 4,
+				"charge": 4,
+				"id": "scatter_prism",
+				"physical": true,
+				"sound_events": 4
+			},
+			{
+				"actual_shots": 8,
+				"charge": 2,
+				"id": "beam_split",
+				"physical": true,
+				"sound_events": 8
+			},
+			{
+				"actual_shots": 2,
+				"charge": 8,
+				"id": "rail_horizon",
+				"physical": true,
+				"sound_events": 2
+			},
+			{
+				"actual_shots": 4,
+				"charge": 4,
+				"id": "recorded_heavy",
+				"physical": true,
+				"sound_events": 4
+			},
+			{
+				"actual_shots": 4,
+				"charge": 4,
+				"id": "gilded_helix",
+				"physical": true,
+				"sound_events": 4
+			},
+			{
+				"actual_shots": 5,
+				"charge": 3,
+				"id": "weave_cross",
+				"physical": true,
+				"sound_events": 5
+			},
+			{
+				"actual_shots": 5,
+				"charge": 3,
+				"id": "crown_orbit",
+				"physical": true,
+				"sound_events": 5
+			},
+			{
+				"actual_shots": 5,
+				"charge": 3,
+				"id": "stern_fan",
+				"physical": true,
+				"sound_events": 5
+			},
+			{
+				"actual_shots": 5,
+				"charge": 3,
+				"id": "dawn_fan",
+				"physical": true,
+				"sound_events": 5
+			},
+			{
+				"actual_shots": 4,
+				"charge": 4,
+				"id": "tidal_weave",
+				"physical": true,
+				"sound_events": 4
+			},
+			{
+				"actual_shots": 5,
+				"charge": 3,
+				"id": "firefly_rain",
+				"physical": true,
+				"sound_events": 5
+			}
+		],
+		"loop_phase_pcm_error_lsb": 0,
+		"max_dispatch_delay_ms": 5.33525486981867,
+		"native_after_wrap": [
+			{
+				"actual": 156.375364668131,
+				"cadence_scale": 1.0,
+				"cadence_step": 0,
+				"deadline": 156.375,
+				"event_id": "arsenal:834:1:0:",
+				"kind": "pulse",
+				"pilot": "",
+				"pitch": 0,
+				"repeat_index": 0,
+				"serial": 834,
+				"step": 2,
+				"track": 0,
+				"uid": 1,
+				"voice": "inst_pulse"
+			},
+			{
+				"actual": 156.937697316813,
+				"cadence_scale": 1.0,
+				"cadence_step": 0,
+				"deadline": 156.9375,
+				"event_id": "arsenal:837:3:0:",
+				"kind": "firefly_rain",
+				"pilot": "",
+				"pitch": 0,
+				"repeat_index": 0,
+				"serial": 837,
+				"step": 5,
+				"track": 2,
+				"uid": 3,
+				"voice": "inst_firefly_rain"
+			}
+		],
+		"native_shots": [
+			{
+				"actual": 0.380335254869819,
+				"cadence_scale": 1.0,
+				"cadence_step": 0,
+				"deadline": 0.375,
+				"event_id": "arsenal:2:1:0:",
+				"kind": "pulse",
+				"pilot": "",
+				"pitch": 0,
+				"repeat_index": 0,
+				"serial": 2,
+				"step": 2,
+				"track": 0,
+				"uid": 1,
+				"voice": "inst_pulse"
+			},
+			{
+				"actual": 1.87510334066999,
+				"cadence_scale": 1.0,
+				"cadence_step": 0,
+				"deadline": 1.875,
+				"event_id": "arsenal:10:1:0:",
+				"kind": "pulse",
+				"pilot": "",
+				"pitch": 0,
+				"repeat_index": 0,
+				"serial": 10,
+				"step": 2,
+				"track": 0,
+				"uid": 1,
+				"voice": "inst_pulse"
+			},
+			{
+				"actual": 2.0637030198158,
+				"cadence_scale": 1.0,
+				"cadence_step": 0,
+				"deadline": 2.0625,
+				"event_id": "arsenal:11:2:0:",
+				"kind": "rail",
+				"pilot": "",
+				"pitch": 0,
+				"repeat_index": 0,
+				"serial": 11,
+				"step": 3,
+				"track": 1,
+				"uid": 2,
+				"voice": "inst_rail"
+			},
+			{
+				"actual": 3.3751653383888,
+				"cadence_scale": 1.0,
+				"cadence_step": 0,
+				"deadline": 3.375,
+				"event_id": "arsenal:18:1:0:",
+				"kind": "pulse",
+				"pilot": "",
+				"pitch": 0,
+				"repeat_index": 0,
+				"serial": 18,
+				"step": 2,
+				"track": 0,
+				"uid": 1,
+				"voice": "inst_pulse"
+			},
+			{
+				"actual": 3.93809620992506,
+				"cadence_scale": 1.0,
+				"cadence_step": 0,
+				"deadline": 3.9375,
+				"event_id": "arsenal:21:3:0:",
+				"kind": "firefly_rain",
+				"pilot": "",
+				"pitch": 0,
+				"repeat_index": 0,
+				"serial": 21,
+				"step": 5,
+				"track": 2,
+				"uid": 3,
+				"voice": "inst_firefly_rain"
+			},
+			{
+				"actual": 4.87886521689832,
+				"cadence_scale": 1.0,
+				"cadence_step": 0,
+				"deadline": 4.875,
+				"event_id": "arsenal:26:1:0:",
+				"kind": "pulse",
+				"pilot": "",
+				"pitch": 0,
+				"repeat_index": 0,
+				"serial": 26,
+				"step": 2,
+				"track": 0,
+				"uid": 1,
+				"voice": "inst_pulse"
+			},
+			{
+				"actual": 5.06508422254407,
+				"cadence_scale": 1.0,
+				"cadence_step": 0,
+				"deadline": 5.0625,
+				"event_id": "arsenal:27:2:0:",
+				"kind": "rail",
+				"pilot": "",
+				"pitch": 0,
+				"repeat_index": 0,
+				"serial": 27,
+				"step": 3,
+				"track": 1,
+				"uid": 2,
+				"voice": "inst_rail"
+			}
+		]
+	},
+	"failures": [],
+	"scope": "All19production weapon schedules versus rendered note IDs,17physical lead launches and independent delays,beam/arc onsets,charged PCM silence,same-type layering,phase-aligned intro/repeat cache and native starter dispatch,pause and actual boundary seek. Controlled timing fixtures,not human mix or full campaign balance."
+}

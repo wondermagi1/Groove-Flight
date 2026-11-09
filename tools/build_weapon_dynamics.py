@@ -44,20 +44,28 @@ def main():
                 layers.append(existing[entry['id']]['layers'][index]);continue
             hold=entry['hold']*level['hold_scale']; release=entry['release']*level['release_scale']
             sustained=policy.get('sustained_salvos',{})
-            profile=sustained.get('profiles',{}).get(entry['id']) if index in sustained.get('strengths',[]) else None
+            base_profile=sustained.get('profiles',{}).get(entry['id'])
+            profile=base_profile if index in sustained.get('strengths',[]) else None
+            fixed_duration=base_profile if base_profile and 'duration_seconds' in base_profile else None
             if profile:
                 hold=profile['hold']*(.94 if index==2 else 1.06)
                 release=profile['release']*(.95 if index==2 else 1.05)
+            if fixed_duration:
+                hold=fixed_duration['hold_seconds'];release=fixed_duration['duration_seconds']-hold
             attack=entry['attack_ms']*level['attack_scale']
             cutoff=min(8500,entry['lowpass_hz']*level['cutoff_scale'])
             raw=source/'dynamic-note.f32'
-            command=[str(exe),str(font),'0',str(entry['program']),str(entry['root_midi']),str(hold),str(release),str(raw),str(level['velocity'])]
+            # TSF's CLI truncates time to frames;avoid a binary float dropping
+            # one frame from an explicitly requested fixed-duration voice.
+            render_hold=str((round(hold*RATE)+.0001)/RATE) if fixed_duration else str(hold)
+            render_release=str((round(release*RATE)+.0001)/RATE) if fixed_duration else str(release)
+            command=[str(exe),str(font),'0',str(entry['program']),str(entry['root_midi']),render_hold,render_release,str(raw),str(level['velocity'])]
             if entry['instrument_family']=='strings': command.append(str(level['bow_attack_ms']/1000))
             result=subprocess.run(command,capture_output=True,text=True,check=True)
             x=np.fromfile(raw,dtype='<f4').astype(np.float64)
             # Preserve the true source onset; trim only leading near-silence.
             active=np.flatnonzero(np.abs(x)>np.max(np.abs(x))*.002)
-            x=x[max(0,int(active[0])-22):]
+            if not fixed_duration:x=x[max(0,int(active[0])-22):]
             x=sosfilt(butter(2,cutoff,fs=RATE,output='sos'),x)
             # Shape existing acoustic harmonics; no added oscillator/layer.
             split=max(220,440*2**((entry['root_midi']-69)/12)*1.8)
@@ -67,7 +75,7 @@ def main():
                 # A licensed bowed acoustic note holds the plucked attack's
                 # exact pitch;this is one composed voice,not another trigger.
                 body_raw=source/'dynamic-body.f32'
-                body_command=[str(exe),str(font),'0',str(profile['sustain_program']),str(entry['root_midi']),str(hold),str(release),str(body_raw),str(.60 if index==2 else .80),'0.025']
+                body_command=[str(exe),str(font),'0',str(profile['sustain_program']),str(entry['root_midi']),render_hold,render_release,str(body_raw),str(.60 if index==2 else .80),'0.025']
                 subprocess.run(body_command,capture_output=True,text=True,check=True)
                 body=np.fromfile(body_raw,dtype='<f4').astype(np.float64)
                 body=sosfilt(butter(2,min(6500,cutoff),fs=RATE,output='sos'),body)
@@ -95,6 +103,7 @@ def main():
                 sidecar.write_text(text.replace('compress/mode=2','compress/mode=0'),encoding='utf-8')
             layers.append({'strength':index,'label':level['label'],'file':path.relative_to(ROOT).as_posix(),'sha256':digest(path),'root_midi':entry['root_midi'],'program':entry['program'],'velocity':level['velocity'],'hold':hold,'release':release,'attack_ms':attack,'cutoff_hz':cutoff,'harmonic_tilt_db':level['harmonic_tilt_db'],'tone_split_hz':split,'seconds':len(x)/RATE,'peak':float(np.max(np.abs(x))),'rms':float(np.sqrt(np.mean(x*x))),'attack_300ms_rms':float(np.sqrt(np.mean(x[:round(.3*RATE)]**2))),'preset':result.stdout.strip(),'normalization_gain':float(gain)})
             if profile:layers[-1].update(sustained_salvo=True,body_swell=sustained['body_swell'],requested_onset_gain_db=sustained['onset_gain_db'])
+            if fixed_duration:layers[-1]['duration_seconds']=fixed_duration['duration_seconds']
             if profile and 'sustain_program' in profile:layers[-1].update(acoustic_sustain_layer={"program":profile['sustain_program'],"root_midi":entry['root_midi'],"mix":profile['sustain_mix'],"onset_seconds":.06,"fade_seconds":.22})
         output.append({'id':entry['id'],'instrument':entry['instrument'],'family':entry['instrument_family'],'balance_db':policy['balance_db'][entry['id']],'layers':layers})
         if entry['id'] in policy.get('sustained_salvos',{}).get('profiles',{}):output[-1]['performance_instrument']=policy['sustained_salvos']['profiles'][entry['id']]['voice_label']

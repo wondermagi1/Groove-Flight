@@ -27,7 +27,7 @@ const PROFILES={
 	"stern_fan":{"color":Color("ff9ecb")},
 	"dawn_fan":{"color":Color("ffe4a0")},
 	"tidal_weave":{"color":Color("7ee9f2")},
-	"firefly_rain":{"color":Color("a8ffbb")}
+	"firefly_rain":{"color":Color("ff9ecb")}
 }
 
 static func profile(id: String) -> Dictionary:
@@ -116,6 +116,9 @@ static func orbit_target(bullet: Dictionary,player: Vector2,delta: float) -> Vec
 	var rate=float(bullet.get("orbit_rate",float(bullet.get("original_speed",245))*.012))
 	bullet.orbit_angle+=delta*rate*(1.+.045*sin(age*1.6+phase))
 	var base=float(bullet.get("orbit_base_radius",bullet.get("orbit_radius",119.)))
+	if bullet.has("orbit_deploy_time"):
+		var deployment=clampf(age/float(bullet.orbit_deploy_time),0.,1.)
+		base=lerpf(float(bullet.orbit_spawn_radius),base,1.-pow(1.-deployment,3.))
 	bullet.orbit_radius=base*(1.+.035*sin(age*1.45+phase)+.015*sin(age*2.3+phase*1.7))
 	var center=Vector2(bullet.get("orbit_center",player))
 	center=center.lerp(player,1.-exp(-float(bullet.get("orbit_follow_gain",15.))*delta)); bullet.orbit_center=center

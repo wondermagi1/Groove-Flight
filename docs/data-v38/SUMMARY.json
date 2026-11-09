@@ -1,0 +1,80 @@
+{
+  "version": "0.38.0-one-second-grand-salvos",
+  "date": "2026-11-09",
+  "backup_branch": "codex/backup-20261109-before-rain-tail-and-rainbow",
+  "backup_sha": "b1fcc51426d35b9cc46793a61717ff384f484c95",
+  "checks": 1523,
+  "failures": 0,
+  "reports": [
+    {
+      "report": "results-v38-rain.json",
+      "checks": 499,
+      "failures": 0
+    },
+    {
+      "report": "results-v38-salvos.json",
+      "checks": 190,
+      "failures": 0
+    },
+    {
+      "report": "results-v36-weapon-expression.json",
+      "checks": 280,
+      "failures": 0
+    },
+    {
+      "report": "results-v34-weapon-sync.json",
+      "checks": 85,
+      "failures": 0
+    },
+    {
+      "report": "results-v24-all-weapons.json",
+      "checks": 66,
+      "failures": 0
+    },
+    {
+      "report": "results-weapon-cycle.json",
+      "checks": 216,
+      "failures": 0
+    },
+    {
+      "report": "results-composer-score.json",
+      "checks": 112,
+      "failures": 0
+    },
+    {
+      "report": "results-v32-starter-layout.json",
+      "checks": 75,
+      "failures": 0
+    }
+  ],
+  "rebuilt_one_second_performances": 40,
+  "unchanged_performances": 36,
+  "unchanged_composer_pitches": 152,
+  "new_salvo_profiles": 10,
+  "grand_range_world_units": [
+    1850,
+    2400
+  ],
+  "crown_base_radius": 230,
+  "crown_ring_gap": 52,
+  "preserved_count_damage_charge_and_materials": true,
+  "unchanged_files_sha256": {
+    "shaders/weapon_body.gdshader": "cf8526e1b4e49a7d20a9a232c962799ed4d5c2f3b72c8b6719c21dcd02e9264b",
+    "shaders/weapon_glow.gdshader": "5bef971d2ff40ef571ce0188d1c0b939ec8aee75845c29a561ff58b62485eda4",
+    "shaders/weapon_trail.gdshader": "3b82a3ab26317a6a8c331230da68447dde383e307a719ef5c360992218c1dca2",
+    "scripts/weapon_render.gd": "a2d8bd7d1a74c95e63543b1e1b5665fc3c0780e3889f60a91683c651dd18568f",
+    "scripts/projectile_growth.gd": "13ff8c609d461299ccb0dfdb826abae9e4bec2c11e561403ec436a3854315ac4",
+    "scripts/arsenal_loadout.gd": "0b9194f9eec33ab438de1d77f8e4445a8bbf7aa43f7b578252629669ec406071",
+    "scripts/composer_score.gd": "169e95bbc1314ea45a0f0c461ca2025114060d6ec67d74c1f5fb59cc85e754e5",
+    "scripts/composer_player.gd": "2f3aca80785fd0991de659664a903a77d1a45cc3596f07c76a53abc79146f344",
+    "scripts/contact_swarm.gd": "4aad354861629b90b0d2785fed516322309004ea1ecb0273e6832d2ab79e2c01",
+    "scripts/audio_controls.gd": "0f1a1ce49d23bc1a3d2ad6f47c9a473c632ac9846f74c9d93be003728c20298e",
+    "scripts/event_mixer.gd": "252b2314a5756a7d7a4b047d904914bbde6c86081613c0e26ef80b0b700444c9",
+    "native/crowd/groove_crowd.windows.x86_64.dll": "0046a79a8dd2eb63f7c13ea4d3e20720651b851aaa71892902701077c3c2c84e",
+    "audio/authorized/feedback/shield_impact.wav": "7fa70ca0d184772a7089048252ea651bfad630280ef3c1b5874b6cd944ee9fb2",
+    "audio/authorized/feedback/kill_low_strong.wav": "7d396a080eee88161e4c724e4980736bc1a4be970b01e9708b0d1ec60e5c2716",
+    "audio/authorized/feedback/pickup_coin.wav": "cb11675ea2078cdaae6bd34d3e0626e8b3a05b71d0a827625f1b0787deeb3b46"
+  },
+  "plans_not_implemented": "Orchestral percussion was discussed as a future voicing option;current instruments remain acoustic piano/strings/harp.",
+  "limits": "Controlled native motion/coverage/PCM/clock tests and actual screenshots;larger real ranges change balance. Not full campaign balance or sustained FPS/human audio approval."
+}

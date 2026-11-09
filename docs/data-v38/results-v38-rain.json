@@ -1,0 +1,9 @@
+{
+	"checks": 499,
+	"facts": {
+		"actual_colors": 73,
+		"rain_count": 79
+	},
+	"failures": [],
+	"scope": "All40long-charge actual1s PCM layers/endpoints;exact Stern Fan palette parity for1–256projectiles including partial rows;real charged salvo count,individual motion,body/glow/residual trail rendering. Visual fixture,not human audio approval."
+}
