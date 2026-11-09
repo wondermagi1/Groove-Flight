@@ -19,7 +19,7 @@ func _initialize() -> void:
 			var bytes=FileAccess.get_file_as_bytes(path); var digest=HashingContext.new()
 			digest.start(HashingContext.HASH_SHA256); digest.update(bytes)
 			samples.append({"pitch":i,"path":path,"bytes":bytes.size(),"sha256":digest.finish().hex_encode()})
-		weapons.append({"id":str(row.id),"name":str(row.name),"family":str(row.family),"voice":str(row.voice),"instrument":str(row.instrument),"recorded_audio":false,"reference_layer":"sampled_instrument","sound_trigger":"actual_fire","charge_rounds":int(row.charge),"fire_interval_seconds":float(row.charge)*L.SEQUENCE_LOOP_SECONDS,"cadence":L.cadence_profile_for(row),"cadence_total":1.,"samples":samples})
+		weapons.append({"id":str(row.id),"name":str(row.name),"family":str(row.family),"voice":str(row.voice),"instrument":str(row.instrument),"instrument_group":str(row.instrument_group),"instrument_program":int(row.instrument_program),"recorded_audio":false,"reference_layer":"sampled_instrument","sound_trigger":"actual_fire","charge_rounds":int(row.charge),"fire_interval_seconds":float(row.charge)*L.SEQUENCE_LOOP_SECONDS,"cadence":L.cadence_profile_for(row),"cadence_total":1.,"samples":samples})
 		weapons[-1].dynamics=dynamics.weapons.filter(func(w): return w.id==row.id)[0]
 		weapons[-1].strength_pattern=EXPRESSION.pattern(int(row.charge))
 		weapons[-1].strength_phrase=EXPRESSION.describe(int(row.charge))

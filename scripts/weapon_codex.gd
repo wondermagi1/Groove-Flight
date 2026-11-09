@@ -5,6 +5,7 @@ const DATA=preload("res://scripts/arsenal_catalog.gd")
 const LOADOUT=preload("res://scripts/arsenal_loadout.gd")
 const EXPRESSION=preload("res://scripts/weapon_expression.gd")
 const ART=preload("res://scripts/item_art.gd")
+const GROUPS=preload("res://scripts/instrument_groups.gd")
 var game
 var selected_id: String="pulse"
 var selected_family_id: String="pulse"
@@ -30,6 +31,58 @@ var queue_timer: float=0.
 var selected_pitch: int=0
 var play_log: Array[Dictionary]=[]
 var manifest: Dictionary={}
+var group_mode: OptionButton
+var charge_filter: OptionButton
+var instrument_filter: OptionButton
+var card_sections: VBoxContainer
+var filter_count: Label
+
+func filtered_cards() -> Array[Dictionary]:
+	var rows: Array[Dictionary]=[]
+	var charge=charge_filter.get_selected_id()
+	var instrument="" if instrument_filter.selected==0 else str(GROUPS.ROWS[instrument_filter.selected-1][0])
+	for row in _unique_weapon_cards():
+		if charge>0 and int(row.charge)!=charge: continue
+		if not instrument.is_empty() and str(row.instrument_group)!=instrument: continue
+		rows.append(row)
+	return rows
+
+func _refresh_cards(_choice: int=0) -> void:
+	queued.clear()
+	for player in audition_players: player.stop()
+	for child in card_sections.get_children(): card_sections.remove_child(child); child.queue_free()
+	card_buttons.clear()
+	var rows=filtered_cards()
+	filter_count.text="%d / %d 种武器"%[rows.size(),_unique_weapon_cards().size()]
+	var keys: Array=[]
+	if group_mode.selected==0:
+		for group in GROUPS.ROWS: keys.append(str(group[0]))
+	else: keys=GROUPS.CHARGES.duplicate()
+	for key in keys:
+		var members: Array=[]
+		for row in rows:
+			if (str(row.instrument_group)==str(key) if group_mode.selected==0 else int(row.charge)==int(key)): members.append(row)
+		if members.is_empty(): continue
+		var caption=GROUPS.title(str(key)) if group_mode.selected==0 else "%d轮充能 · 每%.1f秒发射"%[int(key),float(key)*LOADOUT.SEQUENCE_LOOP_SECONDS]
+		card_sections.add_child(_label("%s  ·  %d种"%[caption,members.size()],19,Color("9de5dc")))
+		var grid=GridContainer.new(); grid.columns=4; grid.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+		grid.add_theme_constant_override("h_separation",7); grid.add_theme_constant_override("v_separation",7); card_sections.add_child(grid)
+		for row in members:
+			var button=Button.new(); button.name="CodexCard_"+str(row.id)
+			button.text="%s\n%d轮 · %s"%[str(row.name),int(row.charge),GROUPS.title(str(row.instrument_group))]
+			button.tooltip_text="%s\n%s\n每%d轮实际发射时奏响"%[str(row.name),_recording_tag(str(row.id)),int(row.charge)]
+			button.custom_minimum_size=Vector2(126,74); button.size_flags_horizontal=Control.SIZE_EXPAND_FILL; button.focus_mode=Control.FOCUS_NONE
+			button.clip_text=true; button.add_theme_font_size_override("font_size",15)
+			button.add_theme_stylebox_override("normal",_box(Color("0d1927"),Color(row.color,.28),6,7))
+			button.add_theme_stylebox_override("hover",_box(Color("172c3a"),Color(row.color,.82),6,7))
+			button.add_theme_stylebox_override("pressed",_box(Color("244354"),row.color,6,7))
+			button.add_theme_color_override("font_color",Color("dce9f5")); button.pressed.connect(select_weapon.bind(str(row.id)))
+			grid.add_child(button); card_buttons[str(row.id)]=button
+	var detail=get_node_or_null("WeaponCodexFrame/WeaponCodexDetail")
+	if detail: detail.visible=not rows.is_empty()
+	if rows.is_empty(): card_sections.add_child(_label("这个分类的武器尚未开发",18,Color("8ca9bf")))
+	elif not audition_players.is_empty(): select_weapon(selected_id if card_buttons.has(selected_id) else str(rows[0].id))
+	_layout()
 
 func _recording_tag(id: String) -> String:
 	if bool(DATA.item(id).get("instrument_samples",false)): return str(_record(id).get("dynamics",{}).get("performance_instrument",DATA.item(id).get("instrument","乐器音色")))
@@ -106,20 +159,20 @@ func _ready() -> void:
 	close.add_theme_stylebox_override("normal",_box(Color("122233"),Color("5c768c"),6,7)); close.add_theme_stylebox_override("hover",_box(Color("213c4d"),Color("9bdde0"),6,7))
 	close.add_theme_color_override("font_color",Color("c5e7ed")); close.pressed.connect(queue_free); frame.add_child(close)
 	var left=PanelContainer.new(); left.position=Vector2(24,92); left.size=Vector2(560,700); left.add_theme_stylebox_override("panel",_box(Color("07101c"),Color("263d52"),8,12)); frame.add_child(left)
-	var scroll=ScrollContainer.new(); scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED; left.add_child(scroll)
-	var grid=GridContainer.new(); grid.columns=4; grid.add_theme_constant_override("h_separation",7); grid.add_theme_constant_override("v_separation",7); scroll.add_child(grid)
-	for row in _unique_weapon_cards():
-		var button=Button.new(); button.name="CodexCard_"+str(row.id)
-		var tiers=_quality_rows(str(row.id)).size()
-		var tier_text="%d档品质"%tiers if tiers>1 else _recording_tag(str(row.id))
-		button.text="%s\n%s" % [str(row.name),tier_text]
-		button.custom_minimum_size=Vector2(126,74); button.focus_mode=Control.FOCUS_NONE
-		button.add_theme_font_size_override("font_size",15)
-		button.add_theme_stylebox_override("normal",_box(Color("0d1927"),Color(row.color,.28),6,7))
-		button.add_theme_stylebox_override("hover",_box(Color("172c3a"),Color(row.color,.82),6,7))
-		button.add_theme_stylebox_override("pressed",_box(Color("244354"),row.color,6,7))
-		button.add_theme_color_override("font_color",Color("dce9f5")); button.pressed.connect(select_weapon.bind(str(row.id)))
-		grid.add_child(button); card_buttons[str(row.id)]=button
+	var listing=VBoxContainer.new(); listing.size_flags_horizontal=Control.SIZE_EXPAND_FILL; listing.add_theme_constant_override("separation",10); left.add_child(listing)
+	var filters=HBoxContainer.new(); filters.add_theme_constant_override("separation",6); listing.add_child(filters)
+	group_mode=OptionButton.new(); group_mode.name="CodexGroupMode"; group_mode.add_item("按乐器分组"); group_mode.add_item("按充能分组"); filters.add_child(group_mode)
+	charge_filter=OptionButton.new(); charge_filter.name="CodexChargeFilter"; charge_filter.add_item("全部回合",0)
+	for charge in GROUPS.CHARGES: charge_filter.add_item("%d轮充能"%charge,int(charge))
+	filters.add_child(charge_filter)
+	instrument_filter=OptionButton.new(); instrument_filter.name="CodexInstrumentFilter"; instrument_filter.add_item("全部乐器")
+	for group in GROUPS.ROWS: instrument_filter.add_item(str(group[1]))
+	filters.add_child(instrument_filter)
+	for control in [group_mode,charge_filter,instrument_filter]:
+		control.size_flags_horizontal=Control.SIZE_EXPAND_FILL; control.add_theme_font_size_override("font_size",16); control.item_selected.connect(_refresh_cards)
+	filter_count=_label("",16,Color("8ca9bf")); listing.add_child(filter_count)
+	var scroll=ScrollContainer.new(); scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED; scroll.size_flags_vertical=Control.SIZE_EXPAND_FILL; listing.add_child(scroll)
+	card_sections=VBoxContainer.new(); card_sections.size_flags_horizontal=Control.SIZE_EXPAND_FILL; card_sections.add_theme_constant_override("separation",12); scroll.add_child(card_sections)
 	var detail=PanelContainer.new(); detail.name="WeaponCodexDetail"; detail.position=Vector2(602,92); detail.size=Vector2(590,700); detail.add_theme_stylebox_override("panel",_box(Color("07111f"),Color("2b455b"),8,18)); frame.add_child(detail)
 	var detail_scroll=ScrollContainer.new(); detail_scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED; detail_scroll.size_flags_vertical=Control.SIZE_EXPAND_FILL; detail.add_child(detail_scroll)
 	var detail_column=VBoxContainer.new(); detail_column.add_theme_constant_override("separation",8); detail_column.size_flags_horizontal=Control.SIZE_EXPAND_FILL; detail_scroll.add_child(detail_column)
@@ -148,7 +201,7 @@ func _ready() -> void:
 	audition_players.append(audio_player)
 	for i in range(3):
 		var player=AudioStreamPlayer.new(); player.bus=game.AUDIO.WEAPONS; player.volume_db=-2.; add_child(player); audition_players.append(player)
-	resized.connect(_layout); _layout(); select_weapon("pulse")
+	resized.connect(_layout); _refresh_cards(); _layout()
 
 func _layout() -> void:
 	if not is_inside_tree(): return
@@ -165,6 +218,10 @@ func _layout() -> void:
 	if detail:
 		detail.position=Vector2(24+maxf(360.,frame.size.x*.46)+18,92)
 		detail.size=Vector2(frame.size.x-detail.position.x-24,frame.size.y-116)
+
+	if is_instance_valid(card_sections):
+		for section in card_sections.get_children():
+			if section is GridContainer: section.columns=clampi(floori((maxf(360.,frame.size.x*.46)-24.)/133.),2,5)
 
 func _load_manifest() -> void:
 	if not FileAccess.file_exists("res://audio/weapon_codex.json"): return

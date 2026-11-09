@@ -1,0 +1,54 @@
+{
+  "version": "0.40.0-balance-codex-foundation",
+  "date": "2026-11-09",
+  "backup": "63385cb2909b5b7aa7e4d9cbcf75a32db95a6380",
+  "reports": [
+    {
+      "file": "results-v40-foundation.json",
+      "checks": 881,
+      "failures": []
+    },
+    {
+      "file": "results-v40-balance.json",
+      "checks": null,
+      "failures": []
+    },
+    {
+      "file": "results-v36-weapon-expression.json",
+      "checks": 320,
+      "failures": []
+    },
+    {
+      "file": "results-v34-weapon-sync.json",
+      "checks": 85,
+      "failures": []
+    },
+    {
+      "file": "results-weapon-cycle.json",
+      "checks": 216,
+      "failures": []
+    },
+    {
+      "file": "results-composer-score.json",
+      "checks": 112,
+      "failures": []
+    },
+    {
+      "file": "results-v29-music-shop-hud.json",
+      "checks": 351,
+      "failures": []
+    }
+  ],
+  "native_layouts": [
+    "../screenshots/v40-codex-instrument-1280.png",
+    "../screenshots/v40-codex-instrument-1920.png",
+    "../screenshots/v40-codex-charge-1280.png",
+    "../screenshots/v40-codex-charge-1920.png"
+  ],
+  "limits": [
+    "Three seeded numerical routes with modeled15s shops are not human win rates or all-planet/hard-mode certification.",
+    "Boss durations are actual outcomes,not enforced deadlines.",
+    "Balance simulation reports resource-release warnings at process exit;no failed simulation assertions.",
+    "No sustained60FPS certification;crowd kernel,projectile counts and VFX unchanged."
+  ]
+}

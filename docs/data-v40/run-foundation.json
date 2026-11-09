@@ -1,0 +1,1590 @@
+{
+	"boss": "actual death;35-50second planning assumption,build dependent",
+	"date": "2026-11-09",
+	"enemy_base_hp": {
+		"armor": 86.0,
+		"dart": 14.0,
+		"lance": 122.0,
+		"mirror": 92.0,
+		"mote": 16.0,
+		"sentinel": 112.0,
+		"shooter": 40.0,
+		"splitter": 60.0
+	},
+	"instrument_charge_coverage": [
+		{
+			"charges": {
+				"1": [
+					{
+						"id": "pulse",
+						"name": "脉冲机炮"
+					},
+					{
+						"id": "scatter",
+						"name": "星砂霰弹"
+					},
+					{
+						"id": "pulse_needle",
+						"name": "星针狙击器"
+					}
+				],
+				"2": [
+					{
+						"id": "missile",
+						"name": "彗星导弹"
+					}
+				],
+				"3": [
+					{
+						"id": "weave_cross",
+						"name": "虹织十字炮"
+					},
+					{
+						"id": "dawn_fan",
+						"name": "晨羽前奏"
+					}
+				],
+				"4": [
+					{
+						"id": "nova",
+						"name": "新星环炮"
+					},
+					{
+						"id": "scatter_prism",
+						"name": "七彩折光匣"
+					},
+					{
+						"id": "recorded_heavy",
+						"name": "终压攻城铳"
+					},
+					{
+						"id": "gilded_helix",
+						"name": "鎏金螺旋阵"
+					}
+				],
+				"6": [],
+				"8": [
+					{
+						"id": "rail_horizon",
+						"name": "地平线终奏"
+					}
+				]
+			},
+			"id": "piano",
+			"name": "钢琴"
+		},
+		{
+			"charges": {
+				"1": [
+					{
+						"id": "beam",
+						"name": "棱镜光束"
+					}
+				],
+				"2": [],
+				"3": [],
+				"4": [
+					{
+						"id": "tidal_weave",
+						"name": "潮汐弦歌"
+					}
+				],
+				"6": [],
+				"8": []
+			},
+			"id": "violin",
+			"name": "小提琴"
+		},
+		{
+			"charges": {
+				"1": [],
+				"2": [
+					{
+						"id": "beam_split",
+						"name": "双生棱镜"
+					}
+				],
+				"3": [],
+				"4": [],
+				"6": [],
+				"8": []
+			},
+			"id": "viola",
+			"name": "中提琴"
+		},
+		{
+			"charges": {
+				"1": [],
+				"2": [
+					{
+						"id": "rail",
+						"name": "苍穹轨炮"
+					}
+				],
+				"3": [],
+				"4": [],
+				"6": [],
+				"8": []
+			},
+			"id": "cello",
+			"name": "大提琴"
+		},
+		{
+			"charges": {
+				"1": [],
+				"2": [],
+				"3": [],
+				"4": [],
+				"6": [],
+				"8": []
+			},
+			"id": "double_bass",
+			"name": "倍大提琴"
+		},
+		{
+			"charges": {
+				"1": [],
+				"2": [
+					{
+						"id": "chain",
+						"name": "跃迁电弧"
+					}
+				],
+				"3": [
+					{
+						"id": "crown_orbit",
+						"name": "星冕回旋阵"
+					},
+					{
+						"id": "stern_fan",
+						"name": "尾羽回响"
+					},
+					{
+						"id": "firefly_rain",
+						"name": "流萤织雨"
+					}
+				],
+				"4": [],
+				"6": [],
+				"8": []
+			},
+			"id": "harp",
+			"name": "竖琴"
+		},
+		{
+			"charges": {
+				"1": [],
+				"2": [],
+				"3": [],
+				"4": [],
+				"6": [],
+				"8": []
+			},
+			"id": "flute",
+			"name": "长笛"
+		},
+		{
+			"charges": {
+				"1": [],
+				"2": [],
+				"3": [],
+				"4": [],
+				"6": [],
+				"8": []
+			},
+			"id": "clarinet",
+			"name": "单簧管"
+		},
+		{
+			"charges": {
+				"1": [],
+				"2": [],
+				"3": [],
+				"4": [],
+				"6": [],
+				"8": []
+			},
+			"id": "oboe",
+			"name": "双簧管"
+		},
+		{
+			"charges": {
+				"1": [],
+				"2": [],
+				"3": [],
+				"4": [],
+				"6": [],
+				"8": []
+			},
+			"id": "bassoon",
+			"name": "巴松"
+		},
+		{
+			"charges": {
+				"1": [],
+				"2": [],
+				"3": [],
+				"4": [],
+				"6": [],
+				"8": []
+			},
+			"id": "triangle",
+			"name": "三角铁"
+		},
+		{
+			"charges": {
+				"1": [],
+				"2": [],
+				"3": [],
+				"4": [],
+				"6": [],
+				"8": []
+			},
+			"id": "glockenspiel",
+			"name": "钟琴"
+		},
+		{
+			"charges": {
+				"1": [],
+				"2": [],
+				"3": [],
+				"4": [],
+				"6": [],
+				"8": []
+			},
+			"id": "timpani",
+			"name": "定音鼓"
+		}
+	],
+	"loot_multiplier": 1.5,
+	"ordinary_seconds": [
+		20.0,
+		20.0,
+		20.0,
+		27.0,
+		27.0,
+		33.0,
+		40.0
+	],
+	"routes": [
+		{
+			"difficulty": 0,
+			"planet": "mercury",
+			"rules": {
+				"accent": "(0.8471, 0.7098, 0.5804, 1.0)",
+				"boss_hp": 90000.0,
+				"bullet_speed": 1.0,
+				"damage": 1.0,
+				"difficulty": 0,
+				"drop_scale": 1.0,
+				"enemy_speed": 1.0,
+				"hp_scale": 1.0,
+				"planet_style": 0,
+				"sky_tint": "(0.4, 0.3255, 0.298, 1.0)"
+			},
+			"shop_price_scale": 3.0,
+			"waves": [
+				{
+					"budget": 182,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "日照试航",
+					"seconds": 20.0
+				},
+				{
+					"budget": 241,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "浅坑编队",
+					"seconds": 20.0
+				},
+				{
+					"budget": 312,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "终昏弯月",
+					"seconds": 20.0
+				},
+				{
+					"budget": 396,
+					"difficulty": 0,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "矿脊拦截",
+					"seconds": 27.0
+				},
+				{
+					"budget": 503,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "热流出口",
+					"seconds": 27.0
+				},
+				{
+					"budget": 615,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "热流出口 · 再迎击2",
+					"seconds": 33.0
+				},
+				{
+					"budget": 732,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "热流出口 · 再迎击3",
+					"seconds": 40.0
+				},
+				{
+					"budget": 0,
+					"elite": false,
+					"formation": "boss",
+					"name": "水星机器",
+					"seconds": 0.0
+				}
+			]
+		},
+		{
+			"difficulty": 1,
+			"planet": "mercury",
+			"rules": {
+				"accent": "(0.8471, 0.7098, 0.5804, 1.0)",
+				"boss_hp": 117000.0,
+				"bullet_speed": 1.08,
+				"damage": 1.14,
+				"difficulty": 1,
+				"drop_scale": 1.12,
+				"enemy_speed": 1.05,
+				"hp_scale": 1.18,
+				"planet_style": 0,
+				"sky_tint": "(0.4, 0.3255, 0.298, 1.0)"
+			},
+			"shop_price_scale": 3.0,
+			"waves": [
+				{
+					"budget": 215,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "日照试航",
+					"seconds": 20.0
+				},
+				{
+					"budget": 284,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "浅坑编队",
+					"seconds": 20.0
+				},
+				{
+					"budget": 368,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "终昏弯月",
+					"seconds": 20.0
+				},
+				{
+					"budget": 467,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "矿脊拦截",
+					"seconds": 27.0
+				},
+				{
+					"budget": 593,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "热流出口",
+					"seconds": 27.0
+				},
+				{
+					"budget": 726,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "热流出口 · 再迎击2",
+					"seconds": 33.0
+				},
+				{
+					"budget": 864,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "热流出口 · 再迎击3",
+					"seconds": 40.0
+				},
+				{
+					"budget": 0,
+					"elite": false,
+					"formation": "boss",
+					"name": "水星机器",
+					"seconds": 0.0
+				}
+			]
+		},
+		{
+			"difficulty": 0,
+			"planet": "venus",
+			"rules": {
+				"accent": "(1.0, 0.651, 0.4039, 1.0)",
+				"boss_hp": 90000.0,
+				"bullet_speed": 1.04,
+				"damage": 1.15,
+				"difficulty": 0,
+				"drop_scale": 1.08,
+				"enemy_speed": 1.04,
+				"hp_scale": 1.18,
+				"planet_style": 1,
+				"sky_tint": "(0.5216, 0.2824, 0.1804, 1.0)"
+			},
+			"shop_price_scale": 3.36,
+			"waves": [
+				{
+					"budget": 247,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "入云",
+					"seconds": 20.0
+				},
+				{
+					"budget": 343,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "硫幕蜂群",
+					"seconds": 20.0
+				},
+				{
+					"budget": 454,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "风眼缺口",
+					"seconds": 20.0
+				},
+				{
+					"budget": 579,
+					"difficulty": 0,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "炽云突围",
+					"seconds": 27.0
+				},
+				{
+					"budget": 725,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "双层锋面",
+					"seconds": 27.0
+				},
+				{
+					"budget": 892,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "暮光交击",
+					"seconds": 33.0
+				},
+				{
+					"budget": 1068,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "暮光交击 · 再迎击2",
+					"seconds": 40.0
+				},
+				{
+					"budget": 0,
+					"elite": false,
+					"formation": "boss",
+					"name": "金星机器",
+					"seconds": 0.0
+				}
+			]
+		},
+		{
+			"difficulty": 1,
+			"planet": "venus",
+			"rules": {
+				"accent": "(1.0, 0.651, 0.4039, 1.0)",
+				"boss_hp": 117000.0,
+				"bullet_speed": 1.1232,
+				"damage": 1.311,
+				"difficulty": 1,
+				"drop_scale": 1.2096,
+				"enemy_speed": 1.092,
+				"hp_scale": 1.3924,
+				"planet_style": 1,
+				"sky_tint": "(0.5216, 0.2824, 0.1804, 1.0)"
+			},
+			"shop_price_scale": 3.36,
+			"waves": [
+				{
+					"budget": 291,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "入云",
+					"seconds": 20.0
+				},
+				{
+					"budget": 405,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "硫幕蜂群",
+					"seconds": 20.0
+				},
+				{
+					"budget": 535,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "风眼缺口",
+					"seconds": 20.0
+				},
+				{
+					"budget": 683,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "炽云突围",
+					"seconds": 27.0
+				},
+				{
+					"budget": 855,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "双层锋面",
+					"seconds": 27.0
+				},
+				{
+					"budget": 1053,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "暮光交击",
+					"seconds": 33.0
+				},
+				{
+					"budget": 1260,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "暮光交击 · 再迎击2",
+					"seconds": 40.0
+				},
+				{
+					"budget": 0,
+					"elite": false,
+					"formation": "boss",
+					"name": "金星机器",
+					"seconds": 0.0
+				}
+			]
+		},
+		{
+			"difficulty": 0,
+			"planet": "earth",
+			"rules": {
+				"accent": "(0.4, 0.8431, 0.9608, 1.0)",
+				"boss_hp": 85000.0,
+				"bullet_speed": 1.08,
+				"damage": 1.32,
+				"difficulty": 0,
+				"drop_scale": 1.18,
+				"enemy_speed": 1.08,
+				"hp_scale": 1.38,
+				"planet_style": 2,
+				"sky_tint": "(0.1569, 0.3725, 0.5333, 1.0)"
+			},
+			"shop_price_scale": 3.72,
+			"waves": [
+				{
+					"budget": 312,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "外海接触",
+					"seconds": 20.0
+				},
+				{
+					"budget": 441,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "赤道双列",
+					"seconds": 20.0
+				},
+				{
+					"budget": 605,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "潮汐防线",
+					"seconds": 20.0
+				},
+				{
+					"budget": 791,
+					"difficulty": 0,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "近岸楔阵",
+					"seconds": 27.0
+				},
+				{
+					"budget": 986,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "轨道救援",
+					"seconds": 27.0
+				},
+				{
+					"budget": 1190,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "交叉护航",
+					"seconds": 33.0
+				},
+				{
+					"budget": 1434,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "蔚蓝合奏",
+					"seconds": 40.0
+				},
+				{
+					"budget": 0,
+					"elite": false,
+					"formation": "boss",
+					"name": "地球机器",
+					"seconds": 0.0
+				}
+			]
+		},
+		{
+			"difficulty": 1,
+			"planet": "earth",
+			"rules": {
+				"accent": "(0.4, 0.8431, 0.9608, 1.0)",
+				"boss_hp": 110500.0,
+				"bullet_speed": 1.1664,
+				"damage": 1.5048,
+				"difficulty": 1,
+				"drop_scale": 1.3216,
+				"enemy_speed": 1.134,
+				"hp_scale": 1.6284,
+				"planet_style": 2,
+				"sky_tint": "(0.1569, 0.3725, 0.5333, 1.0)"
+			},
+			"shop_price_scale": 3.72,
+			"waves": [
+				{
+					"budget": 368,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "外海接触",
+					"seconds": 20.0
+				},
+				{
+					"budget": 521,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "赤道双列",
+					"seconds": 20.0
+				},
+				{
+					"budget": 714,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "潮汐防线",
+					"seconds": 20.0
+				},
+				{
+					"budget": 933,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "近岸楔阵",
+					"seconds": 27.0
+				},
+				{
+					"budget": 1163,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "轨道救援",
+					"seconds": 27.0
+				},
+				{
+					"budget": 1404,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "交叉护航",
+					"seconds": 33.0
+				},
+				{
+					"budget": 1692,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "蔚蓝合奏",
+					"seconds": 40.0
+				},
+				{
+					"budget": 0,
+					"elite": false,
+					"formation": "boss",
+					"name": "地球机器",
+					"seconds": 0.0
+				}
+			]
+		},
+		{
+			"difficulty": 0,
+			"planet": "mars",
+			"rules": {
+				"accent": "(0.9333, 0.5294, 0.4235, 1.0)",
+				"boss_hp": 92000.0,
+				"bullet_speed": 1.11,
+				"damage": 1.52,
+				"difficulty": 0,
+				"drop_scale": 1.3,
+				"enemy_speed": 1.11,
+				"hp_scale": 1.62,
+				"planet_style": 3,
+				"sky_tint": "(0.4667, 0.2431, 0.251, 1.0)"
+			},
+			"shop_price_scale": 4.08,
+			"waves": [
+				{
+					"budget": 377,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "红沙冲锋",
+					"seconds": 20.0
+				},
+				{
+					"budget": 522,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "峡谷交击",
+					"seconds": 20.0
+				},
+				{
+					"budget": 701,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "重装廊道",
+					"seconds": 20.0
+				},
+				{
+					"budget": 918,
+					"difficulty": 0,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "断层缺口",
+					"seconds": 27.0
+				},
+				{
+					"budget": 1160,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "沙暴雷群",
+					"seconds": 27.0
+				},
+				{
+					"budget": 1413,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "前哨重启",
+					"seconds": 33.0
+				},
+				{
+					"budget": 1693,
+					"difficulty": 0,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "双锋反攻",
+					"seconds": 40.0
+				},
+				{
+					"budget": 0,
+					"elite": false,
+					"formation": "boss",
+					"name": "火星机器",
+					"seconds": 0.0
+				}
+			]
+		},
+		{
+			"difficulty": 1,
+			"planet": "mars",
+			"rules": {
+				"accent": "(0.9333, 0.5294, 0.4235, 1.0)",
+				"boss_hp": 119600.0,
+				"bullet_speed": 1.1988,
+				"damage": 1.7328,
+				"difficulty": 1,
+				"drop_scale": 1.456,
+				"enemy_speed": 1.1655,
+				"hp_scale": 1.9116,
+				"planet_style": 3,
+				"sky_tint": "(0.4667, 0.2431, 0.251, 1.0)"
+			},
+			"shop_price_scale": 4.08,
+			"waves": [
+				{
+					"budget": 445,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "红沙冲锋",
+					"seconds": 20.0
+				},
+				{
+					"budget": 616,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "峡谷交击",
+					"seconds": 20.0
+				},
+				{
+					"budget": 827,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "重装廊道",
+					"seconds": 20.0
+				},
+				{
+					"budget": 1083,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "断层缺口",
+					"seconds": 27.0
+				},
+				{
+					"budget": 1369,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "沙暴雷群",
+					"seconds": 27.0
+				},
+				{
+					"budget": 1667,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "前哨重启",
+					"seconds": 33.0
+				},
+				{
+					"budget": 1997,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "双锋反攻",
+					"seconds": 40.0
+				},
+				{
+					"budget": 0,
+					"elite": false,
+					"formation": "boss",
+					"name": "火星机器",
+					"seconds": 0.0
+				}
+			]
+		},
+		{
+			"difficulty": 0,
+			"planet": "jupiter",
+			"rules": {
+				"accent": "(0.8863, 0.6902, 0.5216, 1.0)",
+				"boss_hp": 100000.0,
+				"bullet_speed": 1.15,
+				"damage": 1.82,
+				"difficulty": 0,
+				"drop_scale": 1.43,
+				"enemy_speed": 1.15,
+				"hp_scale": 1.92,
+				"planet_style": 4,
+				"sky_tint": "(0.451, 0.3216, 0.2706, 1.0)"
+			},
+			"shop_price_scale": 4.44,
+			"waves": [
+				{
+					"budget": 455,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "云带剪影",
+					"seconds": 20.0
+				},
+				{
+					"budget": 646,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "巨斑裂弧",
+					"seconds": 20.0
+				},
+				{
+					"budget": 898,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "风暴辫流",
+					"seconds": 20.0
+				},
+				{
+					"budget": 1194,
+					"difficulty": 0,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "雷群聚合",
+					"seconds": 27.0
+				},
+				{
+					"budget": 1513,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "气旋交叉",
+					"seconds": 27.0
+				},
+				{
+					"budget": 1859,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "压境楔群",
+					"seconds": 33.0
+				},
+				{
+					"budget": 2227,
+					"difficulty": 0,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "六角眼壁",
+					"seconds": 40.0
+				},
+				{
+					"budget": 0,
+					"elite": false,
+					"formation": "boss",
+					"name": "木星机器",
+					"seconds": 0.0
+				}
+			]
+		},
+		{
+			"difficulty": 1,
+			"planet": "jupiter",
+			"rules": {
+				"accent": "(0.8863, 0.6902, 0.5216, 1.0)",
+				"boss_hp": 130000.0,
+				"bullet_speed": 1.242,
+				"damage": 2.0748,
+				"difficulty": 1,
+				"drop_scale": 1.6016,
+				"enemy_speed": 1.2075,
+				"hp_scale": 2.2656,
+				"planet_style": 4,
+				"sky_tint": "(0.451, 0.3216, 0.2706, 1.0)"
+			},
+			"shop_price_scale": 4.44,
+			"waves": [
+				{
+					"budget": 537,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "云带剪影",
+					"seconds": 20.0
+				},
+				{
+					"budget": 763,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "巨斑裂弧",
+					"seconds": 20.0
+				},
+				{
+					"budget": 1060,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "风暴辫流",
+					"seconds": 20.0
+				},
+				{
+					"budget": 1408,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "雷群聚合",
+					"seconds": 27.0
+				},
+				{
+					"budget": 1785,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "气旋交叉",
+					"seconds": 27.0
+				},
+				{
+					"budget": 2194,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "压境楔群",
+					"seconds": 33.0
+				},
+				{
+					"budget": 2627,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "六角眼壁",
+					"seconds": 40.0
+				},
+				{
+					"budget": 0,
+					"elite": false,
+					"formation": "boss",
+					"name": "木星机器",
+					"seconds": 0.0
+				}
+			]
+		},
+		{
+			"difficulty": 0,
+			"planet": "saturn",
+			"rules": {
+				"accent": "(0.9098, 0.8314, 0.6039, 1.0)",
+				"boss_hp": 108000.0,
+				"bullet_speed": 1.19,
+				"damage": 2.12,
+				"difficulty": 0,
+				"drop_scale": 1.58,
+				"enemy_speed": 1.18,
+				"hp_scale": 2.22,
+				"planet_style": 5,
+				"sky_tint": "(0.3922, 0.3804, 0.2627, 1.0)"
+			},
+			"shop_price_scale": 4.8,
+			"waves": [
+				{
+					"budget": 533,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "光环入口",
+					"seconds": 20.0
+				},
+				{
+					"budget": 771,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "六芒卫队",
+					"seconds": 20.0
+				},
+				{
+					"budget": 1059,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "碎环缺口",
+					"seconds": 20.0
+				},
+				{
+					"budget": 1391,
+					"difficulty": 0,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "冰尘楔阵",
+					"seconds": 27.0
+				},
+				{
+					"budget": 1759,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "双轨封锁",
+					"seconds": 27.0
+				},
+				{
+					"budget": 2164,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "环带弯月",
+					"seconds": 33.0
+				},
+				{
+					"budget": 2593,
+					"difficulty": 0,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "交会节点",
+					"seconds": 40.0
+				},
+				{
+					"budget": 0,
+					"elite": false,
+					"formation": "boss",
+					"name": "土星机器",
+					"seconds": 0.0
+				}
+			]
+		},
+		{
+			"difficulty": 1,
+			"planet": "saturn",
+			"rules": {
+				"accent": "(0.9098, 0.8314, 0.6039, 1.0)",
+				"boss_hp": 140400.0,
+				"bullet_speed": 1.2852,
+				"damage": 2.4168,
+				"difficulty": 1,
+				"drop_scale": 1.7696,
+				"enemy_speed": 1.239,
+				"hp_scale": 2.6196,
+				"planet_style": 5,
+				"sky_tint": "(0.3922, 0.3804, 0.2627, 1.0)"
+			},
+			"shop_price_scale": 4.8,
+			"waves": [
+				{
+					"budget": 629,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "光环入口",
+					"seconds": 20.0
+				},
+				{
+					"budget": 910,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "六芒卫队",
+					"seconds": 20.0
+				},
+				{
+					"budget": 1249,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "碎环缺口",
+					"seconds": 20.0
+				},
+				{
+					"budget": 1642,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "冰尘楔阵",
+					"seconds": 27.0
+				},
+				{
+					"budget": 2076,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "双轨封锁",
+					"seconds": 27.0
+				},
+				{
+					"budget": 2554,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "环带弯月",
+					"seconds": 33.0
+				},
+				{
+					"budget": 3059,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "交会节点",
+					"seconds": 40.0
+				},
+				{
+					"budget": 0,
+					"elite": false,
+					"formation": "boss",
+					"name": "土星机器",
+					"seconds": 0.0
+				}
+			]
+		},
+		{
+			"difficulty": 0,
+			"planet": "uranus",
+			"rules": {
+				"accent": "(0.5608, 0.902, 0.9098, 1.0)",
+				"boss_hp": 115000.0,
+				"bullet_speed": 1.23,
+				"damage": 2.42,
+				"difficulty": 0,
+				"drop_scale": 1.75,
+				"enemy_speed": 1.21,
+				"hp_scale": 2.55,
+				"planet_style": 6,
+				"sky_tint": "(0.2078, 0.4275, 0.4627, 1.0)"
+			},
+			"shop_price_scale": 5.16,
+			"waves": [
+				{
+					"budget": 611,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "极夜断弧",
+					"seconds": 20.0
+				},
+				{
+					"budget": 909,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "倾轴双流",
+					"seconds": 20.0
+				},
+				{
+					"budget": 1283,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "冰缝交锋",
+					"seconds": 20.0
+				},
+				{
+					"budget": 1709,
+					"difficulty": 0,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "镜晶蜂群",
+					"seconds": 27.0
+				},
+				{
+					"budget": 2185,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "冷涡月阵",
+					"seconds": 27.0
+				},
+				{
+					"budget": 2668,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "极光双列",
+					"seconds": 33.0
+				},
+				{
+					"budget": 3172,
+					"difficulty": 0,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "反向穿插",
+					"seconds": 40.0
+				},
+				{
+					"budget": 0,
+					"elite": false,
+					"formation": "boss",
+					"name": "天王星机器",
+					"seconds": 0.0
+				}
+			]
+		},
+		{
+			"difficulty": 1,
+			"planet": "uranus",
+			"rules": {
+				"accent": "(0.5608, 0.902, 0.9098, 1.0)",
+				"boss_hp": 149500.0,
+				"bullet_speed": 1.3284,
+				"damage": 2.7588,
+				"difficulty": 1,
+				"drop_scale": 1.96,
+				"enemy_speed": 1.2705,
+				"hp_scale": 3.009,
+				"planet_style": 6,
+				"sky_tint": "(0.2078, 0.4275, 0.4627, 1.0)"
+			},
+			"shop_price_scale": 5.16,
+			"waves": [
+				{
+					"budget": 721,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "极夜断弧",
+					"seconds": 20.0
+				},
+				{
+					"budget": 1073,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "倾轴双流",
+					"seconds": 20.0
+				},
+				{
+					"budget": 1514,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "冰缝交锋",
+					"seconds": 20.0
+				},
+				{
+					"budget": 2017,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "镜晶蜂群",
+					"seconds": 27.0
+				},
+				{
+					"budget": 2578,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "冷涡月阵",
+					"seconds": 27.0
+				},
+				{
+					"budget": 3148,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "极光双列",
+					"seconds": 33.0
+				},
+				{
+					"budget": 3743,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "反向穿插",
+					"seconds": 40.0
+				},
+				{
+					"budget": 0,
+					"elite": false,
+					"formation": "boss",
+					"name": "天王星机器",
+					"seconds": 0.0
+				}
+			]
+		},
+		{
+			"difficulty": 0,
+			"planet": "neptune",
+			"rules": {
+				"accent": "(0.5294, 0.6118, 1.0, 1.0)",
+				"boss_hp": 120000.0,
+				"bullet_speed": 1.27,
+				"damage": 2.75,
+				"difficulty": 0,
+				"drop_scale": 1.95,
+				"enemy_speed": 1.24,
+				"hp_scale": 2.9,
+				"planet_style": 7,
+				"sky_tint": "(0.2078, 0.2275, 0.502, 1.0)"
+			},
+			"shop_price_scale": 5.52,
+			"waves": [
+				{
+					"budget": 702,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "深蓝门槛",
+					"seconds": 20.0
+				},
+				{
+					"budget": 1016,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "暗流交错",
+					"seconds": 20.0
+				},
+				{
+					"budget": 1393,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "风暴断面",
+					"seconds": 20.0
+				},
+				{
+					"budget": 1836,
+					"difficulty": 0,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "深潮编织",
+					"seconds": 27.0
+				},
+				{
+					"budget": 2310,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "双线合围",
+					"seconds": 27.0
+				},
+				{
+					"budget": 2826,
+					"difficulty": 0,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "远海群落",
+					"seconds": 33.0
+				},
+				{
+					"budget": 3386,
+					"difficulty": 0,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "无光弯月",
+					"seconds": 40.0
+				},
+				{
+					"budget": 0,
+					"elite": false,
+					"formation": "boss",
+					"name": "海王星机器",
+					"seconds": 0.0
+				}
+			]
+		},
+		{
+			"difficulty": 1,
+			"planet": "neptune",
+			"rules": {
+				"accent": "(0.5294, 0.6118, 1.0, 1.0)",
+				"boss_hp": 156000.0,
+				"bullet_speed": 1.3716,
+				"damage": 3.135,
+				"difficulty": 1,
+				"drop_scale": 2.184,
+				"enemy_speed": 1.302,
+				"hp_scale": 3.422,
+				"planet_style": 7,
+				"sky_tint": "(0.2078, 0.2275, 0.502, 1.0)"
+			},
+			"shop_price_scale": 5.52,
+			"waves": [
+				{
+					"budget": 828,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "battalion_grid",
+					"name": "深蓝门槛",
+					"seconds": 20.0
+				},
+				{
+					"budget": 1199,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "暗流交错",
+					"seconds": 20.0
+				},
+				{
+					"budget": 1644,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "风暴断面",
+					"seconds": 20.0
+				},
+				{
+					"budget": 2167,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "深潮编织",
+					"seconds": 27.0
+				},
+				{
+					"budget": 2726,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "双线合围",
+					"seconds": 27.0
+				},
+				{
+					"budget": 3335,
+					"difficulty": 1,
+					"elite": false,
+					"formation": "radial_bloom",
+					"name": "远海群落",
+					"seconds": 33.0
+				},
+				{
+					"budget": 3995,
+					"difficulty": 1,
+					"elite": true,
+					"formation": "battalion_grid",
+					"name": "无光弯月",
+					"seconds": 40.0
+				},
+				{
+					"budget": 0,
+					"elite": false,
+					"formation": "boss",
+					"name": "海王星机器",
+					"seconds": 0.0
+				}
+			]
+		}
+	],
+	"scope": "Current production policy and actual primary-source instrument coverage;empty cells are future gaps,not installed weapons or audio sources.",
+	"shop": "unlimited;typical12-18seconds each;manual pause/settings excluded",
+	"typical_total_seconds": [
+		306.0,
+		363.0
+	],
+	"version": "0.40.0-balance-codex-foundation"
+}

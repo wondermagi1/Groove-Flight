@@ -901,6 +901,7 @@ func _update_live() -> void:
 	if is_instance_valid(lab_status) and is_instance_valid(game.get("lab")): lab_status.text=game.lab.status+("\n"+game.lab.comparison if not game.lab.comparison.is_empty() else "")
 	if game == null or not is_instance_valid(content): return
 	if is_instance_valid(currency_label): currency_label.text = "✦ %d   /   WAVE %02d" % [int(game.dust), int(game.wave)]
+	if is_instance_valid(currency_label) and mode=="shop": currency_label.tooltip_text="本波拾取 %d · 通关补给 +%d · 商店不限时"%[game.picked-game.wave_picked_start,game.wave_supply]
 	if not stat_labels.is_empty():
 		var stats: Dictionary = game.loadout.stats()
 		for key in stat_labels:

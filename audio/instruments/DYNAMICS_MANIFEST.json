@@ -6,8 +6,8 @@
   "renderer": "TinySoundFont, MIT",
   "renderer_sha256": "70d55963c98f60ebb81518eaa1f25d46888d5180eb5f5289fd6b74ffc177d197",
   "format": "mono PCM16 22050Hz",
-  "revision": "chamber-v39-half-second-salvos",
-  "policy_sha256": "e9b9db7758f06cfd0b393599caa669ae7b436d958ab87a083c3512bdb6e62571",
+  "revision": "chamber-v40-charge-foundation",
+  "policy_sha256": "e8f445f8226756a51bf044b46910524ab36ded37ef5181ff608454c8e8270d39",
   "renderer_driver_sha256": "ed01518720c9d67618862d361dbe0f3d277e7f77170ffd1185fb377c696e555e",
   "scope": "76independent same-root performances;source velocity zones,envelope/hold/release/lowpass and optional same-root bowed acoustic body for sustained salvos. Not four independent acoustic recordings. Original152 pitch samples untouched;no added oscillator,drum,electronic layer,pitch shift or time stretching.",
   "weapons": [

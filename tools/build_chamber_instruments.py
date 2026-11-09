@@ -38,6 +38,8 @@ def sync_catalog(entries):
         'const INSTRUMENTS=' + literal({e['id']: e['instrument'] for e in entries}),
         'const INSTRUMENT_ROOTS=' + literal({e['id']: e['root_midi'] for e in entries}),
         'const INSTRUMENT_FAMILIES=' + literal({e['id']: e['instrument_family'] for e in entries}),
+        'const INSTRUMENT_PROGRAMS=' + literal({e['id']: e['program'] for e in entries}),
+        'const INSTRUMENT_GROUP_OVERRIDES=' + literal({e['id']: e['instrument_group'] for e in entries if e.get('instrument_group')}),
         'const PERCUSSION_IDS=[]',
         'const NEW_INSTRUMENTS=' + literal({e['id']: e['instrument'] for e in entries
             if e['id'] in ['gilded_helix', 'weave_cross', 'crown_orbit', 'stern_fan'] or e.get('fleet_barrage', False)})]

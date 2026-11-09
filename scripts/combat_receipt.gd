@@ -21,8 +21,8 @@ func hit(kind: String,context: Dictionary,effective: float,raw: float,killed: bo
 		if killed: row.kills+=1
 		if int(context.get("depth",0))>0: row.procs+=1
 func count(key: String,amount: int=1) -> void: requests[key]=int(requests.get(key,0))+amount
-func end_wave(wave: int,seconds: float,dust: int,spawned: int,retreated: int) -> void:
-	waves.append({"wave":wave,"seconds":seconds,"dust":dust,"spawned":spawned,"retreated":retreated,"weapons":current.duplicate(true)})
+func end_wave(wave: int,seconds: float,dust: int,spawned: int,retreated: int,supply: int=0) -> void:
+	waves.append({"wave":wave,"seconds":seconds,"dust":dust,"spawned":spawned,"retreated":retreated,"supply":supply,"weapons":current.duplicate(true)})
 	current.clear()
 func for_uid(uid: int,last: bool=false) -> Dictionary:
 	var values: Dictionary=(waves[-1].weapons if not waves.is_empty() else {}) if last else total

@@ -1,6 +1,7 @@
 extends RefCounted
 ## Original arsenal. Every record is an independent mechanism, never a rarity copy.
 ## Percent rules use fractions; primary attributes use whole points; spread is radians.
+const INSTRUMENT_GROUPS=preload("res://scripts/instrument_groups.gd")
 const FAMILIES=["pulse","scatter","beam","missile","nova","chain","rail","boomerang","orbit","mine","flame","drone"]
 const FAMILY_NAMES=["机炮","霰弹","光束","导弹","环炮","电弧","轨炮","回旋刃","轨道卫星","地雷","焰流","无人机"]
 const COLORS=[Color("63e7df"),Color("ffc16b"),Color("ada2ff"),Color("ff86ab"),Color("91edbe"),Color("7fbcff"),Color("d3e7ff"),Color("cab2ff"),Color("80dfed"),Color("e0bb87"),Color("ff9672"),Color("b1dddb")]
@@ -18,6 +19,8 @@ const ACTIVE_WEAPON_IDS=["pulse","scatter","beam","missile","nova","chain","rail
 const INSTRUMENTS={"pulse":"延音中音钢琴","scatter":"明亮延音钢琴","beam":"清晰弓头小提琴","missile":"温暖低音钢琴","nova":"圆润中音钢琴","chain":"柔和高音竖琴","rail":"厚弓大提琴","pulse_needle":"清亮高音钢琴","scatter_prism":"珠光钢琴","beam_split":"绵奏中提琴","rail_horizon":"深色低音钢琴","recorded_heavy":"厚实中低音钢琴","gilded_helix":"明亮三角钢琴","weave_cross":"轻巧断奏钢琴","crown_orbit":"通透竖琴","stern_fan":"温暖中音竖琴","dawn_fan":"柔亮高音钢琴","tidal_weave":"绵奏高音小提琴","firefly_rain":"绵长高音竖琴"}
 const INSTRUMENT_ROOTS={"pulse":60,"scatter":67,"beam":60,"missile":48,"nova":63,"chain":72,"rail":48,"pulse_needle":72,"scatter_prism":67,"beam_split":55,"rail_horizon":36,"recorded_heavy":43,"gilded_helix":60,"weave_cross":72,"crown_orbit":72,"stern_fan":60,"dawn_fan":67,"tidal_weave":67,"firefly_rain":75}
 const INSTRUMENT_FAMILIES={"pulse":"piano","scatter":"piano","beam":"strings","missile":"piano","nova":"piano","chain":"harp","rail":"strings","pulse_needle":"piano","scatter_prism":"piano","beam_split":"strings","rail_horizon":"piano","recorded_heavy":"piano","gilded_helix":"piano","weave_cross":"piano","crown_orbit":"harp","stern_fan":"harp","dawn_fan":"piano","tidal_weave":"strings","firefly_rain":"harp"}
+const INSTRUMENT_PROGRAMS={"pulse":0,"scatter":1,"beam":40,"missile":0,"nova":0,"chain":46,"rail":42,"pulse_needle":1,"scatter_prism":1,"beam_split":41,"rail_horizon":0,"recorded_heavy":0,"gilded_helix":1,"weave_cross":0,"crown_orbit":46,"stern_fan":46,"dawn_fan":1,"tidal_weave":40,"firefly_rain":46}
+const INSTRUMENT_GROUP_OVERRIDES={}
 const PERCUSSION_IDS=[]
 const NEW_INSTRUMENTS={"gilded_helix":"明亮三角钢琴","weave_cross":"轻巧断奏钢琴","crown_orbit":"通透竖琴","stern_fan":"温暖中音竖琴","dawn_fan":"柔亮高音钢琴","tidal_weave":"绵奏高音小提琴","firefly_rain":"绵长高音竖琴"}
 const LEGACY_WEAPON_ALIASES={"recorded_light":"pulse","recorded_medium":"scatter","recorded_heavy_rare":"recorded_heavy","recorded_heavy_legend":"recorded_heavy"}
@@ -247,6 +250,8 @@ static func _build_weapons() -> void:
 			data.instrument=str(INSTRUMENTS.get(str(data.id),"乐器"))
 			data.instrument_family=str(INSTRUMENT_FAMILIES.get(str(data.id),"piano"))
 			data.sample_root=int(INSTRUMENT_ROOTS.get(str(data.id),60))
+			data.instrument_program=int(INSTRUMENT_PROGRAMS.get(str(data.id),0))
+			data.instrument_group=str(INSTRUMENT_GROUP_OVERRIDES.get(str(data.id),INSTRUMENT_GROUPS.from_program(data.instrument_program)))
 			data.percussion=str(data.id) in PERCUSSION_IDS
 			data.audio_status="sampled_instrument"
 			if str(data.family)!="orbit": data.life*=1.3

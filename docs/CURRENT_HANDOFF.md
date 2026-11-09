@@ -4,7 +4,10 @@
 
 2026-11-09后续配器决定：用户最新合并为[统一13种乐器组开发总体框架](ORCHESTRAL_AUDIO_DIRECTION.md)：钢琴、弦乐4种、竖琴、木管4种、三角铁/钟琴/定音鼓。覆盖此前A/B划分；先建立音源和演奏力度，再按武器定位分配。当前V38素材与乐器尚未替换，圆号不计入最新核心清单。
 
-2026-11-09，工程版本 `0.39.0-half-second-voices`，开发分支 `codex/v39-half-second-voices`。远程仓库：https://github.com/wondermagi1/Groove-Flight 。本轮修改前备份`5e32ac7`已上传并核验。后续每轮游戏修改前必须先上传Git备份并核验SHA，规则见根目录 `AGENTS.md`。
+2026-11-09，工程版本 `0.40.0-balance-codex-foundation`，开发分支 `codex/v40-balance-codex-foundation`。远程仓库：https://github.com/wondermagi1/Groove-Flight 。本轮修改前备份`63385cb`已上传并核验。后续每轮游戏修改前必须先上传Git备份并核验SHA，规则见根目录 `AGENTS.md`。
+
+V40：所有星球七波+Boss，普通波20/20/20/27/27/33/40秒；商店不限时，典型含购物目标5–6分钟。中央耐久/预算/掉落/补给/价格政策在 `run_balance.gd`。图鉴按具体乐器/充能分组和交叉筛选，支持6轮有效充能；没有增加武器或替换音源。以后武器开发先读[统一规范](WEAPON_DEVELOPMENT_STANDARD.md)。见[V40说明](V40_BALANCE_CODEX_FOUNDATION.md)与[当前验证](data-v40/SUMMARY.json)。
+
 
 V39：按图鉴试听反馈，十件三四轮武器四档40份音源由1秒缩为0.5秒，持音0.28秒＋释放0.22秒，图鉴和实战同源，试听状态显示实际时长。36份其他力度与152音高保留；V38齐射、范围和色带不改。见[V39说明](V39_HALF_SECOND_VOICES.md)与`docs/data-v39/SUMMARY.json`。
 

@@ -43,9 +43,9 @@ func ui_checks() -> void:
 		check(panel.is_visible_in_tree() and rect.position.x<30. and rect.position.y>view.y*.7 and rect.end.x<=view.x and rect.end.y<=view.y,"restored sequencer stays bottom-left and on-screen / "+str(size_value))
 		check(game.ui.arsenal.step_lights.size()==24,"all three tracks retain eight scan lights")
 		check(game.ui.arsenal.step_lights.all(func(n): return n.z_index>0),"scan lights draw above equipped weapon cards")
-		for sample in [[0.,0],[.25,1],[1.75,7],[2.,0]]:
+		for sample in [[0.,0],[game.LOADOUT.SEQUENCE_STEP_SECONDS,1],[game.LOADOUT.SEQUENCE_STEP_SECONDS*7.,7],[game.LOADOUT.SEQUENCE_LOOP_SECONDS,0]]:
 			game.music.timeline=sample[0]; game.ui.arsenal._update_sequence_cursor()
-			check(game.ui.arsenal.step_lights[int(sample[1])].active and game.ui.arsenal.step_lights.filter(func(n): return n.active).size()==3,"scan dots retain250ms cells and2second loop / "+str(sample[0]))
+			check(game.ui.arsenal.step_lights[int(sample[1])].active and game.ui.arsenal.step_lights.filter(func(n): return n.active).size()==3,"scan dots follow current production cell/loop timing / "+str(sample[0]))
 		if DisplayServer.get_name()!="headless":
 			await RenderingServer.frame_post_draw; root.get_texture().get_image().save_png("res://docs/screenshots/v29-hud-"+str(size_value.x)+".png")
 		game.state="reward"; game.wave=4; game.shop_offers=game.loadout.make_shop(game.rng,4); game.rewards=[]; game.reward_taken=true

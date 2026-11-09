@@ -318,7 +318,7 @@ func _previous_weapon(at: int) -> Dictionary:
 	return row if str(row.get("category",""))=="weapon" else {}
 
 func _effective_charge(value: float) -> int:
-	for allowed in [8,4,3,2,1]:
+	for allowed in [8,6,4,3,2,1]:
 		if value>=float(allowed): return int(allowed)
 	return 1
 
@@ -451,7 +451,7 @@ func salvage(uid: int) -> int:
 	var refund=maxi(1,roundi(float(_row(str(module.kind)).get("cost",10))*.4*(1.+.5*(int(module.level)-1))))
 	unequip_uid(uid); modules.erase(module); return refund
 
-func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[],weapon_count: int=3,item_count: int=3) -> Array[Dictionary]:
+func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[],weapon_count: int=3,item_count: int=3,price_scale: float=1.) -> Array[Dictionary]:
 	var pool: Array=[]; var result: Array[Dictionary]=[]
 	var max_rarity=clampi(1+floori(float(maxi(wave,1)-1)/3.),1,3)
 	for row in C.rows():
@@ -487,7 +487,7 @@ func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[],weapon_co
 			roll-=(1.+float(pool[candidate].rarity)*luck*.04)*PATHS.affinity(str(pool[candidate].id),owned)
 			if roll<=0.: index=candidate; break
 		var row: Dictionary=pool[index]; pool.remove_at(index)
-		result.append({"id":str(row.id),"price":maxi(1,roundi(float(row.cost)*(1.+.025*maxi(0,wave-1)))),"sold":false,"locked":false})
+		result.append({"id":str(row.id),"price":maxi(1,roundi(float(row.cost)*(1.+.025*maxi(0,wave-1))*maxf(.01,price_scale))),"sold":false,"locked":false})
 	return result
 func buy(offer: Dictionary,dust: int) -> Dictionary:
 	var denied={"ok":false,"cost":0,"uid":-1}

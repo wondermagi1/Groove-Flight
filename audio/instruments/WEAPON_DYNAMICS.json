@@ -1,5 +1,5 @@
 {
-  "revision": "chamber-v39-half-second-salvos",
+  "revision": "chamber-v40-charge-foundation",
   "description": "Four independently rendered acoustic performances at the same weapon root note. Velocity, onset, note-on duration, release and spectral shaping change together; not scaled copies of one WAV. Composer keeps its authored pitches and original152 samples.",
   "levels": [
     {
@@ -71,6 +71,10 @@
       2
     ],
     "8": [
+      2,
+      3
+    ],
+    "6": [
       2,
       3
     ]

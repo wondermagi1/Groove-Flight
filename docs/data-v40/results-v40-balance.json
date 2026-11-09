@@ -1,0 +1,3116 @@
+{
+	"cases": [
+		{
+			"boons": [
+				{
+					"id": "boon_caliber",
+					"key": "bullet_multiplier",
+					"wave": 1
+				},
+				{
+					"id": "boon_crit",
+					"key": "crit_chance",
+					"wave": 2
+				},
+				{
+					"id": "boon_hull",
+					"key": "max_health",
+					"wave": 3
+				},
+				{
+					"id": "boon_caliber",
+					"key": "bullet_multiplier",
+					"wave": 4
+				},
+				{
+					"id": "boon_thruster",
+					"key": "move_percent",
+					"wave": 5
+				},
+				{
+					"id": "boon_ballistic",
+					"key": "ballistic",
+					"wave": 6
+				},
+				{
+					"id": "boon_ballistic",
+					"key": "ballistic",
+					"wave": 7
+				}
+			],
+			"boss_hp_left": 0.0,
+			"boss_seconds": 19.0500000000043,
+			"dust": 589,
+			"health": 11.0,
+			"kills": 1306,
+			"modeled_shop_seconds": 105.0,
+			"path": 1,
+			"peak_bullets": 668,
+			"peak_enemies": 600,
+			"planet": "mercury",
+			"purchases": [
+				{
+					"dust_after": 96,
+					"id": "d_magnetic_armor",
+					"price": 51,
+					"slot": 5,
+					"wave": 1
+				},
+				{
+					"dust_after": 18,
+					"id": "rail",
+					"price": 78,
+					"slot": 6,
+					"wave": 1
+				},
+				{
+					"dust_after": 185,
+					"id": "pulse",
+					"price": 43,
+					"slot": 8,
+					"wave": 2
+				},
+				{
+					"dust_after": 123,
+					"id": "d_crystal_skin",
+					"price": 62,
+					"slot": 8,
+					"wave": 2
+				},
+				{
+					"dust_after": 43,
+					"id": "rail",
+					"price": 80,
+					"slot": 9,
+					"wave": 2
+				},
+				{
+					"dust_after": 366,
+					"id": "rail",
+					"price": 82,
+					"slot": 11,
+					"wave": 3
+				},
+				{
+					"dust_after": 309,
+					"id": "mod_nova_2",
+					"price": 57,
+					"slot": 11,
+					"wave": 3
+				},
+				{
+					"dust_after": 252,
+					"id": "mod_orbit_2",
+					"price": 57,
+					"slot": 9,
+					"wave": 3
+				},
+				{
+					"dust_after": 524,
+					"id": "mod_missile_2",
+					"price": 58,
+					"slot": 10,
+					"wave": 4
+				},
+				{
+					"dust_after": 453,
+					"id": "r_arc_bridge",
+					"price": 71,
+					"slot": 12,
+					"wave": 4
+				},
+				{
+					"dust_after": 376,
+					"id": "pulse_needle",
+					"price": 77,
+					"slot": 13,
+					"wave": 4
+				},
+				{
+					"dust_after": 507,
+					"id": "d_life_weave",
+					"price": 83,
+					"slot": 16,
+					"wave": 5
+				},
+				{
+					"dust_after": 438,
+					"id": "r_rest",
+					"price": 69,
+					"slot": 15,
+					"wave": 5
+				},
+				{
+					"dust_after": 365,
+					"id": "nova",
+					"price": 73,
+					"slot": 18,
+					"wave": 5
+				},
+				{
+					"dust_after": 586,
+					"id": "d_medical_converter",
+					"price": 81,
+					"slot": 20,
+					"wave": 6
+				},
+				{
+					"dust_after": 539,
+					"id": "scatter",
+					"price": 47,
+					"slot": -1,
+					"wave": 6
+				},
+				{
+					"dust_after": 471,
+					"id": "beam",
+					"price": 68,
+					"slot": -1,
+					"wave": 6
+				},
+				{
+					"dust_after": 639,
+					"id": "d_dash_screen",
+					"price": 62,
+					"slot": -1,
+					"wave": 7
+				},
+				{
+					"dust_after": 570,
+					"id": "d_reactive_skin",
+					"price": 69,
+					"slot": -1,
+					"wave": 7
+				},
+				{
+					"dust_after": 487,
+					"id": "pulse_needle",
+					"price": 83,
+					"slot": -1,
+					"wave": 7
+				}
+			],
+			"receipt": {
+				"death_reason": "dart接触",
+				"received": 0.874125874125874,
+				"requests": {
+					"derived_projectiles": 5108,
+					"projectile_requested": 14538,
+					"projectile_spawned": 14538,
+					"spawn_checks": 375
+				},
+				"waves": [
+					{
+						"dust": 132,
+						"retreated": 94,
+						"seconds": 20.0000000000001,
+						"spawned": 182,
+						"supply": 15,
+						"wave": 1,
+						"weapons": {
+							"-1:overload": {
+								"damage": 33.30672,
+								"hits": 3,
+								"kills": 3,
+								"kind": "overload",
+								"overkill": 146.69328,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"1:pulse": {
+								"damage": 771.151839999999,
+								"hits": 144,
+								"kills": 40,
+								"kind": "pulse",
+								"overkill": 113.50928,
+								"procs": 70,
+								"shots": 324,
+								"uid": 1
+							},
+							"2:rail": {
+								"damage": 601.8572,
+								"hits": 41,
+								"kills": 41,
+								"kind": "rail",
+								"overkill": 2256.3828,
+								"procs": 0,
+								"shots": 96,
+								"uid": 2
+							},
+							"3:firefly_rain": {
+								"damage": 202.06744,
+								"hits": 51,
+								"kills": 4,
+								"kind": "firefly_rain",
+								"overkill": 13.93256,
+								"procs": 0,
+								"shots": 142,
+								"uid": 3
+							}
+						}
+					},
+					{
+						"dust": 192,
+						"retreated": 113,
+						"seconds": 20.0499999999997,
+						"spawned": 241,
+						"supply": 18,
+						"wave": 2,
+						"weapons": {
+							"-1:overload": {
+								"damage": 1074.73423232,
+								"hits": 24,
+								"kills": 12,
+								"kind": "overload",
+								"overkill": 365.26576768,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"1:pulse": {
+								"damage": 2186.49392,
+								"hits": 354,
+								"kills": 38,
+								"kind": "pulse",
+								"overkill": 321.5907136,
+								"procs": 185,
+								"shots": 308,
+								"uid": 1
+							},
+							"3:firefly_rain": {
+								"damage": 504.904095999999,
+								"hits": 117,
+								"kills": 7,
+								"kind": "firefly_rain",
+								"overkill": 14.575904,
+								"procs": 0,
+								"shots": 178,
+								"uid": 3
+							},
+							"7:rail": {
+								"damage": 1914.1174144,
+								"hits": 87,
+								"kills": 71,
+								"kind": "rail",
+								"overkill": 4816.6921984,
+								"procs": 46,
+								"shots": 185,
+								"uid": 7
+							}
+						}
+					},
+					{
+						"dust": 384,
+						"retreated": 56,
+						"seconds": 20.0499999999989,
+						"spawned": 312,
+						"supply": 21,
+						"wave": 3,
+						"weapons": {
+							"10:rail": {
+								"damage": 327.76360448,
+								"hits": 26,
+								"kills": 26,
+								"kind": "rail",
+								"overkill": 2644.80599552,
+								"procs": 0,
+								"shots": 115,
+								"uid": 10
+							},
+							"1:pulse": {
+								"damage": 1352.9864832,
+								"hits": 137,
+								"kills": 69,
+								"kind": "pulse",
+								"overkill": 444.39799296,
+								"procs": 71,
+								"shots": 345,
+								"uid": 1
+							},
+							"3:firefly_rain": {
+								"damage": 245.79663744,
+								"hits": 46,
+								"kills": 12,
+								"kind": "firefly_rain",
+								"overkill": 5.36336256000001,
+								"procs": 0,
+								"shots": 142,
+								"uid": 3
+							},
+							"7:rail": {
+								"damage": 2290.15753856,
+								"hits": 149,
+								"kills": 149,
+								"kind": "rail",
+								"overkill": 8537.12997248,
+								"procs": 67,
+								"shots": 185,
+								"uid": 7
+							}
+						}
+					},
+					{
+						"dust": 306,
+						"retreated": 197,
+						"seconds": 27.0499999999985,
+						"spawned": 397,
+						"supply": 24,
+						"wave": 4,
+						"weapons": {
+							"-1:overload": {
+								"damage": 51.839488,
+								"hits": 4,
+								"kills": 4,
+								"kind": "overload",
+								"overkill": 188.160512,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"1:pulse": {
+								"damage": 1830.76947584,
+								"hits": 198,
+								"kills": 89,
+								"kind": "pulse",
+								"overkill": 906.348966399999,
+								"procs": 84,
+								"shots": 474,
+								"uid": 1
+							},
+							"3:firefly_rain": {
+								"damage": 187.85393408,
+								"hits": 35,
+								"kills": 2,
+								"kind": "firefly_rain",
+								"overkill": 0.90606592,
+								"procs": 0,
+								"shots": 212,
+								"uid": 3
+							},
+							"7:rail": {
+								"damage": 1945.47281536,
+								"hits": 106,
+								"kills": 105,
+								"kind": "rail",
+								"overkill": 7539.11851904,
+								"procs": 55,
+								"shots": 262,
+								"uid": 7
+							}
+						}
+					},
+					{
+						"dust": 187,
+						"retreated": 378,
+						"seconds": 27.0499999999985,
+						"spawned": 503,
+						"supply": 27,
+						"wave": 5,
+						"weapons": {
+							"16:pulse_needle": {
+								"damage": 335.93353728,
+								"hits": 24,
+								"kills": 24,
+								"kind": "pulse_needle",
+								"overkill": 668.33686272,
+								"procs": 0,
+								"shots": 286,
+								"uid": 16
+							},
+							"1:pulse": {
+								"damage": 406.22547328,
+								"hits": 63,
+								"kills": 19,
+								"kind": "pulse",
+								"overkill": 151.5631808,
+								"procs": 28,
+								"shots": 466,
+								"uid": 1
+							},
+							"3:firefly_rain": {
+								"damage": 61.64843776,
+								"hits": 20,
+								"kills": 1,
+								"kind": "firefly_rain",
+								"overkill": 3.15156224,
+								"procs": 0,
+								"shots": 208,
+								"uid": 3
+							},
+							"7:rail": {
+								"damage": 1205.95588992,
+								"hits": 81,
+								"kills": 81,
+								"kind": "rail",
+								"overkill": 6039.05265792,
+								"procs": 35,
+								"shots": 260,
+								"uid": 7
+							}
+						}
+					},
+					{
+						"dust": 272,
+						"retreated": 419,
+						"seconds": 33.0000000000036,
+						"spawned": 600,
+						"supply": 30,
+						"wave": 6,
+						"weapons": {
+							"16:pulse_needle": {
+								"damage": 656.36203776,
+								"hits": 51,
+								"kills": 51,
+								"kind": "pulse_needle",
+								"overkill": 1113.35836224,
+								"procs": 0,
+								"shots": 346,
+								"uid": 16
+							},
+							"19:nova": {
+								"damage": 34.54866176,
+								"hits": 3,
+								"kills": 2,
+								"kind": "nova",
+								"overkill": 6.27533824,
+								"procs": 0,
+								"shots": 69,
+								"uid": 19
+							},
+							"1:pulse": {
+								"damage": 612.75862144,
+								"hits": 95,
+								"kills": 22,
+								"kind": "pulse",
+								"overkill": 176.50537856,
+								"procs": 48,
+								"shots": 568,
+								"uid": 1
+							},
+							"3:firefly_rain": {
+								"damage": 151.47,
+								"hits": 41,
+								"kills": 0,
+								"kind": "firefly_rain",
+								"overkill": 0.0,
+								"procs": 0,
+								"shots": 242,
+								"uid": 3
+							},
+							"7:rail": {
+								"damage": 1518.07428544,
+								"hits": 106,
+								"kills": 106,
+								"kind": "rail",
+								"overkill": 6724.002704,
+								"procs": 48,
+								"shots": 316,
+								"uid": 7
+							}
+						}
+					},
+					{
+						"dust": 197,
+						"retreated": 461,
+						"seconds": 40.0000000000091,
+						"spawned": 732,
+						"supply": 33,
+						"wave": 7,
+						"weapons": {
+							"-1:overload": {
+								"damage": 224.58716392,
+								"hits": 6,
+								"kills": 5,
+								"kind": "overload",
+								"overkill": 135.41283608,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"16:pulse_needle": {
+								"damage": 8280.65541622,
+								"hits": 204,
+								"kills": 89,
+								"kind": "pulse_needle",
+								"overkill": 1481.12843378,
+								"procs": 0,
+								"shots": 568,
+								"uid": 16
+							},
+							"19:nova": {
+								"damage": 101.4414394,
+								"hits": 7,
+								"kills": 2,
+								"kind": "nova",
+								"overkill": 33.5045606,
+								"procs": 0,
+								"shots": 99,
+								"uid": 19
+							},
+							"1:pulse": {
+								"damage": 5584.63968482,
+								"hits": 422,
+								"kills": 55,
+								"kind": "pulse",
+								"overkill": 539.73888718,
+								"procs": 208,
+								"shots": 917,
+								"uid": 1
+							},
+							"3:firefly_rain": {
+								"damage": 156.33,
+								"hits": 28,
+								"kills": 0,
+								"kind": "firefly_rain",
+								"overkill": 0.0,
+								"procs": 0,
+								"shots": 316,
+								"uid": 3
+							},
+							"7:rail": {
+								"damage": 10331.46054096,
+								"hits": 163,
+								"kills": 120,
+								"kind": "rail",
+								"overkill": 12095.93830224,
+								"procs": 60,
+								"shots": 480,
+								"uid": 7
+							}
+						}
+					},
+					{
+						"dust": 102,
+						"retreated": 0,
+						"seconds": 19.1000000000043,
+						"spawned": 84,
+						"supply": 0,
+						"wave": 8,
+						"weapons": {
+							"-1:overload": {
+								"damage": 180.0,
+								"hits": 3,
+								"kills": 0,
+								"kind": "overload",
+								"overkill": 0.0,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"16:pulse_needle": {
+								"damage": 27659.9352040601,
+								"hits": 360,
+								"kills": 9,
+								"kind": "pulse_needle",
+								"overkill": 412.25698094,
+								"procs": 1,
+								"shots": 348,
+								"uid": 16
+							},
+							"19:nova": {
+								"damage": 77.112,
+								"hits": 7,
+								"kills": 0,
+								"kind": "nova",
+								"overkill": 0.0,
+								"procs": 0,
+								"shots": 39,
+								"uid": 19
+							},
+							"1:pulse": {
+								"damage": 19440.7341511407,
+								"hits": 577,
+								"kills": 18,
+								"kind": "pulse",
+								"overkill": 165.708919899313,
+								"procs": 35,
+								"shots": 534,
+								"uid": 1
+							},
+							"3:firefly_rain": {
+								"damage": 388.438,
+								"hits": 100,
+								"kills": 1,
+								"kind": "firefly_rain",
+								"overkill": 4.412,
+								"procs": 0,
+								"shots": 138,
+								"uid": 3
+							},
+							"7:rail": {
+								"damage": 43302.0926447999,
+								"hits": 292,
+								"kills": 29,
+								"kind": "rail",
+								"overkill": 1260.22084128,
+								"procs": 25,
+								"shots": 262,
+								"uid": 7
+							}
+						}
+					}
+				],
+				"weapons": {
+					"-1:overload": {
+						"damage": 1564.46760424,
+						"hits": 40,
+						"kills": 24,
+						"kind": "overload",
+						"overkill": 835.53239576,
+						"procs": 0,
+						"shots": 0,
+						"uid": -1
+					},
+					"10:rail": {
+						"damage": 327.76360448,
+						"hits": 26,
+						"kills": 26,
+						"kind": "rail",
+						"overkill": 2644.80599552,
+						"procs": 0,
+						"shots": 115,
+						"uid": 10
+					},
+					"16:pulse_needle": {
+						"damage": 36932.8861953201,
+						"hits": 639,
+						"kills": 173,
+						"kind": "pulse_needle",
+						"overkill": 3675.08063968,
+						"procs": 1,
+						"shots": 1548,
+						"uid": 16
+					},
+					"19:nova": {
+						"damage": 213.10210116,
+						"hits": 17,
+						"kills": 4,
+						"kind": "nova",
+						"overkill": 39.77989884,
+						"procs": 0,
+						"shots": 207,
+						"uid": 19
+					},
+					"1:pulse": {
+						"damage": 32185.7596497205,
+						"hits": 1990,
+						"kills": 350,
+						"kind": "pulse",
+						"overkill": 2819.36331939932,
+						"procs": 729,
+						"shots": 3936,
+						"uid": 1
+					},
+					"2:rail": {
+						"damage": 601.8572,
+						"hits": 41,
+						"kills": 41,
+						"kind": "rail",
+						"overkill": 2256.3828,
+						"procs": 0,
+						"shots": 96,
+						"uid": 2
+					},
+					"3:firefly_rain": {
+						"damage": 1898.50854528001,
+						"hits": 438,
+						"kills": 27,
+						"kind": "firefly_rain",
+						"overkill": 42.3414547200001,
+						"procs": 0,
+						"shots": 1578,
+						"uid": 3
+					},
+					"7:rail": {
+						"damage": 62507.3311294397,
+						"hits": 984,
+						"kills": 661,
+						"kind": "rail",
+						"overkill": 47012.15519536,
+						"procs": 336,
+						"shots": 1950,
+						"uid": 7
+					}
+				}
+			},
+			"result": "victory",
+			"seconds": 206.300000000013,
+			"seed": 411,
+			"shops": 7,
+			"total_seconds": 311.300000000013,
+			"wave": 8
+		},
+		{
+			"boons": [
+				{
+					"id": "boon_caliber",
+					"key": "bullet_multiplier",
+					"wave": 1
+				},
+				{
+					"id": "boon_energy",
+					"key": "energy",
+					"wave": 2
+				},
+				{
+					"id": "boon_thruster",
+					"key": "move_percent",
+					"wave": 3
+				},
+				{
+					"id": "boon_caliber",
+					"key": "bullet_multiplier",
+					"wave": 4
+				},
+				{
+					"id": "boon_caliber",
+					"key": "bullet_multiplier",
+					"wave": 5
+				},
+				{
+					"id": "boon_crit",
+					"key": "crit_chance",
+					"wave": 6
+				},
+				{
+					"id": "boon_hull",
+					"key": "max_health",
+					"wave": 7
+				}
+			],
+			"boss_hp_left": 0.0,
+			"boss_seconds": 48.9500000000111,
+			"dust": 1795,
+			"health": 17.0,
+			"kills": 1704,
+			"modeled_shop_seconds": 105.0,
+			"path": 2,
+			"peak_bullets": 124,
+			"peak_enemies": 1018,
+			"planet": "earth",
+			"purchases": [
+				{
+					"dust_after": 40,
+					"id": "beam",
+					"price": 74,
+					"slot": 5,
+					"wave": 1
+				},
+				{
+					"dust_after": 168,
+					"id": "beam",
+					"price": 76,
+					"slot": 8,
+					"wave": 2
+				},
+				{
+					"dust_after": 115,
+					"id": "pulse",
+					"price": 53,
+					"slot": 1,
+					"wave": 2
+				},
+				{
+					"dust_after": 35,
+					"id": "d_heavy_shell",
+					"price": 80,
+					"slot": 8,
+					"wave": 2
+				},
+				{
+					"dust_after": 489,
+					"id": "pulse",
+					"price": 55,
+					"slot": 2,
+					"wave": 3
+				},
+				{
+					"dust_after": 438,
+					"id": "r_meter",
+					"price": 51,
+					"slot": 7,
+					"wave": 3
+				},
+				{
+					"dust_after": 383,
+					"id": "scatter",
+					"price": 55,
+					"slot": 10,
+					"wave": 3
+				},
+				{
+					"dust_after": 663,
+					"id": "d_salvage_pump",
+					"price": 80,
+					"slot": 13,
+					"wave": 4
+				},
+				{
+					"dust_after": 607,
+					"id": "r_velocity",
+					"price": 56,
+					"slot": 14,
+					"wave": 4
+				},
+				{
+					"dust_after": 527,
+					"id": "mod_beam_5",
+					"price": 80,
+					"slot": 16,
+					"wave": 4
+				},
+				{
+					"dust_after": 905,
+					"id": "r_velocity",
+					"price": 57,
+					"slot": 15,
+					"wave": 5
+				},
+				{
+					"dust_after": 844,
+					"id": "mod_scatter_4",
+					"price": 61,
+					"slot": 15,
+					"wave": 5
+				},
+				{
+					"dust_after": 754,
+					"id": "nova",
+					"price": 90,
+					"slot": 18,
+					"wave": 5
+				},
+				{
+					"dust_after": 1262,
+					"id": "d_regenerator",
+					"price": 80,
+					"slot": 20,
+					"wave": 6
+				},
+				{
+					"dust_after": 1208,
+					"id": "d_medkit",
+					"price": 54,
+					"slot": -1,
+					"wave": 6
+				},
+				{
+					"dust_after": 1116,
+					"id": "nova",
+					"price": 92,
+					"slot": -1,
+					"wave": 6
+				},
+				{
+					"dust_after": 1687,
+					"id": "beam",
+					"price": 86,
+					"slot": -1,
+					"wave": 7
+				},
+				{
+					"dust_after": 1627,
+					"id": "scatter",
+					"price": 60,
+					"slot": -1,
+					"wave": 7
+				},
+				{
+					"dust_after": 1537,
+					"id": "d_safety_brake",
+					"price": 90,
+					"slot": -1,
+					"wave": 7
+				}
+			],
+			"receipt": {
+				"death_reason": "mote接触",
+				"received": 11.5984,
+				"requests": {
+					"projectile_requested": 5430,
+					"projectile_spawned": 5430,
+					"spawn_checks": 375
+				},
+				"waves": [
+					{
+						"dust": 95,
+						"retreated": 258,
+						"seconds": 20.0000000000001,
+						"spawned": 312,
+						"supply": 19,
+						"wave": 1,
+						"weapons": {
+							"-1:overload": {
+								"damage": 151.7136,
+								"hits": 11,
+								"kills": 11,
+								"kind": "overload",
+								"overkill": 508.2864,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"1:pulse": {
+								"damage": 341.6388,
+								"hits": 35,
+								"kills": 13,
+								"kind": "pulse",
+								"overkill": 81.3612,
+								"procs": 0,
+								"shots": 52,
+								"uid": 1
+							},
+							"2:rail": {
+								"damage": 284.502,
+								"hits": 20,
+								"kills": 20,
+								"kind": "rail",
+								"overkill": 1527.998,
+								"procs": 0,
+								"shots": 22,
+								"uid": 2
+							},
+							"3:firefly_rain": {
+								"damage": 466.626,
+								"hits": 119,
+								"kills": 10,
+								"kind": "firefly_rain",
+								"overkill": 27.624,
+								"procs": 0,
+								"shots": 140,
+								"uid": 3
+							}
+						}
+					},
+					{
+						"dust": 182,
+						"retreated": 338,
+						"seconds": 20.0499999999997,
+						"spawned": 441,
+						"supply": 22,
+						"wave": 2,
+						"weapons": {
+							"-1:overload": {
+								"damage": 941.88,
+								"hits": 39,
+								"kills": 30,
+								"kind": "overload",
+								"overkill": 1398.12,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"1:pulse": {
+								"damage": 496.21,
+								"hits": 39,
+								"kills": 10,
+								"kind": "pulse",
+								"overkill": 100.49,
+								"procs": 0,
+								"shots": 61,
+								"uid": 1
+							},
+							"2:rail": {
+								"damage": 1433.622,
+								"hits": 39,
+								"kills": 39,
+								"kind": "rail",
+								"overkill": 2457.018,
+								"procs": 0,
+								"shots": 31,
+								"uid": 2
+							},
+							"3:firefly_rain": {
+								"damage": 817.008000000001,
+								"hits": 170,
+								"kills": 6,
+								"kind": "firefly_rain",
+								"overkill": 22.272,
+								"procs": 0,
+								"shots": 176,
+								"uid": 3
+							},
+							"6:beam": {
+								"damage": 615.674,
+								"hits": 24,
+								"kills": 18,
+								"kind": "beam",
+								"overkill": 427.3576,
+								"procs": 0,
+								"shots": 286,
+								"uid": 6
+							}
+						}
+					},
+					{
+						"dust": 484,
+						"retreated": 477,
+						"seconds": 20.0499999999989,
+						"spawned": 750,
+						"supply": 25,
+						"wave": 3,
+						"weapons": {
+							"-1:overload": {
+								"damage": 2058.1204,
+								"hits": 70,
+								"kills": 48,
+								"kind": "overload",
+								"overkill": 2141.8796,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"2:rail": {
+								"damage": 2835.3536,
+								"hits": 91,
+								"kills": 91,
+								"kind": "rail",
+								"overkill": 6092.0064,
+								"procs": 0,
+								"shots": 33,
+								"uid": 2
+							},
+							"3:firefly_rain": {
+								"damage": 894.542400000002,
+								"hits": 170,
+								"kills": 10,
+								"kind": "firefly_rain",
+								"overkill": 33.6576000000001,
+								"procs": 0,
+								"shots": 144,
+								"uid": 3
+							},
+							"6:beam": {
+								"damage": 1517.0994,
+								"hits": 67,
+								"kills": 67,
+								"kind": "beam",
+								"overkill": 3260.36147,
+								"procs": 0,
+								"shots": 375,
+								"uid": 6
+							},
+							"8:pulse": {
+								"damage": 1217.3672,
+								"hits": 72,
+								"kills": 57,
+								"kind": "pulse",
+								"overkill": 465.5608,
+								"procs": 0,
+								"shots": 100,
+								"uid": 8
+							}
+						}
+					},
+					{
+						"dust": 332,
+						"retreated": 604,
+						"seconds": 27.0499999999985,
+						"spawned": 792,
+						"supply": 28,
+						"wave": 4,
+						"weapons": {
+							"-1:overload": {
+								"damage": 2632.0174,
+								"hits": 56,
+								"kills": 27,
+								"kind": "overload",
+								"overkill": 727.9826,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"10:pulse": {
+								"damage": 774.058,
+								"hits": 51,
+								"kills": 6,
+								"kind": "pulse",
+								"overkill": 40.262,
+								"procs": 0,
+								"shots": 88,
+								"uid": 10
+							},
+							"12:scatter": {
+								"damage": 669.6078,
+								"hits": 58,
+								"kills": 8,
+								"kind": "scatter",
+								"overkill": 83.8722,
+								"procs": 0,
+								"shots": 124,
+								"uid": 12
+							},
+							"2:rail": {
+								"damage": 5890.46810000001,
+								"hits": 103,
+								"kills": 70,
+								"kind": "rail",
+								"overkill": 4439.3319,
+								"procs": 0,
+								"shots": 41,
+								"uid": 2
+							},
+							"3:firefly_rain": {
+								"damage": 1998.58897000001,
+								"hits": 340,
+								"kills": 6,
+								"kind": "firefly_rain",
+								"overkill": 16.15103,
+								"procs": 0,
+								"shots": 216,
+								"uid": 3
+							},
+							"6:beam": {
+								"damage": 3362.47023,
+								"hits": 82,
+								"kills": 54,
+								"kind": "beam",
+								"overkill": 1972.1891,
+								"procs": 0,
+								"shots": 518,
+								"uid": 6
+							},
+							"8:pulse": {
+								"damage": 2262.7517,
+								"hits": 104,
+								"kills": 17,
+								"kind": "pulse",
+								"overkill": 229.4068,
+								"procs": 0,
+								"shots": 142,
+								"uid": 8
+							}
+						}
+					},
+					{
+						"dust": 404,
+						"retreated": 758,
+						"seconds": 27.0499999999985,
+						"spawned": 986,
+						"supply": 31,
+						"wave": 5,
+						"weapons": {
+							"-1:overload": {
+								"damage": 392.8284,
+								"hits": 27,
+								"kills": 27,
+								"kind": "overload",
+								"overkill": 1227.1716,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"10:pulse": {
+								"damage": 322.0264,
+								"hits": 30,
+								"kills": 17,
+								"kind": "pulse",
+								"overkill": 188.2736,
+								"procs": 0,
+								"shots": 90,
+								"uid": 10
+							},
+							"12:scatter": {
+								"damage": 618.7564,
+								"hits": 56,
+								"kills": 17,
+								"kind": "scatter",
+								"overkill": 122.1236,
+								"procs": 0,
+								"shots": 126,
+								"uid": 12
+							},
+							"2:rail": {
+								"damage": 1059.1252,
+								"hits": 56,
+								"kills": 56,
+								"kind": "rail",
+								"overkill": 5079.5948,
+								"procs": 0,
+								"shots": 45,
+								"uid": 2
+							},
+							"3:firefly_rain": {
+								"damage": 1073.81,
+								"hits": 202,
+								"kills": 25,
+								"kind": "firefly_rain",
+								"overkill": 71.5300000000001,
+								"procs": 0,
+								"shots": 216,
+								"uid": 3
+							},
+							"6:beam": {
+								"damage": 327.8416,
+								"hits": 23,
+								"kills": 23,
+								"kind": "beam",
+								"overkill": 1259.3167826,
+								"procs": 0,
+								"shots": 520,
+								"uid": 6
+							},
+							"8:pulse": {
+								"damage": 1119.4596,
+								"hits": 63,
+								"kills": 63,
+								"kind": "pulse",
+								"overkill": 434.4039,
+								"procs": 0,
+								"shots": 152,
+								"uid": 8
+							}
+						}
+					},
+					{
+						"dust": 554,
+						"retreated": 877,
+						"seconds": 33.0000000000036,
+						"spawned": 1190,
+						"supply": 34,
+						"wave": 6,
+						"weapons": {
+							"-1:overload": {
+								"damage": 528.4052,
+								"hits": 37,
+								"kills": 37,
+								"kind": "overload",
+								"overkill": 1691.5948,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"10:pulse": {
+								"damage": 544.1428,
+								"hits": 47,
+								"kills": 23,
+								"kind": "pulse",
+								"overkill": 284.9372,
+								"procs": 0,
+								"shots": 110,
+								"uid": 10
+							},
+							"12:scatter": {
+								"damage": 1015.81,
+								"hits": 90,
+								"kills": 24,
+								"kind": "scatter",
+								"overkill": 126.38,
+								"procs": 0,
+								"shots": 154,
+								"uid": 12
+							},
+							"18:nova": {
+								"damage": 366.0664,
+								"hits": 24,
+								"kills": 24,
+								"kind": "nova",
+								"overkill": 252.0196,
+								"procs": 0,
+								"shots": 165,
+								"uid": 18
+							},
+							"2:rail": {
+								"damage": 1567.7264,
+								"hits": 87,
+								"kills": 87,
+								"kind": "rail",
+								"overkill": 8720.3136,
+								"procs": 0,
+								"shots": 55,
+								"uid": 2
+							},
+							"3:firefly_rain": {
+								"damage": 1021.8484,
+								"hits": 205,
+								"kills": 14,
+								"kind": "firefly_rain",
+								"overkill": 52.5116000000001,
+								"procs": 0,
+								"shots": 250,
+								"uid": 3
+							},
+							"6:beam": {
+								"damage": 465.5936,
+								"hits": 34,
+								"kills": 34,
+								"kind": "beam",
+								"overkill": 2074.8821364,
+								"procs": 0,
+								"shots": 636,
+								"uid": 6
+							},
+							"8:pulse": {
+								"damage": 1026.4748,
+								"hits": 70,
+								"kills": 70,
+								"kind": "pulse",
+								"overkill": 763.9852,
+								"procs": 0,
+								"shots": 176,
+								"uid": 8
+							}
+						}
+					},
+					{
+						"dust": 620,
+						"retreated": 998,
+						"seconds": 40.0000000000091,
+						"spawned": 1397,
+						"supply": 37,
+						"wave": 7,
+						"weapons": {
+							"-1:overload": {
+								"damage": 1295.5084,
+								"hits": 76,
+								"kills": 76,
+								"kind": "overload",
+								"overkill": 3264.4916,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"10:pulse": {
+								"damage": 539.556,
+								"hits": 46,
+								"kills": 25,
+								"kind": "pulse",
+								"overkill": 246.684,
+								"procs": 0,
+								"shots": 123,
+								"uid": 10
+							},
+							"12:scatter": {
+								"damage": 867.078,
+								"hits": 83,
+								"kills": 20,
+								"kind": "scatter",
+								"overkill": 136.638,
+								"procs": 0,
+								"shots": 177,
+								"uid": 12
+							},
+							"18:nova": {
+								"damage": 1038.9016,
+								"hits": 64,
+								"kills": 52,
+								"kind": "nova",
+								"overkill": 777.7048,
+								"procs": 0,
+								"shots": 246,
+								"uid": 18
+							},
+							"2:rail": {
+								"damage": 1187.46,
+								"hits": 71,
+								"kills": 71,
+								"kind": "rail",
+								"overkill": 6794.5,
+								"procs": 0,
+								"shots": 59,
+								"uid": 2
+							},
+							"3:firefly_rain": {
+								"damage": 968.274,
+								"hits": 190,
+								"kills": 11,
+								"kind": "firefly_rain",
+								"overkill": 30.486,
+								"procs": 0,
+								"shots": 320,
+								"uid": 3
+							},
+							"6:beam": {
+								"damage": 965.616400000001,
+								"hits": 54,
+								"kills": 54,
+								"kind": "beam",
+								"overkill": 2898.7692272,
+								"procs": 0,
+								"shots": 775,
+								"uid": 6
+							},
+							"8:pulse": {
+								"damage": 1506.6424,
+								"hits": 101,
+								"kills": 90,
+								"kind": "pulse",
+								"overkill": 932.402600000001,
+								"procs": 0,
+								"shots": 194,
+								"uid": 8
+							}
+						}
+					},
+					{
+						"dust": 258,
+						"retreated": 0,
+						"seconds": 49.0000000000111,
+						"spawned": 220,
+						"supply": 0,
+						"wave": 8,
+						"weapons": {
+							"-1:overload": {
+								"damage": 1436.6584,
+								"hits": 53,
+								"kills": 44,
+								"kind": "overload",
+								"overkill": 1803.3416,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"10:pulse": {
+								"damage": 2310.21,
+								"hits": 130,
+								"kills": 0,
+								"kind": "pulse",
+								"overkill": 0.0,
+								"procs": 0,
+								"shots": 135,
+								"uid": 10
+							},
+							"12:scatter": {
+								"damage": 4911.5623,
+								"hits": 280,
+								"kills": 3,
+								"kind": "scatter",
+								"overkill": 26.2706,
+								"procs": 0,
+								"shots": 300,
+								"uid": 12
+							},
+							"18:nova": {
+								"damage": 2263.8746,
+								"hits": 98,
+								"kills": 43,
+								"kind": "nova",
+								"overkill": 548.0002,
+								"procs": 0,
+								"shots": 282,
+								"uid": 18
+							},
+							"2:rail": {
+								"damage": 13745.1889816006,
+								"hits": 88,
+								"kills": 19,
+								"kind": "rail",
+								"overkill": 1629.53101839943,
+								"procs": 1,
+								"shots": 69,
+								"uid": 2
+							},
+							"3:firefly_rain": {
+								"damage": 1956.31860000001,
+								"hits": 417,
+								"kills": 8,
+								"kind": "firefly_rain",
+								"overkill": 24.4014,
+								"procs": 0,
+								"shots": 384,
+								"uid": 3
+							},
+							"6:beam": {
+								"damage": 56140.0351183998,
+								"hits": 700,
+								"kills": 27,
+								"kind": "beam",
+								"overkill": 1031.4239904,
+								"procs": 2,
+								"shots": 896,
+								"uid": 6
+							},
+							"8:pulse": {
+								"damage": 5919.79200000002,
+								"hits": 229,
+								"kills": 2,
+								"kind": "pulse",
+								"overkill": 14.304,
+								"procs": 0,
+								"shots": 232,
+								"uid": 8
+							}
+						}
+					}
+				],
+				"weapons": {
+					"-1:overload": {
+						"damage": 9437.13179999998,
+						"hits": 369,
+						"kills": 300,
+						"kind": "overload",
+						"overkill": 12762.8682,
+						"procs": 0,
+						"shots": 0,
+						"uid": -1
+					},
+					"10:pulse": {
+						"damage": 4489.9932,
+						"hits": 304,
+						"kills": 71,
+						"kind": "pulse",
+						"overkill": 760.156800000001,
+						"procs": 0,
+						"shots": 546,
+						"uid": 10
+					},
+					"12:scatter": {
+						"damage": 8082.81449999998,
+						"hits": 567,
+						"kills": 72,
+						"kind": "scatter",
+						"overkill": 495.2844,
+						"procs": 0,
+						"shots": 881,
+						"uid": 12
+					},
+					"18:nova": {
+						"damage": 3668.8426,
+						"hits": 186,
+						"kills": 119,
+						"kind": "nova",
+						"overkill": 1577.7246,
+						"procs": 0,
+						"shots": 693,
+						"uid": 18
+					},
+					"1:pulse": {
+						"damage": 837.8488,
+						"hits": 74,
+						"kills": 23,
+						"kind": "pulse",
+						"overkill": 181.8512,
+						"procs": 0,
+						"shots": 113,
+						"uid": 1
+					},
+					"2:rail": {
+						"damage": 28003.4462816006,
+						"hits": 555,
+						"kills": 453,
+						"kind": "rail",
+						"overkill": 36740.2937183995,
+						"procs": 1,
+						"shots": 355,
+						"uid": 2
+					},
+					"3:firefly_rain": {
+						"damage": 9197.0163699999,
+						"hits": 1813,
+						"kills": 90,
+						"kind": "firefly_rain",
+						"overkill": 278.63363,
+						"procs": 0,
+						"shots": 1846,
+						"uid": 3
+					},
+					"6:beam": {
+						"damage": 63394.3303483998,
+						"hits": 984,
+						"kills": 277,
+						"kind": "beam",
+						"overkill": 12924.3003066,
+						"procs": 2,
+						"shots": 4006,
+						"uid": 6
+					},
+					"8:pulse": {
+						"damage": 13052.4877,
+						"hits": 639,
+						"kills": 299,
+						"kind": "pulse",
+						"overkill": 2840.0633,
+						"procs": 0,
+						"shots": 996,
+						"uid": 8
+					}
+				}
+			},
+			"result": "victory",
+			"seconds": 236.200000000019,
+			"seed": 2002,
+			"shops": 7,
+			"total_seconds": 341.200000000019,
+			"wave": 8
+		},
+		{
+			"boons": [
+				{
+					"id": "boon_armor",
+					"key": "armor",
+					"wave": 1
+				},
+				{
+					"id": "boon_power",
+					"key": "power",
+					"wave": 2
+				},
+				{
+					"id": "boon_caliber",
+					"key": "bullet_multiplier",
+					"wave": 3
+				},
+				{
+					"id": "boon_caliber",
+					"key": "bullet_multiplier",
+					"wave": 4
+				},
+				{
+					"id": "boon_regen",
+					"key": "regen",
+					"wave": 5
+				},
+				{
+					"id": "boon_power",
+					"key": "power",
+					"wave": 6
+				},
+				{
+					"id": "boon_crit",
+					"key": "crit_chance",
+					"wave": 7
+				}
+			],
+			"boss_hp_left": 0.0,
+			"boss_seconds": 57.300000000013,
+			"dust": 9329,
+			"health": 10.0,
+			"kills": 4014,
+			"modeled_shop_seconds": 105.0,
+			"path": 3,
+			"peak_bullets": 182,
+			"peak_enemies": 1024,
+			"planet": "neptune",
+			"purchases": [
+				{
+					"dust_after": 351,
+					"id": "d_safe_hands",
+					"price": 105,
+					"slot": 5,
+					"wave": 1
+				},
+				{
+					"dust_after": 241,
+					"id": "d_hunter_patch",
+					"price": 110,
+					"slot": 6,
+					"wave": 1
+				},
+				{
+					"dust_after": 125,
+					"id": "r_silent_bar",
+					"price": 116,
+					"slot": 7,
+					"wave": 1
+				},
+				{
+					"dust_after": 328,
+					"id": "rail",
+					"price": 147,
+					"slot": 8,
+					"wave": 2
+				},
+				{
+					"dust_after": 226,
+					"id": "d_radiant_armor",
+					"price": 102,
+					"slot": 10,
+					"wave": 2
+				},
+				{
+					"dust_after": 124,
+					"id": "mod_nova_2",
+					"price": 102,
+					"slot": 11,
+					"wave": 2
+				},
+				{
+					"dust_after": 1310,
+					"id": "missile",
+					"price": 128,
+					"slot": 12,
+					"wave": 3
+				},
+				{
+					"dust_after": 1182,
+					"id": "r_zigzag",
+					"price": 128,
+					"slot": 14,
+					"wave": 3
+				},
+				{
+					"dust_after": 1107,
+					"id": "d_light_boots",
+					"price": 75,
+					"slot": 15,
+					"wave": 3
+				},
+				{
+					"dust_after": 2418,
+					"id": "missile",
+					"price": 131,
+					"slot": 16,
+					"wave": 4
+				},
+				{
+					"dust_after": 2264,
+					"id": "rail",
+					"price": 154,
+					"slot": 16,
+					"wave": 4
+				},
+				{
+					"dust_after": 2157,
+					"id": "d_radiant_armor",
+					"price": 107,
+					"slot": 18,
+					"wave": 4
+				},
+				{
+					"dust_after": 3217,
+					"id": "r_support_ostinato",
+					"price": 121,
+					"slot": 18,
+					"wave": 5
+				},
+				{
+					"dust_after": 3096,
+					"id": "r_even_charge",
+					"price": 121,
+					"slot": 19,
+					"wave": 5
+				},
+				{
+					"dust_after": 2962,
+					"id": "r_short_hit",
+					"price": 134,
+					"slot": 20,
+					"wave": 5
+				},
+				{
+					"dust_after": 6210,
+					"id": "missile",
+					"price": 137,
+					"slot": -1,
+					"wave": 6
+				},
+				{
+					"dust_after": 6086,
+					"id": "r_support_ostinato",
+					"price": 124,
+					"slot": -1,
+					"wave": 6
+				},
+				{
+					"dust_after": 5949,
+					"id": "chain",
+					"price": 137,
+					"slot": -1,
+					"wave": 6
+				},
+				{
+					"dust_after": 9008,
+					"id": "scatter",
+					"price": 89,
+					"slot": -1,
+					"wave": 7
+				},
+				{
+					"dust_after": 8900,
+					"id": "mod_orbit_3",
+					"price": 108,
+					"slot": -1,
+					"wave": 7
+				},
+				{
+					"dust_after": 8773,
+					"id": "r_odd_charge",
+					"price": 127,
+					"slot": -1,
+					"wave": 7
+				}
+			],
+			"receipt": {
+				"death_reason": "敌舰弹幕",
+				"received": 41.4340664728699,
+				"requests": {
+					"projectile_requested": 6936,
+					"projectile_spawned": 6936,
+					"spawn_checks": 375,
+					"spawn_deferred": 1
+				},
+				"waves": [
+					{
+						"dust": 427,
+						"retreated": 494,
+						"seconds": 20.0000000000001,
+						"spawned": 640,
+						"supply": 29,
+						"wave": 1,
+						"weapons": {
+							"-1:overload": {
+								"damage": 1393.28,
+								"hits": 67,
+								"kills": 67,
+								"kind": "overload",
+								"overkill": 2626.72,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"1:pulse": {
+								"damage": 492.713,
+								"hits": 28,
+								"kills": 22,
+								"kind": "pulse",
+								"overkill": 152.191,
+								"procs": 0,
+								"shots": 58,
+								"uid": 1
+							},
+							"2:rail": {
+								"damage": 1085.184,
+								"hits": 51,
+								"kills": 51,
+								"kind": "rail",
+								"overkill": 3479.706,
+								"procs": 0,
+								"shots": 22,
+								"uid": 2
+							},
+							"3:firefly_rain": {
+								"damage": 1113.522,
+								"hits": 230,
+								"kills": 6,
+								"kind": "firefly_rain",
+								"overkill": 11.0475,
+								"procs": 0,
+								"shots": 188,
+								"uid": 3
+							}
+						}
+					},
+					{
+						"dust": 318,
+						"retreated": 659,
+						"seconds": 20.0499999999997,
+						"spawned": 768,
+						"supply": 32,
+						"wave": 2,
+						"weapons": {
+							"-1:overload": {
+								"damage": 2246.93236,
+								"hits": 63,
+								"kills": 39,
+								"kind": "overload",
+								"overkill": 1533.06764,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"1:pulse": {
+								"damage": 905.09408,
+								"hits": 44,
+								"kills": 16,
+								"kind": "pulse",
+								"overkill": 207.84232,
+								"procs": 0,
+								"shots": 63,
+								"uid": 1
+							},
+							"2:rail": {
+								"damage": 3734.6309,
+								"hits": 67,
+								"kills": 45,
+								"kind": "rail",
+								"overkill": 2685.1107,
+								"procs": 0,
+								"shots": 33,
+								"uid": 2
+							},
+							"3:firefly_rain": {
+								"damage": 1725.02251999999,
+								"hits": 372,
+								"kills": 9,
+								"kind": "firefly_rain",
+								"overkill": 26.07742,
+								"procs": 0,
+								"shots": 238,
+								"uid": 3
+							}
+						}
+					},
+					{
+						"dust": 1279,
+						"retreated": 992,
+						"seconds": 20.0499999999989,
+						"spawned": 1429,
+						"supply": 35,
+						"wave": 3,
+						"weapons": {
+							"-1:overload": {
+								"damage": 18027.749485,
+								"hits": 383,
+								"kills": 186,
+								"kind": "overload",
+								"overkill": 4952.25051499999,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"1:pulse": {
+								"damage": 1390.869745,
+								"hits": 61,
+								"kills": 10,
+								"kind": "pulse",
+								"overkill": 199.165205,
+								"procs": 0,
+								"shots": 63,
+								"uid": 1
+							},
+							"3:firefly_rain": {
+								"damage": 3026.36993500002,
+								"hits": 577,
+								"kills": 38,
+								"kind": "firefly_rain",
+								"overkill": 129.325055,
+								"procs": 0,
+								"shots": 212,
+								"uid": 3
+							},
+							"9:rail": {
+								"damage": 20700.292675,
+								"hits": 227,
+								"kills": 203,
+								"kind": "rail",
+								"overkill": 14851.947895,
+								"procs": 0,
+								"shots": 56,
+								"uid": 9
+							}
+						}
+					},
+					{
+						"dust": 1404,
+						"retreated": 880,
+						"seconds": 27.0499999999985,
+						"spawned": 1360,
+						"supply": 38,
+						"wave": 4,
+						"weapons": {
+							"-1:overload": {
+								"damage": 3596.06836,
+								"hits": 70,
+								"kills": 20,
+								"kind": "overload",
+								"overkill": 603.93164,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"12:missile": {
+								"damage": 20358.2621556001,
+								"hits": 544,
+								"kills": 256,
+								"kind": "missile",
+								"overkill": 5307.05490360001,
+								"procs": 0,
+								"shots": 198,
+								"uid": 12
+							},
+							"1:pulse": {
+								"damage": 930.0631156,
+								"hits": 42,
+								"kills": 11,
+								"kind": "pulse",
+								"overkill": 139.3777244,
+								"procs": 0,
+								"shots": 88,
+								"uid": 1
+							},
+							"3:firefly_rain": {
+								"damage": 2969.21327879998,
+								"hits": 508,
+								"kills": 10,
+								"kind": "firefly_rain",
+								"overkill": 34.6979952000002,
+								"procs": 0,
+								"shots": 318,
+								"uid": 3
+							},
+							"9:rail": {
+								"damage": 18567.0065584,
+								"hits": 224,
+								"kills": 183,
+								"kind": "rail",
+								"overkill": 14710.8763344,
+								"procs": 0,
+								"shots": 72,
+								"uid": 9
+							}
+						}
+					},
+					{
+						"dust": 1140,
+						"retreated": 1006,
+						"seconds": 27.0499999999985,
+						"spawned": 1396,
+						"supply": 41,
+						"wave": 5,
+						"weapons": {
+							"-1:overload": {
+								"damage": 1417.1534634,
+								"hits": 38,
+								"kills": 35,
+								"kind": "overload",
+								"overkill": 862.8465366,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"12:missile": {
+								"damage": 10149.92324832,
+								"hits": 287,
+								"kills": 178,
+								"kind": "missile",
+								"overkill": 7839.08027844,
+								"procs": 0,
+								"shots": 223,
+								"uid": 12
+							},
+							"16:rail": {
+								"damage": 7824.2855064,
+								"hits": 95,
+								"kills": 72,
+								"kind": "rail",
+								"overkill": 2283.4458336,
+								"procs": 0,
+								"shots": 45,
+								"uid": 16
+							},
+							"1:pulse": {
+								"damage": 938.25432,
+								"hits": 41,
+								"kills": 12,
+								"kind": "pulse",
+								"overkill": 180.112356,
+								"procs": 0,
+								"shots": 90,
+								"uid": 1
+							},
+							"3:firefly_rain": {
+								"damage": 2830.72757729999,
+								"hits": 423,
+								"kills": 2,
+								"kind": "firefly_rain",
+								"overkill": 6.23373240000004,
+								"procs": 0,
+								"shots": 318,
+								"uid": 3
+							},
+							"9:rail": {
+								"damage": 9694.30671071998,
+								"hits": 111,
+								"kills": 91,
+								"kind": "rail",
+								"overkill": 7816.00787118001,
+								"procs": 0,
+								"shots": 72,
+								"uid": 9
+							}
+						}
+					},
+					{
+						"dust": 3341,
+						"retreated": 1004,
+						"seconds": 33.0000000000036,
+						"spawned": 2146,
+						"supply": 44,
+						"wave": 6,
+						"weapons": {
+							"-1:overload": {
+								"damage": 6564.49970306,
+								"hits": 126,
+								"kills": 43,
+								"kind": "overload",
+								"overkill": 995.50029694,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"12:missile": {
+								"damage": 78065.5541858595,
+								"hits": 1471,
+								"kills": 827,
+								"kind": "missile",
+								"overkill": 25659.47300944,
+								"procs": 0,
+								"shots": 275,
+								"uid": 12
+							},
+							"16:rail": {
+								"damage": 14705.65689677,
+								"hits": 189,
+								"kills": 102,
+								"kind": "rail",
+								"overkill": 5038.61830723,
+								"procs": 0,
+								"shots": 53,
+								"uid": 16
+							},
+							"1:pulse": {
+								"damage": 1356.59957305,
+								"hits": 51,
+								"kills": 10,
+								"kind": "pulse",
+								"overkill": 102.73255295,
+								"procs": 0,
+								"shots": 110,
+								"uid": 1
+							},
+							"3:firefly_rain": {
+								"damage": 8307.23246924986,
+								"hits": 848,
+								"kills": 27,
+								"kind": "firefly_rain",
+								"overkill": 131.37068865,
+								"procs": 0,
+								"shots": 581,
+								"uid": 3
+							},
+							"9:rail": {
+								"damage": 23686.6453949,
+								"hits": 241,
+								"kills": 133,
+								"kind": "rail",
+								"overkill": 12700.4274493,
+								"procs": 0,
+								"shots": 86,
+								"uid": 9
+							}
+						}
+					},
+					{
+						"dust": 3101,
+						"retreated": 1017,
+						"seconds": 40.0000000000091,
+						"spawned": 2130,
+						"supply": 47,
+						"wave": 7,
+						"weapons": {
+							"-1:overload": {
+								"damage": 4573.61618744,
+								"hits": 89,
+								"kills": 35,
+								"kind": "overload",
+								"overkill": 766.38381256,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"12:missile": {
+								"damage": 57743.5358297807,
+								"hits": 1141,
+								"kills": 779,
+								"kind": "missile",
+								"overkill": 25416.3626999002,
+								"procs": 0,
+								"shots": 390,
+								"uid": 12
+							},
+							"16:rail": {
+								"damage": 13202.55643256,
+								"hits": 161,
+								"kills": 76,
+								"kind": "rail",
+								"overkill": 5041.28092744,
+								"procs": 0,
+								"shots": 65,
+								"uid": 16
+							},
+							"1:pulse": {
+								"damage": 1591.45163738,
+								"hits": 61,
+								"kills": 11,
+								"kind": "pulse",
+								"overkill": 111.88893862,
+								"procs": 0,
+								"shots": 135,
+								"uid": 1
+							},
+							"3:firefly_rain": {
+								"damage": 13165.2548691201,
+								"hits": 1176,
+								"kills": 57,
+								"kind": "firefly_rain",
+								"overkill": 250.113174580001,
+								"procs": 0,
+								"shots": 754,
+								"uid": 3
+							},
+							"9:rail": {
+								"damage": 21520.1450568,
+								"hits": 216,
+								"kills": 155,
+								"kind": "rail",
+								"overkill": 12593.1078456,
+								"procs": 0,
+								"shots": 104,
+								"uid": 9
+							}
+						}
+					},
+					{
+						"dust": 556,
+						"retreated": 0,
+						"seconds": 57.350000000013,
+						"spawned": 256,
+						"supply": 0,
+						"wave": 8,
+						"weapons": {
+							"-1:overload": {
+								"damage": 3443.04491769,
+								"hits": 91,
+								"kills": 80,
+								"kind": "overload",
+								"overkill": 2076.95508231,
+								"procs": 0,
+								"shots": 0,
+								"uid": -1
+							},
+							"12:missile": {
+								"damage": 47769.6481738202,
+								"hits": 585,
+								"kills": 31,
+								"kind": "missile",
+								"overkill": 1030.57454358,
+								"procs": 0,
+								"shots": 554,
+								"uid": 12
+							},
+							"16:rail": {
+								"damage": 10311.5758019992,
+								"hits": 112,
+								"kills": 34,
+								"kind": "rail",
+								"overkill": 1863.94891800084,
+								"procs": 0,
+								"shots": 82,
+								"uid": 16
+							},
+							"1:pulse": {
+								"damage": 4642.91267100001,
+								"hits": 160,
+								"kills": 3,
+								"kind": "pulse",
+								"overkill": 12.353025,
+								"procs": 0,
+								"shots": 160,
+								"uid": 1
+							},
+							"3:firefly_rain": {
+								"damage": 31533.11785319,
+								"hits": 1165,
+								"kills": 26,
+								"kind": "firefly_rain",
+								"overkill": 86.4614017600004,
+								"procs": 2,
+								"shots": 1088,
+								"uid": 3
+							},
+							"9:rail": {
+								"damage": 32060.7862236,
+								"hits": 159,
+								"kills": 23,
+								"kind": "rail",
+								"overkill": 1860.699642,
+								"procs": 1,
+								"shots": 142,
+								"uid": 9
+							}
+						}
+					}
+				],
+				"weapons": {
+					"-1:overload": {
+						"damage": 41262.3444765902,
+						"hits": 927,
+						"kills": 505,
+						"kind": "overload",
+						"overkill": 14417.65552341,
+						"procs": 0,
+						"shots": 0,
+						"uid": -1
+					},
+					"12:missile": {
+						"damage": 214086.923593376,
+						"hits": 4028,
+						"kills": 2071,
+						"kind": "missile",
+						"overkill": 65252.5454349604,
+						"procs": 0,
+						"shots": 1640,
+						"uid": 12
+					},
+					"16:rail": {
+						"damage": 46044.0746377292,
+						"hits": 557,
+						"kills": 284,
+						"kind": "rail",
+						"overkill": 14227.2939862709,
+						"procs": 0,
+						"shots": 245,
+						"uid": 16
+					},
+					"1:pulse": {
+						"damage": 12247.95814203,
+						"hits": 488,
+						"kills": 95,
+						"kind": "pulse",
+						"overkill": 1105.66312197,
+						"procs": 0,
+						"shots": 767,
+						"uid": 1
+					},
+					"2:rail": {
+						"damage": 4819.8149,
+						"hits": 118,
+						"kills": 96,
+						"kind": "rail",
+						"overkill": 6164.8167,
+						"procs": 0,
+						"shots": 55,
+						"uid": 2
+					},
+					"3:firefly_rain": {
+						"damage": 64670.4605026565,
+						"hits": 5299,
+						"kills": 175,
+						"kind": "firefly_rain",
+						"overkill": 675.326967590002,
+						"procs": 2,
+						"shots": 3697,
+						"uid": 3
+					},
+					"9:rail": {
+						"damage": 126229.18261942,
+						"hits": 1178,
+						"kills": 788,
+						"kind": "rail",
+						"overkill": 64533.0670374797,
+						"procs": 1,
+						"shots": 532,
+						"uid": 9
+					}
+				}
+			},
+			"result": "victory",
+			"seconds": 244.550000000021,
+			"seed": 2007,
+			"shops": 7,
+			"total_seconds": 349.550000000021,
+			"wave": 8
+		}
+	],
+	"failures": [],
+	"profiles": [
+		{
+			"planet": "mercury",
+			"profile": {
+				"budget": 182,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "日照试航",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "mercury",
+			"profile": {
+				"budget": 241,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "浅坑编队",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "mercury",
+			"profile": {
+				"budget": 312,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "radial_bloom",
+				"name": "终昏弯月",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "mercury",
+			"profile": {
+				"budget": 396,
+				"difficulty": 0,
+				"elite": true,
+				"formation": "battalion_grid",
+				"name": "矿脊拦截",
+				"seconds": 27.0
+			}
+		},
+		{
+			"planet": "mercury",
+			"profile": {
+				"budget": 503,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "热流出口",
+				"seconds": 27.0
+			}
+		},
+		{
+			"planet": "mercury",
+			"profile": {
+				"budget": 615,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "radial_bloom",
+				"name": "热流出口 · 再迎击2",
+				"seconds": 33.0
+			}
+		},
+		{
+			"planet": "mercury",
+			"profile": {
+				"budget": 732,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "热流出口 · 再迎击3",
+				"seconds": 40.0
+			}
+		},
+		{
+			"planet": "mercury",
+			"profile": {
+				"budget": 0,
+				"elite": false,
+				"formation": "boss",
+				"name": "水星机器",
+				"seconds": 0.0
+			}
+		},
+		{
+			"planet": "venus",
+			"profile": {
+				"budget": 247,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "入云",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "venus",
+			"profile": {
+				"budget": 343,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "硫幕蜂群",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "venus",
+			"profile": {
+				"budget": 454,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "radial_bloom",
+				"name": "风眼缺口",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "venus",
+			"profile": {
+				"budget": 579,
+				"difficulty": 0,
+				"elite": true,
+				"formation": "battalion_grid",
+				"name": "炽云突围",
+				"seconds": 27.0
+			}
+		},
+		{
+			"planet": "venus",
+			"profile": {
+				"budget": 725,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "双层锋面",
+				"seconds": 27.0
+			}
+		},
+		{
+			"planet": "venus",
+			"profile": {
+				"budget": 892,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "radial_bloom",
+				"name": "暮光交击",
+				"seconds": 33.0
+			}
+		},
+		{
+			"planet": "venus",
+			"profile": {
+				"budget": 1068,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "暮光交击 · 再迎击2",
+				"seconds": 40.0
+			}
+		},
+		{
+			"planet": "venus",
+			"profile": {
+				"budget": 0,
+				"elite": false,
+				"formation": "boss",
+				"name": "金星机器",
+				"seconds": 0.0
+			}
+		},
+		{
+			"planet": "earth",
+			"profile": {
+				"budget": 312,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "外海接触",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "earth",
+			"profile": {
+				"budget": 441,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "赤道双列",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "earth",
+			"profile": {
+				"budget": 605,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "radial_bloom",
+				"name": "潮汐防线",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "earth",
+			"profile": {
+				"budget": 791,
+				"difficulty": 0,
+				"elite": true,
+				"formation": "battalion_grid",
+				"name": "近岸楔阵",
+				"seconds": 27.0
+			}
+		},
+		{
+			"planet": "earth",
+			"profile": {
+				"budget": 986,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "轨道救援",
+				"seconds": 27.0
+			}
+		},
+		{
+			"planet": "earth",
+			"profile": {
+				"budget": 1190,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "radial_bloom",
+				"name": "交叉护航",
+				"seconds": 33.0
+			}
+		},
+		{
+			"planet": "earth",
+			"profile": {
+				"budget": 1434,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "蔚蓝合奏",
+				"seconds": 40.0
+			}
+		},
+		{
+			"planet": "earth",
+			"profile": {
+				"budget": 0,
+				"elite": false,
+				"formation": "boss",
+				"name": "地球机器",
+				"seconds": 0.0
+			}
+		},
+		{
+			"planet": "mars",
+			"profile": {
+				"budget": 377,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "红沙冲锋",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "mars",
+			"profile": {
+				"budget": 522,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "峡谷交击",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "mars",
+			"profile": {
+				"budget": 701,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "radial_bloom",
+				"name": "重装廊道",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "mars",
+			"profile": {
+				"budget": 918,
+				"difficulty": 0,
+				"elite": true,
+				"formation": "battalion_grid",
+				"name": "断层缺口",
+				"seconds": 27.0
+			}
+		},
+		{
+			"planet": "mars",
+			"profile": {
+				"budget": 1160,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "沙暴雷群",
+				"seconds": 27.0
+			}
+		},
+		{
+			"planet": "mars",
+			"profile": {
+				"budget": 1413,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "radial_bloom",
+				"name": "前哨重启",
+				"seconds": 33.0
+			}
+		},
+		{
+			"planet": "mars",
+			"profile": {
+				"budget": 1693,
+				"difficulty": 0,
+				"elite": true,
+				"formation": "battalion_grid",
+				"name": "双锋反攻",
+				"seconds": 40.0
+			}
+		},
+		{
+			"planet": "mars",
+			"profile": {
+				"budget": 0,
+				"elite": false,
+				"formation": "boss",
+				"name": "火星机器",
+				"seconds": 0.0
+			}
+		},
+		{
+			"planet": "jupiter",
+			"profile": {
+				"budget": 455,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "云带剪影",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "jupiter",
+			"profile": {
+				"budget": 646,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "巨斑裂弧",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "jupiter",
+			"profile": {
+				"budget": 898,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "radial_bloom",
+				"name": "风暴辫流",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "jupiter",
+			"profile": {
+				"budget": 1194,
+				"difficulty": 0,
+				"elite": true,
+				"formation": "battalion_grid",
+				"name": "雷群聚合",
+				"seconds": 27.0
+			}
+		},
+		{
+			"planet": "jupiter",
+			"profile": {
+				"budget": 1513,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "气旋交叉",
+				"seconds": 27.0
+			}
+		},
+		{
+			"planet": "jupiter",
+			"profile": {
+				"budget": 1859,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "radial_bloom",
+				"name": "压境楔群",
+				"seconds": 33.0
+			}
+		},
+		{
+			"planet": "jupiter",
+			"profile": {
+				"budget": 2227,
+				"difficulty": 0,
+				"elite": true,
+				"formation": "battalion_grid",
+				"name": "六角眼壁",
+				"seconds": 40.0
+			}
+		},
+		{
+			"planet": "jupiter",
+			"profile": {
+				"budget": 0,
+				"elite": false,
+				"formation": "boss",
+				"name": "木星机器",
+				"seconds": 0.0
+			}
+		},
+		{
+			"planet": "saturn",
+			"profile": {
+				"budget": 533,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "光环入口",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "saturn",
+			"profile": {
+				"budget": 771,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "六芒卫队",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "saturn",
+			"profile": {
+				"budget": 1059,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "radial_bloom",
+				"name": "碎环缺口",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "saturn",
+			"profile": {
+				"budget": 1391,
+				"difficulty": 0,
+				"elite": true,
+				"formation": "battalion_grid",
+				"name": "冰尘楔阵",
+				"seconds": 27.0
+			}
+		},
+		{
+			"planet": "saturn",
+			"profile": {
+				"budget": 1759,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "双轨封锁",
+				"seconds": 27.0
+			}
+		},
+		{
+			"planet": "saturn",
+			"profile": {
+				"budget": 2164,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "radial_bloom",
+				"name": "环带弯月",
+				"seconds": 33.0
+			}
+		},
+		{
+			"planet": "saturn",
+			"profile": {
+				"budget": 2593,
+				"difficulty": 0,
+				"elite": true,
+				"formation": "battalion_grid",
+				"name": "交会节点",
+				"seconds": 40.0
+			}
+		},
+		{
+			"planet": "saturn",
+			"profile": {
+				"budget": 0,
+				"elite": false,
+				"formation": "boss",
+				"name": "土星机器",
+				"seconds": 0.0
+			}
+		},
+		{
+			"planet": "uranus",
+			"profile": {
+				"budget": 611,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "极夜断弧",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "uranus",
+			"profile": {
+				"budget": 909,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "倾轴双流",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "uranus",
+			"profile": {
+				"budget": 1283,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "radial_bloom",
+				"name": "冰缝交锋",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "uranus",
+			"profile": {
+				"budget": 1709,
+				"difficulty": 0,
+				"elite": true,
+				"formation": "battalion_grid",
+				"name": "镜晶蜂群",
+				"seconds": 27.0
+			}
+		},
+		{
+			"planet": "uranus",
+			"profile": {
+				"budget": 2185,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "冷涡月阵",
+				"seconds": 27.0
+			}
+		},
+		{
+			"planet": "uranus",
+			"profile": {
+				"budget": 2668,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "radial_bloom",
+				"name": "极光双列",
+				"seconds": 33.0
+			}
+		},
+		{
+			"planet": "uranus",
+			"profile": {
+				"budget": 3172,
+				"difficulty": 0,
+				"elite": true,
+				"formation": "battalion_grid",
+				"name": "反向穿插",
+				"seconds": 40.0
+			}
+		},
+		{
+			"planet": "uranus",
+			"profile": {
+				"budget": 0,
+				"elite": false,
+				"formation": "boss",
+				"name": "天王星机器",
+				"seconds": 0.0
+			}
+		},
+		{
+			"planet": "neptune",
+			"profile": {
+				"budget": 702,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "深蓝门槛",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "neptune",
+			"profile": {
+				"budget": 1016,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "暗流交错",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "neptune",
+			"profile": {
+				"budget": 1393,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "radial_bloom",
+				"name": "风暴断面",
+				"seconds": 20.0
+			}
+		},
+		{
+			"planet": "neptune",
+			"profile": {
+				"budget": 1836,
+				"difficulty": 0,
+				"elite": true,
+				"formation": "battalion_grid",
+				"name": "深潮编织",
+				"seconds": 27.0
+			}
+		},
+		{
+			"planet": "neptune",
+			"profile": {
+				"budget": 2310,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "battalion_grid",
+				"name": "双线合围",
+				"seconds": 27.0
+			}
+		},
+		{
+			"planet": "neptune",
+			"profile": {
+				"budget": 2826,
+				"difficulty": 0,
+				"elite": false,
+				"formation": "radial_bloom",
+				"name": "远海群落",
+				"seconds": 33.0
+			}
+		},
+		{
+			"planet": "neptune",
+			"profile": {
+				"budget": 3386,
+				"difficulty": 0,
+				"elite": true,
+				"formation": "battalion_grid",
+				"name": "无光弯月",
+				"seconds": 40.0
+			}
+		},
+		{
+			"planet": "neptune",
+			"profile": {
+				"budget": 0,
+				"elite": false,
+				"formation": "boss",
+				"name": "海王星机器",
+				"seconds": 0.0
+			}
+		}
+	],
+	"scope": "20Hz production-method numerical simulation; current1.5s scan,0.5s enemy steps,real legal purchases and modeled15s shops. No invulnerability/free money/forced damage. Scripted movement is not human win rate; Boss timing is build-dependent and is not a forced deadline."
+}

@@ -266,11 +266,12 @@ func results_screen() -> void:
 	section_title(content,destination.name+(" · 航线突破" if game.state=="victory" else " · 信号中断"),str(destination.cleartext) if game.state=="victory" else "重新编排后，可以再次挑战这条航线。")
 	content.add_child(label("击破 %d   /   得分 %d   /   最佳 %d"%[game.kills,game.score,game.best],24))
 	content.add_child(label("抵达第 %d 波  /  完成 %d 次节拍触发"%[game.wave,game.actual_steps],18,Color("95a8bf")))
+	content.add_child(label("本局用时 %d分%02d秒（含购物 %.0f秒）"%[int(game.run_total_seconds)/60,int(game.run_total_seconds)%60,game.run_shop_seconds],18,Color("95a8bf")))
 	content.add_child(label("种子 %d / 承伤 %.1f / %s"%[game.run_seed,game.receipt.received,game.receipt.death_reason if game.state=="defeat" else "奖励已确认 音乐正在收尾"],17,Color("93abbc")))
 	var boons: Array=game.loadout.boon_summary()
 	if not boons.is_empty(): content.add_child(label("清波强化  "+" · ".join(boons),17,Color("e7c88d")))
 	for wave_record in game.receipt.waves:
-		content.add_child(label("第%d波 %.1f秒 / 生成%d / 撤退%d / 星屑%d"%[wave_record.wave,wave_record.seconds,wave_record.spawned,wave_record.retreated,wave_record.dust],16,Color("829bb2")))
+		content.add_child(label("第%d波 %.1f秒 / 生成%d / 撤退%d / 拾取%d / 补给%d"%[wave_record.wave,wave_record.seconds,wave_record.spawned,wave_record.retreated,wave_record.dust,int(wave_record.get("supply",0))],16,Color("829bb2")))
 	var kinds=game.weapon_damage.keys(); kinds.sort_custom(func(a,b):return game.weapon_damage[a]>game.weapon_damage[b])
 	for kind in kinds.slice(0,4):
 		var name=DATA.item(str(kind)).get("name", "超载爆发" if kind=="overload" else "连锁效果")

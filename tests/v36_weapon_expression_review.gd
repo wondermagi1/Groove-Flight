@@ -55,7 +55,7 @@ func composer_checks() -> void:
 	check(energy>0. and player.score_events.size()==2 and is_equal_approx(recording.get_length(),8./3.),"actual native-ready composer PCM remains nonzero with its authored duration and two notes")
 	player.stop_song(); player.queue_free()
 func codex_checks() -> void:
-	var codex=load("res://scripts/weapon_codex.gd").new(); codex.game=game; game.add_child(codex); await frames(4); codex.set_process(false)
+	var codex=load("res://scripts/weapon_codex.gd").new(); codex.game=game; game.ui.root_control.add_child(codex); game.ui.root_control.show(); await frames(4); codex.set_process(false)
 	check(codex.pitch_row.get_children().filter(func(b): return b.visible).map(func(b): return b.text)==["很弱","弱","强","很强"],"codex exposes four actual performance buttons")
 	codex.pitch_row.get_child(1).pressed.emit()
 	var sample=AudioStreamWAV.load_from_file(ProjectSettings.globalize_path(E.path_for("pulse",1)))

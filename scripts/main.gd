@@ -8,6 +8,7 @@ const WEAPON_CODEX=preload("res://scripts/weapon_codex.gd")
 const MACHINE_ART=preload("res://scripts/planet_machine_art.gd")
 const BACKDROP_ASSETS=preload("res://scripts/planet_backdrop_assets.gd")
 const PLAN=preload("res://scripts/wave_plan.gd")
+const BALANCE=preload("res://scripts/run_balance.gd")
 const PLANETS=preload("res://scripts/planet_catalog.gd")
 const SCORE=preload("res://scripts/composer_score.gd")
 const CLOCK=preload("res://scripts/music_clock.gd")
@@ -42,6 +43,9 @@ var active_planet: String="mercury"
 var planet_rules: Dictionary=PLANETS.combat("mercury")
 var planet_records: Dictionary={}
 var drop_fraction: float=0.
+var wave_supply: int=0
+var run_shop_seconds: float=0.
+var run_total_seconds: float=0.
 var solar_return_state: String="hub"
 var loadout=LOADOUT.new()
 var music
@@ -397,6 +401,7 @@ func _load_audio(path: String) -> AudioStream:
 	return stream
 
 func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=false) -> void:
+	run_shop_seconds=0.; run_total_seconds=0.; wave_supply=0
 	composer_holds.clear(); composer_player.stop_song(); standard_music.stop(); standard_music._running=false
 	for recorded_player in recorded_weapon_players.values():
 		if is_instance_valid(recorded_player):
@@ -779,7 +784,7 @@ func shop_reroll() -> bool:
 	var locked_weapons=0
 	for offer in locked:
 		if str(C.item(str(offer.id)).category)=="weapon": locked_weapons+=1
-	var pool=loadout.make_shop(rng,wave,excluded,maxi(0,3-locked_weapons),maxi(0,3-(locked.size()-locked_weapons)))
+	var pool=loadout.make_shop(rng,wave,excluded,maxi(0,3-locked_weapons),maxi(0,3-(locked.size()-locked_weapons)),BALANCE.price_scale(int(PLANETS.planet(active_planet).index)))
 	var replacement: Array=[]
 	for i in range(6):
 		var offer: Dictionary=shop_offers[i] if i<shop_offers.size() else {}
@@ -790,7 +795,7 @@ func shop_reroll() -> bool:
 				if (str(C.item(str(pool[candidate].id)).category)=="weapon")== (i<3): next=candidate; break
 			if next<0: return false
 			replacement.append(pool[next]); pool.remove_at(next)
-	dust-=shop_reroll_cost; shop_reroll_cost+=4; shop_offers=replacement
+	dust-=shop_reroll_cost; shop_reroll_cost+=BALANCE.reroll_increment(int(PLANETS.planet(active_planet).index)); shop_offers=replacement
 	sound("pickup",-15); ui.refresh(); return true
 
 func can_salvage(uid: int) -> bool:
@@ -933,7 +938,12 @@ func overload() -> bool:
 		if enemy.at.distance_to(player)<650: hurt_enemy(enemy,60,"overload")
 	sound("reward",-5,.72); return true
 
+func run_elapsed_seconds() -> float:
+	return run_total_seconds if state in ["victory","defeat"] else music.timeline+run_shop_seconds
+
 func _process(delta: float) -> void:
+	var shopping=state=="reward" or (state=="editor" and editor_return=="reward") or (state=="weapon_codex" and (weapon_codex_return_state=="reward" or (weapon_codex_return_state=="editor" and editor_return=="reward")))
+	if shopping and not is_preview: run_shop_seconds+=delta
 	_sync_screen_music()
 	update_background_mix(delta)
 	background.set_shader_parameter("travel",music.timeline*.15 if state in ["combat","editor","reward","paused"] else float(Time.get_ticks_msec())*.00015)
@@ -1144,7 +1154,7 @@ func spawn_enemy(kind: String,position: Vector2=Vector2.INF) -> Dictionary:
 	if position==Vector2.INF:
 		var outward=movement_facing.rotated(rng.randf_range(-1.,1.)) if rng.randf()<.72 else Vector2.from_angle(rng.randf()*TAU)
 		position=safe_spawn_position(spawn_origin(outward),outward)
-	var hp={"mote":12.,"armor":62.,"shooter":30.,"dart":10.,"splitter":42.,"sentinel":80.,"lance":86.,"mirror":66.,"elite":330.+wave*28,"boss":6800.}[kind]
+	var hp=BALANCE.base_hp(kind,wave)
 	hp=float(planet_rules.boss_hp) if kind=="boss" else hp*float(planet_rules.hp_scale)
 	var enemy={"uid":next_enemy,"kind":kind,"at":position,"hp":hp,"max_hp":hp,"radius":{"mote":11.,"armor":18.,"shooter":15.,"dart":9.,"splitter":17.,"sentinel":19.,"lance":20.,"mirror":18.,"elite":42.,"boss":82.}[kind],"speed":{"mote":142.,"armor":85.,"shooter":100.,"dart":238.,"splitter":124.,"sentinel":85.,"lance":76.,"mirror":126.,"elite":96.,"boss":0.}[kind],"flash":0.,"phase":1,"angle":0.,"born":music.timeline}
 	if kind=="boss":
@@ -1553,7 +1563,7 @@ func hurt_enemy(enemy: Dictionary,damage: float,kind: String,context: Dictionary
 	if enemy.kind=="splitter": pending_splits.append({"at":enemy.at,"count":3,"maneuver":enemy.get("maneuver",{}).duplicate(true)})
 	# Preserve the small early-planet bonuses:1.08x yields an occasional extra
 	# star rather than rounding every normal enemy back down to1 forever.
-	drop_fraction+=(12 if enemy.kind=="boss" else (5 if enemy.kind=="elite" else 1))*float(planet_rules.drop_scale)
+	drop_fraction+=(12 if enemy.kind=="boss" else (5 if enemy.kind=="elite" else 1))*float(planet_rules.drop_scale)*BALANCE.LOOT_MULTIPLIER
 	# Binary float sums such as100*1.18 may land just below118. The tiny
 	# tolerance prevents losing a whole earned star at an integer boundary.
 	var amount=maxi(1,floori(drop_fraction+.00000001)); drop_fraction=maxf(0.,drop_fraction-float(amount))
@@ -1643,11 +1653,13 @@ func check_wave() -> void:
 	enemies.clear(); by_id.clear(); spatial.clear()
 	# Collect earned drops on transition so the shop never strands rewards.
 	for item in pickups: collect_pickup(item,false)
-	receipt.end_wave(wave,music.timeline-wave_start,picked-wave_picked_start,total_spawned-wave_spawn_start,retreat_count)
+	wave_supply=BALANCE.clear_supply(wave,int(PLANETS.planet(active_planet).index))
+	dust+=wave_supply
+	receipt.end_wave(wave,music.timeline-wave_start,picked-wave_picked_start,total_spawned-wave_spawn_start,retreat_count,wave_supply)
 	pending_splits.clear()
 	pickups.clear(); enemy_bullets.clear(); bullets.clear(); warnings.clear(); pending_triggers.clear(); pending_projectiles.clear()
 	if not (test_mode and simulation_only): standard_music.prepare(loadout)
-	shop_offers=loadout.make_shop(rng,wave); shop_reroll_cost=8; editing_changed=false; selected_uid=-1
+	shop_offers=loadout.make_shop(rng,wave,[],3,3,BALANCE.price_scale(int(PLANETS.planet(active_planet).index))); shop_reroll_cost=BALANCE.reroll_cost(int(PLANETS.planet(active_planet).index)); editing_changed=false; selected_uid=-1
 	rewards=loadout.wave_boon_choices(rng); reward_taken=false
 	state="reward"; music.hold(true); sound("reward",-9); ui.refresh()
 func finish_run(won: bool) -> void:
@@ -1658,6 +1670,7 @@ func finish_run(won: bool) -> void:
 		pickups.clear()
 	receipt.end_wave(wave,music.timeline-wave_start,picked-wave_picked_start,total_spawned-wave_spawn_start,0)
 	pending_triggers.clear(); pending_projectiles.clear(); results_tail=Time.get_ticks_msec()*.001+1.
+	run_total_seconds=music.timeline+run_shop_seconds
 	state="victory" if won else "defeat"; best=maxi(best,score)
 	var record=planet_record(active_planet); record.attempts+=1
 	record.best_score=maxi(int(record.best_score),score); record.last_result="clear" if won else "failed"

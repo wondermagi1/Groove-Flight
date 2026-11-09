@@ -3,9 +3,10 @@ extends RefCounted
 ## encounter data is authored for Groove Flight, not extracted from another game.
 const IDS=["mercury","venus","earth","mars","jupiter","saturn","uranus","neptune"]
 const THEMES=["rocky","volcanic","ocean","desert","gas","ringed","ice","storm"]
-const WAVE_COUNTS=[6,7,8,8,9,9,10,10]
+const BALANCE=preload("res://scripts/run_balance.gd")
+const WAVE_COUNTS=[8,8,8,8,8,8,8,8]
 const HP_SCALES=[1.0,1.18,1.38,1.62,1.92,2.22,2.55,2.90]
-const BOSS_HP=[3000.,5200.,6800.,8700.,10200.,11600.,13000.,14000.]
+const BOSS_HP=BALANCE.BOSS_HP
 const BOSS_RADII=[158.,166.,172.,178.,205.,200.,192.,214.]
 const MACHINE_TYPES=["日冕采掘体","硫云熔炉","轨道仲裁站","赤砂攻城堡","巨斑涡轮","星环歼灭器","极轴观测体","深潮终奏舰"]
 const SPEEDS=[1.0,1.04,1.08,1.11,1.15,1.18,1.21,1.24]
@@ -108,18 +109,18 @@ static func planet(id: String) -> Dictionary:
 static func route(id: String,difficulty: int=0) -> Array[Dictionary]:
 	var index=_index(id)
 	var hard=clampi(difficulty,0,1)>0
-	var start_seconds=[20.,22.,24.,25.,26.,27.,28.,29.][index]
 	var result: Array[Dictionary]=[]
 	for wave in range(WAVE_COUNTS[index]-1):
 		# First elite arrives late in the opening route. Advanced planets keep
 		# additional elite beats without adding unbounded wave counts.
 		var elite=wave==3 or (index>=3 and wave==6)
 		if hard: elite=elite or wave in [1,4,7]
-		var formation=str(FORMATIONS[index][wave])
-		formation="radial_bloom" if wave%3==2 or wave==7 else "battalion_grid"
-		var progression=float(wave)/maxf(1.,float(WAVE_COUNTS[index]-2))
-		var budget=int(round(float(BUDGETS[index][wave])*(2.2+.35*progression)*(1.18 if hard else 1.)))
-		result.append({"name":str(WAVE_NAMES[index][wave]),"seconds":start_seconds+2.*wave,"budget":budget,"elite":elite,"formation":formation,"difficulty":clampi(difficulty,0,1)})
+		var formation="radial_bloom" if wave%3==2 or wave==7 else "battalion_grid"
+		var budget=BALANCE.wave_budget(BUDGETS[index],wave,hard)
+		var name_index=mini(wave,WAVE_NAMES[index].size()-1)
+		var wave_name=str(WAVE_NAMES[index][name_index])
+		if wave>=WAVE_NAMES[index].size(): wave_name+=" · 再迎击%d"%(wave-WAVE_NAMES[index].size()+2)
+		result.append({"name":wave_name,"seconds":BALANCE.ORDINARY_SECONDS[wave],"budget":budget,"elite":elite,"formation":formation,"difficulty":clampi(difficulty,0,1)})
 	result.append({"name":str(planet(id).bossname),"seconds":0.,"budget":0,"elite":false,"formation":"boss"})
 	return result
 
