@@ -20,6 +20,7 @@ const RECEIPT=preload("res://scripts/combat_receipt.gd")
 const EMISSION=preload("res://scripts/weapon_emission.gd")
 const VISUALS=preload("res://scripts/weapon_visuals.gd")
 const PROJECTILE_FIELDS=preload("res://scripts/projectile_fields.gd")
+const ENERGY_WEAPONS=preload("res://scripts/energy_arsenal.gd")
 const SALVOS=preload("res://scripts/salvo_patterns.gd")
 const ARRIVAL=preload("res://scripts/enemy_arrival.gd")
 const PATHS=preload("res://scripts/build_paths.gd")
@@ -48,6 +49,8 @@ var wave_supply: int=0
 var run_shop_seconds: float=0.
 var run_total_seconds: float=0.
 var solar_return_state: String="hub"
+var energy_weapons=ENERGY_WEAPONS.new()
+var energy_renderer
 var loadout=LOADOUT.new()
 var music
 var standard_music
@@ -218,6 +221,7 @@ func _ready() -> void:
 	for i in range(16):
 		var voice=AudioStreamPlayer.new(); add_child(voice); voices.append(voice)
 	weapon_renderer=load("res://scripts/weapon_render.gd").new(); weapon_renderer.z_index=2; add_child(weapon_renderer)
+	energy_renderer=load("res://scripts/energy_render.gd").new(); energy_renderer.z_index=3; add_child(energy_renderer)
 	shield_renderer=load("res://scripts/player_guard_render.gd").new(); shield_renderer.z_index=10; add_child(shield_renderer)
 	var finish=CanvasLayer.new(); finish.layer=20; add_child(finish)
 	post=ColorRect.new(); post.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT); post.mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -423,7 +427,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	background.set_shader_parameter("sky_tint",planet_rules.sky_tint)
 	BACKDROP_ASSETS.apply(background,active_planet,int(settings.background_quality),float(settings.background_exposure))
 	leave_hub()
-	receipt.reset(); pending_triggers.clear(); pending_projectiles.clear(); root_budgets.clear(); results_tail=-1.; pending_resume=""
+	receipt.reset(); pending_triggers.clear(); pending_projectiles.clear(); energy_weapons.clear(); root_budgets.clear(); results_tail=-1.; pending_resume=""
 	spawn_telegraphs.clear()
 	if is_instance_valid(lab): lab.deactivate()
 	if seed_value==0: rng.randomize()
@@ -462,7 +466,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 		begin_wave(); ui.refresh()
 		tutorial_active=not test_mode and not bool(settings.tutorial_done) and not bool(settings.tutorial_skipped) and active_planet=="mercury"; tutorial_stage=0; tutorial_origin=player; tutorial_retimed=false
 func begin_wave() -> void:
-	pending_triggers.clear(); pending_projectiles.clear()
+	pending_triggers.clear(); pending_projectiles.clear(); energy_weapons.clear()
 	spawn_telegraphs.clear()
 	wave+=1; wave_start=music.timeline; wave_spawn_start=total_spawned; wave_picked_start=picked; spawned=0;
 	kill_combo=0; kill_combo_until=0.
@@ -870,6 +874,7 @@ func return_title() -> void:
 	if state in ["composer","composer_loading"]: _save_composer_draft()
 	_restore_standard_music()
 	leave_hub()
+	energy_weapons.clear()
 	music.stop(); music._running=false; camera.enabled=false; state="title"
 	for voice in voices: voice.stop()
 	enemies.clear(); by_id.clear(); spatial.clear(); pending_splits.clear(); bullets.clear(); enemy_bullets.clear(); warnings.clear(); pickups.clear()
@@ -964,7 +969,7 @@ func _process(delta: float) -> void:
 		if music.timeline>=shield_until: shield_points=0
 		flush_triggers(); update_composer_holds(); update_spawn_telegraphs(); update_enemies(dt)
 		if state!="combat": return
-		rebuild_spatial(); update_bullets(dt); update_enemy_bullets(dt)
+		rebuild_spatial(); energy_weapons.step(self,music.timeline); update_bullets(dt); update_enemy_bullets(dt)
 		if state!="combat": return
 		update_warnings()
 		if state!="combat": return
@@ -1301,7 +1306,9 @@ func fire_weapon(trigger: Dictionary) -> void:
 	else:
 		fx.muzzle(origin+direction*25,direction,color,1.25 if family in ["rail","beam","missile"] else 1.)
 	_play_weapon_reference(trigger,family)
-	if family=="chain":
+	if ENERGY_WEAPONS.handles(kind) or family=="chain" or (kind=="beam" and int(trigger.get("refractions",0))>0):
+		rebuild_spatial(); energy_weapons.fire(self,trigger,context,origin,direction,reach,damage,count,color)
+	elif family=="chain":
 		var roots=enemies.filter(func(e): return e.hp>0. and player.distance_to(e.at)<reach)
 		roots.sort_custom(func(a,b): return player.distance_squared_to(a.at)<player.distance_squared_to(b.at))
 		for branch in range(count):
@@ -1480,7 +1487,7 @@ func update_bullets(frame_delta: float) -> void:
 		elif family=="boomerang" and bullet.age>float(bullet.get("total_life",2))*.48:
 			bullet.v=bullet.v.lerp((player-bullet.at).normalized()*float(bullet.get("original_speed",640))*1.4,minf(1.,delta*7.))
 		elif family=="mine": bullet.v*=exp(-delta*2.8)
-		if float(bullet.get("homing",0))>0:
+		if float(bullet.get("homing",0))>0 and not bullet.has("wind_burst_start"):
 			var target: Dictionary=by_id.get(int(bullet.target),{})
 			if target.is_empty() or target.hp<=0: target=nearest(bullet.at); bullet.target=target.get("uid",-1)
 			if not target.is_empty(): bullet.v=(bullet.v.normalized().lerp((target.at-bullet.at).normalized(),minf(1,delta*float(bullet.homing)))).normalized()*maxf(.01,bullet.v.length())
@@ -1639,6 +1646,9 @@ func hurt_player(amount: float) -> void:
 	if health>0: _grant_player_guard(3.)
 	fx.burst(player,Color("ff779d"),16,220)
 	if health<=0: sound("hit",-6); finish_run(false)
+func featured_shop_item() -> String:
+	return "westwind" if wave in [3,4] and not loadout.modules.any(func(module): return str(module.kind)=="westwind") else ""
+
 func check_wave() -> void:
 	if free_music_run or is_preview: return
 	if state!="combat": return
@@ -1660,9 +1670,9 @@ func check_wave() -> void:
 	dust+=wave_supply
 	receipt.end_wave(wave,music.timeline-wave_start,picked-wave_picked_start,total_spawned-wave_spawn_start,retreat_count,wave_supply)
 	pending_splits.clear()
-	pickups.clear(); enemy_bullets.clear(); bullets.clear(); warnings.clear(); pending_triggers.clear(); pending_projectiles.clear()
+	pickups.clear(); enemy_bullets.clear(); bullets.clear(); warnings.clear(); pending_triggers.clear(); pending_projectiles.clear(); energy_weapons.clear()
 	if not (test_mode and simulation_only): standard_music.prepare(loadout)
-	shop_offers=loadout.make_shop(rng,wave,[],3,3,BALANCE.price_scale(int(PLANETS.planet(active_planet).index))); shop_reroll_cost=BALANCE.reroll_cost(int(PLANETS.planet(active_planet).index)); editing_changed=false; selected_uid=-1
+	shop_offers=loadout.make_shop(rng,wave,[],3,3,BALANCE.price_scale(int(PLANETS.planet(active_planet).index)),featured_shop_item()); shop_reroll_cost=BALANCE.reroll_cost(int(PLANETS.planet(active_planet).index)); editing_changed=false; selected_uid=-1
 	rewards=loadout.wave_boon_choices(rng); reward_taken=false
 	state="reward"; music.hold(true); sound("reward",-9); ui.refresh()
 func finish_run(won: bool) -> void:
@@ -1672,7 +1682,7 @@ func finish_run(won: bool) -> void:
 		for item in pickups: collect_pickup(item,false)
 		pickups.clear()
 	receipt.end_wave(wave,music.timeline-wave_start,picked-wave_picked_start,total_spawned-wave_spawn_start,0)
-	pending_triggers.clear(); pending_projectiles.clear(); results_tail=Time.get_ticks_msec()*.001+1.
+	pending_triggers.clear(); pending_projectiles.clear(); energy_weapons.clear(); results_tail=Time.get_ticks_msec()*.001+1.
 	run_total_seconds=music.timeline+run_shop_seconds
 	state="victory" if won else "defeat"; best=maxi(best,score)
 	var record=planet_record(active_planet); record.attempts+=1
@@ -1697,8 +1707,9 @@ static func polygon(at: Vector2,radius: float,sides: int,angle: float=0.) -> Pac
 	return points
 func _draw() -> void:
 	if state=="title" or not background_layer.visible:
-		fleet_batch.visible=false; weapon_renderer.visible=false; shield_renderer.visible=false; return
+		fleet_batch.visible=false; weapon_renderer.visible=false; shield_renderer.visible=false; energy_renderer.visible=false; return
 	var visible_rect=visible_world().grow(140.)
+	energy_renderer.visible=true; energy_renderer.update_packets(energy_weapons.visuals,music.timeline,visible_rect)
 	var pulse=music.pulse()
 	var batch=not enemies.is_empty()
 	fleet_batch.visible=batch
@@ -1816,6 +1827,11 @@ func draw_preview_ranges() -> void:
 		var color=Color(colors[track],.34)
 		var origin=player+direction.orthogonal()*[-17.,0.,17.][track]
 		var pattern=str(C.item(str(row.kind)).get("emission",""))
+		if ENERGY_WEAPONS.handles(str(row.kind)):
+			if family=="beam":
+				for ray in ENERGY_WEAPONS.rays(str(row.kind),origin,direction,int(actual.count),float(actual.spread),music.timeline): draw_dashed_line(ray.a,Vector2(ray.a)+Vector2(ray.axis)*reach,Color(color,.48),1.4,14.,true)
+			else: draw_arc(origin,reach,0.,TAU,96,Color(color,.40),1.5,true)
+			continue
 		if float(actual.get("trajectory",{}).get("kaleidoscope",0.))>0. and str(row.kind) in VISUALS.MOVING_IDS and family!="orbit":
 			draw_arc(player,reach,0.,TAU,96,Color(color,.40),1.5,true)
 			continue

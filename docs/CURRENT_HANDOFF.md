@@ -4,7 +4,10 @@
 
 2026-11-09后续配器决定：用户最新合并为[统一13种乐器组开发总体框架](ORCHESTRAL_AUDIO_DIRECTION.md)：钢琴、弦乐4种、竖琴、木管4种、三角铁/钟琴/定音鼓。覆盖此前A/B划分；先建立音源和演奏力度，再按武器定位分配。当前V38素材与乐器尚未替换，圆号不计入最新核心清单。
 
-2026-11-09，工程版本 `0.41.0-westwind-kaleidoscope`，开发分支 `codex/v41-westwind-kaleidoscope`。V40完成上传`6778a96`；本轮前备份`fa85541`已上传核验。远程仓库 https://github.com/wondermagi1/Groove-Flight ，每轮先上传备份再改动，见根目录AGENTS.md。
+2026-11-09，工程版本 `0.42.0-conductive-light`，开发分支 `codex/v42-chain-laser-arsenal`，修改前备份`8516717`已上传核验。每轮继续遵守先上传Git备份再改游戏。
+
+V42：万花筒4轮/96基础弹；唯一西风完整效果不升级，未持有时3/4波保证，约72%里程触发2.8倍近水平短冲；商店详情点击固定、跨卡悬停不换合成目标。新增arc_bough/chain_loop/laser_fan/laser_crown，24现役/288WAV、7个实际乐器类。真激光每1能量+1折射，上限64、.86逐段衰减；电链每5能量+1传导，击杀向3近敌分流，深度32/全局2048尝试/不重复命中。新光电引擎见energy_arsenal.gd，旧240WAV不动。用户要求本轮不再画面评审，以程序/音频功能检查为准。见[V42说明](V42_CONDUCTIVE_LIGHT.md)及[当前验证](data-v42/SUMMARY.json)。
+
 
 V41：西风`westwind`稀有1格改装，实际里程后段渐强向右受力；万花筒`kaleidoscope`3格史诗实弹，6轮/9秒、六瓣甩射、珠光紫钢琴0.5秒，同轨自由实体弹保留自身充能/声音/弹数/伤害并继承形式。全舰自由实体弹受西风；真激光/电弧/绑定环绕保留。240WAV，旧228和19件基础参数/原生crowd不变。图鉴窗口缩放不再销毁实例。见[V41说明](V41_WESTWIND_KALEIDOSCOPE.md)、[当前验证](data-v41/SUMMARY.json)和[三类重点模组方向](WEAPON_MODULE_ROADMAP.md)。
 

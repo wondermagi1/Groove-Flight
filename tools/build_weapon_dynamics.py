@@ -37,7 +37,7 @@ def main():
     subprocess.run(['E:/MinGW/bin/gcc.exe','-O2','-std=c99','-I',str(source),str(ROOT/'tools/render_instrument_note.c'),'-o',str(exe),'-lm'],check=True)
     output=[]
     for entry in palette['weapons']:
-        assert entry['instrument_family'] in ['piano','strings','harp'] and entry['bank']==0 and entry['program'] in [0,1,40,41,42,46]
+        assert entry['instrument_family'] in palette['allowed_families'] and entry['bank']==0 and entry['program'] in palette.get('allowed_programs',[0,1,40,41,42,46])
         layers=[]
         for index,level in enumerate(policy['levels']):
             if entry['id'] not in selected or index not in strengths:

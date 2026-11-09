@@ -1,10 +1,10 @@
 # 武器特效与音频对应表（持续维护）
 
-最后更新：2026-11-09。核对版本：`0.41.0-westwind-kaleidoscope`；新增西风道具与6轮万花筒，同轨自由实体弹同步甩射、后段向右受力。修改前备份`fa85541`；V40数值/图鉴和初始配装保留。
+最后更新：2026-11-09。核对版本：`0.42.0-conductive-light`；万花筒4轮/96基础弹，完整且不可升级的西风，逐点能量折射及电链击杀三向分流。备份`8516717`已上传核验。
 
 这是当前现役武器的统一查阅入口。后续在同一份文档持续更新；历史版本说明和旧武器档案保留在原处。表中均为已经接入的内容，待开发设想另列。
 
-现役共**20种武器**：**15种共享羽状质感、18种实体弹、2种激光/电弧**。共240份WAV：160份作曲音高、80份独立力度演奏；12种钢琴变化、4种弓弦、4种竖琴。V41新增万花筒8份音高和4份半秒演奏，旧228份WAV保持原样。V39十件三四轮武器的四档仍为0.5秒；万花筒6轮档同为0.5秒。同类材质、独立运动、真实曲线残迹、射程后退场和一齐射一声音保留。详见[V41说明与对比短片](V41_WESTWIND_KALEIDOSCOPE.md)。
+现役共**24种武器**：15种共享羽状质感、18种实体弹、3种真激光、3种电链。共288WAV：192作曲音高、96力度；12钢琴变化、4弓弦、4竖琴、2单簧管、2长笛。V42新增48份木管样本，旧240份保留。万花筒4轮/6秒间隔，基础96弹、基础史诗品质实际100发；声音仍0.5秒。见[V42实现与验证](V42_CONDUCTIVE_LIGHT.md)。
 
 本版新增[统一武器开发规范](WEAPON_DEVELOPMENT_STANDARD.md)，汇总独立受力、曲线残迹、射程后退场、同类材质和后续13乐器组/充能覆盖。新增武器必须参照它；[V40数值与图鉴说明](V40_BALANCE_CODEX_FOUNDATION.md)。
 
@@ -35,7 +35,11 @@
 | 晨羽前奏<br>`dawn_fan` | 机头前方左/中/右三瓣羽扇分排展开，各颗独立飞行；实际行程2400 | 绿、金、橙、粉连续过渡的羽弹与曲线尾迹 | [柔亮高音钢琴](../audio/arsenal/dynamics/dyn_dawn_fan_2.wav) | 实弹 | 3轮 |
 | 潮汐弦歌<br>`tidal_weave` | 前方四股反相潮汐编织，扩大横向摆幅；实际行程2400 | 青粉羽弹、局部柔光与真实弯曲残迹 | [高音小提琴](../audio/arsenal/dynamics/dyn_tidal_weave_2.wav) | 能量 | 4轮 |
 | 流萤织雨<br>`firefly_rain` | 宽幅彩虹扫射幕，多列错峰、向前加速与独立摆动；实际行程2400 | 与尾羽同系绿黄橙粉紫彩虹羽弹，光晕与真实曲线尾迹同步着色 | [高音竖琴＋高音小提琴](../audio/arsenal/dynamics/dyn_firefly_rain_2.wav) | 动力 | 3轮 |
-| 万花筒<br>`kaleidoscope` | 六瓣旋转甩射，切向速度渐转径向，实际行程2300；装备期间同轨自由实体弹继承该形式，各自充能/弹数/伤害保留 | 珠光紫/粉/淡白羽弹，52×15轮廓、柔光与真实曲线残迹；其他武器继承形式时保留原颜色材质 | [珠光高音三角钢琴](../audio/arsenal/dynamics/dyn_kaleidoscope_2.wav) · G5 | 实弹 | 6轮 |
+| 万花筒<br>`kaleidoscope` | 96基础弹六瓣旋转甩射，切向速度渐转径向，实际行程2300；装备期间同轨自由实体弹继承该形式，各自充能/弹数/伤害保留 | 珠光紫/粉/淡白羽弹，52×15轮廓、柔光与真实曲线残迹；其他武器继承形式时保留原颜色材质 | [珠光高音三角钢琴](../audio/arsenal/dynamics/dyn_kaleidoscope_2.wav) · G5 | 实弹 | 4轮 |
+| 鸣雷枝杈<br>`arc_bough` | 分叉跳链，锁定1100/基础跳跃360；击杀后三向分流 | 薰蓝电弧、稳定分支相位、柔光节点 | [高音单簧管G4](../audio/arsenal/dynamics/dyn_arc_bough_2.wav) | 能量 | 1轮 |
+| 风暴回路<br>`chain_loop` | 多目标传导后回流闭环，锁定1450/基础跳跃480；回流不重复伤害 | 粉紫电网与闭环余辉 | [低音单簧管G3](../audio/arsenal/dynamics/dyn_chain_loop_2.wav) | 能量 | 4轮 |
+| 曦光束阵<br>`laser_fan` | 机头扇形脉冲，基础1折射，总行程1500；真实折线/穿透顺序 | 薄荷青直束、白热芯与能量鞘 | [高音长笛C5](../audio/arsenal/dynamics/dyn_laser_fan_2.wav) | 能量 | 1轮 |
+| 穹光轮舞<br>`laser_crown` | 四周分段扫射，0–0.42秒展开，基础2折射，总行程2200 | 暖金激光轮冠，后续束出现时才伤害 | [中音长笛C4](../audio/arsenal/dynamics/dyn_laser_crown_2.wav) | 能量 | 6轮 |
 
 V41射程复核：表内“实际行程”以最终速度×寿命及2400封顶核算，不把`salvo_patterns.gd`的标称范围直接当成结算距离；原九件非环绕大范围武器基础实际行程均为2400，万花筒基础2300，射程改装仍受共同上限限制。这里只纠正文档表述，原19件参数未改。
 
@@ -96,7 +100,17 @@ V39十件三四轮武器的四档均为0.5秒（每份11,025帧），强奏/很�
 
 文件规格统一为22,050Hz、单声道、PCM16。完整8索引、文件长度和SHA256见[音频机器索引](../audio/weapon_codex.json)。V25重制了128份样本，均以较轻触键、离线低通、柔和起音与尾端淡化制作，保留个体音色差异。渲染来源、力度、滤波参数和SHA256见[当前音源清单](../audio/instruments/MANIFEST.json)，统一配置见[音色策略](../audio/instruments/CHAMBER_PALETTE.json)。旧声音可从调整前Git备份恢复，旧元数据见[原音色档案](../audio/instruments/archives/MANIFEST-before-v25.json)。
 
-V41新增万花筒四档（均0.50秒）：[很弱](../audio/arsenal/dynamics/dyn_kaleidoscope_0.wav) · [弱](../audio/arsenal/dynamics/dyn_kaleidoscope_1.wav) · [强](../audio/arsenal/dynamics/dyn_kaleidoscope_2.wav) · [很强](../audio/arsenal/dynamics/dyn_kaleidoscope_3.wav)。实际发射每6轮/9秒一次，强→很强交替。
+万花筒四档（均0.50秒）：[很弱](../audio/arsenal/dynamics/dyn_kaleidoscope_0.wav) · [弱](../audio/arsenal/dynamics/dyn_kaleidoscope_1.wav) · [强](../audio/arsenal/dynamics/dyn_kaleidoscope_2.wav) · [很强](../audio/arsenal/dynamics/dyn_kaleidoscope_3.wav)。实际发射每4轮/6秒一次，很强→强交替。
+
+V42新声部四档均0.50秒：
+
+鸣雷枝杈：[很弱](../audio/arsenal/dynamics/dyn_arc_bough_0.wav) · [弱](../audio/arsenal/dynamics/dyn_arc_bough_1.wav) · [强](../audio/arsenal/dynamics/dyn_arc_bough_2.wav) · [很强](../audio/arsenal/dynamics/dyn_arc_bough_3.wav)
+
+风暴回路：[很弱](../audio/arsenal/dynamics/dyn_chain_loop_0.wav) · [弱](../audio/arsenal/dynamics/dyn_chain_loop_1.wav) · [强](../audio/arsenal/dynamics/dyn_chain_loop_2.wav) · [很强](../audio/arsenal/dynamics/dyn_chain_loop_3.wav)
+
+曦光束阵：[很弱](../audio/arsenal/dynamics/dyn_laser_fan_0.wav) · [弱](../audio/arsenal/dynamics/dyn_laser_fan_1.wav) · [强](../audio/arsenal/dynamics/dyn_laser_fan_2.wav) · [很强](../audio/arsenal/dynamics/dyn_laser_fan_3.wav)
+
+穹光轮舞：[很弱](../audio/arsenal/dynamics/dyn_laser_crown_0.wav) · [弱](../audio/arsenal/dynamics/dyn_laser_crown_1.wav) · [强](../audio/arsenal/dynamics/dyn_laser_crown_2.wav) · [很强](../audio/arsenal/dynamics/dyn_laser_crown_3.wav)
 
 ## 3. 声音与弹道怎样对应
 
@@ -151,11 +165,13 @@ V35提供9项独立音量，新增独立危险警报；推荐混音可一键恢�
 
 预览为受控试射：Lv.4、对应主属性40，前4秒为七彩折光匣，随后为新星环炮和星冕回旋阵；受控重复触发方便比较效果，正常充能规则未改。
 
-### V41组合弹道
+### V42组合与能量规则
 
-- 西风`westwind`：1格稀有改装，对全舰自由实体弹在约60%–92%实际射程渐强施加世界右向气流，强度上限3；真实加速与扫掠路径变化，不增弹/不增声音，完整弹体至射程后才退场。
-- 万花筒：同轨发射形式被动，在各武器自己的期限作用；不是同步所有发声。保留各自颜色/材质/伤害/弹数/充能；导弹保持后续追踪。
-- 二者可叠加，绑定轨道体、激光和闪电链保持原形式；实际规则在`projectile_fields.gd`。后续三类重点模组见[开发方向](WEAPON_MODULE_ROADMAP.md)。
+- 西风：唯一、固定完整效果，不升级/不叠加；未持有时第3/4波初始商店保证出现。约72%里程触发近水平右转，2.8倍速度、0.32秒短助推；此后惯性滑行，原有效射程与退场边界保留。
+- 万花筒：4轮、96基础弹；同轨自由实体弹只同步甩射形式，原充能/声音/伤害/弹数/颜色保留。
+- 真激光：每1能量+1折射（上限64），每次折射保留86%伤害，共用总行程；棱镜光束伤害12、曦光5.5、穹光13。
+- 全部电链：每5能量+1传导（上限32），击杀向最近3个可用敌人分流；同次电流不重复命中，分流受深度/距离限制。后续段按实际期限命中。
+- 传导、折射、分流不新增声音。光束/电链仍独立于西风和万花筒的实体弹逻辑。
 
 ## 5. 后续迭代必须同步更新
 
@@ -175,6 +191,7 @@ V35提供9项独立音量，新增独立危险警报；推荐混音可一键恢�
 
 | 日期 | 游戏版本 / 基线 | 本表变更 |
 | --- | --- | --- |
+| 2026-11-09 | V42 / 备份`8516717` | 新增两链两激光、单簧管/长笛48WAV；万花筒4轮/96基础弹，西风完整唯一且第3/4波保证，详情点击固定。激光每能量+1折射，电链每5能量+1传导及击杀三分流，根齐射一声。 |
 | 2026-11-09 | V41 / 备份`fa85541` | 新增西风真实后段加速、6轮万花筒和同轨旋转甩射，20种现役/240WAV；新增12份钢琴样本，旧228份及19件基础参数保留。实体碰撞、射程和计数守恒；图鉴缩放保留实例。 |
 | 2026-11-09 | V40 / 备份`63385cb` | 图鉴增加主乐器及充能分组/交叉筛选，13类和1/2/3/4/6/8档覆盖表；支持6轮强/很强乐句、144秒相位连续，缓存版本13。19种现役基础充能/特效/样本保留。新增统一武器开发规范，未来乐器和武器尚未增加。 |
 | 2026-11-09 | V39 / 备份`5e32ac7` | 十件三四轮武器四档共40份演奏缩至0.5秒；提琴重新缩短持音/释放，图鉴与实战同源，实际按钮显示0.50秒。其余36份力度与152音高保留；齐射、范围、彩虹、弹数、伤害和充能保留。 |
@@ -197,7 +214,7 @@ V35提供9项独立音量，新增独立危险警报；推荐混音可一键恢�
 
 ## 7. 核对来源
 
-- [当前武器/初始配装/回合强化/商店参数快照](data-v41/weapon-selection.json)、[武器生产目录](../scripts/arsenal_catalog.gd)：名单、ID、属性、充能和音色键。
+- [当前武器/初始配装/回合强化/商店参数快照](data-v42/weapon-selection.json)、[武器生产目录](../scripts/arsenal_catalog.gd)：名单、ID、属性、充能和音色键。
 - [发射与命中](../scripts/main.gd)、[发射几何](../scripts/weapon_emission.gd)、[个体运动与视觉类别](../scripts/weapon_visuals.gd)：真实方向、曲线路径、实体弹与光学分工。
 - [当前乐器索引](../audio/weapon_codex.json)、[音乐播放与混音](../scripts/music.gd)：样本、固定音色和实例重奏。
 - [V31扫描与兼容验证](data-v31/SUMMARY.json)：19件声音/充能时序、可见白点、原生播放与96秒缓存回卷；敌机0.5秒推进、显式作曲和音量兼容。
@@ -214,7 +231,9 @@ V37历史专项：[新配装与长音说明](V37_SUSTAINED_SALVO_VOICES.md) · [
 
 V38历史专项：[一秒音源与十种展开](V38_ONE_SECOND_GRAND_SALVOS.md) · [当前验证](data-v38/SUMMARY.json) · [十种原生齐射总览](screenshots/v38-grand-salvos.png)。
 
-当前V41：[实现与参考分析](V41_WESTWIND_KALEIDOSCOPE.md) · [生产覆盖/航线快照](data-v41/run-foundation.json) · [验证汇总](data-v41/SUMMARY.json)。
+当前V42：[实现说明](V42_CONDUCTIVE_LIGHT.md) · [验证汇总](data-v42/SUMMARY.json)。
+
+历史V41：[实现与参考分析](V41_WESTWIND_KALEIDOSCOPE.md) · [生产覆盖/航线快照](data-v41/run-foundation.json) · [验证汇总](data-v41/SUMMARY.json)。
 
 历史V40：[数值与图鉴](V40_BALANCE_CODEX_FOUNDATION.md) · [乐器/充能和航线快照](data-v40/run-foundation.json) · [验证汇总](data-v40/SUMMARY.json)。
 

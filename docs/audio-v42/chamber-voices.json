@@ -1,0 +1,30 @@
+{
+  "scope": "Sequential offline current fixed-voice auditions; each repeats after1.5s. Direct timbre audition,not charge eligibility or live capture.",
+  "seconds": 12.4,
+  "timeline": [
+    {
+      "id": "arc_bough",
+      "instrument": "清晰高音单簧管",
+      "start_seconds": 0.0,
+      "end_seconds": 3.1
+    },
+    {
+      "id": "chain_loop",
+      "instrument": "温暖低音单簧管",
+      "start_seconds": 3.1,
+      "end_seconds": 6.2
+    },
+    {
+      "id": "laser_fan",
+      "instrument": "轻巧高音长笛",
+      "start_seconds": 6.2,
+      "end_seconds": 9.3
+    },
+    {
+      "id": "laser_crown",
+      "instrument": "饱满中音长笛",
+      "start_seconds": 9.3,
+      "end_seconds": 12.4
+    }
+  ]
+}

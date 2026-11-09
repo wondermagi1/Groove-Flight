@@ -6,12 +6,13 @@ static func smooth(low: float,high: float,value: float) -> float:
 
 static func wind_weight(b: Dictionary) -> float:
 	if float(b.get("westwind",0.))<=0. or bool(b.get("retiring",false)): return 0.
+	if b.has("wind_burst_start"): return 1.
 	var progress=float(b.get("travelled",0.))/maxf(1.,float(b.get("range_limit",1.)))
-	var stagger=(float(b.get("flight_phase",0.))/TAU-.5)*.035
-	return smooth(.60+stagger,.92+stagger,progress)
+	var stagger=(float(b.get("flight_phase",0.))/TAU-.5)*.024
+	return 1. if progress>=.72+stagger else 0.
 
 static func setup(b: Dictionary,motion: Dictionary,index: int,count: int,origin: Vector2,time: float,track: int) -> void:
-	b.westwind=clampf(float(motion.get("westwind",0.)),0.,3.)
+	b.westwind=1. if float(motion.get("westwind",0.))>0. else 0.
 	if float(motion.get("kaleidoscope",0.))<=0.: return
 	# All row members share the same rotor phase; each keeps its own UID,
 	# particle count, damage, root sound and charge deadline.
@@ -37,6 +38,21 @@ static func step(b: Dictionary,delta: float) -> Vector2:
 	if not b.has("kaleido_center") and wind_weight(b)<=0.: return Vector2.ZERO
 	var before=Vector2(b.v); var force=Vector2.ZERO
 	var mass=maxf(.5,float(b.get("flight_mass",1.)))
+	if wind_weight(b)>0.:
+		if not b.has("wind_burst_start"):
+			b.wind_burst_start=float(b.age); b.wind_entry_angle=before.angle(); b.wind_entry_speed=maxf(100.,before.length())
+		var elapsed=maxf(0.,float(b.age)-float(b.wind_burst_start))
+		var turn=smooth(0.,.11*sqrt(mass),elapsed+delta*.5)
+		var target_angle=sin(float(b.get("flight_phase",0.)))*.012
+		var angle=lerp_angle(float(b.wind_entry_angle),target_angle,turn)
+		var boost=2.8
+		var speed=float(b.wind_entry_speed)*lerpf(1.,boost,turn)
+		# A short wind impulse,then inertial coast;effective range still ends
+		# damage. Fast rails also get a true speed increase,not a3000unit cap.
+		var impulse=.32
+		if elapsed>impulse: speed*=exp(-(elapsed-impulse)*1.1)
+		b.v=Vector2.from_angle(angle)*minf(12000.,speed)
+		return -(Vector2(b.v)-before)*.5*delta
 	if b.has("kaleido_center"):
 		var radial=(Vector2(b.at)-Vector2(b.kaleido_center)).normalized()
 		if radial.length_squared()<.01: radial=Vector2.from_angle(float(b.kaleido_phase))
@@ -45,10 +61,6 @@ static func step(b: Dictionary,delta: float) -> Vector2:
 		var tangent=radial.orthogonal()*float(b.kaleido_spin)
 		var desired=(radial*lerpf(.48,1.,release)+tangent*lerpf(.92,.04,release)).normalized()*speed
 		force+=(desired-before)*lerpf(5.2,.9,release)
-	var wind=wind_weight(b)
-	if wind>0.:
-		force*=1.-wind*.80
-		force+=Vector2.RIGHT*2100.*float(b.westwind)*wind
 	b.v=(before+force/mass*delta).limit_length(minf(3000.,maxf(500.,float(b.get("original_speed",700.))*2.8)))
 	# Actual swept displacement uses the same trapezoidal force correction as
 	# the existing independent flight kernel, including wind/rotor acceleration.

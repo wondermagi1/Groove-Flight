@@ -20,6 +20,7 @@ var detail_controls: VBoxContainer
 var editor_hint: Label
 var preview_uid: int = -1
 var preview_kind: String = ""
+var detail_pinned: bool=false
 var preview_stat: String = ""
 var tick: float = 0.0
 var rebuild_pending: bool = false
@@ -57,7 +58,7 @@ class ModuleCard:
 		gui_input.connect(_card_input)
 	func _preview() -> void:
 		if screen != null:
-			screen.inspect_module(module_uid, item_id)
+			screen.inspect_module(module_uid, item_id, false)
 	func _pressed() -> void:
 		if screen == null: return
 		if offer_index >= 0:
@@ -286,6 +287,7 @@ func refresh() -> void:
 	if game.selected_uid >= 0 and not game.loadout.find(game.selected_uid).is_empty():
 		preview_uid = game.selected_uid
 		preview_kind = str(game.loadout.find(preview_uid).kind)
+		detail_pinned=true
 	_update_detail()
 	_update_live()
 
@@ -681,12 +683,14 @@ func _build_inspector(view: Vector2, center_x: float, center_width: float, top: 
 	detail_controls.add_theme_constant_override("separation", 6)
 	body.add_child(detail_controls)
 	if mode == "editor" and game.selected_uid < 0:
-		editor_hint = _label("把旋律排成火力。\n\n悬停查看模块详情；点击选中后，\n可拖入音序、合成或回收。", 24, Color("6e87a3"))
+		editor_hint = _label("把旋律排成火力。\n\n点击后固定详情，拖动调整位置。\n选中后可合成、回收，或点空格放置。", 24, Color("6e87a3"))
 		editor_hint.position = Vector2(center_x + 40.0, top + 85.0)
 		editor_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		content.add_child(editor_hint)
 
-func inspect_module(uid: int, item_id: String = "") -> void:
+func inspect_module(uid: int, item_id: String = "", pin: bool=true) -> void:
+	if detail_pinned and not pin: return
+	detail_pinned=pin
 	preview_uid = uid
 	preview_kind = item_id
 	preview_stat = ""
@@ -696,6 +700,7 @@ func inspect_module(uid: int, item_id: String = "") -> void:
 	_update_detail()
 
 func inspect_stat(key: String) -> void:
+	detail_pinned=true
 	preview_stat = key
 	preview_uid = -1
 	preview_kind = ""
@@ -739,6 +744,7 @@ func _update_detail() -> void:
 		return
 	detail_panel.visible = true
 	_detail_text(str(row.name), 27, Color("f0f6ff"))
+	if detail_pinned: _detail_text("已固定详情 · 点击其他物品切换",14,Color("83b9bb"))
 	var detail_level=int(game.loadout.find(preview_uid).get("level",1))
 	_detail_text("//%s  /  %s  /  占 %d 格" % [DATA.quality_name(row,detail_level), CATEGORY_NAMES.get(str(row.category), "模块"), int(row.width)], 16, DATA.quality_color(row,detail_level))
 	var illustration := DetailIllustration.new()
@@ -760,7 +766,13 @@ func _update_detail() -> void:
 			_detail_text(DATA.GROWTH.formula(actual.growth),18,DATA.quality_color(row,int(module.get("level",1))))
 			if bool(actual.growth.capped): _detail_text("已达单次发射上限 %d"%int(actual.growth.cap),16,Color("ffd478"))
 
-		_detail_text("单发伤害 %.1f  ·  弹丸 %d\n穿透 %d  ·  速度 %.0f\n爆破半径 %.0f  ·  %d 小节充能" % [float(actual.get("damage", row.get("damage", 0.0))), int(actual.get("count", row.get("count", 1))), int(actual.get("pierce", row.get("pierce", 0))), float(actual.get("speed", row.get("speed", 0.0))), float(actual.get("explosion", row.get("explosion", 0.0))), int(actual.get("charge", row.get("charge", 1)))], 18)
+		if str(row.get("visual_class",""))=="laser_beam":
+			_detail_text("单段伤害 %.1f · %d束\n折射 %d次 · 每1点能量+1次\n穿透 %d次 · %d轮充能"%[float(actual.get("damage",row.damage)),int(actual.count),int(actual.get("refractions",row.get("refraction_base",0))),int(actual.pierce),int(actual.charge)],18)
+			_detail_text("光束射程 %.0f · 折射共用总行程\n每次折射后保留86%%伤害"%game.EMISSION.weapon_reach(float(actual.get("speed",row.speed)),float(actual.get("life",row.life))),17,Color("aacdbd"))
+		elif str(row.get("visual_class",""))=="electric_arc":
+			_detail_text("传导伤害 %.1f · %d条根链\n每条最多传导 %d次 · 每5点能量+1次\n击杀后向最近3个可用敌人分流"%[float(actual.get("damage",row.damage)),int(actual.count),int(actual.get("chain_count",row.bounces))],18)
+		else:
+			_detail_text("单发伤害 %.1f  ·  弹丸 %d\n穿透 %d  ·  速度 %.0f\n爆破半径 %.0f  ·  %d 小节充能" % [float(actual.get("damage", row.get("damage", 0.0))), int(actual.get("count", row.get("count", 1))), int(actual.get("pierce", row.get("pierce", 0))), float(actual.get("speed", row.get("speed", 0.0))), float(actual.get("explosion", row.get("explosion", 0.0))), int(actual.get("charge", row.get("charge", 1)))], 18)
 		if str(row.id) in DATA.VISUALS.MOVING_IDS and str(row.family)!="orbit":
 			_detail_text("有效射程 %.0f\n到达射程后缩小消散"%game.EMISSION.weapon_reach(float(actual.get("speed",row.speed)),float(actual.get("life",row.life))),17,Color("aacdbd"))
 		_detail_text("固定音色 · 实际发射时播放一次\n同种武器各自发声，可错位重奏\n充能 %d 轮；等待轮静音，声音与发射同步"%int(actual.get("charge",1)),16,Color("e7c78d"))
@@ -783,7 +795,7 @@ func _update_detail() -> void:
 
 	if not module.is_empty():
 		var equipped: bool = game.loadout.slots.has(preview_uid)
-		_detail_text("Lv.%d / 4   ·   %s" % [int(module.level), "已装备" if equipped else "备用仓 / 未生效"], 18, Color("9bccdd"))
+		_detail_text(("Lv.%d / 4"%int(module.level) if bool(row.get("refinable",true)) else "完整效果 · 不可升级")+" · "+("已装备" if equipped else "备用仓 / 未生效"), 18, Color("9bccdd"))
 		if editable():
 			var actions := HFlowContainer.new()
 			actions.add_theme_constant_override("h_separation", 7)
@@ -792,6 +804,7 @@ func _update_detail() -> void:
 			var merge := _button("合成", merge_selected.bind(preview_uid), Color("c7b3fb"), 37)
 			merge.name = "ArsenalMerge"
 			merge.disabled = not _has_merge_partner(preview_uid)
+			merge.visible=bool(row.get("refinable",true))
 			actions.add_child(merge)
 			var salvage := _button("回收", salvage_selected.bind(preview_uid), Color("d6b487"), 37)
 			salvage.name = "ArsenalSalvage"
@@ -809,12 +822,14 @@ func _add_detail_close() -> void:
 	var close := _button("收起详情", _hide_detail, Color("688099"), 32)
 	detail_controls.add_child(close)
 func _hide_detail() -> void:
+	detail_pinned=false; game.selected_uid=-1
 	preview_uid = -1; preview_kind = ""; preview_stat = ""
 	detail_panel.visible = false
 	if is_instance_valid(editor_hint): editor_hint.show()
 func _has_merge_partner(uid: int) -> bool:
 	var module: Dictionary = game.loadout.find(uid)
 	if module.is_empty() or int(module.level) >= 4: return false
+	if not bool(DATA.item(str(module.kind)).get("refinable",true)): return false
 	for other in game.loadout.modules:
 		if int(other.uid) != uid and str(other.kind) == str(module.kind) and int(other.level) == int(module.level): return true
 	return false
@@ -836,10 +851,9 @@ func select_module(uid: int) -> void:
 		game.select_module(uid)
 		_queue_rebuild()
 func click_slot(at: int, uid: int) -> void:
-	if editable() and game.selected_uid >= 0 and game.selected_uid != uid:
-		drop_module(game.selected_uid, at)
-	elif uid >= 0:
+	if uid >= 0:
 		select_module(uid)
+	elif editable() and game.selected_uid>=0: drop_module(game.selected_uid,at)
 func can_drop(uid: int, at: int) -> bool:
 	if not editable() or game.loadout.find(uid).is_empty(): return false
 	if at < 0: return game.loadout.slots.has(uid)

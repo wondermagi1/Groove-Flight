@@ -1,0 +1,38 @@
+{
+  "version": "0.42.0-conductive-light",
+  "backup": "8516717b8f03211f264160bf98dec6fe366a1fdb",
+  "date": "2026-11-09",
+  "reports": [
+    {
+      "file": "results-v42-energy.json",
+      "checks": 268,
+      "failures": []
+    },
+    {
+      "file": "results-v36-weapon-expression.json",
+      "checks": 394,
+      "failures": []
+    },
+    {
+      "file": "results-v34-weapon-sync.json",
+      "checks": 101,
+      "failures": []
+    },
+    {
+      "file": "results-v29-music-shop-hud.json",
+      "checks": 351,
+      "failures": []
+    },
+    {
+      "file": "results-composer-score.json",
+      "checks": 112,
+      "failures": []
+    }
+  ],
+  "preservation": "asset-preservation.json",
+  "visual_review": "User explicitly asked to finish without further image review;headless functionality/PCM checks only.",
+  "limits": [
+    "No subjective audio approval or sustained FPS certification.",
+    "Godot test teardown can report retained resources;assertion and script errors must be distinguished."
+  ]
+}

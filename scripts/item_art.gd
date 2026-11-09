@@ -56,6 +56,20 @@ static func _barrel(canvas: CanvasItem,at: Vector2,length_value: float,width: fl
 
 static func _weapon(canvas: CanvasItem,data: Dictionary,accent: Color,alpha: float) -> void:
 	var id: String=str(data.id)
+	if id in ["arc_bough","chain_loop"]:
+		_plate(canvas,Vector2(-20,-15),Vector2(40,30),accent)
+		var points=[Vector2(-32,16),Vector2(-10,-5),Vector2(7,14),Vector2(30,-20)] if id=="arc_bough" else [Vector2(-28,0),Vector2(-8,-25),Vector2(25,-9),Vector2(18,22),Vector2(-28,0)]
+		canvas.draw_polyline(PackedVector2Array(points),Color(accent,.8),4.,true)
+		for point in points: canvas.draw_circle(point,5.,accent); canvas.draw_circle(point+Vector2(-1,-1),2.,Color.WHITE)
+		if id=="arc_bough": canvas.draw_polyline(PackedVector2Array([Vector2(-10,-5),Vector2(-2,-28),Vector2(12,-34)]),accent,3.,true)
+		return
+	if id in ["laser_fan","laser_crown"]:
+		canvas.draw_circle(Vector2.ZERO,15.,Color(DARK,alpha));canvas.draw_circle(Vector2.ZERO,11.,accent.darkened(.4))
+		for index in range(7 if id=="laser_fan" else 10):
+			var angle=-PI*.5+(index-3)*.18 if id=="laser_fan" else index*TAU/10.
+			var axis=Vector2.from_angle(angle); canvas.draw_line(axis*13.,axis*37.,accent,3.,true);canvas.draw_line(axis*15.,axis*32.,Color.WHITE,1.,true)
+		canvas.draw_circle(Vector2.ZERO,6.,Color.WHITE)
+		return
 	if id=="kaleidoscope":
 		canvas.draw_circle(Vector2(0,4),15.,Color(DARK,alpha))
 		for petal in range(6):

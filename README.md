@@ -2,7 +2,7 @@
 
 长期维护的[武器特效与音频对应表](docs/WEAPON_VFX_AUDIO_REFERENCE.md)：19种现役武器的发射形式、运动、光色、乐器音色与原声试听。以后武器迭代与本表同步提交更新。
 
-当前版本 **0.41.0-westwind-kaleidoscope**：新增西风后段右向加速、6轮万花筒与同轨实体弹旋转甩射，原有材质/独立运动/真实残迹/射程后退场保留；20种武器、240份WAV。V40五至六分钟典型关卡、图鉴分组和初始配装保留。见[V41说明与对比短片](docs/V41_WESTWIND_KALEIDOSCOPE.md)、[武器开发规范](docs/WEAPON_DEVELOPMENT_STANDARD.md)和[后续模组方向](docs/WEAPON_MODULE_ROADMAP.md)。
+当前版本 **0.42.0-conductive-light**：新增两种电链/两种激光与单簧管、长笛；激光逐点能量折射，电链随能量传导并在击杀后三分流。万花筒4轮/96基础弹，西风完整唯一、强右转短加速、第3/4波商店保证；点击固定商店详情。见[V42说明](docs/V42_CONDUCTIVE_LIGHT.md)和[统一武器文档](docs/WEAPON_VFX_AUDIO_REFERENCE.md)。
 
 音频与设置基础：护盾反馈按用户要求裁成干净的一击，去掉末尾小声音；设置中有总音量、背景音乐、武器声音、击杀鼓点、拾取、受击护盾、命中爆炸、界面和独立警报9项控制，即时生效、0%静音并自动保存。见[分类音量说明](docs/V26_AUDIO_CONTROLS.md)。
 

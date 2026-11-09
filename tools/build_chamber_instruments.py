@@ -56,7 +56,7 @@ def main():
     selected = set(args.ids.split(',')) if args.ids else {e['id'] for e in policy['weapons']}
     assert selected <= {e['id'] for e in policy['weapons']}
     assert all(e['instrument_family'] in policy['allowed_families'] and e['bank'] == 0
-               and e['program'] in [0, 1, 40, 41, 42, 46] and e['electronic_mix'] == 0
+               and e['program'] in policy.get('allowed_programs',[0, 1, 40, 41, 42, 46]) and e['electronic_mix'] == 0
                for e in policy['weapons'])
     exe = SOURCE / 'render_instrument_note.exe'
     subprocess.run(['E:/MinGW/bin/gcc.exe', '-O2', '-std=c99', '-I', str(SOURCE),

@@ -7,11 +7,12 @@
   "renderer_sha256": "70d55963c98f60ebb81518eaa1f25d46888d5180eb5f5289fd6b74ffc177d197",
   "format": "mono PCM16 22050Hz",
   "fixed_battle_pitch_index": 0,
-  "palette_revision": "chamber-v41-kaleidoscope",
+  "palette_revision": "chamber-v42-woodwinds",
   "allowed_families": [
     "piano",
     "strings",
-    "harp"
+    "harp",
+    "woodwind"
   ],
   "renderer_driver_sha256": "ed01518720c9d67618862d361dbe0f3d277e7f77170ffd1185fb377c696e555e",
   "processing": "Acoustic sampled instruments with sustained note-on/body and natural note-off release,optional clear-bow attack,offline low-pass and onset/tail fades;shared gain across8pitches. No synthetic layer,time stretching or playback speed change.",
@@ -2061,6 +2062,418 @@
           "peak": 0.18801850594189368,
           "rms": 0.042507702164533354,
           "attack_300ms_rms": 0.054336342067429294
+        }
+      ]
+    },
+    {
+      "id": "arc_bough",
+      "instrument": "清晰高音单簧管",
+      "instrument_family": "woodwind",
+      "bank": 0,
+      "program": 71,
+      "root_midi": 67,
+      "hold": 0.28,
+      "release": 0.22,
+      "velocity": 0.58,
+      "lowpass_hz": 4600,
+      "attack_ms": 12,
+      "target_rms": 0.052,
+      "peak_limit": 0.32,
+      "electronic_mix": 0.0,
+      "fleet_barrage": true,
+      "voice": "inst_arc_bough",
+      "preset_name": "Clarinet",
+      "percussion": false,
+      "gain": 0.277578920416544,
+      "samples": [
+        {
+          "pitch_index": 0,
+          "root_midi": 67,
+          "file": "audio/arsenal/notes/inst_arc_bough_0.wav",
+          "seconds": 0.4999092970521542,
+          "sha256": "2f218e671ff6d54b14a1cd32b4dcda9d71c1baefa0797364961a7e8c6b9f0653",
+          "peak": 0.10591378949109866,
+          "rms": 0.04149002300898835,
+          "attack_300ms_rms": 0.052720074348616947
+        },
+        {
+          "pitch_index": 1,
+          "root_midi": 69,
+          "file": "audio/arsenal/notes/inst_arc_bough_1.wav",
+          "seconds": 0.5,
+          "sha256": "10fde06a9f5bde9a689d8eedffdf643fa7e4f0a10ef3870a6858af1c7e76f62e",
+          "peak": 0.10603886317232254,
+          "rms": 0.044720477957844264,
+          "attack_300ms_rms": 0.05679004600217079
+        },
+        {
+          "pitch_index": 2,
+          "root_midi": 70,
+          "file": "audio/arsenal/notes/inst_arc_bough_2.wav",
+          "seconds": 0.5,
+          "sha256": "4c05acc9120ac88382f4ccd6fdf1367ff6ad527d19a948f3d539371ad7441d16",
+          "peak": 0.10271115251811247,
+          "rms": 0.044765556643732045,
+          "attack_300ms_rms": 0.05686313719858741
+        },
+        {
+          "pitch_index": 3,
+          "root_midi": 72,
+          "file": "audio/arsenal/notes/inst_arc_bough_3.wav",
+          "seconds": 0.5,
+          "sha256": "948d6e341a57a35d8acf810c7ae586b414f85c7f5a34977b01e4fe7661bc92ce",
+          "peak": 0.09688447602244199,
+          "rms": 0.04512101696555168,
+          "attack_300ms_rms": 0.05731576357061086
+        },
+        {
+          "pitch_index": 4,
+          "root_midi": 74,
+          "file": "audio/arsenal/notes/inst_arc_bough_4.wav",
+          "seconds": 0.5,
+          "sha256": "9cb07838ed76fe78e2a5a1f61dfc74db742ec056a5c5bdd2a3e61e2dc7ac17dc",
+          "peak": 0.10370133102808715,
+          "rms": 0.04020322088270463,
+          "attack_300ms_rms": 0.05104186329205124
+        },
+        {
+          "pitch_index": 5,
+          "root_midi": 75,
+          "file": "audio/arsenal/notes/inst_arc_bough_5.wav",
+          "seconds": 0.5,
+          "sha256": "b2920132264af61d013bc6d324e5e9551dea238826f6789b30ff648513ebfeb2",
+          "peak": 0.10124849429581705,
+          "rms": 0.040368744009046956,
+          "attack_300ms_rms": 0.051260946247494894
+        },
+        {
+          "pitch_index": 6,
+          "root_midi": 77,
+          "file": "audio/arsenal/notes/inst_arc_bough_6.wav",
+          "seconds": 0.5,
+          "sha256": "7ebb7ddd23370d6a2b0267bd02fa22830a100b098bd8b770247ddb905d17214d",
+          "peak": 0.09560672142299453,
+          "rms": 0.04035795701932937,
+          "attack_300ms_rms": 0.05127992565138305
+        },
+        {
+          "pitch_index": 7,
+          "root_midi": 79,
+          "file": "audio/arsenal/notes/inst_arc_bough_7.wav",
+          "seconds": 0.5,
+          "sha256": "e600d525a7691008ac17af035c0a97fb68e9efe4d9180494edc99511f7295b39",
+          "peak": 0.08841437647404905,
+          "rms": 0.039441095970115095,
+          "attack_300ms_rms": 0.05015439903338036
+        }
+      ]
+    },
+    {
+      "id": "chain_loop",
+      "instrument": "温暖低音单簧管",
+      "instrument_family": "woodwind",
+      "bank": 0,
+      "program": 71,
+      "root_midi": 55,
+      "hold": 0.28,
+      "release": 0.22,
+      "velocity": 0.58,
+      "lowpass_hz": 3500,
+      "attack_ms": 12,
+      "target_rms": 0.052,
+      "peak_limit": 0.32,
+      "electronic_mix": 0.0,
+      "fleet_barrage": true,
+      "voice": "inst_chain_loop",
+      "preset_name": "Clarinet",
+      "percussion": false,
+      "gain": 0.29562765606521746,
+      "samples": [
+        {
+          "pitch_index": 0,
+          "root_midi": 55,
+          "file": "audio/arsenal/notes/inst_chain_loop_0.wav",
+          "seconds": 0.5,
+          "sha256": "238f652f859676b1e844fc60dca8126f52798bf60562bac73d1cab93bffb7891",
+          "peak": 0.10962645312728347,
+          "rms": 0.031803043222062004,
+          "attack_300ms_rms": 0.04035427835541435
+        },
+        {
+          "pitch_index": 1,
+          "root_midi": 57,
+          "file": "audio/arsenal/notes/inst_chain_loop_1.wav",
+          "seconds": 0.49700680272108844,
+          "sha256": "e7d62c943052cec00773696ab613bfd6633f3a7b8b0726cd2f3503248bda8530",
+          "peak": 0.11185926142156422,
+          "rms": 0.03774580668115118,
+          "attack_300ms_rms": 0.04788075571762971
+        },
+        {
+          "pitch_index": 2,
+          "root_midi": 58,
+          "file": "audio/arsenal/notes/inst_chain_loop_2.wav",
+          "seconds": 0.49718820861678004,
+          "sha256": "3ec1c8d1c9f52ae668d5623c931e4345dec38bff8c57f551f2bb7d69dc2e38c4",
+          "peak": 0.1098482221239047,
+          "rms": 0.037549262247787846,
+          "attack_300ms_rms": 0.04765212566672462
+        },
+        {
+          "pitch_index": 3,
+          "root_midi": 60,
+          "file": "audio/arsenal/notes/inst_chain_loop_3.wav",
+          "seconds": 0.49759637188208616,
+          "sha256": "a6722fb4f345c445e8a7c84688a25e5b4589689e115c8a97e9d7b9402f07ad86",
+          "peak": 0.10640329903465928,
+          "rms": 0.037211639103582765,
+          "attack_300ms_rms": 0.04723688857782816
+        },
+        {
+          "pitch_index": 4,
+          "root_midi": 62,
+          "file": "audio/arsenal/notes/inst_chain_loop_4.wav",
+          "seconds": 0.4995918367346939,
+          "sha256": "e183234a471f58c6a18736062af1170d556e89b052dae30acbe3173e250d8fbb",
+          "peak": 0.1224322927158451,
+          "rms": 0.044981486996362424,
+          "attack_300ms_rms": 0.057158821173259926
+        },
+        {
+          "pitch_index": 5,
+          "root_midi": 63,
+          "file": "audio/arsenal/notes/inst_chain_loop_5.wav",
+          "seconds": 0.4996825396825397,
+          "sha256": "0e664c41188ec41174925b662d9f5f21ff36a08dcd0132eca8d69f2aec791aad",
+          "peak": 0.12089011595211027,
+          "rms": 0.04481085400657077,
+          "attack_300ms_rms": 0.05693356827818908
+        },
+        {
+          "pitch_index": 6,
+          "root_midi": 65,
+          "file": "audio/arsenal/notes/inst_chain_loop_6.wav",
+          "seconds": 0.4997732426303855,
+          "sha256": "58e74154ab7268e67e67ce0df010ab346776cfbcfc14686f69e6caae919fafea",
+          "peak": 0.11681671548181212,
+          "rms": 0.04442822574185194,
+          "attack_300ms_rms": 0.05647604361491733
+        },
+        {
+          "pitch_index": 7,
+          "root_midi": 67,
+          "file": "audio/arsenal/notes/inst_chain_loop_7.wav",
+          "seconds": 0.4999092970521542,
+          "sha256": "b8a38c65a38ecb537ab3992af13d797ccb6bd51d0c8483ba2554bd2974d8ada9",
+          "peak": 0.11201946375968352,
+          "rms": 0.044165838239967725,
+          "attack_300ms_rms": 0.05611924428237027
+        }
+      ]
+    },
+    {
+      "id": "laser_fan",
+      "instrument": "轻巧高音长笛",
+      "instrument_family": "woodwind",
+      "bank": 0,
+      "program": 73,
+      "root_midi": 72,
+      "hold": 0.28,
+      "release": 0.22,
+      "velocity": 0.58,
+      "lowpass_hz": 4600,
+      "attack_ms": 12,
+      "target_rms": 0.052,
+      "peak_limit": 0.32,
+      "electronic_mix": 0.0,
+      "fleet_barrage": true,
+      "voice": "inst_laser_fan",
+      "preset_name": "Flute",
+      "percussion": false,
+      "gain": 0.2350122666630852,
+      "samples": [
+        {
+          "pitch_index": 0,
+          "root_midi": 72,
+          "file": "audio/arsenal/notes/inst_laser_fan_0.wav",
+          "seconds": 0.4980952380952381,
+          "sha256": "860634713395d6e819ae94eb270053c382d8444788e99572346a522b8ecb0897",
+          "peak": 0.1150854620193571,
+          "rms": 0.03113775484031356,
+          "attack_300ms_rms": 0.03994452901856867
+        },
+        {
+          "pitch_index": 1,
+          "root_midi": 74,
+          "file": "audio/arsenal/notes/inst_laser_fan_1.wav",
+          "seconds": 0.4980952380952381,
+          "sha256": "880f649851db90e1cc7a5a6ac1bad9d5795aad644c0fcd939ea3194d1d1fadaf",
+          "peak": 0.12358324259845417,
+          "rms": 0.04468956196881364,
+          "attack_300ms_rms": 0.0572581550538252
+        },
+        {
+          "pitch_index": 2,
+          "root_midi": 75,
+          "file": "audio/arsenal/notes/inst_laser_fan_2.wav",
+          "seconds": 0.4978231292517007,
+          "sha256": "10af18dac7addb04919c367e9adabe9ad3b69a3aefec283a7bfd40e2de1eceaa",
+          "peak": 0.1239500595398952,
+          "rms": 0.04472326985371788,
+          "attack_300ms_rms": 0.05728898903038837
+        },
+        {
+          "pitch_index": 3,
+          "root_midi": 77,
+          "file": "audio/arsenal/notes/inst_laser_fan_3.wav",
+          "seconds": 0.4980952380952381,
+          "sha256": "9d4846b28d9d881e71c38a85d78ccb8062c0c3840cc6e7d9d76bc24e73586da7",
+          "peak": 0.12058694509486874,
+          "rms": 0.054053858832654046,
+          "attack_300ms_rms": 0.06921209525049515
+        },
+        {
+          "pitch_index": 4,
+          "root_midi": 79,
+          "file": "audio/arsenal/notes/inst_laser_fan_4.wav",
+          "seconds": 0.4978231292517007,
+          "sha256": "703849a3e340078da11914fc84812b0f922353256533a28b313811224a89a60f",
+          "peak": 0.10020148770750514,
+          "rms": 0.03836501127140074,
+          "attack_300ms_rms": 0.049069229954024025
+        },
+        {
+          "pitch_index": 5,
+          "root_midi": 80,
+          "file": "audio/arsenal/notes/inst_laser_fan_5.wav",
+          "seconds": 0.4980045351473923,
+          "sha256": "7c0df9be0d51456490193616858c58dfecbf96be5963e63a4ce8eec28f236513",
+          "peak": 0.1003158549150795,
+          "rms": 0.038886656089785206,
+          "attack_300ms_rms": 0.04979397815294535
+        },
+        {
+          "pitch_index": 6,
+          "root_midi": 82,
+          "file": "audio/arsenal/notes/inst_laser_fan_6.wav",
+          "seconds": 0.4979138321995465,
+          "sha256": "88f23deed476e564b7a7d2e44ddb644ef243ab666b6fc0771e7a02cc4aa9a510",
+          "peak": 0.10009844122698332,
+          "rms": 0.04029924466926438,
+          "attack_300ms_rms": 0.05152565299448625
+        },
+        {
+          "pitch_index": 7,
+          "root_midi": 84,
+          "file": "audio/arsenal/notes/inst_laser_fan_7.wav",
+          "seconds": 0.4980952380952381,
+          "sha256": "69d4987aed4926c7d2c1ce1aaced27780a4fdde91f4b6a4d30357295404ffaf8",
+          "peak": 0.10026125107548782,
+          "rms": 0.04106479822775234,
+          "attack_300ms_rms": 0.05247434700551376
+        }
+      ]
+    },
+    {
+      "id": "laser_crown",
+      "instrument": "饱满中音长笛",
+      "instrument_family": "woodwind",
+      "bank": 0,
+      "program": 73,
+      "root_midi": 60,
+      "hold": 0.28,
+      "release": 0.22,
+      "velocity": 0.58,
+      "lowpass_hz": 3500,
+      "attack_ms": 12,
+      "target_rms": 0.052,
+      "peak_limit": 0.32,
+      "electronic_mix": 0.0,
+      "fleet_barrage": true,
+      "voice": "inst_laser_crown",
+      "preset_name": "Flute",
+      "percussion": false,
+      "gain": 0.3333456095581249,
+      "samples": [
+        {
+          "pitch_index": 0,
+          "root_midi": 60,
+          "file": "audio/arsenal/notes/inst_laser_crown_0.wav",
+          "seconds": 0.4980952380952381,
+          "sha256": "f447e05fda592bea797d5d8145d3ccc2c68bc46ad935cea6637518da0dc6fb8c",
+          "peak": 0.12673613792374847,
+          "rms": 0.03701395245764042,
+          "attack_300ms_rms": 0.04746892360386717
+        },
+        {
+          "pitch_index": 1,
+          "root_midi": 62,
+          "file": "audio/arsenal/notes/inst_laser_crown_1.wav",
+          "seconds": 0.4980952380952381,
+          "sha256": "d633105bf58a616e0013882af3ba26e2f296cf446efecf0c6c520251c730bf36",
+          "peak": 0.12659942365036836,
+          "rms": 0.03680630884166685,
+          "attack_300ms_rms": 0.04701329032777711
+        },
+        {
+          "pitch_index": 2,
+          "root_midi": 63,
+          "file": "audio/arsenal/notes/inst_laser_crown_2.wav",
+          "seconds": 0.4980952380952381,
+          "sha256": "7dc1fd461ab509a83fa5f167a795a50b5f234355220b55a5a5a88424abb05cd7",
+          "peak": 0.12670965031363188,
+          "rms": 0.037206507137800306,
+          "attack_300ms_rms": 0.047537289072563806
+        },
+        {
+          "pitch_index": 3,
+          "root_midi": 65,
+          "file": "audio/arsenal/notes/inst_laser_crown_3.wav",
+          "seconds": 0.4980952380952381,
+          "sha256": "4d09ea14f5f779823c9778bc28af80a0b0075b2188c33aa67dce93aae685723f",
+          "peak": 0.1579501157668146,
+          "rms": 0.036715239410107174,
+          "attack_300ms_rms": 0.047013329915231064
+        },
+        {
+          "pitch_index": 4,
+          "root_midi": 67,
+          "file": "audio/arsenal/notes/inst_laser_crown_4.wav",
+          "seconds": 0.49768707482993196,
+          "sha256": "997caefffef4743947ee2bf34d0e1795faeb889b337726f407644aa6edd7fc15",
+          "peak": 0.14326079404755146,
+          "rms": 0.0458160969964675,
+          "attack_300ms_rms": 0.05860320844131774
+        },
+        {
+          "pitch_index": 5,
+          "root_midi": 68,
+          "file": "audio/arsenal/notes/inst_laser_crown_5.wav",
+          "seconds": 0.49786848072562356,
+          "sha256": "2534254961186af953240bedc3fb37bf1eb5d38f18f157a58fa287be69b90867",
+          "peak": 0.14361802383596925,
+          "rms": 0.045919636975297405,
+          "attack_300ms_rms": 0.05859534612549467
+        },
+        {
+          "pitch_index": 6,
+          "root_midi": 70,
+          "file": "audio/arsenal/notes/inst_laser_crown_6.wav",
+          "seconds": 0.4980045351473923,
+          "sha256": "773944e9769b27f34fb644a538c35fad6f304ba0756df66485a7918de1c6c8f7",
+          "peak": 0.1630125049495896,
+          "rms": 0.045282177753011486,
+          "attack_300ms_rms": 0.058169956517354536
+        },
+        {
+          "pitch_index": 7,
+          "root_midi": 72,
+          "file": "audio/arsenal/notes/inst_laser_crown_7.wav",
+          "seconds": 0.4980952380952381,
+          "sha256": "d50f47369bc9a4f0d476ccf0dfbe586c884b192899a08cb87af81074351c645c",
+          "peak": 0.16238995655705035,
+          "rms": 0.044014171414214306,
+          "attack_300ms_rms": 0.056462710927436204
         }
       ]
     }

@@ -1,5 +1,5 @@
 {
-  "revision": "chamber-v41-westwind-kaleidoscope",
+  "revision": "chamber-v42-conductive-light",
   "description": "Four independently rendered acoustic performances at the same weapon root note. Velocity, onset, note-on duration, release and spectral shaping change together; not scaled copies of one WAV. Composer keeps its authored pitches and original152 samples.",
   "levels": [
     {
@@ -99,7 +99,11 @@
     "dawn_fan": -0.2,
     "tidal_weave": -1.0,
     "firefly_rain": -0.5,
-    "kaleidoscope": -1.0
+    "kaleidoscope": -1.0,
+    "arc_bough": -1.8,
+    "chain_loop": -0.7,
+    "laser_fan": -1.8,
+    "laser_crown": -0.7
   },
   "sustained_salvos": {
     "strengths": [
@@ -199,6 +203,34 @@
         "hold": 0.28,
         "release": 0.22,
         "voice_label": "珠光高音三角钢琴",
+        "duration_seconds": 0.5,
+        "hold_seconds": 0.28
+      },
+      "arc_bough": {
+        "hold": 0.28,
+        "release": 0.22,
+        "voice_label": "清晰高音单簧管",
+        "duration_seconds": 0.5,
+        "hold_seconds": 0.28
+      },
+      "chain_loop": {
+        "hold": 0.28,
+        "release": 0.22,
+        "voice_label": "温暖低音单簧管",
+        "duration_seconds": 0.5,
+        "hold_seconds": 0.28
+      },
+      "laser_fan": {
+        "hold": 0.28,
+        "release": 0.22,
+        "voice_label": "轻巧高音长笛",
+        "duration_seconds": 0.5,
+        "hold_seconds": 0.28
+      },
+      "laser_crown": {
+        "hold": 0.28,
+        "release": 0.22,
+        "voice_label": "饱满中音长笛",
         "duration_seconds": 0.5,
         "hold_seconds": 0.28
       }

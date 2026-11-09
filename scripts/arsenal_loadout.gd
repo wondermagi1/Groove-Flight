@@ -1,6 +1,7 @@
 extends RefCounted
 ## Pure arsenal/sequence model. Currency, health changes and audio playback belong
 ## to the game. Occupied cells contain UIDs; only each item's head emits events.
+const ENERGY_GROWTH=preload("res://scripts/energy_growth.gd")
 const C=preload("res://scripts/arsenal_catalog.gd")
 const CLOCK=preload("res://scripts/music_clock.gd")
 const PATHS=preload("res://scripts/build_paths.gd")
@@ -131,6 +132,7 @@ func item_width(uid: int) -> int:
 
 func add_module(kind: String,at: int=-1) -> int:
 	if modules.size()>=INVENTORY_LIMIT or _row(kind).is_empty(): return -1
+	if bool(_row(kind).get("unique",false)) and modules.any(func(module): return str(module.kind)==kind): return -1
 	if audio_guard_enabled and not C.is_item_available(kind): return -1
 	if at>=slots.size(): return -1
 	var uid=next_uid
@@ -234,10 +236,14 @@ func _condition(condition: String,serial: int) -> bool:
 
 func _rules() -> Array:
 	var result: Array=[]
+	var seen_unique: Dictionary={}
 	for at in heads():
 		var module=find(slots[at]); var row=_row(str(module.kind))
+		if bool(row.get("unique",false)):
+			if seen_unique.has(str(module.kind)): continue
+			seen_unique[str(module.kind)]=true
 		for rule in row.get("rules",[]):
-			result.append({"uid":int(module.uid),"name":str(row.name),"slot":at,"width":int(row.width),"level":int(module.level),"scale":1.+.35*(int(module.level)-1),"rule":rule})
+			result.append({"uid":int(module.uid),"name":str(row.name),"slot":at,"width":int(row.width),"level":int(module.level),"scale":1.+.35*(int(module.level)-1) if bool(row.get("refinable",true)) else 1.,"rule":rule})
 	return result
 
 func _applies(source: Dictionary,uid: int,serial: int) -> bool:
@@ -363,7 +369,7 @@ func _weapon_event(uid: int,serial: int,sources: Array) -> Dictionary:
 	var cadence_data=cadence_profile_for(row)
 	var cadence=int(cadence_data.get("beats",_cadence_beats(row)))
 	var cadence_step=0
-	return {"uid":uid,"kind":str(row.id),"voice":str(row.get("voice",row.id)),"pitch":pitch,"family":str(row.family),"name":str(row.name),"category":"weapon","attr":attribute,"level":int(module.level),"quality":int(growth.quality),"growth":growth,"width":int(row.width),"slot":at,"damage":clampf(damage,.1,100000.),"count":clampi(int(row.get("count",1))+extra,1,count_limit),"extra":extra,"pierce":clampi(int(row.get("pierce",0))+roundi(weapon.pierce),0,40),"speed":clampf(float(row.get("speed",700))*maxf(.1,1.+weapon.speed_percent),0.,3000.),"life":clampf(float(row.get("life",2))*maxf(.1,1.+weapon.range_percent),.1,30.),"spread":clampf(float(row.get("spread",0))*maxf(0.,1.+weapon.spread_percent),0.,TAU),"explosion":clampf(float(row.get("explosion",0))+weapon.explosion,0.,800.),"homing":clampf(float(row.get("homing",0))+weapon.homing,0.,20.),"bounces":clampi(int(row.get("bounces",0))+roundi(weapon.bounces),0,24),"chain_count":clampi(maxi(1,int(row.get("bounces",3)))+roundi(weapon.chain_count)+floori(maxf(0.,float(attributes.get(attribute,0.)))*float(trajectory.chain_per_attribute)),1,32),"chord":chord,"chord_power":clampf(beat.chord if chord else 0.,0.,5.),"repeat":clampi(roundi(beat.repeat),0,3),"repeat_index":0,"angle":deg_to_rad(fposmod(beat.rotate,360.)),"charge":charge,"charge_base":int(row.get("charge",1)),"eligible":posmod(bar+1,charge)==0,"cadence_beats":cadence,"cadence_step":cadence_step,"cadence_scale":1.,"cadence_label":str(cadence_data.label),"cadence_profile":cadence_data,"cadence_light":false,"recorded_audio":bool(row.get("recorded_audio",false)),"recorded_source":str(row.get("recorded_source","")),"crit_chance":attributes.crit_chance,"crit_damage":attributes.crit_damage,"stats":attributes,"events":_events_for(uid,serial,sources),"equipped":true,"trajectory":trajectory,"calculation":{"base_damage":float(row.damage),"ship_multiplier":damage_scale,"level_multiplier":1.+.45*(int(module.level)-1),"attribute_multiplier":maxf(.1,1.+float(attributes.get(attribute,0))/100.+float(attributes.power)/200.),"damage_multiplier":attributes.bullet_multiplier,"mod_multiplier":maxf(.1,1.+weapon.damage_percent+(beat.streak if same else 0.)),"attribute_count":attribute_count,"quality_count":int(growth.quality_count),"level_count":int(growth.level_count),"growth":growth,"base_count":int(row.get("count",1)),"extra_count":extra,"count_cap":count_limit}}
+	return {"uid":uid,"kind":str(row.id),"voice":str(row.get("voice",row.id)),"pitch":pitch,"family":str(row.family),"name":str(row.name),"category":"weapon","attr":attribute,"level":int(module.level),"quality":int(growth.quality),"growth":growth,"width":int(row.width),"slot":at,"damage":clampf(damage,.1,100000.),"count":clampi(int(row.get("count",1))+extra,1,count_limit),"extra":extra,"pierce":clampi(int(row.get("pierce",0))+roundi(weapon.pierce),0,40),"speed":clampf(float(row.get("speed",700))*maxf(.1,1.+weapon.speed_percent),0.,3000.),"life":clampf(float(row.get("life",2))*maxf(.1,1.+weapon.range_percent),.1,30.),"spread":clampf(float(row.get("spread",0))*maxf(0.,1.+weapon.spread_percent),0.,TAU),"explosion":clampf(float(row.get("explosion",0))+weapon.explosion,0.,800.),"homing":clampf(float(row.get("homing",0))+weapon.homing,0.,20.),"bounces":clampi(int(row.get("bounces",0))+roundi(weapon.bounces),0,24),"refractions":ENERGY_GROWTH.refractions(row,attributes),"chain_count":ENERGY_GROWTH.conductions(row,attributes,float(weapon.chain_count),float(trajectory.chain_per_attribute)),"chord":chord,"chord_power":clampf(beat.chord if chord else 0.,0.,5.),"repeat":clampi(roundi(beat.repeat),0,3),"repeat_index":0,"angle":deg_to_rad(fposmod(beat.rotate,360.)),"charge":charge,"charge_base":int(row.get("charge",1)),"eligible":posmod(bar+1,charge)==0,"cadence_beats":cadence,"cadence_step":cadence_step,"cadence_scale":1.,"cadence_label":str(cadence_data.label),"cadence_profile":cadence_data,"cadence_light":false,"recorded_audio":bool(row.get("recorded_audio",false)),"recorded_source":str(row.get("recorded_source","")),"crit_chance":attributes.crit_chance,"crit_damage":attributes.crit_damage,"stats":attributes,"events":_events_for(uid,serial,sources),"equipped":true,"trajectory":trajectory,"calculation":{"base_damage":float(row.damage),"ship_multiplier":damage_scale,"level_multiplier":1.+.45*(int(module.level)-1),"attribute_multiplier":maxf(.1,1.+float(attributes.get(attribute,0))/100.+float(attributes.power)/200.),"damage_multiplier":attributes.bullet_multiplier,"mod_multiplier":maxf(.1,1.+weapon.damage_percent+(beat.streak if same else 0.)),"attribute_count":attribute_count,"quality_count":int(growth.quality_count),"level_count":int(growth.level_count),"growth":growth,"base_count":int(row.get("count",1)),"extra_count":extra,"count_cap":count_limit}}
 
 func item_stats(uid: int,serial: int=0) -> Dictionary:
 	var module=find(uid)
@@ -436,6 +442,7 @@ func advance_step(_index: int,serial: int,local_beats: Dictionary={}) -> Array[D
 func merge(uid: int) -> bool:
 	var chosen=find(uid)
 	if chosen.is_empty() or int(chosen.level)>=4 or not valid(): return false
+	if not bool(_row(str(chosen.kind)).get("refinable",true)): return false
 	var donor: Dictionary={}
 	# Prefer a reserve copy so a merge doesn't unexpectedly dismantle the score.
 	for candidate in modules:
@@ -451,11 +458,12 @@ func salvage(uid: int) -> int:
 	var refund=maxi(1,roundi(float(_row(str(module.kind)).get("cost",10))*.4*(1.+.5*(int(module.level)-1))))
 	unequip_uid(uid); modules.erase(module); return refund
 
-func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[],weapon_count: int=3,item_count: int=3,price_scale: float=1.) -> Array[Dictionary]:
+func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[],weapon_count: int=3,item_count: int=3,price_scale: float=1.,featured_item: String="") -> Array[Dictionary]:
 	var pool: Array=[]; var result: Array[Dictionary]=[]
 	var max_rarity=clampi(1+floori(float(maxi(wave,1)-1)/3.),1,3)
 	for row in C.rows():
 		if int(row.rarity)<=max_rarity and not excluded.has(str(row.id)):
+			if bool(row.get("unique",false)) and modules.any(func(module): return str(module.kind)==str(row.id)): continue
 			if audio_guard_enabled and not C.is_item_available(str(row.id)): continue
 			pool.append(row)
 	var luck=float(stats().luck)
@@ -479,6 +487,9 @@ func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[],weapon_co
 					if str(rule.type)=="trajectory" or (str(rule.type)=="beat" and str(rule.key) in ["repeat","charge_reduce","chord"]): spatial=true
 				if spatial: preferred.append(candidate)
 			elif survival_bag and str(pool[candidate].category)=="defense": preferred.append(candidate)
+		if not wants_weapon and result.size()==weapon_count and not featured_item.is_empty():
+			for candidate in candidates:
+				if str(pool[candidate].id)==featured_item: preferred=[candidate]; break
 		if not preferred.is_empty(): candidates=preferred
 		if candidates.is_empty(): break
 		for candidate in candidates: total+=(1.+float(pool[candidate].rarity)*luck*.04)*PATHS.affinity(str(pool[candidate].id),owned)
@@ -539,6 +550,7 @@ func take(reward: Dictionary) -> bool:
 		"upgrade":
 			var module=find(int(reward.get("uid",-1)))
 			if module.is_empty() or int(module.level)>=4: return false
+			if not bool(_row(str(module.kind)).get("refinable",true)): return false
 			module.level=int(module.level)+1; return true
 		"power": damage_scale+=.18; return true
 	return false

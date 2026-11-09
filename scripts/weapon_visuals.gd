@@ -29,7 +29,11 @@ const PROFILES={
 	"dawn_fan":{"color":Color("ffe4a0")},
 	"tidal_weave":{"color":Color("7ee9f2")},
 	"firefly_rain":{"color":Color("ff9ecb")},
-	"kaleidoscope":{"color":Color("c7b4ff")}
+	"kaleidoscope":{"color":Color("c7b4ff")},
+	"arc_bough":{"size":Vector2(48,10),"tail":190.,"width":3.,"color":Color("a9b9ff")},
+	"chain_loop":{"size":Vector2(52,12),"tail":210.,"width":4.,"color":Color("f18ddd")},
+	"laser_fan":{"size":Vector2(68,12),"tail":245.,"width":4.,"color":Color("8df5e3")},
+	"laser_crown":{"size":Vector2(85,16),"tail":290.,"width":6.,"color":Color("ffdc91")}
 }
 
 static func profile(id: String) -> Dictionary:

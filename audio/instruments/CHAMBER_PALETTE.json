@@ -1,5 +1,5 @@
 {
-  "revision": "chamber-v41-kaleidoscope",
+  "revision": "chamber-v42-woodwinds",
   "source": "GeneralUser GS 2.0.3",
   "format": "mono PCM16 22050Hz",
   "fixed_battle_pitch_index": 0,
@@ -16,7 +16,8 @@
   "allowed_families": [
     "piano",
     "strings",
-    "harp"
+    "harp",
+    "woodwind"
   ],
   "description": "Only acoustic piano variants, bowed strings and harp for weapon voices; no drum, sax, flute, guitar, bell or electronic layer. Existing gameplay feedback is separate.",
   "weapons": [
@@ -347,6 +348,84 @@
       "peak_limit": 0.34,
       "electronic_mix": 0.0,
       "fleet_barrage": true
+    },
+    {
+      "id": "arc_bough",
+      "instrument": "清晰高音单簧管",
+      "instrument_family": "woodwind",
+      "bank": 0,
+      "program": 71,
+      "root_midi": 67,
+      "hold": 0.28,
+      "release": 0.22,
+      "velocity": 0.58,
+      "lowpass_hz": 4600,
+      "attack_ms": 12,
+      "target_rms": 0.052,
+      "peak_limit": 0.32,
+      "electronic_mix": 0.0,
+      "fleet_barrage": true
+    },
+    {
+      "id": "chain_loop",
+      "instrument": "温暖低音单簧管",
+      "instrument_family": "woodwind",
+      "bank": 0,
+      "program": 71,
+      "root_midi": 55,
+      "hold": 0.28,
+      "release": 0.22,
+      "velocity": 0.58,
+      "lowpass_hz": 3500,
+      "attack_ms": 12,
+      "target_rms": 0.052,
+      "peak_limit": 0.32,
+      "electronic_mix": 0.0,
+      "fleet_barrage": true
+    },
+    {
+      "id": "laser_fan",
+      "instrument": "轻巧高音长笛",
+      "instrument_family": "woodwind",
+      "bank": 0,
+      "program": 73,
+      "root_midi": 72,
+      "hold": 0.28,
+      "release": 0.22,
+      "velocity": 0.58,
+      "lowpass_hz": 4600,
+      "attack_ms": 12,
+      "target_rms": 0.052,
+      "peak_limit": 0.32,
+      "electronic_mix": 0.0,
+      "fleet_barrage": true
+    },
+    {
+      "id": "laser_crown",
+      "instrument": "饱满中音长笛",
+      "instrument_family": "woodwind",
+      "bank": 0,
+      "program": 73,
+      "root_midi": 60,
+      "hold": 0.28,
+      "release": 0.22,
+      "velocity": 0.58,
+      "lowpass_hz": 3500,
+      "attack_ms": 12,
+      "target_rms": 0.052,
+      "peak_limit": 0.32,
+      "electronic_mix": 0.0,
+      "fleet_barrage": true
     }
+  ],
+  "allowed_programs": [
+    0,
+    1,
+    40,
+    41,
+    42,
+    46,
+    71,
+    73
   ]
 }

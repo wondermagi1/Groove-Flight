@@ -1,0 +1,14 @@
+{
+  "baseline": "8516717b8f03211f264160bf98dec6fe366a1fdb",
+  "old_wavs_verified": 240,
+  "allowed_weapon_changes": {
+    "beam": {
+      "damage": 12.0
+    },
+    "kaleidoscope": {
+      "charge": 4,
+      "count": 96
+    }
+  },
+  "failures": []
+}

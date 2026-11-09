@@ -20,6 +20,7 @@ func stop_audio(node: Node) -> void:
 	for child in node.get_children(): stop_audio(child)
 
 func fixture(kind: String="pulse") -> void:
+	if game.get("energy_weapons")!=null: game.energy_weapons.clear()
 	game.is_preview=true; game.state="combat"; game.wave=1; game.wave_start=0.; game.music.timeline=0.
 	game.active_planet="mercury"; game.planet_rules=game.PLANETS.wave_rules("mercury",1)
 	game.wave_rows=game.PLANETS.route("mercury"); game.free_music_run=false
