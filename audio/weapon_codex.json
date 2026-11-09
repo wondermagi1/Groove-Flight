@@ -6,7 +6,7 @@
 	"scope": "Fixed-root acoustic performances selected on actual shots by effective charge. Four independently rendered dynamic layers per weapon;original8pitches remain for explicit composer. No automatic pitch melody or damage-strength cycle.",
 	"sequence_loop_seconds": 1.5,
 	"sequence_step_seconds": 0.1875,
-	"version": "0.43.0-doctrine-campaigns",
+	"version": "0.44.0-jade-fleet",
 	"weapon_count": 24,
 	"weapons": [
 		{

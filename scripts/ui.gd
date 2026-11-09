@@ -1,4 +1,5 @@
 extends CanvasLayer
+const SKIN=preload("res://scripts/visual_theme.gd")
 const DATA=preload("res://scripts/arsenal_catalog.gd")
 const ARSENAL=preload("res://scripts/arsenal_screen.gd")
 const FLEET=preload("res://scripts/fleet_catalog.gd")
@@ -32,15 +33,15 @@ func _ready() -> void:
 	font=SystemFont.new(); font.font_names=PackedStringArray(["Microsoft YaHei UI","Noto Sans CJK SC","Arial"])
 	root_control=Control.new(); root_control.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root_control.mouse_filter=Control.MOUSE_FILTER_IGNORE; add_child(root_control)
-	var theme=Theme.new(); theme.default_font=font; theme.default_font_size=20; root_control.theme=theme
+	var theme=Theme.new(); theme.default_font=font; theme.default_font_size=20; SKIN.apply(theme);root_control.theme=theme
 	get_viewport().size_changed.connect(refresh)
 func box(color: Color,border: Color=Color.TRANSPARENT,radius: int=10) -> StyleBoxFlat:
-	var style=StyleBoxFlat.new(); style.bg_color=color; style.border_color=border
-	style.set_border_width_all(1); style.set_corner_radius_all(radius); style.content_margin_left=18; style.content_margin_right=18
-	style.content_margin_top=12; style.content_margin_bottom=12; return style
+	var style=SKIN.panel(color,border,radius,18)
+	style.content_margin_top=12;style.content_margin_bottom=12
+	return style
 func label(text_value: String,size: int=20,color: Color=Color("edf3ff")) -> Label:
 	var node=Label.new(); node.text=text_value; node.add_theme_font_size_override("font_size",roundi(size*float(game.settings.get("text_scale",1.))))
-	node.add_theme_color_override("font_color",color); node.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	node.add_theme_color_override("font_color",SKIN.text(color)); node.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	return node
 func button(text_value: String,callback: Callable,color: Color=Color("71e8dc"),height: float=54) -> Button:
 	var node=Button.new(); node.text=text_value; node.custom_minimum_size=Vector2(180,height); node.focus_mode=Control.FOCUS_NONE
@@ -156,6 +157,9 @@ func arsenal_screen(mode_value: String) -> void:
 	arsenal.name="ArsenalScreen"; root_control.add_child(arsenal)
 func hud(include_arsenal: bool=true) -> void:
 	var view=get_viewport().get_visible_rect().size
+	var telemetry=Panel.new();telemetry.name="TelemetryMaterial";telemetry.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	telemetry.position=Vector2(12,12);telemetry.size=Vector2(view.x-24,64)
+	telemetry.add_theme_stylebox_override("panel",SKIN.panel(Color(SKIN.VOID,.88),Color(SKIN.LINE,.65),4,0));root_control.add_child(telemetry)
 	wave_label=label("",17,Color("97a7bf")); wave_label.position=Vector2(24,26); root_control.add_child(wave_label)
 	timer_label=label("",35); timer_label.position=Vector2(192,13); root_control.add_child(timer_label)
 	health_label=label("",20); health_label.position=Vector2(370,26); root_control.add_child(health_label)
@@ -199,7 +203,9 @@ func update_hud() -> void:
 		boss_title.text=str(PLANETS.planet(game.active_planet).bossname)+"  /  "+str(PLANETS.planet(game.active_planet).machine_type)
 		boss_caption.text="巨型机械接近 · 武器启动中" if game.music.timeline<float(boss.get("entry_until",-1.)) else ("核心暴露 ×1.5 / 炮塔剩余%d"%game.BOSS_SCORE.live_nodes(game,boss) if game.music.timeline<float(boss.get("core_until",-1.)) else str(boss.get("motif","装甲核心"))+" / 拆炮塔削减8%核心")
 func section_title(content: VBoxContainer,text_value: String,subtitle: String="") -> void:
-	content.add_child(label(text_value,30))
+	var heading=HBoxContainer.new();heading.add_theme_constant_override("separation",12);content.add_child(heading)
+	var marker=ColorRect.new();marker.color=SKIN.GOLD;marker.custom_minimum_size=Vector2(3,32);heading.add_child(marker)
+	heading.add_child(label(text_value,30,SKIN.TEXT))
 	if not subtitle.is_empty(): content.add_child(label(subtitle,17,Color("8c9db5")))
 func reward_screen() -> void:
 	arsenal_screen("shop")

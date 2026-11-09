@@ -16,7 +16,11 @@ void vertex(){
   if(UV.y<4.){
    vec2 normal=rotation*vec2(cos(UV.y),sin(UV.y));
    shade=.48+.38*max(0.,dot(normal,normalize(vec2(-.6,-.8))));
-  }else{shade=.98;}
+  }else{
+   // Constant world-space key light on the machined top face. Emitters keep
+   // their colour;there is no synchronized fleet-wide brightness animation.
+   shade=UV.y>6.?.99:(.93+.075*dot(normalize(p+vec2(.001)),normalize(vec2(-.6,-.8))));
+  }
   lit_color=vec4(COLOR.rgb*shade,COLOR.a);
  }
  VERTEX=inverse_rotation*p;

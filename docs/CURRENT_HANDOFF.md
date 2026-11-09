@@ -4,7 +4,9 @@
 
 2026-11-09后续配器决定：用户最新合并为[统一13种乐器组开发总体框架](ORCHESTRAL_AUDIO_DIRECTION.md)：钢琴、弦乐4种、竖琴、木管4种、三角铁/钟琴/定音鼓。覆盖此前A/B划分；先建立音源和演奏力度，再按武器定位分配。当前V38素材与乐器尚未替换，圆号不计入最新核心清单。
 
-2026-11-09，工程版本 `0.43.0-doctrine-campaigns`，开发分支 `codex/v43-doctrine-pools`，修改前备份`42187dc`已上传核验。V42收尾`28a9d1a`已先行上传。每轮继续遵守先上传Git备份再改游戏。
+2026-11-09，工程版本 `0.44.0-jade-fleet`，开发分支 `codex/v44-jade-fleet-ui`，修改前备份`059ceb2`已上传核验。每轮继续遵守先上传Git备份再改游戏。
+
+V44：共享visual_theme接主界面/HUD/商店/机库/星图/图鉴/作曲，深青绿、暖白与暖金；5舰体倒角/喷口/散热/检修细节，8敌机网格珊瑚红核心和装甲层次，仍8个单surface共享网格（288–387顶点），1024无独立敌机节点。planet_uhd同pass参考视频青绿背景，无新增模糊/灯光pass。24武器/288WAV、main实际战斗/流派/碰撞/敌群/原生DLL逐文件不变；UI120%文本/1080p/720p及真实Forward+渲染通过。未做人工图片评审。见[V44](V44_JADE_FLEET_UI.md)、[当前验证](data-v44/SUMMARY.json)与[实际舰体预览](screenshots/v44-hull-materials.png)。
 
 V43：星图出击/结算重试先明确选实弹、激光或电链；本局固定。按实际类别分18/3/3，导弹、七彩和羽弹双生仍在实弹，真beam/chain移出实弹。商店/锁定刷新/奖励/购买/直接添加/祝福都校验，通用生存共享。3+3与价格锁定不变，小池必要时仅提前武器稀有度。所有关卡取消初始流萤，实弹pulseA3+railB4–B5，激光beamA3–A4+laser_fanB4–B5，电链chainA3–A4+arc_boughB4–B5。24参数/288WAV不变，composer和独立音色图鉴仍完整。见[V43说明](V43_DOCTRINE_CAMPAIGNS.md)、[当前验证](data-v43/SUMMARY.json)。
 

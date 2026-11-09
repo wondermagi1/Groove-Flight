@@ -1,0 +1,93 @@
+{
+	"checks": 64,
+	"facts": {
+		"enemy_meshes": [
+			{
+				"kind": "mote",
+				"local_max_radius": 1.45000004768372,
+				"surfaces": 1,
+				"vertices": 288
+			},
+			{
+				"kind": "armor",
+				"local_max_radius": 1.14437758922577,
+				"surfaces": 1,
+				"vertices": 312
+			},
+			{
+				"kind": "shooter",
+				"local_max_radius": 1.36356151103973,
+				"surfaces": 1,
+				"vertices": 306
+			},
+			{
+				"kind": "dart",
+				"local_max_radius": 1.45000004768372,
+				"surfaces": 1,
+				"vertices": 288
+			},
+			{
+				"kind": "splitter",
+				"local_max_radius": 1.20830464363098,
+				"surfaces": 1,
+				"vertices": 387
+			},
+			{
+				"kind": "sentinel",
+				"local_max_radius": 1.18004238605499,
+				"surfaces": 1,
+				"vertices": 306
+			},
+			{
+				"kind": "lance",
+				"local_max_radius": 1.72000002861023,
+				"surfaces": 1,
+				"vertices": 336
+			},
+			{
+				"kind": "mirror",
+				"local_max_radius": 1.26491105556488,
+				"surfaces": 1,
+				"vertices": 384
+			}
+		],
+		"muted_contrast": 6.78516972778854,
+		"text_contrast": 13.1203606109689,
+		"top_buttons_1280": [
+			{
+				"position": "(1850.0, 23.0)",
+				"size": "(56.0, 52.0)",
+				"text": "Ⅱ"
+			},
+			{
+				"position": "(1640.0, 23.0)",
+				"size": "(180.0, 52.0)",
+				"text": "Tab  音序工坊"
+			}
+		],
+		"top_buttons_1920": [
+			{
+				"position": "(1845.0, 23.0)",
+				"size": "(56.0, 52.0)",
+				"text": "Ⅱ"
+			},
+			{
+				"position": "(1635.0, 23.0)",
+				"size": "(180.0, 52.0)",
+				"text": "Tab  音序工坊"
+			}
+		]
+	},
+	"failures": [],
+	"images": [
+		"res://docs/screenshots/v44-shop-1920.png",
+		"res://docs/screenshots/v44-doctrine-1920.png",
+		"res://docs/screenshots/v44-combat-1920.png",
+		"res://docs/screenshots/v44-shop-1280.png",
+		"res://docs/screenshots/v44-doctrine-1280.png",
+		"res://docs/screenshots/v44-combat-1280.png",
+		"res://docs/screenshots/v44-hangar.png",
+		"res://docs/screenshots/v44-hull-materials.png"
+	],
+	"scope": "Shared cockpit materials,readability,bounded one-surface enemy meshes,1024instanced individuals,120percent shop lock separation,prebattle choice,bottom-left sequencer and optional real GPU captures. No manual picture review,subjective approval or sustained FPS certification."
+}

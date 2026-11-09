@@ -1,0 +1,63 @@
+{
+  "version": "0.44.0-jade-fleet",
+  "date": "2026-11-09",
+  "backup": "059ceb2ebc096766db743fcf0a0abc63f26796a1",
+  "reports": [
+    {
+      "file": "results-v44-visual.json",
+      "checks": 64,
+      "failures": []
+    },
+    {
+      "file": "results-v43-doctrine.json",
+      "checks": 3181,
+      "failures": []
+    },
+    {
+      "file": "results-v42-energy.json",
+      "checks": 268,
+      "failures": []
+    },
+    {
+      "file": "results-v29-music-shop-hud.json",
+      "checks": 351,
+      "failures": []
+    },
+    {
+      "file": "results-v33-music-continuity.json",
+      "checks": 36,
+      "failures": []
+    },
+    {
+      "file": "results-v40-foundation.json",
+      "checks": 869,
+      "failures": []
+    },
+    {
+      "file": "results-v36-weapon-expression.json",
+      "checks": 394,
+      "failures": []
+    },
+    {
+      "file": "results-composer-score.json",
+      "checks": 112,
+      "failures": []
+    }
+  ],
+  "checks": 5275,
+  "preservation": "asset-preservation.json",
+  "reference": "reference-palette.json",
+  "actual_render": "render-palette.json",
+  "gpu": "Actual Forward+ / RTX4060Laptop / offscreen controlled captures,1080p+720p.",
+  "manual_visual_review": false,
+  "legacy_test_note": "weapon_codex_review.gd targets34cards/archived recorded_ballistic and is incompatible with the unchanged24weapon live catalogue. Original script retained. Current codex verified by v40foundation(869checks) and v36expression(394checks);do not interpret obsolete test as a current-skin regression.",
+  "limits": [
+    "No human aesthetic/audio approval or sustained60FPS claim.",
+    "V33 can report2resources retained at test teardown;36functional assertions pass,no script errors.",
+    "Controlled220enemy formation and enlarged hull sheet are test fixtures,not changed campaign spawn/size mechanics."
+  ],
+  "engine_import": {
+    "exit": 0,
+    "script_errors": []
+  }
+}

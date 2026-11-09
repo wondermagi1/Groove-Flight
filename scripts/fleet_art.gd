@@ -2,17 +2,17 @@ extends RefCounted
 ## Procedural 2D fleet silhouettes: bevelled plates, engines and readable cores.
 ## Angle zero points along +X. `radius` is the central-core radius, not wingspan.
 const F=preload("res://scripts/fleet_catalog.gd")
-const HULL=Color("eff4ff")
-const SIDE=Color("9aaec7")
-const SHADE=Color("3e536e")
-const DARK=Color("142235")
-const INK=Color("080f1c")
+const HULL=Color("f0eee0")
+const SIDE=Color("a6beb9")
+const SHADE=Color("456367")
+const DARK=Color("152e35")
+const INK=Color("09171f")
 
 static func draw_enemy_lod(canvas: CanvasItem,at: Vector2,radius: float,angle: float,kind: String,flash: float=0.) -> void:
 	# A bounded five-draw-call hull for dense packs; important ships retain the
 	# detailed drawing. Filled plates keep aircraft readable at small sizes.
 	canvas.draw_set_transform(at,angle,Vector2.ONE*radius)
-	var plate=Color("a9b6cd").lerp(Color.WHITE,clampf(flash*11.,0,1))
+	var plate=Color("cbd5c9").lerp(Color.WHITE,clampf(flash*11.,0,1))
 	var red=Color("ff7d9f")
 	var wing=1.15 if kind in ["mote","dart"] else .85
 	if kind=="lance":
@@ -38,6 +38,28 @@ static func _poly(canvas: CanvasItem,coordinates: Array,color: Color) -> void:
 	var points=PackedVector2Array()
 	for point in coordinates: points.append(Vector2(point[0],point[1]))
 	canvas.draw_colored_polygon(points,color)
+
+static func _plated(canvas: CanvasItem,coordinates: Array,color: Color) -> void:
+	# Inset armour faces and real bevel strips;only used for the five player
+	# hulls and capital-ship plates,never a new draw loop per crowd member.
+	if color.get_luminance()<.12 or color.a<.60:
+		_poly(canvas,coordinates,color);return
+	var outer=PackedVector2Array();var inner=PackedVector2Array();var center=Vector2.ZERO
+	for p in coordinates:outer.append(Vector2(p[0],p[1]));center+=outer[-1]
+	center/=outer.size()
+	for p in outer:inner.append(p.move_toward(center,minf(.055,p.distance_to(center)*.18)))
+	canvas.draw_colored_polygon(outer,Color(color.darkened(.26),color.a))
+	var tones=PackedColorArray()
+	for p in inner:
+		var strength=clampf((p-center).dot(Vector2(-.35,-.9)), -.65,.65)
+		tones.append(Color(color.lightened(maxf(0.,strength)*.10).darkened(maxf(0.,-strength)*.15),color.a))
+	canvas.draw_polygon(inner,tones)
+	for i in range(outer.size()):
+		var j=(i+1)%outer.size();var normal=(outer[j]-outer[i]).orthogonal().normalized()
+		var facing=normal.dot(Vector2(-.45,-.89))
+		var rim=color.lightened(.42) if facing>.25 else color.darkened(.40)
+		canvas.draw_colored_polygon(PackedVector2Array([outer[i],outer[j],inner[j],inner[i]]),Color(rim,color.a))
+	_edge(canvas,outer,Color(INK,color.a*.45),.018)
 static func _regular(at: Vector2,radius: float,sides: int,angle: float=0.) -> PackedVector2Array:
 	var points=PackedVector2Array()
 	for i in range(sides): points.append(at+Vector2.from_angle(angle+i*TAU/sides)*radius)
@@ -55,6 +77,11 @@ static func _engine(canvas: CanvasItem,at: Vector2,color: Color,pulse: float,len
 	canvas.draw_line(at+Vector2(-.23,-.14),at+Vector2(-.23,.14),color,.12,true)
 	_poly(canvas,[[at.x-.25,at.y-.13],[at.x-.25-length*(1.+pulse*.55),at.y],[at.x-.25,at.y+.13]],Color(color,.65))
 	canvas.draw_line(at+Vector2(-.23,0),at+Vector2(-.25-length*.58,0),Color("e9ffff"),.07,true)
+	# Ceramic throat,compression ring and a cool white-hot nozzle core.
+	canvas.draw_rect(Rect2(at+Vector2(-.13,-.13),Vector2(.19,.26)),Color(INK,color.a))
+	for x in [-.12,-.035,.05]:
+		canvas.draw_line(at+Vector2(x,-.15),at+Vector2(x,.15),Color(SIDE,color.a*.80),.025,true)
+	canvas.draw_line(at+Vector2(-.21,-.115),at+Vector2(-.21,.115),Color("eaffef",color.a*.90),.05,true)
 
 static func _canopy(canvas: CanvasItem,center: Vector2,scale: Vector2,accent: Color,opacity: float) -> void:
 	# Sapphire canopy with an opaque metal rim, a hot center seam and one
@@ -139,6 +166,17 @@ static func _ship_finish(canvas: CanvasItem,ship_id: String,accent: Color,pulse:
 		canvas.draw_line(Vector2(-.72,side*.32),Vector2(-.35,side*.47),Color(Color.WHITE,opacity*.26),.018,true)
 		canvas.draw_circle(Vector2(-.84,side*.54),.035,Color(Color.WHITE,opacity*.66))
 		canvas.draw_circle(Vector2(-.14,side*.76),.022,Color(accent,opacity*.72))
+	# Recessed radiator channels,ivory access panels and brass service marks.
+	for side in [-1.,1.]:
+		var mount=Vector2(-.49,side*.32)
+		_plated(canvas,[[mount.x-.24,mount.y-.11],[mount.x+.15,mount.y-.11],[mount.x+.22,mount.y+.10],[mount.x-.25,mount.y+.10]],Color(SIDE,opacity))
+		for vent in range(4):
+			var x=mount.x-.16+vent*.065
+			canvas.draw_line(Vector2(x,mount.y-.065),Vector2(x-.025,mount.y+.062),Color(INK,opacity*.88),.026,true)
+		canvas.draw_line(Vector2(.27,side*.56),Vector2(.49,side*.44),Color("d9b77b",opacity*.92),.055,true)
+		canvas.draw_circle(Vector2(-.89,side*.58),.040,Color(INK,opacity))
+		canvas.draw_circle(Vector2(-.90,side*.59),.018,Color(HULL,opacity))
+	canvas.draw_arc(Vector2(-.02,-.035),.52,-PI*.85,-PI*.1,16,Color("fffce8",opacity*.8),.023,true)
 
 static func draw_ship(canvas: CanvasItem,at: Vector2,radius: float,angle: float,ship_id: String,pulse: float=0.,opacity: float=1.) -> void:
 	var data=F.ship(ship_id); var accent: Color=data.color
@@ -149,68 +187,68 @@ static func draw_ship(canvas: CanvasItem,at: Vector2,radius: float,angle: float,
 		"sabre": silhouette=[[2.28,0],[.55,-.30],[-1.45,-.72],[-1.82,0],[-1.45,.72],[.55,.30]]
 		"manta": silhouette=[[2.22,0],[.88,-.31],[.28,-.72],[-.56,-1.48],[-1.66,-1.36],[-1.34,-.62],[-1.72,0],[-1.34,.62],[-1.66,1.36],[-.56,1.48],[.28,.72],[.88,.31]]
 	canvas.draw_set_transform(at+Vector2(5.,10.),angle,Vector2.ONE*radius)
-	_poly(canvas,silhouette,Color("030917",opacity*.2))
+	_plated(canvas,silhouette,Color("030917",opacity*.2))
 	canvas.draw_set_transform(at+Vector2(0.,5.),angle,Vector2.ONE*radius)
-	_poly(canvas,silhouette,Color("3c4d67",opacity))
+	_plated(canvas,silhouette,Color("3c4d67",opacity))
 	canvas.draw_set_transform(at,angle,Vector2.ONE*radius)
 	# Dark extrusion is offset consistently so the silhouette reads as plated metal.
 	match ship_id:
 		"swift":
-			_poly(canvas,[[-1.9,-1.48],[-.15,-.72],[1.9,0],[-.15,.72],[-1.9,1.48],[-1.12,.25],[-1.12,-.25]],Color(INK,opacity))
+			_plated(canvas,[[-1.9,-1.48],[-.15,-.72],[1.9,0],[-.15,.72],[-1.9,1.48],[-1.12,.25],[-1.12,-.25]],Color(INK,opacity))
 			for side in [-1.,1.]:
-				_poly(canvas,[[-1.85,side*1.42],[.25,side*.55],[.55,side*.31],[-1.12,side*.30]],Color(SIDE,opacity))
-				_poly(canvas,[[-1.68,side*1.26],[.18,side*.55],[-.40,side*.54],[-1.28,side*.66]],Color(HULL,opacity))
+				_plated(canvas,[[-1.85,side*1.42],[.25,side*.55],[.55,side*.31],[-1.12,side*.30]],Color(SIDE,opacity))
+				_plated(canvas,[[-1.68,side*1.26],[.18,side*.55],[-.40,side*.54],[-1.28,side*.66]],Color(HULL,opacity))
 				canvas.draw_line(Vector2(-1.65,side*1.23),Vector2(-.30,side*.66),Color(accent,opacity),.10,true)
 				_engine(canvas,Vector2(-.95,side*.43),Color(accent,opacity),pulse,.75)
-			_poly(canvas,[[1.97,0],[.25,-.36],[-1.22,-.25],[-1.22,.25],[.25,.36]],Color(HULL,opacity))
-			_poly(canvas,[[1.9,0],[.2,.18],[-1.16,.18],[-1.16,.3],[.25,.36]],Color(SIDE,opacity))
+			_plated(canvas,[[1.97,0],[.25,-.36],[-1.22,-.25],[-1.22,.25],[.25,.36]],Color(HULL,opacity))
+			_plated(canvas,[[1.9,0],[.2,.18],[-1.16,.18],[-1.16,.3],[.25,.36]],Color(SIDE,opacity))
 		"bastion":
-			_poly(canvas,[[1.35,-1.35],[1.72,-.7],[1.52,.88],[.55,1.5],[-1.42,1.4],[-1.7,.65],[-1.7,-.65],[-1.42,-1.4]],Color(INK,opacity))
+			_plated(canvas,[[1.35,-1.35],[1.72,-.7],[1.52,.88],[.55,1.5],[-1.42,1.4],[-1.7,.65],[-1.7,-.65],[-1.42,-1.4]],Color(INK,opacity))
 			for side in [-1.,1.]:
-				_poly(canvas,[[-1.4,side*.58],[-1.12,side*1.32],[.73,side*1.32],[1.18,side*.8],[.65,side*.52]],Color(SIDE,opacity))
-				_poly(canvas,[[-1.25,side*.62],[-.98,side*1.14],[.62,side*1.14],[.91,side*.82],[.46,side*.64]],Color(HULL,opacity))
+				_plated(canvas,[[-1.4,side*.58],[-1.12,side*1.32],[.73,side*1.32],[1.18,side*.8],[.65,side*.52]],Color(SIDE,opacity))
+				_plated(canvas,[[-1.25,side*.62],[-.98,side*1.14],[.62,side*1.14],[.91,side*.82],[.46,side*.64]],Color(HULL,opacity))
 				canvas.draw_line(Vector2(-.84,side*1.02),Vector2(.48,side*1.02),Color(accent,opacity),.105,true)
 				canvas.draw_rect(Rect2(Vector2(.38,side*.83-.10),Vector2(1.30,.20)),Color(SHADE,opacity))
 				canvas.draw_rect(Rect2(Vector2(.49,side*.83-.065),Vector2(1.25,.13)),Color(HULL,opacity))
 				canvas.draw_line(Vector2(1.74,side*.83-.10),Vector2(1.74,side*.83+.10),Color(accent,opacity),.10,true)
 				_engine(canvas,Vector2(-1.18,side*.93),Color(accent,opacity),pulse,.45)
-			_poly(canvas,[[1.18,-.57],[1.44,0],[1.18,.57],[-.98,.69],[-1.28,.33],[-1.28,-.33],[-.98,-.69]],Color(HULL,opacity))
+			_plated(canvas,[[1.18,-.57],[1.44,0],[1.18,.57],[-.98,.69],[-1.28,.33],[-1.28,-.33],[-.98,-.69]],Color(HULL,opacity))
 			_engine(canvas,Vector2(-1.20,0),Color(accent,opacity),pulse,.55)
 		"sabre":
 			# Two long blade rails and a narrow fuselage create a sword-like
 			# interceptor silhouette that stays distinct at gameplay scale.
-			_poly(canvas,[[2.28,0],[.55,-.30],[-1.45,-.72],[-1.82,0],[-1.45,.72],[.55,.30]],Color(INK,opacity))
+			_plated(canvas,[[2.28,0],[.55,-.30],[-1.45,-.72],[-1.82,0],[-1.45,.72],[.55,.30]],Color(INK,opacity))
 			for side in [-1.,1.]:
-				_poly(canvas,[[2.03,side*.12],[.28,side*.65],[-1.42,side*1.10],[-1.13,side*.34],[.13,side*.20]],Color(SIDE,opacity))
-				_poly(canvas,[[1.90,side*.10],[.45,side*.49],[-1.18,side*.86],[-1.02,side*.42],[.16,side*.26]],Color(HULL,opacity))
+				_plated(canvas,[[2.03,side*.12],[.28,side*.65],[-1.42,side*1.10],[-1.13,side*.34],[.13,side*.20]],Color(SIDE,opacity))
+				_plated(canvas,[[1.90,side*.10],[.45,side*.49],[-1.18,side*.86],[-1.02,side*.42],[.16,side*.26]],Color(HULL,opacity))
 				canvas.draw_line(Vector2(1.72,side*.12),Vector2(-1.02,side*.69),Color(accent,opacity*.92),.075,true)
 				canvas.draw_line(Vector2(1.67,side*.09),Vector2(-.86,side*.60),Color(Color.WHITE,opacity*.55),.024,true)
 				_engine(canvas,Vector2(-1.38,side*.43),Color(accent,opacity),pulse,.70)
-			_poly(canvas,[[2.30,0],[.78,-.18],[-1.02,0],[.78,.18]],Color(HULL,opacity))
-			_poly(canvas,[[1.58,0],[.48,.18],[-.95,.20],[-.45,0]],Color(SIDE,opacity))
+			_plated(canvas,[[2.30,0],[.78,-.18],[-1.02,0],[.78,.18]],Color(HULL,opacity))
+			_plated(canvas,[[1.58,0],[.48,.18],[-.95,.20],[-.45,0]],Color(SIDE,opacity))
 		"manta":
 			# Broad manta wings carry two drone rotors and three tail emitters.
-			_poly(canvas,[[2.22,0],[.88,-.31],[.28,-.72],[-.56,-1.48],[-1.66,-1.36],[-1.34,-.62],[-1.72,0],[-1.34,.62],[-1.66,1.36],[-.56,1.48],[.28,.72],[.88,.31]],Color(INK,opacity))
+			_plated(canvas,[[2.22,0],[.88,-.31],[.28,-.72],[-.56,-1.48],[-1.66,-1.36],[-1.34,-.62],[-1.72,0],[-1.34,.62],[-1.66,1.36],[-.56,1.48],[.28,.72],[.88,.31]],Color(INK,opacity))
 			for side in [-1.,1.]:
-				_poly(canvas,[[1.78,side*.12],[.44,side*.68],[-.56,side*1.30],[-1.48,side*1.18],[-1.13,side*.54],[-.28,side*.30]],Color(SIDE,opacity))
-				_poly(canvas,[[1.60,side*.13],[.50,side*.52],[-.48,side*1.08],[-1.19,side*1.01],[-.95,side*.55],[-.21,side*.40]],Color(HULL,opacity))
-				_poly(canvas,[[.24,side*.45],[-.50,side*1.08],[-1.19,side*1.01],[-.83,side*.55]],Color(SHADE,opacity*.74))
+				_plated(canvas,[[1.78,side*.12],[.44,side*.68],[-.56,side*1.30],[-1.48,side*1.18],[-1.13,side*.54],[-.28,side*.30]],Color(SIDE,opacity))
+				_plated(canvas,[[1.60,side*.13],[.50,side*.52],[-.48,side*1.08],[-1.19,side*1.01],[-.95,side*.55],[-.21,side*.40]],Color(HULL,opacity))
+				_plated(canvas,[[.24,side*.45],[-.50,side*1.08],[-1.19,side*1.01],[-.83,side*.55]],Color(SHADE,opacity*.74))
 				canvas.draw_line(Vector2(1.34,side*.15),Vector2(-.94,side*.88),Color(accent,opacity*.88),.075,true)
 				_engine(canvas,Vector2(-1.18,side*.90),Color(accent,opacity),pulse,.66)
 				_engine(canvas,Vector2(-1.02,side*.37),Color(accent,opacity),pulse,.44)
-			_poly(canvas,[[2.23,0],[.88,-.26],[-.72,-.42],[-1.33,0],[-.72,.42],[.88,.26]],Color(HULL,opacity))
-			_poly(canvas,[[2.23,0],[.88,.26],[-.72,.42],[-1.33,0],[-.65,.18],[.80,.16]],Color(SIDE,opacity))
+			_plated(canvas,[[2.23,0],[.88,-.26],[-.72,-.42],[-1.33,0],[-.72,.42],[.88,.26]],Color(HULL,opacity))
+			_plated(canvas,[[2.23,0],[.88,.26],[-.72,.42],[-1.33,0],[-.65,.18],[.80,.16]],Color(SIDE,opacity))
 			for side in [-1.,1.]:
 				canvas.draw_line(Vector2(-.30,side*.35),Vector2(-.30,side*.66),Color(DARK,opacity*.68),.046,true)
 		_:
-			_poly(canvas,[[1.77,0],[.73,-.72],[-.18,-.9],[-.75,-1.25],[-1.45,-1.13],[-1.18,-.42],[-1.42,0],[-1.18,.42],[-1.45,1.13],[-.75,1.25],[-.18,.9],[.73,.72]],Color(INK,opacity))
+			_plated(canvas,[[1.77,0],[.73,-.72],[-.18,-.9],[-.75,-1.25],[-1.45,-1.13],[-1.18,-.42],[-1.42,0],[-1.18,.42],[-1.45,1.13],[-.75,1.25],[-.18,.9],[.73,.72]],Color(INK,opacity))
 			for side in [-1.,1.]:
-				_poly(canvas,[[-1.31,side*1.01],[-.83,side*1.12],[.55,side*.54],[-.25,side*.33]],Color(SIDE,opacity))
-				_poly(canvas,[[-1.18,side*.91],[-.81,side*.98],[.35,side*.54],[-.29,side*.47]],Color(HULL,opacity))
+				_plated(canvas,[[-1.31,side*1.01],[-.83,side*1.12],[.55,side*.54],[-.25,side*.33]],Color(SIDE,opacity))
+				_plated(canvas,[[-1.18,side*.91],[-.81,side*.98],[.35,side*.54],[-.29,side*.47]],Color(HULL,opacity))
 				canvas.draw_line(Vector2(-.94,side*.88),Vector2(-.19,side*.59),Color(accent,opacity),.10,true)
 				_engine(canvas,Vector2(-.87,side*.73),Color(accent,opacity),pulse,.48)
-			_poly(canvas,[[1.68,0],[.65,-.47],[-.94,-.48],[-1.21,0],[-.94,.48],[.65,.47]],Color(HULL,opacity))
-			_poly(canvas,[[1.68,0],[.65,.47],[-.94,.48],[-1.21,0],[-.65,.20],[.60,.23]],Color(SIDE,opacity))
+			_plated(canvas,[[1.68,0],[.65,-.47],[-.94,-.48],[-1.21,0],[-.94,.48],[.65,.47]],Color(HULL,opacity))
+			_plated(canvas,[[1.68,0],[.65,.47],[-.94,.48],[-1.21,0],[-.65,.20],[.60,.23]],Color(SIDE,opacity))
 	# Shared white hexagonal reactor is present on every spacecraft.
 	_hex(canvas,Vector2.ZERO,.68,Color(INK,opacity))
 	_hex(canvas,Vector2(-.02,-.035),.57,Color(HULL,opacity))
@@ -228,8 +266,8 @@ static func draw_ship(canvas: CanvasItem,at: Vector2,radius: float,angle: float,
 
 static func draw_enemy(canvas: CanvasItem,at: Vector2,radius: float,angle: float,kind: String,flash: float=0.,pulse: float=0.) -> void:
 	canvas.draw_set_transform(at,angle,Vector2.ONE*radius)
-	var plate=Color("a9b6cd").lerp(Color.WHITE,clampf(flash*11.,0,1))
-	var dark=Color("28364c").lerp(Color("c5d8ed"),clampf(flash*6.,0,1))
+	var plate=Color("cbd5c9").lerp(Color.WHITE,clampf(flash*11.,0,1))
+	var dark=Color("314e52").lerp(Color("c5d8ed"),clampf(flash*6.,0,1))
 	var red=Color("ff7d9f"); var brass=Color("c3a278")
 	match kind:
 		"dart":

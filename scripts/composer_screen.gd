@@ -1,4 +1,5 @@
 extends Control
+const SKIN=preload("res://scripts/visual_theme.gd")
 ## Piano-roll editor. All audible playback and file operations use game callbacks;
 ## the drawing never advances the score or emits a combat attack.
 const DATA=preload("res://scripts/arsenal_catalog.gd")
@@ -168,7 +169,7 @@ class PianoRoll:
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT); mouse_filter=Control.MOUSE_FILTER_STOP
 	var font=SystemFont.new(); font.font_names=PackedStringArray(["Microsoft YaHei UI","Noto Sans CJK SC","Arial"])
-	var t=Theme.new(); t.default_font=font; t.default_font_size=18; theme=t
+	var t=Theme.new(); t.default_font=font; t.default_font_size=18; SKIN.apply(t);theme=t
 	resized.connect(_queue_refresh); refresh()
 func score(): return game.composer_score
 func current_track() -> Dictionary:
@@ -176,14 +177,13 @@ func current_track() -> Dictionary:
 	return score().tracks[clampi(track_index,0,score().tracks.size()-1)]
 static func pitch_name(pitch: int) -> String: return str(PITCH_NAMES[posmod(pitch,12)])+str(floori(float(pitch)/12.)-1)
 func _label(value: String,size_value: int=18,color: Color=Color("a7bed4")) -> Label:
-	var n=Label.new(); n.text=value; n.mouse_filter=Control.MOUSE_FILTER_IGNORE; n.add_theme_font_size_override("font_size",size_value); n.add_theme_color_override("font_color",color); return n
+	var n=Label.new(); n.text=value; n.mouse_filter=Control.MOUSE_FILTER_IGNORE; n.add_theme_font_size_override("font_size",size_value); n.add_theme_color_override("font_color",SKIN.text(color)); return n
 func _box(color: Color,border: Color=Color("23384e"),margin: int=14) -> StyleBoxFlat:
-	var s=StyleBoxFlat.new(); s.bg_color=color; s.border_color=border; s.set_border_width_all(1); s.set_corner_radius_all(7)
-	s.content_margin_left=margin; s.content_margin_right=margin; s.content_margin_top=margin; s.content_margin_bottom=margin; return s
+	return SKIN.panel(color,border,5,margin)
 func _button(value: String,callback: Callable,name_value: String="",color: Color=Color("82ddd5")) -> Button:
 	var n=Button.new(); n.text=value; n.name=name_value if not name_value.is_empty() else value; n.focus_mode=Control.FOCUS_NONE; n.custom_minimum_size=Vector2(88,40)
 	for state_name in ["normal","hover","pressed"]: n.add_theme_stylebox_override(state_name,_box(Color("112132") if state_name=="normal" else Color("253e51"),Color(color,.35 if state_name=="normal" else .8),9))
-	n.add_theme_color_override("font_color",color); n.pressed.connect(callback); return n
+	n.add_theme_color_override("font_color",SKIN.text(color)); n.pressed.connect(callback); return n
 func _spin(value: float,minimum: float,maximum: float,step: float,callback: Callable,name_value: String="") -> SpinBox:
 	var n=SpinBox.new()
 	if not name_value.is_empty(): n.name=name_value

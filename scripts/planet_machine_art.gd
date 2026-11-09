@@ -13,7 +13,9 @@ static func sector(canvas: CanvasItem,inner: float,outer: float,a: float,b: floa
 static func plate(canvas: CanvasItem,at: Vector2,dimensions: Vector2,angle: float,accent: Color,pulse: float) -> void:
 	var axis=Vector2.from_angle(angle); var side=axis.orthogonal()
 	var shape=PackedVector2Array([at-axis*dimensions.x-side*dimensions.y,at+axis*dimensions.x-side*dimensions.y*.68,at+axis*(dimensions.x+.09),at+axis*dimensions.x+side*dimensions.y*.68,at-axis*dimensions.x+side*dimensions.y])
-	canvas.draw_colored_polygon(shape,Color("101925"))
+	var coordinates: Array=[]
+	for point in shape:coordinates.append([point.x,point.y])
+	ART._plated(canvas,coordinates,Color("536d6e"))
 	ART._edge(canvas,shape,Color("687b8d"),.035)
 	canvas.draw_line(at-axis*dimensions.x*.8-side*dimensions.y*.6,at+axis*dimensions.x*.7-side*dimensions.y*.5,Color("b4c4ce"),.028,true)
 	canvas.draw_line(at-axis*dimensions.x*.6+side*dimensions.y*.45,at+axis*dimensions.x*.4+side*dimensions.y*.4,Color(accent,.75),.035,true)
@@ -21,6 +23,10 @@ static func plate(canvas: CanvasItem,at: Vector2,dimensions: Vector2,angle: floa
 		var vent=at+axis*(j-1)*dimensions.x*.35
 		canvas.draw_line(vent-side*dimensions.y*.30,vent+side*dimensions.y*.30,Color("030a12"),.06,true)
 	canvas.draw_circle(at+axis*(dimensions.x*.75),.07,Color(accent,.20+pulse*.25))
+	for sign_value in [-1.,1.]:
+		var fastener=at-axis*dimensions.x*.70+sign_value*dimensions.y*.62*axis.orthogonal()
+		canvas.draw_circle(fastener,.035,Color("101e25"))
+		canvas.draw_line(fastener+Vector2(-.018,0),fastener+Vector2(.018,0),Color("b5c5bc"),.014,true)
 
 static func draw(canvas: CanvasItem,enemy: Dictionary,style: int,time: float,pulse: float) -> void:
 	var radius=float(enemy.radius); var at: Vector2=enemy.at

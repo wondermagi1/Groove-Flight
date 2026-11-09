@@ -1,0 +1,82 @@
+{
+  "source": "E:/\u5b89\u6cca\u5c1457\u5929\u738b.mp4",
+  "method": "crop gameplay central battlefield;HSV mask excludes bright shots/black/UI;RGB percentiles,not copied artwork",
+  "frames": [
+    {
+      "seconds": 250,
+      "background_pixels": 81160,
+      "median_rgb": [
+        52.0,
+        102.0,
+        96.0
+      ],
+      "p20_rgb": [
+        27.0,
+        74.0,
+        68.0
+      ],
+      "p80_rgb": [
+        76.0,
+        120.0,
+        116.0
+      ]
+    },
+    {
+      "seconds": 438,
+      "background_pixels": 63216,
+      "median_rgb": [
+        28.0,
+        80.0,
+        69.0
+      ],
+      "p20_rgb": [
+        9.0,
+        47.0,
+        40.0
+      ],
+      "p80_rgb": [
+        55.0,
+        105.0,
+        97.0
+      ]
+    },
+    {
+      "seconds": 515,
+      "background_pixels": 65639,
+      "median_rgb": [
+        23.0,
+        84.0,
+        74.0
+      ],
+      "p20_rgb": [
+        11.0,
+        44.0,
+        39.0
+      ],
+      "p80_rgb": [
+        40.0,
+        98.0,
+        90.0
+      ]
+    },
+    {
+      "seconds": 610,
+      "background_pixels": 72225,
+      "median_rgb": [
+        25.0,
+        83.0,
+        75.0
+      ],
+      "p20_rgb": [
+        12.0,
+        53.0,
+        48.0
+      ],
+      "p80_rgb": [
+        42.0,
+        101.0,
+        90.0
+      ]
+    }
+  ]
+}

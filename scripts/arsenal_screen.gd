@@ -1,4 +1,5 @@
 extends Control
+const SKIN=preload("res://scripts/visual_theme.gd")
 ## Three shared presentations of the same loadout. Combat only inspects; editor
 ## and shop route every inventory transaction through the game's validated API.
 const DATA = preload("res://scripts/arsenal_catalog.gd")
@@ -98,6 +99,9 @@ class ModuleCard:
 		var row: Dictionary = DATA.item(item_id)
 		if row.is_empty(): return
 		var accent: Color = DATA.quality_color(row,item_level)
+		if not flight_compact:
+			draw_line(Vector2(1,7),Vector2(1,size.y-7),Color(accent,.70),2.,true)
+			draw_line(Vector2(10,32),Vector2(size.x-10,32),Color(accent,.13),1.,true)
 		if flight_compact:
 			ART.draw_icon(self, Rect2(Vector2(8, 1), Vector2(size.x - 16, size.y - 4)), item_id)
 			if item_level > 1:
@@ -177,6 +181,7 @@ func _ready() -> void:
 	var theme_value := Theme.new()
 	theme_value.default_font = font
 	theme_value.default_font_size = 20
+	SKIN.apply(theme_value)
 	theme = theme_value
 	resized.connect(_queue_rebuild)
 	refresh()
@@ -185,23 +190,13 @@ func editable() -> bool:
 	return game != null and mode != "combat" and game.can_edit()
 
 func _box(color: Color, border: Color = Color("263242"), radius: int = 7, margin: int = 14) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = color
-	style.border_color = border
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(radius)
-	style.content_margin_left = margin
-	style.content_margin_right = margin
-	style.content_margin_top = margin
-	style.content_margin_bottom = margin
-	return style
-
+	return SKIN.panel(color,border,radius,margin)
 func _label(text_value: String, text_size: int = 19, color: Color = Color("c8d3e4")) -> Label:
 	var node := Label.new()
 	node.text = text_value
 	node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	node.add_theme_font_size_override("font_size",roundi(text_size*float(game.settings.get("text_scale",1.))))
-	node.add_theme_color_override("font_color", color)
+	node.add_theme_color_override("font_color", SKIN.text(color))
 	return node
 
 func _button(text_value: String, callback: Callable, accent: Color = Color("83dfd7"), height: float = 38.0) -> Button:
@@ -265,7 +260,7 @@ func refresh() -> void:
 	if mode != "combat":
 		var shade := ColorRect.new()
 		shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		shade.color = Color(0.015, 0.025, 0.045, 0.92)
+		shade.color = Color(SKIN.VOID,0.96)
 		shade.mouse_filter = Control.MOUSE_FILTER_STOP
 		content.add_child(shade)
 	_build_top(view)
@@ -305,7 +300,9 @@ func _panel(rect: Rect2, title_value: String, subtitle: String = "") -> VBoxCont
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override("separation", 10)
 	panel.add_child(column)
-	column.add_child(_label(title_value, 21, Color("e0e9f5")))
+	var header=HBoxContainer.new();header.add_theme_constant_override("separation",9);column.add_child(header)
+	var marker=ColorRect.new();marker.color=SKIN.GOLD;marker.custom_minimum_size=Vector2(3,20);header.add_child(marker)
+	header.add_child(_label(title_value,21,SKIN.TEXT))
 	if not subtitle.is_empty(): column.add_child(_label(subtitle, 15, Color("7d91ab")))
 	return column
 

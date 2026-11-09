@@ -1,0 +1,28 @@
+{
+  "baseline": "059ceb2ebc096766db743fcf0a0abc63f26796a1",
+  "old_wavs_verified": 288,
+  "unchanged_weapon_profiles": 24,
+  "unchanged_files": [
+    "scripts/main.gd",
+    "scripts/arsenal_loadout.gd",
+    "scripts/arsenal_catalog.gd",
+    "scripts/combat_doctrines.gd",
+    "scripts/fleet_catalog.gd",
+    "scripts/run_balance.gd",
+    "scripts/enemy_maneuver.gd",
+    "scripts/enemy_arrival.gd",
+    "scripts/projectile_fields.gd",
+    "scripts/weapon_emission.gd",
+    "scripts/weapon_visuals.gd",
+    "scripts/weapon_render.gd",
+    "scripts/energy_arsenal.gd",
+    "scripts/energy_growth.gd",
+    "scripts/music.gd",
+    "scripts/salvo_patterns.gd",
+    "native/crowd/crowd.cpp",
+    "native/crowd/crowd.gdextension",
+    "native/crowd/groove_crowd.windows.x86_64.dll"
+  ],
+  "comparison": "WAV/DLL raw SHA/bytes;source content normalized to Git LF line endings",
+  "failures": []
+}

@@ -1,4 +1,5 @@
 extends Control
+const SKIN=preload("res://scripts/visual_theme.gd")
 ## An independent miniature 3D solar model. Selection changes the actual route;
 ## orbit animation is decorative and never drives campaign progress.
 const DATA=preload("res://scripts/planet_catalog.gd")
@@ -41,7 +42,7 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter=Control.MOUSE_FILTER_STOP
 	var font=SystemFont.new(); font.font_names=PackedStringArray(["Microsoft YaHei UI","Noto Sans CJK SC","Arial"])
-	var theme_value=Theme.new(); theme_value.default_font=font; theme_value.default_font_size=20; theme=theme_value
+	var theme_value=Theme.new(); theme_value.default_font=font; theme_value.default_font_size=20; SKIN.apply(theme_value);theme=theme_value
 	var background=ColorRect.new(); background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	background.color=Color("030711"); background.mouse_filter=Control.MOUSE_FILTER_IGNORE; add_child(background)
 	_build_world(); _build_interface()
@@ -50,13 +51,10 @@ func _ready() -> void:
 	_update_projected_labels()
 
 func _box(color: Color,border: Color=Color("26364d"),margin: int=16) -> StyleBoxFlat:
-	var style=StyleBoxFlat.new(); style.bg_color=color; style.border_color=border
-	style.set_border_width_all(1); style.set_corner_radius_all(8)
-	style.content_margin_left=margin; style.content_margin_right=margin; style.content_margin_top=margin; style.content_margin_bottom=margin
-	return style
+	return SKIN.panel(color,border,5,margin)
 func _label(value: String,font_size: int=20,color: Color=Color("dceaf6")) -> Label:
 	var node=Label.new(); node.text=value; node.add_theme_font_size_override("font_size",font_size)
-	node.add_theme_color_override("font_color",color); node.mouse_filter=Control.MOUSE_FILTER_IGNORE; return node
+	node.add_theme_color_override("font_color",SKIN.text(color)); node.mouse_filter=Control.MOUSE_FILTER_IGNORE; return node
 func _button(value: String,callback: Callable,accent: Color=Color("87dbe5")) -> Button:
 	var node=Button.new(); node.text=value; node.focus_mode=Control.FOCUS_NONE
 	node.mouse_default_cursor_shape=Control.CURSOR_POINTING_HAND
