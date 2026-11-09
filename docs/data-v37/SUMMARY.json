@@ -1,0 +1,86 @@
+{
+  "version": "0.37.0-sustained-salvo-voices",
+  "date": "2026-11-09",
+  "backup_branch": "codex/backup-20261109-before-long-salvo-voices",
+  "backup_sha": "31ed97e63caacf71d1ff5403840552663857afa2",
+  "checks": 793,
+  "failures": 0,
+  "reports": [
+    {
+      "report": "results-v36-weapon-expression.json",
+      "checks": 280,
+      "failures": 0
+    },
+    {
+      "report": "results-v34-weapon-sync.json",
+      "checks": 85,
+      "failures": 0
+    },
+    {
+      "report": "results-v32-starter-layout.json",
+      "checks": 75,
+      "failures": 0
+    },
+    {
+      "report": "results-weapon-cycle.json",
+      "checks": 216,
+      "failures": 0
+    },
+    {
+      "report": "results-composer-score.json",
+      "checks": 112,
+      "failures": 0
+    },
+    {
+      "report": "results-v35-audio-upgrade.json",
+      "checks": 25,
+      "failures": 0
+    }
+  ],
+  "starter_layout": [
+    {
+      "kind": "pulse",
+      "slot": 2
+    },
+    {
+      "kind": "rail",
+      "slot": 11
+    },
+    {
+      "kind": "firefly_rain",
+      "slot": 21
+    }
+  ],
+  "changed_performance_layers": 20,
+  "unchanged_performance_layers": 56,
+  "unchanged_composer_pitch_samples": 152,
+  "sustain_measurement": "sustain-review.json",
+  "effective_onset_increase_db": 3,
+  "new_voice_length_seconds": [
+    2.2189569160997733,
+    3.219455782312925
+  ],
+  "native_source_and_import_pcm_verified": 76,
+  "starter_audio": {
+    "seconds": 18,
+    "peak": 0.176544189453125,
+    "rms_dbfs": -34.52468745021329
+  },
+  "unchanged_files_sha256": {
+    "scripts/composer_score.gd": "169e95bbc1314ea45a0f0c461ca2025114060d6ec67d74c1f5fb59cc85e754e5",
+    "scripts/composer_player.gd": "2f3aca80785fd0991de659664a903a77d1a45cc3596f07c76a53abc79146f344",
+    "scripts/weapon_visuals.gd": "dcf0c22cddd469288c0c89125e4a1967324c00c5b31d294846a5dd5653a252e1",
+    "scripts/weapon_emission.gd": "3bb606ab6f8abd9b1bff12a2e50084e343444f5983dcebe25a86298eacc0c372",
+    "scripts/contact_swarm.gd": "4aad354861629b90b0d2785fed516322309004ea1ecb0273e6832d2ab79e2c01",
+    "scripts/enemy_maneuver.gd": "33ca942f0ce7db8116200ca41e6095b9c2e1aba6f75ae92187ca28dccd27ea9c",
+    "scripts/audio_controls.gd": "0f1a1ce49d23bc1a3d2ad6f47c9a473c632ac9846f74c9d93be003728c20298e",
+    "scripts/event_mixer.gd": "252b2314a5756a7d7a4b047d904914bbde6c86081613c0e26ef80b0b700444c9",
+    "native/crowd/groove_crowd.windows.x86_64.dll": "0046a79a8dd2eb63f7c13ea4d3e20720651b851aaa71892902701077c3c2c84e",
+    "audio/instruments/MANIFEST.json": "ecfa742c6e75e57746d66c3f1788b873ce011b739f4f20e3a582e1a2278e3c0e",
+    "audio/instruments/CHAMBER_PALETTE.json": "3a38fad8062a9eaf581e0fccd2cc01a07594af2b7186845ad4c18160f1bde08c",
+    "audio/authorized/feedback/shield_impact.wav": "7fa70ca0d184772a7089048252ea651bfad630280ef3c1b5874b6cd944ee9fb2",
+    "audio/authorized/feedback/kill_low_strong.wav": "7d396a080eee88161e4c724e4980736bc1a4be970b01e9708b0d1ec60e5c2716",
+    "audio/authorized/feedback/pickup_coin.wav": "cb11675ea2078cdaae6bd34d3e0626e8b3a05b71d0a827625f1b0787deeb3b46"
+  },
+  "limits": "Controlled starter,source-energy,PCM/resource,clock/native-wrap/composer/mix checks. Acoustic samples,not human vocal recordings. Subjective long-note satisfaction needs user audition;no full campaign balance or sustained FPS certification."
+}

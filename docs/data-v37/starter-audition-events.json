@@ -1,0 +1,159 @@
+{
+	"notes": [
+		{
+			"at": 0.375,
+			"gain": 0.85,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_0",
+			"strength": 0
+		},
+		{
+			"at": 1.875,
+			"gain": 0.85,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_1",
+			"strength": 1
+		},
+		{
+			"at": 2.0625,
+			"gain": 0.802451744843035,
+			"kind": "rail",
+			"sample_key": "dyn_rail_1",
+			"strength": 1
+		},
+		{
+			"at": 3.375,
+			"gain": 0.85,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_2",
+			"strength": 2
+		},
+		{
+			"at": 3.9375,
+			"gain": 0.802451744843035,
+			"kind": "firefly_rain",
+			"sample_key": "dyn_firefly_rain_2",
+			"strength": 2
+		},
+		{
+			"at": 4.875,
+			"gain": 0.85,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_3",
+			"strength": 3
+		},
+		{
+			"at": 5.0625,
+			"gain": 0.802451744843035,
+			"kind": "rail",
+			"sample_key": "dyn_rail_2",
+			"strength": 2
+		},
+		{
+			"at": 6.375,
+			"gain": 0.85,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_0",
+			"strength": 0
+		},
+		{
+			"at": 7.875,
+			"gain": 0.85,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_1",
+			"strength": 1
+		},
+		{
+			"at": 8.0625,
+			"gain": 0.802451744843035,
+			"kind": "rail",
+			"sample_key": "dyn_rail_1",
+			"strength": 1
+		},
+		{
+			"at": 8.4375,
+			"gain": 0.802451744843035,
+			"kind": "firefly_rain",
+			"sample_key": "dyn_firefly_rain_3",
+			"strength": 3
+		},
+		{
+			"at": 9.375,
+			"gain": 0.85,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_2",
+			"strength": 2
+		},
+		{
+			"at": 10.875,
+			"gain": 0.85,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_3",
+			"strength": 3
+		},
+		{
+			"at": 11.0625,
+			"gain": 0.802451744843035,
+			"kind": "rail",
+			"sample_key": "dyn_rail_2",
+			"strength": 2
+		},
+		{
+			"at": 12.375,
+			"gain": 0.85,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_0",
+			"strength": 0
+		},
+		{
+			"at": 12.9375,
+			"gain": 0.802451744843035,
+			"kind": "firefly_rain",
+			"sample_key": "dyn_firefly_rain_2",
+			"strength": 2
+		},
+		{
+			"at": 13.875,
+			"gain": 0.85,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_1",
+			"strength": 1
+		},
+		{
+			"at": 14.0625,
+			"gain": 0.802451744843035,
+			"kind": "rail",
+			"sample_key": "dyn_rail_1",
+			"strength": 1
+		},
+		{
+			"at": 15.375,
+			"gain": 0.85,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_2",
+			"strength": 2
+		},
+		{
+			"at": 16.875,
+			"gain": 0.85,
+			"kind": "pulse",
+			"sample_key": "dyn_pulse_3",
+			"strength": 3
+		},
+		{
+			"at": 17.0625,
+			"gain": 0.802451744843035,
+			"kind": "rail",
+			"sample_key": "dyn_rail_2",
+			"strength": 2
+		},
+		{
+			"at": 17.4375,
+			"gain": 0.802451744843035,
+			"kind": "firefly_rain",
+			"sample_key": "dyn_firefly_rain_3",
+			"strength": 3
+		}
+	],
+	"scope": "Actual production renderer,weapon-only18second starter clip;not live gameplay capture. PulseA3,railB4-B5,rainC6-C8. Fixed1.5second loop and real1/2/3round gates."
+}

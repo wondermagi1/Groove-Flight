@@ -1,0 +1,41 @@
+{
+  "scope": "Three acoustic examples,old then new,3.6s per sound. Onset300ms RMS matched;body/decay deliberately differ. Single-source offline timbre review,not captured gameplay.",
+  "timeline": [
+    {
+      "weapon": "scatter_prism",
+      "version": "before",
+      "start_seconds": 0.0,
+      "onset_rms": 0.045
+    },
+    {
+      "weapon": "scatter_prism",
+      "version": "after",
+      "start_seconds": 3.6,
+      "onset_rms": 0.045
+    },
+    {
+      "weapon": "tidal_weave",
+      "version": "before",
+      "start_seconds": 7.2,
+      "onset_rms": 0.045
+    },
+    {
+      "weapon": "tidal_weave",
+      "version": "after",
+      "start_seconds": 10.8,
+      "onset_rms": 0.045
+    },
+    {
+      "weapon": "firefly_rain",
+      "version": "before",
+      "start_seconds": 14.4,
+      "onset_rms": 0.045
+    },
+    {
+      "weapon": "firefly_rain",
+      "version": "after",
+      "start_seconds": 18.0,
+      "onset_rms": 0.045
+    }
+  ]
+}

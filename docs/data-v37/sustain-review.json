@@ -1,0 +1,458 @@
+{
+  "failures": [],
+  "changed_performance_layers": 20,
+  "preserved_performance_layers": 56,
+  "preserved_composer_pitch_samples": 152,
+  "scope": "Changed20strong/verystrong layers:exact hash/mono PCM,3dB effective attack increase,2.1–3.4s file duration,T95atleast20%later,nonzero600–1300ms held body,peak/root/click-free endpoints;56other layers and152pitch samples exact. Measurements do not certify subjective sound quality.",
+  "layers": [
+    {
+      "id": "nova",
+      "strength": 2,
+      "before": {
+        "seconds": 0.8428571428571429,
+        "t95_energy_seconds": 0.24426303854875284,
+        "onset_300ms_rms": 0.03407832271010741,
+        "body_600_1300ms_rms": null,
+        "peak": 0.1072998046875
+      },
+      "after": {
+        "seconds": 2.2847619047619045,
+        "t95_energy_seconds": 1.1006349206349206,
+        "onset_300ms_rms": 0.04290188175012543,
+        "body_600_1300ms_rms": 0.018003274711855734,
+        "peak": 0.121368408203125
+      },
+      "effective_onset_gain_db": 2.999962605635041,
+      "acoustic_sustain_layer": null
+    },
+    {
+      "id": "nova",
+      "strength": 3,
+      "before": {
+        "seconds": 0.8759637188208617,
+        "t95_energy_seconds": 0.25891156462585035,
+        "onset_300ms_rms": 0.04425763868629082,
+        "body_600_1300ms_rms": null,
+        "peak": 0.138671875
+      },
+      "after": {
+        "seconds": 2.5551473922902495,
+        "t95_energy_seconds": 1.2024489795918367,
+        "onset_300ms_rms": 0.05571689228873563,
+        "body_600_1300ms_rms": 0.02243372400803228,
+        "peak": 0.161407470703125
+      },
+      "effective_onset_gain_db": 2.9999729183471318,
+      "acoustic_sustain_layer": null
+    },
+    {
+      "id": "scatter_prism",
+      "strength": 2,
+      "before": {
+        "seconds": 0.7917460317460318,
+        "t95_energy_seconds": 0.22462585034013605,
+        "onset_300ms_rms": 0.03770973019301778,
+        "body_600_1300ms_rms": null,
+        "peak": 0.1109619140625
+      },
+      "after": {
+        "seconds": 2.5024489795918368,
+        "t95_energy_seconds": 1.2251700680272108,
+        "onset_300ms_rms": 0.04747373619519057,
+        "body_600_1300ms_rms": 0.023571016063662277,
+        "peak": 0.11541748046875
+      },
+      "effective_onset_gain_db": 2.9999997407975068,
+      "acoustic_sustain_layer": null
+    },
+    {
+      "id": "scatter_prism",
+      "strength": 3,
+      "before": {
+        "seconds": 0.8213605442176871,
+        "t95_energy_seconds": 0.23895691609977324,
+        "onset_300ms_rms": 0.04897366893258503,
+        "body_600_1300ms_rms": null,
+        "peak": 0.156219482421875
+      },
+      "after": {
+        "seconds": 2.7974603174603176,
+        "t95_energy_seconds": 1.3655328798185942,
+        "onset_300ms_rms": 0.06165417956250294,
+        "body_600_1300ms_rms": 0.02936370397765447,
+        "peak": 0.168212890625
+      },
+      "effective_onset_gain_db": 2.999997638060182,
+      "acoustic_sustain_layer": null
+    },
+    {
+      "id": "recorded_heavy",
+      "strength": 2,
+      "before": {
+        "seconds": 1.0279818594104309,
+        "t95_energy_seconds": 0.320453514739229,
+        "onset_300ms_rms": 0.037071172421776,
+        "body_600_1300ms_rms": null,
+        "peak": 0.1207275390625
+      },
+      "after": {
+        "seconds": 2.6434467120181404,
+        "t95_energy_seconds": 1.3092970521541951,
+        "onset_300ms_rms": 0.04666977206775441,
+        "body_600_1300ms_rms": 0.024860099635949238,
+        "peak": 0.142486572265625
+      },
+      "effective_onset_gain_db": 2.9999871695045304,
+      "acoustic_sustain_layer": null
+    },
+    {
+      "id": "recorded_heavy",
+      "strength": 3,
+      "before": {
+        "seconds": 1.067981859410431,
+        "t95_energy_seconds": 0.3434920634920635,
+        "onset_300ms_rms": 0.04814448143377889,
+        "body_600_1300ms_rms": null,
+        "peak": 0.166290283203125
+      },
+      "after": {
+        "seconds": 2.956462585034014,
+        "t95_energy_seconds": 1.488390022675737,
+        "onset_300ms_rms": 0.06061016349312451,
+        "body_600_1300ms_rms": 0.03245976452741166,
+        "peak": 0.20074462890625
+      },
+      "effective_onset_gain_db": 2.9999788447592284,
+      "acoustic_sustain_layer": null
+    },
+    {
+      "id": "gilded_helix",
+      "strength": 2,
+      "before": {
+        "seconds": 0.8943764172335601,
+        "t95_energy_seconds": 0.2492063492063492,
+        "onset_300ms_rms": 0.03456072325604439,
+        "body_600_1300ms_rms": null,
+        "peak": 0.11566162109375
+      },
+      "after": {
+        "seconds": 2.6439455782312926,
+        "t95_energy_seconds": 1.3733333333333333,
+        "onset_300ms_rms": 0.04350929740693161,
+        "body_600_1300ms_rms": 0.025675821345854808,
+        "peak": 0.130126953125
+      },
+      "effective_onset_gain_db": 2.9999849576521873,
+      "acoustic_sustain_layer": null
+    },
+    {
+      "id": "gilded_helix",
+      "strength": 3,
+      "before": {
+        "seconds": 0.9289795918367347,
+        "t95_energy_seconds": 0.2656689342403628,
+        "onset_300ms_rms": 0.04488407608417331,
+        "body_600_1300ms_rms": null,
+        "peak": 0.157257080078125
+      },
+      "after": {
+        "seconds": 2.9559637188208616,
+        "t95_energy_seconds": 1.5122902494331065,
+        "onset_300ms_rms": 0.056506010894184715,
+        "body_600_1300ms_rms": 0.03177463385897407,
+        "peak": 0.18206787109375
+      },
+      "effective_onset_gain_db": 3.0000471797693447,
+      "acoustic_sustain_layer": null
+    },
+    {
+      "id": "weave_cross",
+      "strength": 2,
+      "before": {
+        "seconds": 0.5039455782312925,
+        "t95_energy_seconds": 0.1493877551020408,
+        "onset_300ms_rms": 0.030635219600272733,
+        "body_600_1300ms_rms": null,
+        "peak": 0.11407470703125
+      },
+      "after": {
+        "seconds": 2.2189569160997733,
+        "t95_energy_seconds": 1.220045351473923,
+        "onset_300ms_rms": 0.03856757663862892,
+        "body_600_1300ms_rms": 0.02366178001816085,
+        "peak": 0.108184814453125
+      },
+      "effective_onset_gain_db": 3.000027067837659,
+      "acoustic_sustain_layer": {
+        "program": 40,
+        "root_midi": 72,
+        "mix": 0.58,
+        "onset_seconds": 0.06,
+        "fade_seconds": 0.22
+      }
+    },
+    {
+      "id": "weave_cross",
+      "strength": 3,
+      "before": {
+        "seconds": 0.5221315192743764,
+        "t95_energy_seconds": 0.15619047619047619,
+        "onset_300ms_rms": 0.03978598751899363,
+        "body_600_1300ms_rms": null,
+        "peak": 0.155426025390625
+      },
+      "after": {
+        "seconds": 2.480952380952381,
+        "t95_energy_seconds": 1.3932426303854875,
+        "onset_300ms_rms": 0.05008754897212507,
+        "body_600_1300ms_rms": 0.030972019527577038,
+        "peak": 0.154296875
+      },
+      "effective_onset_gain_db": 2.99999276015975,
+      "acoustic_sustain_layer": {
+        "program": 40,
+        "root_midi": 72,
+        "mix": 0.58,
+        "onset_seconds": 0.06,
+        "fade_seconds": 0.22
+      }
+    },
+    {
+      "id": "crown_orbit",
+      "strength": 2,
+      "before": {
+        "seconds": 0.8435827664399093,
+        "t95_energy_seconds": 0.528344671201814,
+        "onset_300ms_rms": 0.03810088727424891,
+        "body_600_1300ms_rms": null,
+        "peak": 0.163665771484375
+      },
+      "after": {
+        "seconds": 2.596916099773243,
+        "t95_energy_seconds": 1.3723809523809525,
+        "onset_300ms_rms": 0.04796602284536899,
+        "body_600_1300ms_rms": 0.040527252636427855,
+        "peak": 0.188079833984375
+      },
+      "effective_onset_gain_db": 2.9999724107610852,
+      "acoustic_sustain_layer": {
+        "program": 40,
+        "root_midi": 72,
+        "mix": 0.62,
+        "onset_seconds": 0.06,
+        "fade_seconds": 0.22
+      }
+    },
+    {
+      "id": "crown_orbit",
+      "strength": 3,
+      "before": {
+        "seconds": 0.8731519274376417,
+        "t95_energy_seconds": 0.5227210884353741,
+        "onset_300ms_rms": 0.04948148589384521,
+        "body_600_1300ms_rms": null,
+        "peak": 0.249664306640625
+      },
+      "after": {
+        "seconds": 2.9029931972789114,
+        "t95_energy_seconds": 1.5093877551020407,
+        "onset_300ms_rms": 0.06229376935291441,
+        "body_600_1300ms_rms": 0.05025146305888166,
+        "peak": 0.2886962890625
+      },
+      "effective_onset_gain_db": 3.0000375564122064,
+      "acoustic_sustain_layer": {
+        "program": 40,
+        "root_midi": 72,
+        "mix": 0.62,
+        "onset_seconds": 0.06,
+        "fade_seconds": 0.22
+      }
+    },
+    {
+      "id": "stern_fan",
+      "strength": 2,
+      "before": {
+        "seconds": 0.8847619047619047,
+        "t95_energy_seconds": 0.6385487528344671,
+        "onset_300ms_rms": 0.03715296745325139,
+        "body_600_1300ms_rms": null,
+        "peak": 0.072235107421875
+      },
+      "after": {
+        "seconds": 2.6444444444444444,
+        "t95_energy_seconds": 1.4013151927437641,
+        "onset_300ms_rms": 0.04677269101060476,
+        "body_600_1300ms_rms": 0.03966340549884986,
+        "peak": 0.13690185546875
+      },
+      "effective_onset_gain_db": 2.9999770024373964,
+      "acoustic_sustain_layer": {
+        "program": 41,
+        "root_midi": 60,
+        "mix": 0.58,
+        "onset_seconds": 0.06,
+        "fade_seconds": 0.22
+      }
+    },
+    {
+      "id": "stern_fan",
+      "strength": 3,
+      "before": {
+        "seconds": 0.9155555555555556,
+        "t95_energy_seconds": 0.6521995464852608,
+        "onset_300ms_rms": 0.048250426899574456,
+        "body_600_1300ms_rms": null,
+        "peak": 0.095703125
+      },
+      "after": {
+        "seconds": 2.95546485260771,
+        "t95_energy_seconds": 1.580045351473923,
+        "onset_300ms_rms": 0.06074385759625216,
+        "body_600_1300ms_rms": 0.05022307345696636,
+        "peak": 0.173583984375
+      },
+      "effective_onset_gain_db": 3.0000241717642195,
+      "acoustic_sustain_layer": {
+        "program": 41,
+        "root_midi": 60,
+        "mix": 0.58,
+        "onset_seconds": 0.06,
+        "fade_seconds": 0.22
+      }
+    },
+    {
+      "id": "dawn_fan",
+      "strength": 2,
+      "before": {
+        "seconds": 0.8843537414965986,
+        "t95_energy_seconds": 0.23120181405895693,
+        "onset_300ms_rms": 0.03949810539987001,
+        "body_600_1300ms_rms": null,
+        "peak": 0.1158447265625
+      },
+      "after": {
+        "seconds": 2.45546485260771,
+        "t95_energy_seconds": 1.186031746031746,
+        "onset_300ms_rms": 0.04972515984395664,
+        "body_600_1300ms_rms": 0.024674534733598194,
+        "peak": 0.123138427734375
+      },
+      "effective_onset_gain_db": 2.9999984695304898,
+      "acoustic_sustain_layer": null
+    },
+    {
+      "id": "dawn_fan",
+      "strength": 3,
+      "before": {
+        "seconds": 0.9171428571428571,
+        "t95_energy_seconds": 0.24621315192743765,
+        "onset_300ms_rms": 0.051296073070396825,
+        "body_600_1300ms_rms": null,
+        "peak": 0.16644287109375
+      },
+      "after": {
+        "seconds": 2.7444444444444445,
+        "t95_energy_seconds": 1.324580498866213,
+        "onset_300ms_rms": 0.0645781622550859,
+        "body_600_1300ms_rms": 0.030720605055102646,
+        "peak": 0.182891845703125
+      },
+      "effective_onset_gain_db": 3.000031250445959,
+      "acoustic_sustain_layer": null
+    },
+    {
+      "id": "tidal_weave",
+      "strength": 2,
+      "before": {
+        "seconds": 1.20984126984127,
+        "t95_energy_seconds": 0.37936507936507935,
+        "onset_300ms_rms": 0.036359991821890376,
+        "body_600_1300ms_rms": null,
+        "peak": 0.12725830078125
+      },
+      "after": {
+        "seconds": 2.6875283446712017,
+        "t95_energy_seconds": 1.6478458049886622,
+        "onset_300ms_rms": 0.0457746004109187,
+        "body_600_1300ms_rms": 0.06534410298226985,
+        "peak": 0.188262939453125
+      },
+      "effective_onset_gain_db": 3.0000156990239506,
+      "acoustic_sustain_layer": null
+    },
+    {
+      "id": "tidal_weave",
+      "strength": 3,
+      "before": {
+        "seconds": 1.265124716553288,
+        "t95_energy_seconds": 0.4035827664399093,
+        "onset_300ms_rms": 0.04722073454522665,
+        "body_600_1300ms_rms": null,
+        "peak": 0.164093017578125
+      },
+      "after": {
+        "seconds": 3.0104761904761905,
+        "t95_energy_seconds": 1.8542403628117914,
+        "onset_300ms_rms": 0.059447647933416004,
+        "body_600_1300ms_rms": 0.07557444558829189,
+        "peak": 0.226104736328125
+      },
+      "effective_onset_gain_db": 3.0000387558595336,
+      "acoustic_sustain_layer": null
+    },
+    {
+      "id": "firefly_rain",
+      "strength": 2,
+      "before": {
+        "seconds": 1.5108843537414967,
+        "t95_energy_seconds": 0.5244444444444445,
+        "onset_300ms_rms": 0.03737819878791915,
+        "body_600_1300ms_rms": 0.004431193157361719,
+        "peak": 0.146820068359375
+      },
+      "after": {
+        "seconds": 2.880453514739229,
+        "t95_energy_seconds": 1.518140589569161,
+        "onset_300ms_rms": 0.04705632207829919,
+        "body_600_1300ms_rms": 0.03670975019057041,
+        "peak": 0.17193603515625
+      },
+      "effective_onset_gain_db": 2.9999922062897735,
+      "acoustic_sustain_layer": {
+        "program": 40,
+        "root_midi": 75,
+        "mix": 0.7,
+        "onset_seconds": 0.06,
+        "fade_seconds": 0.22
+      }
+    },
+    {
+      "id": "firefly_rain",
+      "strength": 3,
+      "before": {
+        "seconds": 1.5709297052154194,
+        "t95_energy_seconds": 0.5262585034013605,
+        "onset_300ms_rms": 0.0485432838080454,
+        "body_600_1300ms_rms": 0.005827775598730732,
+        "peak": 0.2340087890625
+      },
+      "after": {
+        "seconds": 3.219455782312925,
+        "t95_energy_seconds": 1.7130612244897958,
+        "onset_300ms_rms": 0.06111219905660055,
+        "body_600_1300ms_rms": 0.04618211257258248,
+        "peak": 0.273101806640625
+      },
+      "effective_onset_gain_db": 2.9999751981313856,
+      "acoustic_sustain_layer": {
+        "program": 40,
+        "root_midi": 75,
+        "mix": 0.7,
+        "onset_seconds": 0.06,
+        "fade_seconds": 0.22
+      }
+    }
+  ],
+  "verified_layers": 20
+}

@@ -1,0 +1,99 @@
+{
+  "revision": "chamber-v36-performance-layers",
+  "description": "Four independently rendered acoustic performances at the same weapon root note. Velocity, onset, note-on duration, release and spectral shaping change together; not scaled copies of one WAV. Composer keeps its authored pitches and original152 samples.",
+  "levels": [
+    {
+      "id": "pp",
+      "label": "很弱",
+      "velocity": 0.3,
+      "rms_ratio": 0.34,
+      "hold_scale": 0.9,
+      "release_scale": 0.96,
+      "cutoff_scale": 0.45,
+      "attack_scale": 2.4,
+      "bow_attack_ms": 28,
+      "harmonic_tilt_db": -6.0
+    },
+    {
+      "id": "p",
+      "label": "弱",
+      "velocity": 0.46,
+      "rms_ratio": 0.52,
+      "hold_scale": 0.96,
+      "release_scale": 1.0,
+      "cutoff_scale": 0.65,
+      "attack_scale": 1.7,
+      "bow_attack_ms": 22,
+      "harmonic_tilt_db": -3.0
+    },
+    {
+      "id": "mf",
+      "label": "强",
+      "velocity": 0.68,
+      "rms_ratio": 0.77,
+      "hold_scale": 1.02,
+      "release_scale": 1.03,
+      "cutoff_scale": 0.9,
+      "attack_scale": 1.05,
+      "bow_attack_ms": 15,
+      "harmonic_tilt_db": 0.0
+    },
+    {
+      "id": "f",
+      "label": "很强",
+      "velocity": 0.92,
+      "rms_ratio": 1.0,
+      "hold_scale": 1.1,
+      "release_scale": 1.06,
+      "cutoff_scale": 1.15,
+      "attack_scale": 0.65,
+      "bow_attack_ms": 10,
+      "harmonic_tilt_db": 2.5
+    }
+  ],
+  "charge_patterns": {
+    "1": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "2": [
+      1,
+      2
+    ],
+    "3": [
+      2,
+      3
+    ],
+    "4": [
+      3,
+      2
+    ],
+    "8": [
+      2,
+      3
+    ]
+  },
+  "balance_db": {
+    "pulse": 0.0,
+    "scatter": -0.8,
+    "beam": -2.5,
+    "missile": -0.5,
+    "nova": -0.6,
+    "chain": -2.0,
+    "rail": -0.5,
+    "pulse_needle": -1.8,
+    "scatter_prism": -1.0,
+    "beam_split": -2.0,
+    "rail_horizon": 0.0,
+    "recorded_heavy": 0.0,
+    "gilded_helix": -1.5,
+    "weave_cross": -2.0,
+    "crown_orbit": -2.5,
+    "stern_fan": -1.2,
+    "dawn_fan": -1.2,
+    "tidal_weave": -2.0,
+    "firefly_rain": -1.5
+  }
+}

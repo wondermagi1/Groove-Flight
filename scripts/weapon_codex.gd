@@ -207,6 +207,8 @@ func select_weapon(id: String) -> void:
 	var strengths: PackedStringArray=[]
 	for value in cadence.get("scales",[.25,.25,.25,.25]): strengths.append("%d%%"%roundi(float(value)*100.))
 	cadence_label.text="%s · 每次发射推进一次\n每 %.1f 秒发声；充能等待轮静音，尾音自然延续。"%[EXPRESSION.describe(int(row.charge)),float(row.charge)*LOADOUT.SEQUENCE_LOOP_SECONDS]
+	if record.get("dynamics",{}).has("performance_instrument"):
+		cadence_label.text+="\n长音演奏："+str(record.dynamics.performance_instrument)
 	var samples=record.get("samples",[])
 	var recorded_group=_recorded_group(id)
 	var audio_ready=DATA.is_weapon_audio_ready(id)

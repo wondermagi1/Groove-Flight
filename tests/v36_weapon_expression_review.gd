@@ -71,7 +71,7 @@ func codex_checks() -> void:
 	if DisplayServer.get_name()!="headless":
 		for size_value in [Vector2i(1920,1080),Vector2i(1280,720)]:
 			root.size=size_value; codex._layout(); await frames(4); await RenderingServer.frame_post_draw
-			root.get_texture().get_image().save_png("res://docs/screenshots/v36-dynamics-"+str(size_value.x)+".png")
+			root.get_texture().get_image().save_png("res://docs/screenshots/v"+str(ProjectSettings.get_setting("application/config/version")).split(".")[1]+"-dynamics-"+str(size_value.x)+".png")
 	codex.queue_free(); await frames(3)
 func run() -> void:
 	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_NO_FOCUS,true)
