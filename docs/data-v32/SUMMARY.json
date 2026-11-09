@@ -1,0 +1,24 @@
+{
+  "version": "0.32.0-fixed-starters",
+  "date": "2026-11-09",
+  "backup_branch": "codex/backup-20261109-before-fixed-starters",
+  "backup_sha": "dcadfecdbfb4fa16f50d99c27becd103abbfc9dd",
+  "checks": 75,
+  "failures": 0,
+  "actual_start_run_cases": 64,
+  "coverage": "Production live reset,all five hulls and actual start_run across all8planets,2difficulties and4path presets. Rotation covers all hulls. Checks exact UID spans,only head scan events and retained nonweapon hull utility. No full campaign balance claim.",
+  "starter_layout": [
+    {
+      "kind": "firefly_rain",
+      "slot": 2
+    },
+    {
+      "kind": "scatter_prism",
+      "slot": 14
+    }
+  ],
+  "weapons_parameters_unchanged": true,
+  "sequence_loop_seconds": 1.5,
+  "previous_timing_verification": "../data-v31/SUMMARY.json",
+  "limits": "Controlled start initialization and scan event fixtures; no full campaign balance review."
+}

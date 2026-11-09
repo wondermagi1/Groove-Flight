@@ -11,7 +11,7 @@ const SEQUENCE_LOOP_SECONDS=1.5
 const SEQUENCE_STEP_SECONDS=SEQUENCE_LOOP_SECONDS/STEPS
 const SEQUENCE_BPM=60./(SEQUENCE_STEP_SECONDS*2.)
 const STARTER_WEAPON_LIMIT=2
-const COLORFUL_STARTER_WEAPONS=["scatter_prism","nova"]
+const LIVE_STARTER_LAYOUT=[{"kind":"firefly_rain","slot":2},{"kind":"scatter_prism","slot":14}]
 const INVENTORY_LIMIT=64
 const STAT_KEYS=["ballistic","energy","power","support","extra_projectiles","bullet_multiplier","crit_chance","crit_damage","max_health","regen","armor","move_percent","magnet","luck"]
 const CADENCE_PROFILES={
@@ -77,14 +77,14 @@ func reset() -> void:
 	phrase_offsets.clear()
 	modules.clear(); slots.resize(TRACKS*STEPS); slots.fill(-1); perks.clear(); boons.clear()
 	next_uid=1; damage_scale=1.; echo_repeat=false; _base_health=10; _base_extra=0; _fleet_stats.clear()
-	if audio_guard_enabled: set_starters(COLORFUL_STARTER_WEAPONS)
+	if audio_guard_enabled: set_starters([])
 	else: set_starters(["pulse","scatter","beam","pulse","nova"])
 
 func configure_live_rules() -> void:
 	active_tracks=3
 	audio_guard_enabled=true
 	slots.resize(TRACKS*STEPS); slots.fill(-1)
-	set_starters(COLORFUL_STARTER_WEAPONS)
+	set_starters([])
 
 func set_fleet(craft: Dictionary,pilot: Dictionary) -> void:
 	# Preserve inventory. A new run explicitly calls set_starters after this.
@@ -100,23 +100,17 @@ func set_fleet(craft: Dictionary,pilot: Dictionary) -> void:
 func set_starters(kinds: Array) -> void:
 	phrase_offsets.clear()
 	modules.clear(); slots.fill(-1); next_uid=1
-	var filtered: Array=[]
-	var playable_weapons=0
 	if audio_guard_enabled:
+		# Reserve the universal weapon spans before placing ship/path utilities.
+		for placement in LIVE_STARTER_LAYOUT:
+			add_module(str(placement.kind),int(placement.slot))
 		for kind in kinds:
 			var row=C.item(str(kind))
-			if str(row.get("category",""))!="weapon": filtered.append(str(kind))
-		for kind in COLORFUL_STARTER_WEAPONS:
-			filtered.append(str(kind))
-			playable_weapons+=1
-	else:
-		for kind in kinds:
-			var row=C.item(str(kind))
-			filtered.append(str(kind))
-			if str(row.get("category",""))=="weapon": playable_weapons+=1
+			if str(row.get("category",""))!="weapon": add_module(str(kind))
+		return
 	var preferred=[0,8,2,16,4,12,6,14]
-	for index in range(filtered.size()):
-		var uid=add_module(str(filtered[index]),-2)
+	for index in range(kinds.size()):
+		var uid=add_module(str(kinds[index]),-2)
 		if uid<0: continue
 		var placed=false
 		if index<preferred.size(): placed=move_module(uid,int(preferred[index]))

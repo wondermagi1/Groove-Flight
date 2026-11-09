@@ -23,5 +23,5 @@ func _initialize() -> void:
 	var boons: Array=[]
 	for boon in L.WAVE_BOONS:
 		var entry: Dictionary=boon.duplicate(true); entry.color=Color(boon.color).to_html(false); boons.append(entry)
-	FileAccess.open(snapshot_dir+"/weapon-selection.json",FileAccess.WRITE).store_string(JSON.stringify({"version":version,"weapons":selection,"wave_boons":boons,"shop_weapons":3,"shop_items":3,"sequence_step_seconds":L.SEQUENCE_STEP_SECONDS,"sequence_loop_seconds":L.SEQUENCE_LOOP_SECONDS},"\t"))
+	FileAccess.open(snapshot_dir+"/weapon-selection.json",FileAccess.WRITE).store_string(JSON.stringify({"version":version,"weapons":selection,"wave_boons":boons,"shop_weapons":3,"shop_items":3,"starter_layout":L.LIVE_STARTER_LAYOUT,"sequence_step_seconds":L.SEQUENCE_STEP_SECONDS,"sequence_loop_seconds":L.SEQUENCE_LOOP_SECONDS},"\t"))
 	print("LIVE_ARSENAL_EXPORT ",weapons.size()," weapons / ",weapons.size()*8," samples"); quit()

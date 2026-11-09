@@ -2,7 +2,9 @@
 
 武器改动先查[武器特效与音频对应表](WEAPON_VFX_AUDIO_REFERENCE.md)。用户要求本表长期维护；武器特效、声音或触发规则变更必须在同一提交同步更新表格、日期、版本与迭代记录。
 
-2026-11-09，工程版本 `0.31.0-one-half-second-loop`，开发分支 `codex/v31-one-half-loop`。远程仓库：https://github.com/wondermagi1/Groove-Flight 。本轮修改前备份`aef8d32`已上传并核验。后续每轮游戏修改前必须先上传Git备份并核验SHA，规则见根目录 `AGENTS.md`。
+2026-11-09，工程版本 `0.32.0-fixed-starters`，开发分支 `codex/v32-fixed-starters`。远程仓库：https://github.com/wondermagi1/Groove-Flight 。本轮修改前备份`dcadfec`已上传并核验。后续每轮游戏修改前必须先上传Git备份并核验SHA，规则见根目录 `AGENTS.md`。
+
+V32：所有行星、难度、舰体和起步预设的新一局均使用流萤织雨 A3–A5、七彩折光匣 B7–B8；先保留武器格，再摆放原有非武器道具。后续波次沿用玩家自行编排。见[V32说明](V32_FIXED_STARTERS.md)与`docs/data-v32/SUMMARY.json`。
 
 V31：按用户最新指令，只改普通音序为1.5秒一轮，每格187.5毫秒；敌机仍每0.5秒推进（0.22秒移动、0.28秒停顿）。音频缓存改为64整轮/96秒，声音、扫描、充能与试射共用规则。见[V31说明与试听](V31_ONE_HALF_SECOND_SEQUENCE.md)和`docs/data-v31/SUMMARY.json`。
 
