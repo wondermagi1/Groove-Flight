@@ -2,7 +2,7 @@
 
 长期维护的[武器特效与音频对应表](docs/WEAPON_VFX_AUDIO_REFERENCE.md)：19种现役武器的发射形式、运动、光色、乐器音色与原声试听。以后武器迭代与本表同步提交更新。
 
-当前版本 **0.32.0-fixed-starters**：所有关卡统一以**流萤织雨 A3–A5、七彩折光匣 B7–B8**起步，见[初始配装说明](docs/V32_FIXED_STARTERS.md)。音序器保持**每格0.1875秒、1.5秒一轮**，敌机仍每0.5秒推进，见[节奏说明与试听](docs/V31_ONE_HALF_SECOND_SEQUENCE.md)。V30的双生棱镜羽流与3种前射羽弹保留，共19件武器，见[武器说明与预览](docs/V30_FORWARD_FEATHERS.md)。V29的Filaments背景、左下音序恢复、商店3武器＋3道具、锁定独占一行和回合主属性+5保留，见[V29说明](docs/V29_FILAMENTS_SHOP_HUD.md)与[音乐署名](CREDITS.md)。V28敌群性能优化保留，见[性能报告](docs/V28_CROWD_PERFORMANCE.md)。
+当前版本 **0.33.0-music-continuity**：修复局内调节声音后背景音乐重头播放，暂停、设置和恢复音量均保留进度，见[修复说明](docs/V33_MUSIC_CONTINUITY.md)。所有关卡统一以**流萤织雨 A3–A5、七彩折光匣 B7–B8**起步，见[初始配装说明](docs/V32_FIXED_STARTERS.md)。音序器保持**每格0.1875秒、1.5秒一轮**，敌机仍每0.5秒推进，见[节奏说明与试听](docs/V31_ONE_HALF_SECOND_SEQUENCE.md)。V30的双生棱镜羽流与3种前射羽弹保留，共19件武器，见[武器说明与预览](docs/V30_FORWARD_FEATHERS.md)。V29的Filaments背景、左下音序恢复、商店3武器＋3道具、锁定独占一行和回合主属性+5保留，见[V29说明](docs/V29_FILAMENTS_SHOP_HUD.md)与[音乐署名](CREDITS.md)。V28敌群性能优化保留，见[性能报告](docs/V28_CROWD_PERFORMANCE.md)。
 
 音频与设置基础：护盾反馈按用户要求裁成干净的一击，去掉末尾小声音；设置中有总音量、背景音乐、武器声音、击杀鼓点、拾取、受击护盾、命中爆炸和界面警报8项独立控制，即时生效、0%静音并自动保存。见[分类音量说明](docs/V26_AUDIO_CONTROLS.md)。
 

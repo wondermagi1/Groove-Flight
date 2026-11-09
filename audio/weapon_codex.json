@@ -4,7 +4,7 @@
 	"scope": "Active fixed instruments. Fixed pitch0 battle sounds; no automatic strength or melody cycles.",
 	"sequence_loop_seconds": 1.5,
 	"sequence_step_seconds": 0.1875,
-	"version": "0.32.0-fixed-starters",
+	"version": "0.33.0-music-continuity",
 	"weapon_count": 19,
 	"weapons": [
 		{

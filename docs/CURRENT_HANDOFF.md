@@ -2,7 +2,9 @@
 
 武器改动先查[武器特效与音频对应表](WEAPON_VFX_AUDIO_REFERENCE.md)。用户要求本表长期维护；武器特效、声音或触发规则变更必须在同一提交同步更新表格、日期、版本与迭代记录。
 
-2026-11-09，工程版本 `0.32.0-fixed-starters`，开发分支 `codex/v32-fixed-starters`。远程仓库：https://github.com/wondermagi1/Groove-Flight 。本轮修改前备份`dcadfec`已上传并核验。后续每轮游戏修改前必须先上传Git备份并核验SHA，规则见根目录 `AGENTS.md`。
+2026-11-09，工程版本 `0.33.0-music-continuity`，开发分支 `codex/v33-music-continuity`。远程仓库：https://github.com/wondermagi1/Groove-Flight 。本轮修改前备份`2056a0a`已上传并核验。后续每轮游戏修改前必须先上传Git备份并核验SHA，规则见根目录 `AGENTS.md`。
+
+V33：修复暂停后打开设置、调整声音导致背景曲回到开头。暂停的播放器仍保有播放实例，背景状态同步改以`has_stream_playback()`判定启动/停止，保留进度；退出战斗也停止暂停中的旧背景，防止残留。见[V33说明](V33_MUSIC_CONTINUITY.md)与`docs/data-v33/SUMMARY.json`。
 
 V32：所有行星、难度、舰体和起步预设的新一局均使用流萤织雨 A3–A5、七彩折光匣 B7–B8；先保留武器格，再摆放原有非武器道具。后续波次沿用玩家自行编排。见[V32说明](V32_FIXED_STARTERS.md)与`docs/data-v32/SUMMARY.json`。
 

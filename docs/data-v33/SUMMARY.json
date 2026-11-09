@@ -1,0 +1,43 @@
+{
+  "version": "0.33.0-music-continuity",
+  "date": "2026-11-09",
+  "backup_branch": "codex/backup-20261109-before-music-continuity",
+  "backup_sha": "2056a0a182390d79a9b6795a34d5f0e9f9b2a0d4",
+  "checks": 79,
+  "failures": 0,
+  "reports": [
+    {
+      "report": "results-v33-music-continuity.json",
+      "checks": 33,
+      "failures": 0
+    },
+    {
+      "report": "results-v26-audio-controls.json",
+      "checks": 46,
+      "failures": 0
+    }
+  ],
+  "before_fix_failures": 30,
+  "before_fix_facts": {
+    "after_resume": 0.162539675831795,
+    "before": {
+      "has_playback": true,
+      "initial": 91.1393203735352,
+      "paused": 91.1625366210938,
+      "paused_flag": true,
+      "playing": false
+    }
+  },
+  "after_fix_facts": {
+    "after_resume": 91.3308868408203,
+    "before": {
+      "has_playback": true,
+      "initial": 91.1393203735352,
+      "paused": 91.1625366210938,
+      "paused_flag": true,
+      "playing": false
+    }
+  },
+  "weapons_samples_starters_timing_and_growth_unchanged": true,
+  "limits": "Native transport test seeks real Filaments to91seconds and checks actual playback position/settings sliders. V26 regression ran headless. No subjective mix or full campaign claim."
+}

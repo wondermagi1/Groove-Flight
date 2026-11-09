@@ -961,8 +961,8 @@ func _sync_screen_music() -> void:
 	if is_instance_valid(mixer): mixer.set_combat_state("settings" if state=="settings" else candidate)
 	if is_instance_valid(menu_music) and menu_music.stream!=null:
 		var wants=candidate in ["title","hub","hangar","solar"] and not is_preview and not free_music_run
-		if wants and not menu_music.playing: menu_music.play()
-		elif not wants and menu_music.playing: menu_music.stop()
+		if wants and not menu_music.has_stream_playback(): menu_music.play()
+		elif not wants and menu_music.has_stream_playback(): menu_music.stop()
 	for recorded_player in recorded_weapon_players.values():
 		if not is_instance_valid(recorded_player) or not recorded_player.playing: continue
 		if candidate not in ["combat","reward","paused","editor"]:
@@ -977,9 +977,11 @@ func _sync_screen_music() -> void:
 			var planet_stream=_load_audio(LEVEL_MUSIC_PATH)
 			if planet_stream is AudioStreamOggVorbis: planet_stream.loop=true
 			planet_music.stream=planet_stream
-		if planet_music.stream!=null and not planet_music.playing: planet_music.play()
+		# Paused streams report playing=false but retain their playback/position.
+		# Restart only when no playback exists; sliders must not rewind the song.
+		if planet_music.stream!=null and not planet_music.has_stream_playback(): planet_music.play()
 		planet_music.stream_paused=candidate in ["paused","editor"]
-	elif planet_music.playing:
+	elif planet_music.has_stream_playback():
 		planet_music.stop()
 		planet_music.stream_paused=false
 func on_step(index: int,serial: int,deadline: float) -> void:
