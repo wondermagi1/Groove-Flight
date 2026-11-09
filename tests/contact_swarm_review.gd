@@ -125,7 +125,7 @@ func march_checks() -> void:
 			game.music.timeline=float(i)/fps; game.update_enemies(1./fps)
 		endpoints.append(enemy.at)
 	check(endpoints[0].is_equal_approx(endpoints[1]) and endpoints[1].is_equal_approx(endpoints[2]),"30/60/120Hz updates retain the same beat positions")
-	check(game.loadout.SEQUENCE_LOOP_SECONDS==2. and game.music.STEP==.25,"the current sequencer remains two seconds per eight cells")
+	check(game.loadout.SEQUENCE_LOOP_SECONDS==1.5 and game.music.STEP==.1875,"the current sequencer uses1.5seconds while enemy march stays0.5seconds")
 	facts.rhythm={"sequencer_seconds":game.loadout.SEQUENCE_LOOP_SECONDS,"enemy_step_seconds":.5,"move_seconds":.22,"hold_seconds":.28}
 
 func route_checks() -> void:

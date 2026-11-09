@@ -1027,9 +1027,11 @@ func spawn_for_step(serial: int) -> void:
 		if serial%16!=0 or enemies.size()>=120: return
 		spawn_wave_group(16,"battalion_grid")
 		return
-	if serial%maxi(1,roundi(.5/LOADOUT.SEQUENCE_STEP_SECONDS))!=0: return
+	# Crossing absolute-time buckets avoids drift when a scan cell is not an
+	# integer fraction of0.5s (for example a1.5s loop has187.5ms cells).
+	if floori(serial*LOADOUT.SEQUENCE_STEP_SECONDS/.5)==floori((serial-1)*LOADOUT.SEQUENCE_STEP_SECONDS/.5): return
 	if wave==wave_count():
-		if not boss_down and serial%maxi(1,roundi(2./LOADOUT.SEQUENCE_STEP_SECONDS))==0:
+		if not boss_down and floori(serial*LOADOUT.SEQUENCE_STEP_SECONDS/2.)!=floori((serial-1)*LOADOUT.SEQUENCE_STEP_SECONDS/2.):
 			spawn_wave_group(9,"battalion_grid",true)
 		return
 	var config=wave_profile(); var elapsed=music.timeline-wave_start
@@ -1228,7 +1230,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 	var count=int(trigger.get("count",1)); var kind=str(trigger.kind); var family=trigger_family
 	if prism_cross: origin=EMISSION.prism_origin(player,motion)
 	if selected_pilot=="volt" and music.timeline<pilot_amp_until: damage*=1.25; count+=1
-	if selected_pilot=="nova" and posmod(floori(music.timeline/.25),8)==0: damage*=1.20
+	if selected_pilot=="nova" and posmod(floori(music.timeline/(.25 if free_music_run else LOADOUT.SEQUENCE_STEP_SECONDS)),8)==0: damage*=1.20
 	if music.timeline<overload_until: damage*=1.75; count+=2
 	count=clampi(count,1,C.GROWTH.count_limit(C.item(kind)))
 	var context=trigger.duplicate(true)
@@ -1835,7 +1837,7 @@ func update_tutorial() -> void:
 	if tutorial_stage>=4:
 		tutorial_active=false; settings.tutorial_done=true; save_settings(); return
 	var movement=" / ".join([binding_name("up"),binding_name("left"),binding_name("down"),binding_name("right")])
-	var tips=[movement+" 自由飞行 · 武器跟随2秒音序自动开火","观察下方8格 · 每格0.25秒，一轮2秒",binding_name("editor")+" 打开三轨音序工坊 · 把武器拖到另一个扫描格",binding_name("dash")+" 冲刺穿过缺口 · "+binding_name("overload")+" 满充能后超载"]
+	var tips=[movement+" 自由飞行 · 武器跟随%.1f秒音序自动开火"%LOADOUT.SEQUENCE_LOOP_SECONDS,"观察下方8格 · 每格%.4f秒，一轮%.1f秒"%[LOADOUT.SEQUENCE_STEP_SECONDS,LOADOUT.SEQUENCE_LOOP_SECONDS],binding_name("editor")+" 打开三轨音序工坊 · 把武器拖到另一个扫描格",binding_name("dash")+" 冲刺穿过缺口 · "+binding_name("overload")+" 满充能后超载"]
 	notice=tips[tutorial_stage]; notice_until=INF
 
 func apply_input_bindings() -> void:

@@ -1,0 +1,94 @@
+{
+	"cell_seconds": 0.1875,
+	"checks": 74,
+	"enemy_seconds": 0.5,
+	"facts": {
+		"native_boundary": [
+			{
+				"actual": 96.0,
+				"cadence_scale": 1.0,
+				"cadence_step": 0,
+				"deadline": 96.0,
+				"event_id": "arsenal:512:1:0:",
+				"kind": "pulse",
+				"pilot": "",
+				"pitch": 0,
+				"repeat_index": 0,
+				"serial": 512,
+				"step": 0,
+				"track": 0,
+				"uid": 1,
+				"voice": "inst_pulse"
+			}
+		],
+		"native_first_salvos": [
+			{
+				"actual": 0.0046179887791276,
+				"cadence_scale": 1.0,
+				"cadence_step": 0,
+				"deadline": 0.0,
+				"event_id": "arsenal:0:1:0:",
+				"kind": "pulse",
+				"pilot": "",
+				"pitch": 0,
+				"repeat_index": 0,
+				"serial": 0,
+				"step": 0,
+				"track": 0,
+				"uid": 1,
+				"voice": "inst_pulse"
+			},
+			{
+				"actual": 1.50106601350629,
+				"cadence_scale": 1.0,
+				"cadence_step": 0,
+				"deadline": 1.5,
+				"event_id": "arsenal:8:1:0:",
+				"kind": "pulse",
+				"pilot": "",
+				"pitch": 0,
+				"repeat_index": 0,
+				"serial": 8,
+				"step": 0,
+				"track": 0,
+				"uid": 1,
+				"voice": "inst_pulse"
+			},
+			{
+				"actual": 3.00063121851575,
+				"cadence_scale": 1.0,
+				"cadence_step": 0,
+				"deadline": 3.0,
+				"event_id": "arsenal:16:1:0:",
+				"kind": "pulse",
+				"pilot": "",
+				"pitch": 0,
+				"repeat_index": 0,
+				"serial": 16,
+				"step": 0,
+				"track": 0,
+				"uid": 1,
+				"voice": "inst_pulse"
+			},
+			{
+				"actual": 4.50362109702527,
+				"cadence_scale": 1.0,
+				"cadence_step": 0,
+				"deadline": 4.5,
+				"event_id": "arsenal:24:1:0:",
+				"kind": "pulse",
+				"pilot": "",
+				"pitch": 0,
+				"repeat_index": 0,
+				"serial": 24,
+				"step": 0,
+				"track": 0,
+				"uid": 1,
+				"voice": "inst_pulse"
+			}
+		]
+	},
+	"failures": [],
+	"loop_seconds": 1.5,
+	"scope": "All19 schedules/charge gates/fixed voices/metadata,visible24scan dots,unchanged enemy constants and native audio dispatch,pause/resume,real96second PCM boundary seek.9second production-renderer audition. Controlled timing checks,not full campaign balance."
+}

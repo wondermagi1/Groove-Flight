@@ -1,0 +1,62 @@
+{
+  "version": "0.31.0-one-half-second-loop",
+  "date": "2026-11-09",
+  "backup_branch": "codex/backup-20261108-before-one-half-loop",
+  "backup_sha": "aef8d329d2584e11011fa5c20896f485e74d3aae",
+  "loop_seconds": 1.5,
+  "cell_seconds": 0.1875,
+  "pcm_cache_seconds": 96,
+  "enemy_step_seconds": 0.5,
+  "checks": 543,
+  "failures": 0,
+  "reports": [
+    {
+      "report": "results-v31-sequence.json",
+      "checks": 74,
+      "failures": 0,
+      "scope": "All19 schedules/charge gates/fixed voices/metadata,visible24scan dots,unchanged enemy constants and native audio dispatch,pause/resume,real96second PCM boundary seek.9second production-renderer audition. Controlled timing checks,not full campaign balance."
+    },
+    {
+      "report": "results-contact-swarm.json",
+      "checks": 88,
+      "failures": 0,
+      "scope": "Production square/circle births from upper-left, above and upper-right with boundary deferral, ordinary attack gates, half-second pacing/pause, 30/60/120Hz agreement and actual swept contact damage. Controlled fixtures, not a complete campaign or human balance review."
+    },
+    {
+      "report": "results-composer-score.json",
+      "checks": 112,
+      "failures": 0,
+      "scope": "Pure score/editor transactions, boundedJSONsave/load, actualSMF0/1 byte fixtures/runningstatus/chords/sustain/tempo handling/corruptinput, MIDIandJSONroundtrip, sharedschedule. No audio or UI/nativeflight acceptance."
+    },
+    {
+      "report": "results-weapon-cycle.json",
+      "checks": 223,
+      "failures": 0,
+      "scope": "Pure production scheduling of every active weapon for eight complete rounds; separate UID scheduling, configured loop deadlines, fixed voices, damage conservation and pure snapshot/clone behavior."
+    },
+    {
+      "report": "results-v26-audio-controls.json",
+      "checks": 46,
+      "failures": 0,
+      "scope": "Eight real settings sliders, isolated legacy config migration/roundtrip, production category routes including feedback/codex/composer/shop, runtime source hashes and actual195ms shield from28seconds, exact0 mute without touching siblings. Native mode captures actual Master output at full/quarter/muted gain for all7categories and background/weapon independence."
+    }
+  ],
+  "production_catalogue": {
+    "weapons": 19,
+    "samples": 152,
+    "all_samples_verified_unchanged": true,
+    "all_weapon_parameters_and_wave_boons_unchanged": true
+  },
+  "unchanged_movement_files": {
+    "scripts/contact_swarm.gd": "4aad354861629b90b0d2785fed516322309004ea1ecb0273e6832d2ab79e2c01",
+    "scripts/enemy_maneuver.gd": "33ca942f0ce7db8116200ca41e6095b9c2e1aba6f75ae92187ca28dccd27ea9c",
+    "native/crowd/crowd.cpp": "387b0518c024453303348c71cf99777267d82198e62f46cf1d0bc225484fe99d",
+    "native/crowd/groove_crowd.windows.x86_64.dll": "0046a79a8dd2eb63f7c13ea4d3e20720651b851aaa71892902701077c3c2c84e"
+  },
+  "audition": {
+    "duration_seconds": 9.0,
+    "sample_rate": 22050,
+    "channels": 2
+  },
+  "limits": "Controlled timing and compatibility fixtures. PCM boundary verified by seeking95.6s and crossing96s in native playback. No full campaign balance or sustained FPS certification. Earlier hardcoded2second weapon-cycle assertion was updated to the shared loop policy and rerun successfully."
+}

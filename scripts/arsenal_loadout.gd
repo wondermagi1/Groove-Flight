@@ -7,8 +7,9 @@ const PATHS=preload("res://scripts/build_paths.gd")
 const GROWTH=preload("res://scripts/projectile_growth.gd")
 const TRACKS=3
 const STEPS=8
-const SEQUENCE_STEP_SECONDS=.25
-const SEQUENCE_LOOP_SECONDS=2.
+const SEQUENCE_LOOP_SECONDS=1.5
+const SEQUENCE_STEP_SECONDS=SEQUENCE_LOOP_SECONDS/STEPS
+const SEQUENCE_BPM=60./(SEQUENCE_STEP_SECONDS*2.)
 const STARTER_WEAPON_LIMIT=2
 const COLORFUL_STARTER_WEAPONS=["scatter_prism","nova"]
 const INVENTORY_LIMIT=64
@@ -431,7 +432,7 @@ func schedule(serial: int, local_beats: Dictionary={}) -> Array[Dictionary]:
 		echo.track=-1
 		result.append(echo)
 	for i in range(result.size()):
-		result[i]=CLOCK.stamp(result[i],serial,SEQUENCE_STEP_SECONDS,120.,"arsenal",SEQUENCE_LOOP_SECONDS)
+		result[i]=CLOCK.stamp(result[i],serial,SEQUENCE_STEP_SECONDS,SEQUENCE_BPM,"arsenal",SEQUENCE_LOOP_SECONDS)
 	return result
 
 func advance_step(_index: int,serial: int,local_beats: Dictionary={}) -> Array[Dictionary]:

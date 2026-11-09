@@ -19,7 +19,8 @@ static func live_nodes(game,boss: Dictionary) -> int:
 	return count
 static func warn(game,boss: Dictionary,angle: float,serial: int,width: float=24.) -> void:
 	var axis=Vector2.from_angle(angle)
-	game.warnings.append({"at":boss.at+axis*(float(boss.radius)+8.),"to":boss.at+axis*1800.,"target":(serial+4)*.25,"born":game.music.timeline,"done":false,"width":width,"damage":float(game.planet_rules.damage)*1.5})
+	var step_seconds=.25 if game.free_music_run else game.LOADOUT.SEQUENCE_STEP_SECONDS
+	game.warnings.append({"at":boss.at+axis*(float(boss.radius)+8.),"to":boss.at+axis*1800.,"target":(serial+4)*step_seconds,"born":game.music.timeline,"done":false,"width":width,"damage":float(game.planet_rules.damage)*1.5})
 static func fan(game,boss: Dictionary,angle: float,count: int,spread: float,speed: float) -> void:
 	for i in range(count): game.boss_shot(boss,Vector2.from_angle(angle+(float(i)/maxf(1.,count-1)-.5)*spread),speed)
 static func step(game,boss: Dictionary,serial: int) -> void:

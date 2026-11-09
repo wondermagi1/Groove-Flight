@@ -498,7 +498,7 @@ func _build_sequencer(rect: Rect2) -> void:
 		content.add_child(panel)
 		panel.add_child(rows_area)
 	else:
-		var column := _panel(rect, "三轨音序", "每轨8格 · 每格0.25秒 · 一轮2秒")
+		var column := _panel(rect, "三轨音序", "每轨8格 · 每格%.4f秒 · 一轮%.1f秒"%[game.LOADOUT.SEQUENCE_STEP_SECONDS,game.LOADOUT.SEQUENCE_LOOP_SECONDS])
 		rows_area.custom_minimum_size.y = 188.0 if rect.size.y > 270.0 else 148.0
 		rows_area.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		column.add_child(rows_area)
@@ -750,7 +750,7 @@ func _update_detail() -> void:
 	var module: Dictionary = game.loadout.find(preview_uid)
 	if str(row.category) == "weapon":
 		var head: int = game.loadout.equipped_head(preview_uid)
-		var serial: int = maxi(0, floori(float(game.music.timeline) / 1.0)) * 8 + maxi(0, head) % 8
+		var serial: int = maxi(0, floori(float(game.music.timeline) / game.LOADOUT.SEQUENCE_LOOP_SECONDS)) * 8 + maxi(0, head) % 8
 		var actual: Dictionary = game.loadout.item_stats(preview_uid, serial) if not module.is_empty() else row
 		if module.is_empty() and bool(row.get("linear_projectiles",false)):
 			actual=row.duplicate(true); actual.growth=projectile_preview(str(row.id),detail_level); actual.count=actual.growth.count
@@ -768,7 +768,7 @@ func _update_detail() -> void:
 		if not actual.get("calculation",{}).is_empty():
 			var f: Dictionary=actual.calculation
 			_detail_text("计算明细\n基础 %.1f × 舰体 %.2f × 等级 %.2f\n× 属性 %.2f × 单发倍率 %.2f × 改装 %.2f"%[f.base_damage,f.ship_multiplier,f.level_multiplier,f.attribute_multiplier,f.damage_multiplier,f.mod_multiplier],16)
-			_detail_text("弹数 %d + %d → %d  上限 %d\n充能 %d → %d 小节  每轮2秒"%[f.base_count,f.extra_count,actual.count,f.count_cap,actual.charge_base,actual.charge],16,Color("9dcdd8"))
+			_detail_text("弹数 %d + %d → %d  上限 %d\n充能 %d → %d 小节  每轮%.1f秒"%[f.base_count,f.extra_count,actual.count,f.count_cap,actual.charge_base,actual.charge,game.LOADOUT.SEQUENCE_LOOP_SECONDS],16,Color("9dcdd8"))
 			_detail_text("其中属性换算弹数 %d"%int(f.get("attribute_count",0)),15,Color("829eb5"))
 			for rule_text in game.loadout.rule_explanation(preview_uid,serial): _detail_text(rule_text,14,Color("7e9caf"))
 		if preview_uid>=0 and game.get("receipt")!=null:

@@ -2,9 +2,9 @@
 	"sample_file_count": 152,
 	"schema": 1,
 	"scope": "Active fixed instruments. Fixed pitch0 battle sounds; no automatic strength or melody cycles.",
-	"sequence_loop_seconds": 2.0,
-	"sequence_step_seconds": 0.25,
-	"version": "0.30.0-forward-feathers",
+	"sequence_loop_seconds": 1.5,
+	"sequence_step_seconds": 0.1875,
+	"version": "0.31.0-one-half-second-loop",
 	"weapon_count": 19,
 	"weapons": [
 		{

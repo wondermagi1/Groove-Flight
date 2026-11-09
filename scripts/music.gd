@@ -5,11 +5,12 @@ const CLOCK=preload("res://scripts/music_clock.gd")
 const SEQUENCE=preload("res://scripts/arsenal_loadout.gd")
 signal step_fired(index: int,serial: int,deadline: float)
 signal prepared(key: String)
-const RENDER_VERSION=5
+const RENDER_VERSION=6
 const RATE=22050
-const BPM=120.
 const STEP=SEQUENCE.SEQUENCE_STEP_SECONDS
-const LENGTH=128.
+const BPM=SEQUENCE.SEQUENCE_BPM
+# Keep the PCM loop on complete eight-cell cycles, including charge phases.
+const LENGTH=SEQUENCE.SEQUENCE_LOOP_SECONDS*64.
 const GROOVE_LENGTH=8.
 var samples: Dictionary={}
 var base: PackedFloat32Array
@@ -66,7 +67,7 @@ func voice(kind: String,index: int) -> PackedFloat32Array:
 		samples[key]=decode(recording)
 	return samples[key]
 func key_for(loadout) -> String:
-	return str(hash(JSON.stringify([RENDER_VERSION,loadout.modules,loadout.slots,loadout.damage_scale,loadout.echo_repeat,loadout.stats(),track_mutes,backing_gain,weapon_gain,groove_gain])))
+	return str(hash(JSON.stringify([RENDER_VERSION,STEP,LENGTH,BPM,loadout.modules,loadout.slots,loadout.damage_scale,loadout.echo_repeat,loadout.stats(),track_mutes,backing_gain,weapon_gain,groove_gain])))
 func _snapshot(loadout) -> Dictionary:
 	var events: Array=[]; var instruments: Dictionary={}
 	for serial in range(int(LENGTH/STEP)):
