@@ -481,10 +481,14 @@ func salvage(uid: int) -> int:
 	var refund=maxi(1,roundi(float(_row(str(module.kind)).get("cost",10))*.4*(1.+.5*(int(module.level)-1))))
 	unequip_uid(uid); modules.erase(module); return refund
 
+static func weapon_shop_rarity(wave: int) -> int:
+	# Weapon variety opens earlier;nonweapon rarity keeps its existing curve.
+	return clampi(wave,1,3)
+
 func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[],weapon_count: int=3,item_count: int=3,price_scale: float=1.,featured_item: String="") -> Array[Dictionary]:
 	var pool: Array=[]; var result: Array[Dictionary]=[]
 	var max_rarity=clampi(1+floori(float(maxi(wave,1)-1)/3.),1,3)
-	var weapon_rarity=max_rarity
+	var weapon_rarity=weapon_shop_rarity(wave)
 	if not doctrine_id.is_empty():
 		# Small dedicated pools still expose three distinct weapons;only weapon
 		# rarity unlock advances when needed,not the nonweapon economy.

@@ -9,7 +9,8 @@ func shop_checks() -> void:
 			var offers=model.make_shop(random,wave); var weapons=0; var ids: Dictionary={}; var rarity_ok=true
 			for offer in offers:
 				var row=C.item(offer.id); weapons+=1 if str(row.category)=="weapon" else 0; ids[offer.id]=true
-				rarity_ok=rarity_ok and int(row.rarity)<=clampi(1+floori(float(wave-1)/3.),1,3)
+				var ceiling=clampi(wave,1,3) if str(row.category)=="weapon" else clampi(1+floori(float(wave-1)/3.),1,3)
+				rarity_ok=rarity_ok and int(row.rarity)<=ceiling
 			check(offers.size()==6 and weapons==3 and ids.size()==6 and rarity_ok,"seeded shop keeps3weapons3items,unique IDs and rarity unlock / %d:%d"%[wave,seed_value]); samples+=1
 	game.simulation_only=true; game.state="reward"
 	for mask in range(64):

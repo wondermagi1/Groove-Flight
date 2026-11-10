@@ -1,0 +1,19 @@
+{
+	"checks": 9,
+	"facts": {
+		"count": 144,
+		"encircle": 97,
+		"max_route_leg": 3,
+		"mean_radius_after_expansion": 340.521317429013,
+		"mean_radius_before": 225.625008159214,
+		"minimum_clearance_margin_world": -0.00145721435546875,
+		"pressure": 47,
+		"simulated_seconds": 52.5,
+		"units_returned": 40,
+		"units_seen_offscreen": 97
+	},
+	"failures": [],
+	"move_seconds": 0.25,
+	"scope": "Real circular birth,radial expansion,nearest-first task assignment and52.5seconds of world-space current-cadence routing. Camera fixed,no shooting,invulnerable player;not human balance certification.",
+	"step_seconds": 0.25
+}

@@ -1,0 +1,22 @@
+{
+	"checks": 1633,
+	"facts": {
+		"offers": {
+			"ballistic_slots": 800,
+			"flat_options": 598,
+			"ids_seen": [
+				"boon_ballistic_3",
+				"boon_ballistic",
+				"boon_ballistic_7",
+				"boon_ballistic_10",
+				"boon_ballistic_x15",
+				"boon_ballistic_x2",
+				"boon_ballistic_x3"
+			],
+			"multiplier_options": 202,
+			"waves_sampled": 400
+		}
+	},
+	"failures": [],
+	"scope": "Starting primary points,shared damage/count calculations,one-shot snapshot grants,equipment changes,additive future gains,reset/clone/caps,weighted distinct doctrine-filtered rewards and real shop button dispatch. No human balance or listening claim."
+}

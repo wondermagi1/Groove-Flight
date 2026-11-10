@@ -1,0 +1,184 @@
+{
+	"checks": 74,
+	"facts": {
+		"continuity": [
+			{
+				"four_second_distance": 681.6015625,
+				"fps": 30,
+				"maximum_frame_error": 0.000175781249999396,
+				"minimum_frame_distance": 5.679931640625,
+				"native": true,
+				"planned": true
+			},
+			{
+				"four_second_distance": 681.6015625,
+				"fps": 60,
+				"maximum_frame_error": 0.000156250000000302,
+				"minimum_frame_distance": 2.83984375,
+				"native": true,
+				"planned": true
+			},
+			{
+				"four_second_distance": 681.6015625,
+				"fps": 120,
+				"maximum_frame_error": 0.000166015624999849,
+				"minimum_frame_distance": 1.419921875,
+				"native": true,
+				"planned": true
+			},
+			{
+				"four_second_distance": 681.6015625,
+				"fps": 144,
+				"maximum_frame_error": 0.000227864583333348,
+				"minimum_frame_distance": 1.18310546875,
+				"native": true,
+				"planned": true
+			},
+			{
+				"four_second_distance": 681.6015625,
+				"fps": 30,
+				"maximum_frame_error": 0.000175781249999396,
+				"minimum_frame_distance": 5.679931640625,
+				"native": true,
+				"planned": false
+			},
+			{
+				"four_second_distance": 681.6015625,
+				"fps": 60,
+				"maximum_frame_error": 0.000156250000000302,
+				"minimum_frame_distance": 2.83984375,
+				"native": true,
+				"planned": false
+			},
+			{
+				"four_second_distance": 681.6015625,
+				"fps": 120,
+				"maximum_frame_error": 0.000166015624999849,
+				"minimum_frame_distance": 1.419921875,
+				"native": true,
+				"planned": false
+			},
+			{
+				"four_second_distance": 681.6015625,
+				"fps": 144,
+				"maximum_frame_error": 0.000227864583333348,
+				"minimum_frame_distance": 1.18310546875,
+				"native": true,
+				"planned": false
+			},
+			{
+				"four_second_distance": 681.6015625,
+				"fps": 30,
+				"maximum_frame_error": 0.000175781249999396,
+				"minimum_frame_distance": 5.679931640625,
+				"native": false,
+				"planned": true
+			},
+			{
+				"four_second_distance": 681.6015625,
+				"fps": 60,
+				"maximum_frame_error": 0.000156250000000302,
+				"minimum_frame_distance": 2.83984375,
+				"native": false,
+				"planned": true
+			},
+			{
+				"four_second_distance": 681.6015625,
+				"fps": 120,
+				"maximum_frame_error": 0.000166015624999849,
+				"minimum_frame_distance": 1.419921875,
+				"native": false,
+				"planned": true
+			},
+			{
+				"four_second_distance": 681.6015625,
+				"fps": 144,
+				"maximum_frame_error": 0.000227864583333348,
+				"minimum_frame_distance": 1.18310546875,
+				"native": false,
+				"planned": true
+			},
+			{
+				"four_second_distance": 681.6015625,
+				"fps": 30,
+				"maximum_frame_error": 0.000175781249999396,
+				"minimum_frame_distance": 5.679931640625,
+				"native": false,
+				"planned": false
+			},
+			{
+				"four_second_distance": 681.6015625,
+				"fps": 60,
+				"maximum_frame_error": 0.000156250000000302,
+				"minimum_frame_distance": 2.83984375,
+				"native": false,
+				"planned": false
+			},
+			{
+				"four_second_distance": 681.6015625,
+				"fps": 120,
+				"maximum_frame_error": 0.000166015624999849,
+				"minimum_frame_distance": 1.419921875,
+				"native": false,
+				"planned": false
+			},
+			{
+				"four_second_distance": 681.6015625,
+				"fps": 144,
+				"maximum_frame_error": 0.000227864583333348,
+				"minimum_frame_distance": 1.18310546875,
+				"native": false,
+				"planned": false
+			}
+		],
+		"pursuit": {
+			"base_world_speed": 142.0,
+			"deadlines": [
+				{
+					"index": 16,
+					"time": 4.0,
+					"x": 2318.3984375
+				},
+				{
+					"index": 16,
+					"time": 4.16,
+					"x": 2291.13427734375
+				},
+				{
+					"index": 16,
+					"time": 4.24,
+					"x": 2277.50244140625
+				},
+				{
+					"index": 17,
+					"time": 4.25,
+					"x": 2275.79833984375
+				},
+				{
+					"index": 17,
+					"time": 4.41,
+					"x": 2248.5341796875
+				},
+				{
+					"index": 17,
+					"time": 4.49,
+					"x": 2234.90234375
+				},
+				{
+					"index": 18,
+					"time": 4.5,
+					"x": 2233.1982421875
+				}
+			],
+			"measured_distance_four_seconds": 681.6015625,
+			"new_world_speed": 170.400390625,
+			"plans": 17
+		}
+	},
+	"failures": [],
+	"movement_seconds": 0.25,
+	"planning_seconds": 0.25,
+	"rest_seconds": 0.0,
+	"scope": "Actual native/script and direct-spawn movement at30/60/120/144Hz,irregular frames,boundary continuity,contact sweep,pause,birth timing and deployment lookahead. Crowd clearance is tested separately;no human smoothness or sustained FPS claim.",
+	"speed_scale": 1.2
+}

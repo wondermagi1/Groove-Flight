@@ -1,0 +1,155 @@
+{
+	"checks": 16912,
+	"facts": {
+		"initial_shops": {
+			"1": {
+				"distinct_weapon_ids": [
+					"scatter",
+					"pulse",
+					"rail",
+					"missile",
+					"pulse_needle",
+					"nova",
+					"dawn_fan",
+					"stern_fan"
+				],
+				"shops": 300,
+				"weapon_rarity_counts": [
+					252,
+					648,
+					0,
+					0
+				]
+			},
+			"2": {
+				"distinct_weapon_ids": [
+					"missile",
+					"scatter",
+					"scatter_prism",
+					"rail",
+					"nova",
+					"gilded_helix",
+					"stern_fan",
+					"beam_split",
+					"firefly_rain",
+					"tidal_weave",
+					"kaleidoscope",
+					"pulse_needle",
+					"crown_orbit",
+					"pulse",
+					"dawn_fan"
+				],
+				"shops": 300,
+				"weapon_rarity_counts": [
+					148,
+					374,
+					378,
+					0
+				]
+			},
+			"3": {
+				"distinct_weapon_ids": [
+					"nova",
+					"missile",
+					"beam_split",
+					"pulse_needle",
+					"rail",
+					"recorded_heavy",
+					"crown_orbit",
+					"rail_horizon",
+					"firefly_rain",
+					"tidal_weave",
+					"kaleidoscope",
+					"weave_cross",
+					"scatter",
+					"dawn_fan",
+					"scatter_prism",
+					"pulse",
+					"gilded_helix",
+					"stern_fan"
+				],
+				"shops": 300,
+				"weapon_rarity_counts": [
+					117,
+					314,
+					337,
+					132
+				]
+			},
+			"6": {
+				"distinct_weapon_ids": [
+					"nova",
+					"missile",
+					"beam_split",
+					"pulse_needle",
+					"rail",
+					"recorded_heavy",
+					"crown_orbit",
+					"rail_horizon",
+					"firefly_rain",
+					"tidal_weave",
+					"kaleidoscope",
+					"weave_cross",
+					"scatter",
+					"dawn_fan",
+					"scatter_prism",
+					"pulse",
+					"gilded_helix",
+					"stern_fan"
+				],
+				"shops": 300,
+				"weapon_rarity_counts": [
+					117,
+					314,
+					337,
+					132
+				]
+			},
+			"7": {
+				"distinct_weapon_ids": [
+					"nova",
+					"missile",
+					"beam_split",
+					"pulse_needle",
+					"rail",
+					"recorded_heavy",
+					"crown_orbit",
+					"rail_horizon",
+					"firefly_rain",
+					"tidal_weave",
+					"kaleidoscope",
+					"weave_cross",
+					"scatter",
+					"dawn_fan",
+					"scatter_prism",
+					"pulse",
+					"gilded_helix",
+					"stern_fan"
+				],
+				"shops": 300,
+				"weapon_rarity_counts": [
+					117,
+					314,
+					337,
+					132
+				]
+			}
+		},
+		"rerolled_weapon_counts": {
+			"2": [
+				32,
+				81,
+				87,
+				0
+			],
+			"3": [
+				27,
+				69,
+				69,
+				35
+			]
+		}
+	},
+	"failures": [],
+	"scope": "Actual weighted production shop rolls over1500initial shops and200locked rerolls;early epic/legend availability,nonweapon rarity,exact quotas,uniqueness,doctrine scope and unchanged prices. Does not guarantee a high-quality offer in every individual shop."
+}
