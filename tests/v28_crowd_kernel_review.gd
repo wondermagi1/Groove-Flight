@@ -19,7 +19,7 @@ func run() -> void:
 		var native=game.enemies.duplicate(true); var reference=game.enemies.duplicate(true)
 		var error_max=0.
 		for beat in range(5):
-			var t=float(beat)*.5; var player=Vector2(20*beat,-15*beat)
+			var t=float(beat)*game.SWARM.STEP_SECONDS; var player=Vector2(20*beat,-15*beat)
 			game.SWARM.use_native=false; game.SWARM.plan_individuals(reference,t,player)
 			game.SWARM.use_native=true; game.SWARM.plan_individuals(native,t,player)
 			for i in range(native.size()):

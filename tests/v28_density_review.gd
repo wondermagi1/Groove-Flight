@@ -1,5 +1,5 @@
 extends "res://tests/v23_density_review.gd"
-## Same production paths before/after, with the current 250ms sequencer clock.
+## Dense production paths, with independent live weapon and enemy clocks.
 func run() -> void:
 	root.size=Vector2i(1920,1080)
 	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_NO_FOCUS,true)
@@ -27,7 +27,7 @@ func run() -> void:
 			for enemy in game.enemies: enemy.maneuver.scatter_until=0.
 		var samples: Dictionary={}
 		for key in ["frame","simulation","enemy","spatial","projectile","effects","dispatch","gpu","beat_enemy"]: samples[key]=[]
-		var last_step=-1; var previous=Time.get_ticks_usec(); var peaks={"enemies":0,"projectiles":0,"rendered":0}; var worst: Array=[]
+		var last_step=-1; var last_enemy_beat=-1; var previous=Time.get_ticks_usec(); var peaks={"enemies":0,"projectiles":0,"rendered":0}; var worst: Array=[]
 		for frame in range(120 if "--profile-short" in OS.get_cmdline_user_args() else (960 if "--forward-loadout" in OS.get_cmdline_user_args() else 720)):
 			var t=float(frame)/60.; var delta=1./60.; var started=Time.get_ticks_usec()
 			game.music.timeline=t; game.player=Vector2(sin(t*.35)*90.,cos(t*.28)*55.)
@@ -36,6 +36,8 @@ func run() -> void:
 			while last_step<serial:
 				last_step+=1; game.on_step(last_step%8,last_step,last_step*game.LOADOUT.SEQUENCE_STEP_SECONDS)
 			var dispatch=(Time.get_ticks_usec()-mark)/1000.
+			var enemy_beat=floori((t+.000001)/game.SWARM.STEP_SECONDS)
+			var planned=enemy_beat!=last_enemy_beat;last_enemy_beat=enemy_beat
 			mark=Time.get_ticks_usec(); game.update_enemies(delta); var enemy_ms=(Time.get_ticks_usec()-mark)/1000.
 			mark=Time.get_ticks_usec(); game.rebuild_spatial(); var spatial_ms=(Time.get_ticks_usec()-mark)/1000.
 			mark=Time.get_ticks_usec(); game.update_bullets(delta); var projectile_ms=(Time.get_ticks_usec()-mark)/1000.
@@ -46,8 +48,8 @@ func run() -> void:
 			var now=Time.get_ticks_usec()
 			if frame>=60:
 				for pair in [["frame",(now-previous)/1000.],["simulation",simulation],["enemy",enemy_ms],["spatial",spatial_ms],["projectile",projectile_ms],["effects",effects_ms],["dispatch",dispatch],["gpu",RenderingServer.viewport_get_measured_render_time_gpu(root.get_viewport_rid())]]: samples[pair[0]].append(pair[1])
-				if frame%30==0: samples.beat_enemy.append(enemy_ms)
-				worst.append({"time":t,"simulation":simulation,"enemy":enemy_ms,"projectile":projectile_ms,"dispatch":dispatch,"planner":game.SWARM.last_profile.duplicate() if frame%30==0 else {}})
+				if planned: samples.beat_enemy.append(enemy_ms)
+				worst.append({"time":t,"simulation":simulation,"enemy":enemy_ms,"projectile":projectile_ms,"dispatch":dispatch,"planner":game.SWARM.last_profile.duplicate() if planned else {}})
 			previous=now
 			peaks.enemies=maxi(peaks.enemies,game.enemies.size()); peaks.projectiles=maxi(peaks.projectiles,game.bullets.size()); peaks.rendered=maxi(peaks.rendered,game.fleet_batch.active_count)
 		worst.sort_custom(func(a,b): return a.simulation>b.simulation); worst.resize(8)
@@ -63,6 +65,6 @@ func run() -> void:
 	var tag="current"
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--perf-tag="): tag=arg.trim_prefix("--perf-tag=")
-	var result={"checks":checks,"failures":failures,"scenarios":results,"gpu":RenderingServer.get_video_adapter_name(),"cpu":OS.get_processor_name(),"renderer":RenderingServer.get_current_rendering_method(),"sequence_step_seconds":game.LOADOUT.SEQUENCE_STEP_SECONDS,"scope":"Isolated native1920x1080,"+str(results.deployment.peaks.enemies)+"high-HP ordinary hulls,eightLv4 weapons,attributes24,two"+str((results.deployment.frames+60)/60)+"second manual60Hz simulations (deployment and encirclement),first60frames discarded per scenario. Current production250ms sequence. Audio muted,no captures. Controlled crowd test,not sustained campaign FPS."}
+	var result={"checks":checks,"failures":failures,"scenarios":results,"gpu":RenderingServer.get_video_adapter_name(),"cpu":OS.get_processor_name(),"renderer":RenderingServer.get_current_rendering_method(),"sequence_step_seconds":game.LOADOUT.SEQUENCE_STEP_SECONDS,"enemy_step_seconds":game.SWARM.STEP_SECONDS,"enemy_move_seconds":game.SWARM.MOVE_SECONDS,"scope":"Isolated native1920x1080,"+str(results.deployment.peaks.enemies)+"high-HP ordinary hulls,eightLv4 weapons,attributes24,two"+str((results.deployment.frames+60)/60)+"second manual60Hz simulations (deployment and encirclement),first60frames discarded per scenario. Live independent sequence/enemy clocks. Audio muted,no captures. Controlled crowd test,not sustained campaign FPS."}
 	FileAccess.open("res://tests/results-v28-density-"+tag+".json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	stop_audio(game); current_scene=null; game.queue_free(); await frames(6); quit(0 if failures.is_empty() else 1)

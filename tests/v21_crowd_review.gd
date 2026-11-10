@@ -82,7 +82,7 @@ func run() -> void:
 	check(frozen==game.enemies.map(func(e): return Vector2(e.at)),"unchanged music time keeps all units and avoidance frozen")
 	check(game.enemy_bullets.is_empty(),"dense independent pursuit never restores ordinary enemy fire")
 	facts={"units":600,"simulated_seconds":15.,"sample_rate":30,"minimum_clearance_margin_world":worst,"units_moved_over20world":moving,"waiting_at_end":waiting,"initial_mean_distance":initial_mean,"final_mean_distance":final_mean,"initial_pressure_distance":initial_pressure,"final_pressure_distance":final_pressure,"deployment":deployment}
-	FileAccess.open("res://tests/results-v21-crowd.json",FileAccess.WRITE).store_string(JSON.stringify({"checks":checks,"failures":failures,"facts":facts,"scope":"Actual production600-unit spawn, smooth3second deployment and half-beat encirclement/close approach around a moving invulnerable player. Pairwise hull-circle margins sampled every5frames; safe relative swept reservations prevent inter-frame crossing. No human difficulty claim."},"\t"))
+	FileAccess.open("res://tests/results-v21-crowd.json",FileAccess.WRITE).store_string(JSON.stringify({"checks":checks,"failures":failures,"facts":facts,"step_seconds":game.SWARM.STEP_SECONDS,"move_seconds":game.SWARM.MOVE_SECONDS,"scope":"Actual production600-unit spawn,smooth3second deployment and current-cadence encirclement/close approach around a moving invulnerable player. Pairwise hull-circle margins sampled every5frames;safe relative swept reservations prevent inter-frame crossing. No human difficulty claim."},"\t"))
 	print("V21_CROWD ",JSON.stringify(facts)," failures=",failures)
 	game.music.stop(); game.composer_player.stop_song(); current_scene=null; game.queue_free()
 	for i in range(5): await process_frame

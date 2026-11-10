@@ -27,7 +27,7 @@ func ui_and_enemy_checks() -> void:
 	for sample in [[0.,0],[.1875,1],[.375,2],[1.3125,7],[1.5,0]]:
 		game.music.timeline=sample[0]; game.ui.arsenal._update_sequence_cursor()
 		check(range(24).all(func(i): return game.ui.arsenal.step_lights[i].active==(i%8==int(sample[1]))),"visible three-track scan wraps on the new clock / "+str(sample[0]))
-	check(game.SWARM.STEP_SECONDS==.5 and game.SWARM.MOVE_SECONDS==.22,"ordinary enemy cadence remains0.5seconds with unchanged movement burst")
+	check(game.SWARM.STEP_SECONDS==.25 and game.SWARM.MOVE_SECONDS==.16,"V47 ordinary enemies use an independent0.25second step and0.16second movement burst")
 	var boss={"at":Vector2.ZERO,"radius":40.}; game.music.timeline=3.
 	game.BOSS_SCORE.warn(game,boss,0.,16)
 	check(is_equal_approx(float(game.warnings[-1].target),3.75),"authored four-cell warning uses the real scan deadline")
@@ -59,6 +59,6 @@ func run() -> void:
 	game=load("res://scenes/Main.tscn").instantiate(); game.is_preview=true; root.add_child(game); current_scene=game; await frames(4)
 	game.set_process(false); game.set_physics_process(false); game.set_process_unhandled_input(false); game.music.stop(); game.music._running=false; game.settings.master=0.; game.apply_audio()
 	await ui_and_enemy_checks(); await native_checks()
-	var result={"checks":checks,"failures":failures,"facts":facts,"loop_seconds":1.5,"cell_seconds":.1875,"enemy_seconds":.5,"scope":"All19 schedules/charge gates/fixed voices/metadata,visible24scan dots,unchanged enemy constants and native audio dispatch,pause/resume,real PCM repeat-boundary seek.9second production-renderer audition. Controlled timing checks,not full campaign balance."}
+	var result={"checks":checks,"failures":failures,"facts":facts,"loop_seconds":1.5,"cell_seconds":.1875,"enemy_seconds":game.SWARM.STEP_SECONDS,"enemy_move_seconds":game.SWARM.MOVE_SECONDS,"scope":"Current catalogue schedules/charge gates/fixed voices/metadata,visible24scan dots,independent live enemy cadence and native audio dispatch,pause/resume,real PCM repeat-boundary seek.9second production-renderer audition. Controlled timing checks,not full campaign balance."}
 	FileAccess.open("res://tests/results-v31-sequence.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t")); print("V31_SEQUENCE ",JSON.stringify(result))
 	stop_audio(game); current_scene=null; game.queue_free(); await frames(6); await create_timer(.2,true).timeout; quit(0 if failures.is_empty() else 1)

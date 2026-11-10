@@ -1,11 +1,12 @@
 extends RefCounted
-## Matrix and circular births execute individual routes on half-second beats.
+## Matrix and circular births execute individual routes on quarter-second beats.
 ## Legacy formation fixtures retain their historical route sampler.
 const FORMATION=preload("res://scripts/formation_motion.gd")
 const ARRIVAL=preload("res://scripts/enemy_arrival.gd")
 const MANEUVER=preload("res://scripts/enemy_maneuver.gd")
-const STEP_SECONDS=.5
-const MOVE_SECONDS=.22
+const CADENCE=preload("res://scripts/enemy_cadence.gd")
+const STEP_SECONDS=CADENCE.STEP_SECONDS
+const MOVE_SECONDS=CADENCE.MOVE_SECONDS
 const CELL=96.
 static var profile_enabled=false
 static var last_profile: Dictionary={}
@@ -72,12 +73,13 @@ static func plan_individuals(enemies: Array,time: float,player: Vector2) -> void
 				motion.deployment=str(route.scatter_start)+":"+str(route.batch_center)
 			else:
 				var toward: Vector2=MANEUVER.target(enemy,time,player)-motion.start
-				var travel=float(enemy.speed)*float(enemy.get("individual_speed_scale",1.))*STEP_SECONDS
+				var travel=float(enemy.speed)*float(enemy.get("individual_speed_scale",1.))*STEP_SECONDS*CADENCE.SPEED_SCALE
 				var route: Dictionary=enemy.get("maneuver",{})
 				if str(route.get("phase","")) in ["外围绕行","侧后方合围"]: travel*=1.8
 				var desired=toward.normalized()
 				var heading: Vector2=enemy.get("preferred_heading",desired)
-				heading=heading.rotated(clampf(heading.angle_to(desired),-.5,.5))
+				var turn_limit=CADENCE.TURN_RADIANS_PER_SECOND*STEP_SECONDS
+				heading=heading.rotated(clampf(heading.angle_to(desired),-turn_limit,turn_limit))
 				if toward.length()<300.: travel*=maxf(.35,heading.dot(desired))
 				enemy.preferred_heading=heading
 				motion.target=motion.start+heading*minf(travel,toward.length())
@@ -254,10 +256,10 @@ static func update(enemy: Dictionary,time: float,player: Vector2) -> bool:
 	if index!=int(march.index):
 		var next=enemy.duplicate()
 		if bool(enemy.get("warned_entry",false)):
-			next.at=Vector2(enemy.at).move_toward(player,float(enemy.speed)*float(enemy.get("individual_speed_scale",1.))*STEP_SECONDS)
+			next.at=Vector2(enemy.at).move_toward(player,float(enemy.speed)*float(enemy.get("individual_speed_scale",1.))*STEP_SECONDS*CADENCE.SPEED_SCALE)
 			next.formation_phase="独立追击"
 		elif not FORMATION.update(next,time,STEP_SECONDS,player):
-			next.at=Vector2(enemy.at).move_toward(player,float(enemy.speed)*STEP_SECONDS)
+			next.at=Vector2(enemy.at).move_toward(player,float(enemy.speed)*STEP_SECONDS*CADENCE.SPEED_SCALE)
 			next.formation_phase="推进"
 		march.index=index; march.from=enemy.at; march.to=next.at
 		enemy.formation_phase=str(next.get("formation_phase","推进"))

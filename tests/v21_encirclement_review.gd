@@ -61,7 +61,7 @@ func run() -> void:
 	check(game.enemies.all(func(e): return not e.has("formation")) and game.enemy_bullets.is_empty(),"circular routing retains individual AI and zero ordinary ranged fire")
 	check(worst>=-.02,"circle expansion and52.5seconds of encirclement retain complete individual hull clearances")
 	facts={"minimum_clearance_margin_world":worst,"count":game.enemies.size(),"pressure":pressure.size(),"encircle":flank.size(),"mean_radius_before":before,"mean_radius_after_expansion":expanded,"units_seen_offscreen":invisible.size(),"units_returned":returned.size(),"max_route_leg":max_leg,"simulated_seconds":52.5}
-	FileAccess.open("res://tests/results-v21-encirclement.json",FileAccess.WRITE).store_string(JSON.stringify({"checks":checks,"failures":failures,"facts":facts,"scope":"Real circular birth, radial expansion, nearest-first task assignment and52.5seconds of world-space half-beat routing. Camera fixed, no shooting, invulnerable player; not human balance certification."},"\t"))
+	FileAccess.open("res://tests/results-v21-encirclement.json",FileAccess.WRITE).store_string(JSON.stringify({"checks":checks,"failures":failures,"facts":facts,"step_seconds":game.SWARM.STEP_SECONDS,"move_seconds":game.SWARM.MOVE_SECONDS,"scope":"Real circular birth,radial expansion,nearest-first task assignment and52.5seconds of world-space current-cadence routing. Camera fixed,no shooting,invulnerable player;not human balance certification."},"\t"))
 	print("V21_ENCIRCLEMENT ",JSON.stringify(facts)," failures=",failures)
 	game.music.stop(); game.composer_player.stop_song(); current_scene=null; game.queue_free()
 	for i in range(5): await process_frame

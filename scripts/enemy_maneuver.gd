@@ -1,5 +1,6 @@
 extends RefCounted
 ## Individual world-space routes; visibility never controls route progress.
+const CADENCE=preload("res://scripts/enemy_cadence.gd")
 const EXPANSION_SECONDS=1.8
 const MATRIX_SCATTER_SECONDS=3.
 const PLAYER_BIRTH_GAP=360.
@@ -64,14 +65,14 @@ static func assign_batch(members: Array,center: Vector2,player: Vector2,view: Re
 		for turn in [.45,.95,1.5]:
 			var reach=radius if float(turn)<1.4 else maxf(650.,radius*.6)
 			waypoints.append(anchor+Vector2.from_angle(bearing+side*float(turn))*reach)
-		var scatter_start=ceilf(time/.5)*.5
+		var scatter_start=ceilf(time/CADENCE.STEP_SECONDS)*CADENCE.STEP_SECONDS
 		enemy.maneuver={"role":"pressure" if near_ids.has(enemy.uid) else "encircle","phase":"径向展开" if shape=="radial_bloom" else "矩阵上下疏散","born":time,"batch_center":center,"scatter_start":scatter_start,"scatter_until":scatter_start+MATRIX_SCATTER_SECONDS if shape!="radial_bloom" else time,"scatter_origin":enemy.at,"scatter_target":scatter_target,"sector":"middle" if absf(row)<.25 else ("upper" if upper else "lower"),"expansion_until":time+EXPANSION_SECONDS if shape=="radial_bloom" else time,"expand_target":expansion_center+radial*1.55,"waypoints":waypoints,"index":0,"leg_started":scatter_start+MATRIX_SCATTER_SECONDS if shape!="radial_bloom" else time,"last_refit":time,"reference_player":player,"side":side,"lane":float(int(enemy.uid)%9-4)/4.}
 
 static func scatter_step(enemy: Dictionary,time: float) -> Variant:
 	var route: Dictionary=enemy.get("maneuver",{})
 	if route.is_empty() or time>=float(route.scatter_until): return null
 	route.phase="矩阵上下疏散"
-	var progress=clampf((time+.5-float(route.scatter_start))/MATRIX_SCATTER_SECONDS,0.,1.)
+	var progress=clampf((time+CADENCE.STEP_SECONDS-float(route.scatter_start))/MATRIX_SCATTER_SECONDS,0.,1.)
 	progress=smoothstep(0.,1.,progress)
 	return Vector2(route.scatter_origin).lerp(route.scatter_target,progress)-Vector2(enemy.at)
 
