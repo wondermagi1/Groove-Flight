@@ -68,23 +68,24 @@ static func assign_batch(members: Array,center: Vector2,player: Vector2,view: Re
 		var scatter_start=ceilf(time/CADENCE.STEP_SECONDS)*CADENCE.STEP_SECONDS
 		enemy.maneuver={"role":"pressure" if near_ids.has(enemy.uid) else "encircle","phase":"径向展开" if shape=="radial_bloom" else "矩阵上下疏散","born":time,"batch_center":center,"scatter_start":scatter_start,"scatter_until":scatter_start+MATRIX_SCATTER_SECONDS if shape!="radial_bloom" else time,"scatter_origin":enemy.at,"scatter_target":scatter_target,"sector":"middle" if absf(row)<.25 else ("upper" if upper else "lower"),"expansion_until":time+EXPANSION_SECONDS if shape=="radial_bloom" else time,"expand_target":expansion_center+radial*1.55,"waypoints":waypoints,"index":0,"leg_started":scatter_start+MATRIX_SCATTER_SECONDS if shape!="radial_bloom" else time,"last_refit":time,"reference_player":player,"side":side,"lane":float(int(enemy.uid)%9-4)/4.}
 
-static func scatter_step(enemy: Dictionary,time: float) -> Variant:
+static func scatter_step(enemy: Dictionary,time: float,from: Vector2=Vector2.INF) -> Variant:
 	var route: Dictionary=enemy.get("maneuver",{})
 	if route.is_empty() or time>=float(route.scatter_until): return null
 	route.phase="矩阵上下疏散"
 	var progress=clampf((time+CADENCE.STEP_SECONDS-float(route.scatter_start))/MATRIX_SCATTER_SECONDS,0.,1.)
 	progress=smoothstep(0.,1.,progress)
-	return Vector2(route.scatter_origin).lerp(route.scatter_target,progress)-Vector2(enemy.at)
+	return Vector2(route.scatter_origin).lerp(route.scatter_target,progress)-(Vector2(enemy.at) if from==Vector2.INF else from)
 
-static func target(enemy: Dictionary,time: float,player: Vector2) -> Vector2:
+static func target(enemy: Dictionary,time: float,player: Vector2,from: Vector2=Vector2.INF) -> Vector2:
 	if not enemy.has("maneuver"): return player
 	var route: Dictionary=enemy.maneuver
 	if time<float(route.expansion_until):
 		route.phase="径向展开"; return route.expand_target
-	var distance=Vector2(enemy.at).distance_to(player)
+	var at: Vector2=enemy.at if from==Vector2.INF else from
+	var distance=at.distance_to(player)
 	if str(route.role)=="pressure" or int(route.index)>=route.waypoints.size() or (int(route.index)>=1 and distance<500.):
 		route.phase="近端扇形进攻"
-		var radial=(Vector2(enemy.at)-player).normalized().rotated(float(route.lane)*.28)
+		var radial=(at-player).normalized().rotated(float(route.lane)*.28)
 		return player+radial*(160. if distance>330. else 0.)
 	if time-float(route.last_refit)>=2.:
 		var shift=player-Vector2(route.reference_player)
@@ -94,7 +95,7 @@ static func target(enemy: Dictionary,time: float,player: Vector2) -> Vector2:
 			route.reference_player=Vector2(route.reference_player)+correction
 		route.last_refit=time
 	var point: Vector2=route.waypoints[int(route.index)]
-	if Vector2(enemy.at).distance_to(point)<115. or time-maxf(float(route.leg_started),float(route.expansion_until))>24.:
+	if at.distance_to(point)<115. or time-maxf(float(route.leg_started),float(route.expansion_until))>24.:
 		route.index=int(route.index)+1; route.leg_started=time
 		if int(route.index)>=route.waypoints.size(): route.phase="近端扇形进攻"; return player
 		point=route.waypoints[int(route.index)]

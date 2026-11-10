@@ -1,5 +1,5 @@
 extends RefCounted
-## Matrix and circular births execute individual routes on quarter-second beats.
+## Individual routes move continuously between shared quarter-second plans.
 ## Legacy formation fixtures retain their historical route sampler.
 const FORMATION=preload("res://scripts/formation_motion.gd")
 const ARRIVAL=preload("res://scripts/enemy_arrival.gd")
@@ -47,6 +47,7 @@ class Move:
 
 static func plan_individuals(enemies: Array,time: float,player: Vector2) -> void:
 	var beat=floori((time+.000001)/STEP_SECONDS)
+	var plan_time=float(beat)*STEP_SECONDS
 	var needs_plan=false
 	for enemy in enemies:
 		if enemy.hp>0. and bool(enemy.get("warned_entry",false)) and float(enemy.speed)>0. and beat>=ceili((float(enemy.born)-.000001)/STEP_SECONDS) and (not enemy.has("march") or int(enemy.march.index)!=beat):
@@ -60,19 +61,23 @@ static func plan_individuals(enemies: Array,time: float,player: Vector2) -> void
 		var old: Dictionary=enemy.get("march",{})
 		var already=not old.is_empty() and int(old.index)==beat
 		var motion=Move.new(); motion.enemy=enemy
-		motion.start=old.from if already else enemy.at
-		motion.target=old.to if already else enemy.at
+		# The previous plan reaches its endpoint exactly at the shared deadline.
+		# Keep enemy.at unchanged here so the contact sweep includes the remainder
+		# since the last rendered frame as well as the new interval's movement.
+		var completed=not old.is_empty() and int(old.index)<beat and float(enemy.speed)>0.
+		motion.start=old.from if already else (old.to if completed else enemy.at)
+		motion.target=old.to if already else motion.start
 		motion.radius=ARRIVAL.clearance(str(enemy.kind))
 		motion.movable=bool(enemy.get("warned_entry",false)) and float(enemy.speed)>0. and not already and beat>=ceili((float(enemy.born)-.000001)/STEP_SECONDS)
 		if motion.movable:
-			var deployment=MANEUVER.scatter_step(enemy,time)
+			var deployment=MANEUVER.scatter_step(enemy,plan_time,motion.start)
 			if deployment!=null:
 				motion.target=motion.start+Vector2(deployment); motion.deploying=true
 				if Vector2(deployment).length_squared()>1.: enemy.preferred_heading=Vector2(deployment).normalized()
 				var route: Dictionary=enemy.maneuver
 				motion.deployment=str(route.scatter_start)+":"+str(route.batch_center)
 			else:
-				var toward: Vector2=MANEUVER.target(enemy,time,player)-motion.start
+				var toward: Vector2=MANEUVER.target(enemy,plan_time,player,motion.start)-motion.start
 				var travel=float(enemy.speed)*float(enemy.get("individual_speed_scale",1.))*STEP_SECONDS*CADENCE.SPEED_SCALE
 				var route: Dictionary=enemy.get("maneuver",{})
 				if str(route.get("phase","")) in ["外围绕行","侧后方合围"]: travel*=1.8
@@ -255,17 +260,20 @@ static func update(enemy: Dictionary,time: float,player: Vector2) -> bool:
 	var march: Dictionary=enemy.march
 	if index!=int(march.index):
 		var next=enemy.duplicate()
+		var start: Vector2=march.to if int(march.index)>=first_index and index>int(march.index) else enemy.at
+		next.at=start
 		if bool(enemy.get("warned_entry",false)):
-			next.at=Vector2(enemy.at).move_toward(player,float(enemy.speed)*float(enemy.get("individual_speed_scale",1.))*STEP_SECONDS*CADENCE.SPEED_SCALE)
+			next.at=start.move_toward(player,float(enemy.speed)*float(enemy.get("individual_speed_scale",1.))*STEP_SECONDS*CADENCE.SPEED_SCALE)
 			next.formation_phase="独立追击"
 		elif not FORMATION.update(next,time,STEP_SECONDS,player):
-			next.at=Vector2(enemy.at).move_toward(player,float(enemy.speed)*STEP_SECONDS*CADENCE.SPEED_SCALE)
+			next.at=start.move_toward(player,float(enemy.speed)*STEP_SECONDS*CADENCE.SPEED_SCALE)
 			next.formation_phase="推进"
-		march.index=index; march.from=enemy.at; march.to=next.at
+		march.index=index; march.from=start; march.to=next.at
 		enemy.formation_phase=str(next.get("formation_phase","推进"))
 	var phase=clampf((time-float(index)*STEP_SECONDS)/MOVE_SECONDS,0.,1.)
-	var eased=1.-pow(1.-phase,3.)
-	enemy.at=Vector2(march.from).lerp(Vector2(march.to),eased)
+	# Shared linear time retains the solver's swept reservations, without the
+	# former accelerate/brake/rest cycle at every planning boundary.
+	enemy.at=Vector2(march.from).lerp(Vector2(march.to),phase)
 	var heading=Vector2(march.to)-Vector2(march.from)
 	enemy.angle=heading.angle() if bool(enemy.get("warned_entry",false)) and heading.length_squared()>1. else (player-enemy.at).angle()
 	return true

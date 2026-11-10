@@ -27,7 +27,7 @@ func ui_and_enemy_checks() -> void:
 	for sample in [[0.,0],[.1875,1],[.375,2],[1.3125,7],[1.5,0]]:
 		game.music.timeline=sample[0]; game.ui.arsenal._update_sequence_cursor()
 		check(range(24).all(func(i): return game.ui.arsenal.step_lights[i].active==(i%8==int(sample[1]))),"visible three-track scan wraps on the new clock / "+str(sample[0]))
-	check(game.SWARM.STEP_SECONDS==.25 and game.SWARM.MOVE_SECONDS==.16,"V47 ordinary enemies use an independent0.25second step and0.16second movement burst")
+	check(game.SWARM.STEP_SECONDS==.25 and game.SWARM.MOVE_SECONDS==.25,"V48 ordinary enemies move continuously across the independent quarter-second planning intervals")
 	var boss={"at":Vector2.ZERO,"radius":40.}; game.music.timeline=3.
 	game.BOSS_SCORE.warn(game,boss,0.,16)
 	check(is_equal_approx(float(game.warnings[-1].target),3.75),"authored four-cell warning uses the real scan deadline")
