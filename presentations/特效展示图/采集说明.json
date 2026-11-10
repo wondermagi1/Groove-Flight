@@ -1,0 +1,208 @@
+{
+  "version": "0.46.0-clear-combat-ui",
+  "production_commit": "b492fd397dabc9b50fb1b7d93a4cca693b423fee",
+  "date": "2026-11-10",
+  "renderer": "Godot Forward+",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "purpose": "Controlled high-attribute production-VFX showcase, not campaign or sustained performance evidence.",
+  "shots": [
+    {
+      "file": "01_彩虹羽弹.png",
+      "sha256": "be133f5dded73f0f2479e5e6a45bbe0d2f1963a34b8081155fc6c2e39e0bd57c",
+      "attrs": {
+        "ballistic": 72.0,
+        "energy": 30.0,
+        "power": 18.0,
+        "support": 10.0
+      },
+      "bullets": 586,
+      "enemies": 88,
+      "time": 0.76,
+      "weapons": [
+        {
+          "kind": "scatter_prism",
+          "level": 4,
+          "uid": 1
+        },
+        {
+          "kind": "stern_fan",
+          "level": 4,
+          "uid": 2
+        },
+        {
+          "kind": "firefly_rain",
+          "level": 4,
+          "uid": 3
+        },
+        {
+          "kind": "gilded_helix",
+          "level": 4,
+          "uid": 4
+        },
+        {
+          "kind": "weave_cross",
+          "level": 4,
+          "uid": 5
+        },
+        {
+          "kind": "dawn_fan",
+          "level": 4,
+          "uid": 6
+        }
+      ]
+    },
+    {
+      "file": "02_万花筒.png",
+      "sha256": "a9b2751ed8b9fe8ac698efcb9afaa04a23ab70b196e56d8d584df4e6f662490c",
+      "attrs": {
+        "ballistic": 72.0,
+        "energy": 30.0,
+        "power": 18.0,
+        "support": 10.0
+      },
+      "bullets": 670,
+      "enemies": 88,
+      "time": 0.68,
+      "weapons": [
+        {
+          "kind": "kaleidoscope",
+          "level": 4,
+          "uid": 1
+        },
+        {
+          "kind": "gilded_helix",
+          "level": 4,
+          "uid": 2
+        },
+        {
+          "kind": "firefly_rain",
+          "level": 4,
+          "uid": 3
+        },
+        {
+          "kind": "stern_fan",
+          "level": 4,
+          "uid": 4
+        },
+        {
+          "kind": "dawn_fan",
+          "level": 4,
+          "uid": 5
+        },
+        {
+          "kind": "weave_cross",
+          "level": 4,
+          "uid": 6
+        }
+      ]
+    },
+    {
+      "file": "03_激光折射.png",
+      "sha256": "8fa821e9c2977aad09a3da983b6a2c95ea9b87ec48d5d8856cf55c6550fdea86",
+      "attrs": {
+        "ballistic": 72.0,
+        "energy": 30.0,
+        "power": 18.0,
+        "support": 10.0
+      },
+      "bullets": 0,
+      "enemies": 176,
+      "time": 0.12,
+      "weapons": [
+        {
+          "kind": "laser_fan",
+          "level": 4,
+          "uid": 1
+        },
+        {
+          "kind": "laser_crown",
+          "level": 4,
+          "uid": 2
+        },
+        {
+          "kind": "beam",
+          "level": 4,
+          "uid": 3
+        }
+      ]
+    },
+    {
+      "file": "04_闪电传导.png",
+      "sha256": "4910806c70d76e38e1e67eba32fc9d3a0f77e6320a9707b98be45923d1d4e8c8",
+      "attrs": {
+        "ballistic": 72.0,
+        "energy": 30.0,
+        "power": 18.0,
+        "support": 10.0
+      },
+      "bullets": 0,
+      "enemies": 176,
+      "time": 0.1,
+      "weapons": [
+        {
+          "kind": "chain_loop",
+          "level": 4,
+          "uid": 1
+        },
+        {
+          "kind": "arc_bough",
+          "level": 4,
+          "uid": 2
+        },
+        {
+          "kind": "chain",
+          "level": 4,
+          "uid": 3
+        }
+      ]
+    },
+    {
+      "file": "05_战斗界面.png",
+      "sha256": "9fb13e13f6a44f0db2292133ed2831cfe4c7af0970a23edaad48ce95a987ffe3",
+      "attrs": {
+        "ballistic": 72.0,
+        "energy": 30.0,
+        "power": 18.0,
+        "support": 10.0
+      },
+      "bullets": 518,
+      "enemies": 176,
+      "time": 0.92,
+      "weapons": [
+        {
+          "kind": "scatter_prism",
+          "level": 4,
+          "uid": 1
+        },
+        {
+          "kind": "stern_fan",
+          "level": 4,
+          "uid": 2
+        },
+        {
+          "kind": "firefly_rain",
+          "level": 4,
+          "uid": 3
+        },
+        {
+          "kind": "gilded_helix",
+          "level": 4,
+          "uid": 4
+        },
+        {
+          "kind": "weave_cross",
+          "level": 4,
+          "uid": 5
+        },
+        {
+          "kind": "dawn_fan",
+          "level": 4,
+          "uid": 6
+        }
+      ]
+    }
+  ]
+}
