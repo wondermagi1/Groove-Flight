@@ -1,0 +1,10 @@
+{
+	"dispatch_every_cell": true,
+	"minimum_warning_seconds": 0.6,
+	"phrase_cells": 32,
+	"projectile_cull_margin": 1200.0,
+	"projectile_life": 10.5,
+	"projectile_radius": 10.0,
+	"ray_reach": 2500.0,
+	"ray_width_scale": 1.6
+}

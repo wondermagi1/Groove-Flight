@@ -20,23 +20,37 @@ class HostileLayer:
 	extends Node2D
 	var segments=PackedVector2Array()
 	var cores=PackedVector2Array()
+	var boss_segments=PackedVector2Array()
+	var boss_cores=PackedVector2Array()
+	var boss_trails=PackedVector2Array()
 	var active_count=0
 	func update_hazards(bullets: Array,bounds: Rect2) -> void:
-		segments.clear(); cores.clear(); active_count=0
+		segments.clear(); cores.clear();boss_segments.clear();boss_cores.clear();boss_trails.clear(); active_count=0
 		for bullet in bullets:
 			if not bounds.has_point(bullet.at) or float(bullet.life)<=0.: continue
 			var direction: Vector2=bullet.v.normalized()
+			if bool(bullet.get("boss_attack",false)):
+				boss_segments.append(bullet.at-direction*8.);boss_segments.append(bullet.at+direction*4.)
+				boss_cores.append(bullet.at-direction*3.);boss_cores.append(bullet.at+direction*2.)
+				boss_trails.append(bullet.at-direction*minf(72.,Vector2(bullet.v).length()*minf(.16,float(bullet.get("age",0.)))));boss_trails.append(bullet.at)
+				active_count+=1;continue
 			segments.append(bullet.at-direction*5.); segments.append(bullet.at+direction*2.)
 			cores.append(bullet.at-direction*2.); cores.append(bullet.at+direction)
 			active_count+=1
 		queue_redraw()
 	func _draw() -> void:
-		if segments.is_empty(): return
 		# A dark separator keeps dangerous rounds legible over friendly emission
 		# and bright planet surfaces. These are the original collision locations.
-		draw_multiline(segments,Color("10131e"),12.,true)
-		draw_multiline(segments,Color("ff6389"),7.,true)
-		draw_multiline(cores,Color("fff0bd"),2.3,true)
+		if not segments.is_empty():
+			draw_multiline(segments,Color("10131e"),12.,true)
+			draw_multiline(segments,Color("ff6389"),7.,true)
+			draw_multiline(cores,Color("fff0bd"),2.3,true)
+		if not boss_segments.is_empty():
+			draw_multiline(boss_trails,Color("ff637e",.22),5.,true)
+			draw_multiline(boss_segments,Color("10131e"),24.,true)
+			draw_multiline(boss_segments,Color("ff6f94",.18),32.,true)
+			draw_multiline(boss_segments,Color("ff7899"),16.,true)
+			draw_multiline(boss_cores,Color("fff1c4"),4.,true)
 
 class TrailLayer:
 	extends MultiMeshInstance2D

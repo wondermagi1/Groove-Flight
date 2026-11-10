@@ -1,0 +1,85 @@
+{
+  "version": "0.49.0-boss-pressure",
+  "date": "2026-11-10",
+  "backup": "d818e73cde810424761347271fe8afd616a19b3c",
+  "preserved_files": [
+    "scripts/arsenal_loadout.gd",
+    "scripts/arsenal_catalog.gd",
+    "scripts/projectile_growth.gd",
+    "scripts/weapon_emission.gd",
+    "scripts/weapon_visuals.gd",
+    "scripts/salvo_patterns.gd",
+    "scripts/projectile_fields.gd",
+    "scripts/energy_arsenal.gd",
+    "scripts/energy_growth.gd",
+    "scripts/combat_doctrines.gd",
+    "scripts/contact_swarm.gd",
+    "scripts/enemy_cadence.gd",
+    "scripts/enemy_maneuver.gd",
+    "scripts/enemy_arrival.gd",
+    "scripts/fleet_art.gd",
+    "scripts/fleet_batch.gd",
+    "scripts/fleet_catalog.gd",
+    "scripts/run_balance.gd",
+    "scripts/planet_catalog.gd",
+    "scripts/music.gd",
+    "scripts/ui.gd",
+    "scripts/combat_hud_style.gd",
+    "scripts/planet_backdrop_assets.gd",
+    "shaders/planet_uhd.gdshader",
+    "native/crowd/crowd.cpp",
+    "native/crowd/groove_crowd.windows.x86_64.dll",
+    "native/crowd/crowd.gdextension"
+  ],
+  "preserved_friendly_main_functions": [
+    "fire_weapon",
+    "update_bullets",
+    "dispatch_trigger",
+    "play_note",
+    "hurt_enemy"
+  ],
+  "preserved_friendly_renderer_after_class": "TrailLayer",
+  "preserved_wavs": 288,
+  "sample_manifest": "../data-v47/sample-preservation.json",
+  "historical_score_fixture": {
+    "path": "tests/fixtures/v48_boss_score.gd",
+    "source_commit": "d818e73cde810424761347271fe8afd616a19b3c",
+    "sha256": "fb5c604071caadef0bef2050bc23a5a8b4761721bf38ebeed938805564eb276a"
+  },
+  "weapons": 24,
+  "reports": [
+    {
+      "file": "results-v49-boss-pressure.json",
+      "checks": 140,
+      "failures": []
+    },
+    {
+      "file": "results-v49-boss-sustain.json",
+      "checks": 256,
+      "failures": []
+    },
+    {
+      "file": "results-v49-boss-native.json",
+      "checks": 8,
+      "failures": []
+    },
+    {
+      "file": "results-v31-sequence.json",
+      "checks": 85,
+      "failures": []
+    },
+    {
+      "file": "results-v48-continuous-enemy.json",
+      "checks": 74,
+      "failures": []
+    },
+    {
+      "file": "results-v47-ballistic-growth.json",
+      "checks": 1633,
+      "failures": []
+    }
+  ],
+  "checks": 2196,
+  "failures": [],
+  "scope": "Boss attack frequency/coverage/physical hit geometry,warning/dodge/charge/victory checks,16minute headless attack simulation and4native Forward+ captures;no manual picture review,human difficulty approval or sustained campaign FPS guarantee. Friendly weapons,audio,ordinary movement,stats,shops and presentations retained."
+}

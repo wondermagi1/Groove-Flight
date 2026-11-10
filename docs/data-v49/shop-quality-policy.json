@@ -1,0 +1,48 @@
+{
+	"guaranteed_high_quality": false,
+	"locked_price_and_position_preserved": true,
+	"nonweapon_rarity_by_wave": [
+		1,
+		1,
+		1,
+		2,
+		2,
+		2,
+		3
+	],
+	"quota": {
+		"nonweapon": 3,
+		"weapon": 3
+	},
+	"small_dedicated_pool_escalation": true,
+	"weapon_rarity_by_wave": [
+		{
+			"maximum_rarity": 1,
+			"wave": 1
+		},
+		{
+			"maximum_rarity": 2,
+			"wave": 2
+		},
+		{
+			"maximum_rarity": 3,
+			"wave": 3
+		},
+		{
+			"maximum_rarity": 3,
+			"wave": 4
+		},
+		{
+			"maximum_rarity": 3,
+			"wave": 5
+		},
+		{
+			"maximum_rarity": 3,
+			"wave": 6
+		},
+		{
+			"maximum_rarity": 3,
+			"wave": 7
+		}
+	]
+}

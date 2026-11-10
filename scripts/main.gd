@@ -1063,7 +1063,7 @@ func on_step(index: int,serial: int,deadline: float) -> void:
 	for enemy in enemies:
 		if enemy.hp<=0: continue
 		if enemy.kind=="elite" and posmod(serial+int(enemy.uid)*2,32)==0: enemy_fire(enemy)
-		if enemy.kind=="boss" and serial%2==0: boss_step(enemy,serial)
+		if enemy.kind=="boss": boss_step(enemy,serial)
 	if free_music_run: return
 	if posmod(serial,16)==0:
 		health=minf(float(stats_snapshot.max_health),health+float(event_snapshot.get("heal_bar",0)))
@@ -1218,9 +1218,11 @@ func update_enemies(delta: float) -> void:
 		elif enemy.kind=="boss":
 			var age=maxf(0.,music.timeline-float(enemy.born))
 			var approach=pow(1.-clampf(age/2.4,0.,1.),2.)
-			if music.timeline>=float(enemy.get("ram_start",INF)) and music.timeline<float(enemy.get("ram_end",-1.)):
+			if enemy.has("ram_start") and music.timeline>=float(enemy.ram_start)-1. and music.timeline<float(enemy.ram_start):
+				enemy.at=enemy.ram_from
+			elif music.timeline>=float(enemy.get("ram_start",INF)) and music.timeline<float(enemy.get("ram_end",-1.)):
 				enemy.at=enemy.ram_from.lerp(enemy.ram_to,clampf((music.timeline-float(enemy.ram_start))/maxf(.001,float(enemy.ram_end)-float(enemy.ram_start)),0.,1.))
-			elif music.timeline<float(enemy.get("ram_end",-10.))+2.:
+			elif music.timeline>=float(enemy.get("ram_end",INF)) and music.timeline<float(enemy.get("ram_end",-10.))+2.:
 				enemy.at=enemy.ram_to.lerp(boss_anchor,smoothstep(float(enemy.ram_end),float(enemy.ram_end)+2.,music.timeline))
 			else: enemy.at=(boss_anchor+Vector2(sin(age*.21)*130,-approach*260)).clamp(field().position+Vector2.ONE*220,field().end-Vector2.ONE*220)
 			var next_phase=2 if enemy.hp<enemy.max_hp*.5 else 1
@@ -1245,12 +1247,12 @@ func enemy_fire(enemy: Dictionary) -> void:
 		var axis=direction.rotated((i-(count-1)*.5)*.22)
 		if enemy.kind=="boss": boss_shot(enemy,axis,230.)
 		else: enemy_shot(enemy.at,axis,390 if enemy.kind=="lance" else (205 if enemy.kind=="shooter" else 230))
-func enemy_shot(at: Vector2,direction: Vector2,speed: float) -> void:
-	if enemy_bullets.size()<MAX_ENEMY_BULLETS: enemy_bullets.append({"at":at,"v":direction*speed*float(planet_rules.bullet_speed),"life":9.,"radius":7.,"damage":float(planet_rules.damage)})
+func enemy_shot(at: Vector2,direction: Vector2,speed: float,boss_attack: bool=false) -> void:
+	if enemy_bullets.size()<MAX_ENEMY_BULLETS: enemy_bullets.append({"at":at,"v":direction*speed*float(planet_rules.bullet_speed),"life":BOSS_SCORE.SHOT_LIFE if boss_attack else 9.,"radius":BOSS_SCORE.SHOT_RADIUS if boss_attack else 7.,"damage":float(planet_rules.damage),"boss_attack":boss_attack,"age":0.})
 func boss_shot(enemy: Dictionary,direction: Vector2,speed: float) -> void:
 	# Fire at the armor's perimeter so giant hulls cannot hide bullets for a
 	# full second after their musical onset.
-	enemy_shot(enemy.at+direction*(float(enemy.radius)+10.),direction,speed)
+	enemy_shot(enemy.at+direction*(float(enemy.radius)+10.),direction,speed,true)
 func boss_step(enemy: Dictionary,serial: int) -> void:
 	BOSS_SCORE.step(self,enemy,serial)
 
@@ -1614,10 +1616,14 @@ func hurt_enemy(enemy: Dictionary,damage: float,kind: String,context: Dictionary
 		pickups[closest].amount+=item.amount; pickups[closest].heal=pickups[closest].heal or item.heal; pickups[closest].life=36.
 func update_enemy_bullets(delta: float) -> void:
 	var bounds=visible_world().grow(350)
+	var boss_bounds=visible_world().grow(BOSS_SCORE.SHOT_CULL_MARGIN)
 	for i in range(enemy_bullets.size()-1,-1,-1):
-		var bullet=enemy_bullets[i]; bullet.at+=bullet.v*delta; bullet.life-=delta
-		if bullet.life<=0 or not bounds.has_point(bullet.at): enemy_bullets.remove_at(i); continue
-		if bullet.at.distance_to(player)<19:
+		var bullet=enemy_bullets[i]; var previous: Vector2=bullet.at
+		bullet.at+=bullet.v*delta; bullet.life-=delta; bullet.age=float(bullet.get("age",0.))+delta
+		var boss_round=bool(bullet.get("boss_attack",false))
+		if bullet.life<=0 or not (boss_bounds if boss_round else bounds).has_point(bullet.at): enemy_bullets.remove_at(i); continue
+		var distance=Geometry2D.get_closest_point_to_segment(player,previous,bullet.at).distance_to(player) if boss_round else bullet.at.distance_to(player)
+		if distance<(13.+float(bullet.radius) if boss_round else 19.):
 			enemy_bullets.remove_at(i); last_damage_reason="敌舰弹幕"; hurt_player(float(bullet.get("damage",1.)))
 			if state!="combat": return
 func update_warnings() -> void:
@@ -1625,7 +1631,9 @@ func update_warnings() -> void:
 		var warning=warnings[i]
 		if music.timeline<float(warning.target): continue
 		warnings.remove_at(i)
-		fx.beam(warning.at,warning.to,Color("ff7c9c"),34)
+		var width=float(warning.get("width",24.))
+		fx.beam(warning.at,warning.to,Color("ff7c9c"),width,false,.26)
+		fx.muzzle(warning.at,(Vector2(warning.to)-Vector2(warning.at)).normalized(),Color("ffc19a"),1.8)
 		if Geometry2D.get_closest_point_to_segment(player,warning.at,warning.to).distance_to(player)<float(warning.get("width",24.))*.5+13.: last_damage_reason="机械巨物射线"; hurt_player(float(warning.get("damage",2.)))
 		if state!="combat": return
 func update_pickups(delta: float) -> void:
@@ -1747,8 +1755,13 @@ func _draw() -> void:
 		draw_colored_polygon(polygon(item.at,5 if not item.heal else 8,4,PI*.25),color)
 	for warning in warnings:
 		var remaining=maxf(0,float(warning.target)-music.timeline)
-		var color=Color(1.,.42,.57,.18+.35*(1.-remaining))
-		draw_line(warning.at,warning.to,Color(color,.08),50,true); draw_dashed_line(warning.at,warning.to,color,2,12,true)
+		var progress=clampf(1.-remaining/maxf(.001,float(warning.target)-float(warning.get("born",music.timeline))),0.,1.)
+		var color=Color(1.,.42,.57,.30+.45*progress); var width=float(warning.get("width",24.))
+		var side=(Vector2(warning.to)-Vector2(warning.at)).normalized().orthogonal()*width*.5
+		draw_line(warning.at,warning.to,Color(color,.04),width+28.,true)
+		draw_line(warning.at,warning.to,Color(color,.10+.10*progress),width,true)
+		draw_line(warning.at+side,warning.to+side,color,1.5,true);draw_line(warning.at-side,warning.to-side,color,1.5,true)
+		draw_dashed_line(warning.at,warning.to,color,2.+progress,16.,true)
 	for enemy in enemies:
 		if enemy.hp<=0: continue
 		var draw_bounds=visible_rect.grow(maxf(0.,float(enemy.radius)*1.8-140.)) if enemy.kind=="boss" else visible_rect
@@ -1778,7 +1791,9 @@ func _draw() -> void:
 			for spoke in range(4):
 				var axis=Vector2.from_angle(spoke*TAU/4.+enemy.uid*.31)
 				draw_line(enemy.at+axis*float(enemy.radius)*.82,enemy.at+axis*entry_radius,Color("d8fbff",entry_fade*.50),1.2,true)
-		if enemy.kind=="boss": MACHINE_ART.draw(self,enemy,int(enemy.get("machine_style",0)),music.timeline,pulse)
+		if enemy.kind=="boss":
+			BOSS_SCORE.draw_charge(self,enemy,music.timeline)
+			MACHINE_ART.draw(self,enemy,int(enemy.get("machine_style",0)),music.timeline,pulse)
 		else: ART.draw_enemy(self,enemy.at,enemy.radius,enemy.angle,enemy.kind,enemy.flash,pulse)
 		_draw_formation_status(enemy,pulse)
 		if enemy.kind=="elite":

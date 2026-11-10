@@ -1,0 +1,135 @@
+{
+	"cases": [
+		{
+			"peak_active_rounds": 76,
+			"peak_fx_marks": 6,
+			"peak_pending_rays": 2,
+			"phase": 1,
+			"planet": "mercury",
+			"seconds": 60.0
+		},
+		{
+			"peak_active_rounds": 106,
+			"peak_fx_marks": 6,
+			"peak_pending_rays": 2,
+			"phase": 2,
+			"planet": "mercury",
+			"seconds": 60.0
+		},
+		{
+			"peak_active_rounds": 205,
+			"peak_fx_marks": 4,
+			"peak_pending_rays": 1,
+			"phase": 1,
+			"planet": "venus",
+			"seconds": 60.0
+		},
+		{
+			"peak_active_rounds": 246,
+			"peak_fx_marks": 4,
+			"peak_pending_rays": 1,
+			"phase": 2,
+			"planet": "venus",
+			"seconds": 60.0
+		},
+		{
+			"peak_active_rounds": 68,
+			"peak_fx_marks": 6,
+			"peak_pending_rays": 2,
+			"phase": 1,
+			"planet": "earth",
+			"seconds": 60.0
+		},
+		{
+			"peak_active_rounds": 94,
+			"peak_fx_marks": 8,
+			"peak_pending_rays": 3,
+			"phase": 2,
+			"planet": "earth",
+			"seconds": 60.0
+		},
+		{
+			"peak_active_rounds": 100,
+			"peak_fx_marks": 3,
+			"peak_pending_rays": 1,
+			"phase": 1,
+			"planet": "mars",
+			"seconds": 60.0
+		},
+		{
+			"peak_active_rounds": 124,
+			"peak_fx_marks": 3,
+			"peak_pending_rays": 1,
+			"phase": 2,
+			"planet": "mars",
+			"seconds": 60.0
+		},
+		{
+			"peak_active_rounds": 384,
+			"peak_fx_marks": 6,
+			"peak_pending_rays": 0,
+			"phase": 1,
+			"planet": "jupiter",
+			"seconds": 60.0
+		},
+		{
+			"peak_active_rounds": 437,
+			"peak_fx_marks": 6,
+			"peak_pending_rays": 0,
+			"phase": 2,
+			"planet": "jupiter",
+			"seconds": 60.0
+		},
+		{
+			"peak_active_rounds": 274,
+			"peak_fx_marks": 3,
+			"peak_pending_rays": 1,
+			"phase": 1,
+			"planet": "saturn",
+			"seconds": 60.0
+		},
+		{
+			"peak_active_rounds": 366,
+			"peak_fx_marks": 3,
+			"peak_pending_rays": 1,
+			"phase": 2,
+			"planet": "saturn",
+			"seconds": 60.0
+		},
+		{
+			"peak_active_rounds": 217,
+			"peak_fx_marks": 3,
+			"peak_pending_rays": 0,
+			"phase": 1,
+			"planet": "uranus",
+			"seconds": 60.0
+		},
+		{
+			"peak_active_rounds": 237,
+			"peak_fx_marks": 3,
+			"peak_pending_rays": 0,
+			"phase": 2,
+			"planet": "uranus",
+			"seconds": 60.0
+		},
+		{
+			"peak_active_rounds": 72,
+			"peak_fx_marks": 6,
+			"peak_pending_rays": 2,
+			"phase": 1,
+			"planet": "neptune",
+			"seconds": 60.0
+		},
+		{
+			"peak_active_rounds": 99,
+			"peak_fx_marks": 6,
+			"peak_pending_rays": 2,
+			"phase": 2,
+			"planet": "neptune",
+			"seconds": 60.0
+		}
+	],
+	"checks": 256,
+	"failures": [],
+	"scope": "Sixteen60-second actual Main projectile/enemy/warning/effect simulations at20Hz with a moving invulnerable target. Both phases of every boss;no ordinary support spawns or player weapons. Not human difficulty or sustained native frame-rate certification."
+}

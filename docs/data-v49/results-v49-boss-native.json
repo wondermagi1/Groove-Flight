@@ -1,0 +1,49 @@
+{
+	"captures": [
+		{
+			"effect": "gates",
+			"height": 1080,
+			"pending_rays": 3,
+			"planet": "earth",
+			"rendered_boss_rounds": 19,
+			"screenshot": "res://docs/screenshots/v49-boss-gates.png",
+			"time": 1.5,
+			"width": 1920
+		},
+		{
+			"effect": "charge",
+			"height": 1080,
+			"pending_rays": 1,
+			"planet": "mars",
+			"rendered_boss_rounds": 0,
+			"screenshot": "res://docs/screenshots/v49-boss-charge.png",
+			"time": 0.6,
+			"width": 1920
+		},
+		{
+			"effect": "helix",
+			"height": 1080,
+			"pending_rays": 0,
+			"planet": "jupiter",
+			"rendered_boss_rounds": 153,
+			"screenshot": "res://docs/screenshots/v49-boss-helix.png",
+			"time": 3.75,
+			"width": 1920
+		},
+		{
+			"effect": "ring",
+			"height": 1080,
+			"pending_rays": 1,
+			"planet": "saturn",
+			"rendered_boss_rounds": 102,
+			"screenshot": "res://docs/screenshots/v49-boss-ring.png",
+			"time": 2.25,
+			"width": 1920
+		}
+	],
+	"checks": 8,
+	"failures": [],
+	"gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+	"renderer": "forward_plus",
+	"scope": "Four actual1920x1080Forward+ Boss attack captures with current hulls/background/UI and production attack/hazard/effect paths. Automated render smoke test;no manual picture review or subjective approval."
+}

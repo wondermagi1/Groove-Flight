@@ -1,0 +1,10 @@
+{
+	"cell_seconds": 0.1875,
+	"checks": 85,
+	"enemy_move_seconds": 0.25,
+	"enemy_seconds": 0.25,
+	"facts": {},
+	"failures": [],
+	"loop_seconds": 1.5,
+	"scope": "Current catalogue schedules/charge gates/fixed voices/metadata,visible24scan dots,independent live enemy cadence and native audio dispatch,pause/resume,real PCM repeat-boundary seek.9second production-renderer audition. Controlled timing checks,not full campaign balance."
+}

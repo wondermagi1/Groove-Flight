@@ -39,6 +39,12 @@ static func draw(canvas: CanvasItem,enemy: Dictionary,style: int,time: float,pul
 	canvas.draw_set_transform(at,angle,Vector2.ONE*radius)
 	# Low-opacity energy stays behind the solid silhouette, never a smoke veil.
 	canvas.draw_circle(Vector2.ZERO,1.06,Color(accent,.045+pulse*.025))
+	var firing=clampf((float(enemy.get("attack_until",-1.))-time)/.45,0.,1.)
+	if firing>0.:
+		canvas.draw_arc(Vector2.ZERO,1.20+(1.-firing)*.12,0,TAU,64,Color("ff9a8c",firing*.65),.025,true)
+		for index in range(4):
+			var a=float(index)*TAU/4.+time*.6
+			canvas.draw_arc(Vector2.ZERO,1.38,a,a+.65,16,Color(accent,firing*.75),.035,true)
 	if style==5:
 		for i in range(24):
 			var a=i*TAU/24.+time*.025
