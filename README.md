@@ -4,6 +4,8 @@
 
 当前版本 **0.49.0-boss-pressure**：八星Boss两阶段全面提高出招频率、覆盖、弹速与特效规模；射线范围2500、弹体半径10，保留预警与逃生缺口，冲锋先蓄力再沿锁定走廊突进。普通机持续移动、第2波史诗/第3波传奇商店、实弹开局+10及波末强化、24武器/288WAV和1.5秒音序器继续保留。见[V49说明](docs/V49_BOSS_PRESSURE.md)与[现役武器表](docs/WEAPON_VFX_AUDIO_REFERENCE.md)。
 
+已生成Windows x64独立Demo：`dist/GrooveFlight_Demo_v0.49.0_Windows_x64.zip`。完整解压后双击`GrooveFlightDemo.exe`；无需安装Godot/Python，另附兼容模式入口。运行、重建与验证见[Demo说明](docs/WINDOWS_DEMO.md)。
+
 音频与设置基础：护盾反馈按用户要求裁成干净的一击，去掉末尾小声音；设置中有总音量、背景音乐、武器声音、击杀鼓点、拾取、受击护盾、命中爆炸、界面和独立警报9项控制，即时生效、0%静音并自动保存。见[分类音量说明](docs/V26_AUDIO_CONTROLS.md)。
 
 当前24种武器共288份样本：192份作曲音高＋96份四档演奏。主乐器已覆盖钢琴、小提琴、中提琴、大提琴、竖琴、单簧管和长笛7类；后续统一13乐器框架见[配器方向](docs/ORCHESTRAL_AUDIO_DIRECTION.md)。

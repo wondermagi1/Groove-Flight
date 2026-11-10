@@ -1,0 +1,43 @@
+{
+	"checks": 361,
+	"facts": {
+		"audio": {
+			"composer_notes": 192,
+			"dynamic_layers": 96
+		},
+		"background_seconds": 339.880615234375,
+		"ballistic": {
+			"energy_events": 0,
+			"physical": 59,
+			"real_salvos": 7,
+			"starters": [
+				"pulse",
+				"rail"
+			]
+		},
+		"engine": "4.7.2-stable (official)",
+		"executable": "D:/Tool/Godot_v4.7.2-stable_win64.exe/Godot_v4.7.2-stable_win64.exe",
+		"laser": {
+			"energy_events": 5,
+			"physical": 0,
+			"real_salvos": 9,
+			"starters": [
+				"beam",
+				"laser_fan"
+			]
+		},
+		"lightning": {
+			"energy_events": 1,
+			"physical": 0,
+			"real_salvos": 5,
+			"starters": [
+				"chain",
+				"arc_bough"
+			]
+		},
+		"packed_resource_probe": true,
+		"renderer": "forward_plus",
+		"user_directory": "C:/Users/GXR/Documents/Codex/2026-09-20/new-chat/outputs/BeatDrift/tests/profile-demo-final/GrooveFlightDemo/"
+	},
+	"failures": []
+}

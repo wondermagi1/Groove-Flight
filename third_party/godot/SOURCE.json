@@ -1,0 +1,20 @@
+{
+  "version": "4.7.2-stable",
+  "files": [
+    {
+      "file": "LICENSE.txt",
+      "url": "https://raw.githubusercontent.com/godotengine/godot/4.7.2-stable/LICENSE.txt",
+      "sha256": "b0435e3b3e4e55238f05f4b306f30524a1b2e20147810d436eaa554fa6855c80"
+    },
+    {
+      "file": "COPYRIGHT.txt",
+      "url": "https://raw.githubusercontent.com/godotengine/godot/4.7.2-stable/COPYRIGHT.txt",
+      "sha256": "cb1980c88089573bcacd7221d777c689bb8bbd778799f24c27fca0fe5f774d6d"
+    },
+    {
+      "file": "AUTHORS.md",
+      "url": "https://raw.githubusercontent.com/godotengine/godot/4.7.2-stable/AUTHORS.md",
+      "sha256": "6ca51d335b9de108ea53c5621e820c187d98c6faf92e14c8413ddb946b5e56cf"
+    }
+  ]
+}
