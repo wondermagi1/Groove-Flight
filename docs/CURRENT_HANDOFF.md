@@ -4,7 +4,9 @@
 
 2026-11-09后续配器决定：用户最新合并为[统一13种乐器组开发总体框架](ORCHESTRAL_AUDIO_DIRECTION.md)：钢琴、弦乐4种、竖琴、木管4种、三角铁/钟琴/定音鼓。覆盖此前A/B划分；先建立音源和演奏力度，再按武器定位分配。当前V38素材与乐器尚未替换，圆号不计入最新核心清单。
 
-2026-11-10，工程版本 `0.45.0-original-backdrop`，开发分支 `codex/v45-original-backdrop`，修改前备份`3b6b84a`已上传核验。每轮继续遵守先上传Git备份再改游戏。
+2026-11-10，工程版本 `0.46.0-clear-combat-ui`，开发分支 `codex/v46-transparent-combat-ui`，修改前备份`9e7c967`已上传核验。每轮继续先上传Git备份再修改游戏。
+
+V46：用户要求UI也回退，并将战斗顶部青色UI透明化。六组UI源文件恢复059ceb2，ui/arsenal再接combat_hud_style：正常/禁用状态无背景/边框/阴影，悬停10%与按下18%暗底，白字描边，大号粗体倒计时；暂停、编辑、跳过教学、面板开关/显示全部保留点击区域/信号。移除整条TelemetryMaterial衬板，Boss文字衬板透明，血条/超载条与数据保留。V45原始背景、V44舰体细节及玩法/音频不改。visual_theme.gd仅为历史，不再接生产界面。正在打开的PPT与其临时owner文件均保留。见[V46](V46_CLEAR_COMBAT_UI.md)与[当前验证](data-v46/SUMMARY.json)。
 
 V45用户否定青绿色战场，已将planet_uhd.gdshader与planet_backdrop_assets.gd完整恢复为V44改色前059ceb2的原文件。原始星球/星空、云层/夜景/光环与亮度/画质控制恢复；V44 UI/敌我舰体细节保留，武器/音频/流派/节奏/碰撞不动。V44青绿战场图仅作历史，不代表当前背景。见[V45](V45_ORIGINAL_BACKDROP.md)与[当前验证](data-v45/SUMMARY.json)。
 

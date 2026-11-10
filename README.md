@@ -2,7 +2,7 @@
 
 长期维护的[武器特效与音频对应表](docs/WEAPON_VFX_AUDIO_REFERENCE.md)：24种现役武器的发射形式、运动、光色、乐器音色与原声试听。以后武器迭代与本表同步提交更新。
 
-当前版本 **0.45.0-original-backdrop**：按用户反馈恢复青绿调整前的原始星球/星空背景；V44的UI与敌我战机细节保留，V43流派、初始武器与数值保持。见[V45回退说明](docs/V45_ORIGINAL_BACKDROP.md)和[武器持续维护表](docs/WEAPON_VFX_AUDIO_REFERENCE.md)。
+当前版本 **0.46.0-clear-combat-ui**：六组UI恢复V44换肤前的样式，战斗顶部按钮与面板开关默认透明，采用白字和大号粗体倒计时，保留数据与操作入口。原始星球背景、敌我战机细节、武器与玩法继续保留。见[V46说明](docs/V46_CLEAR_COMBAT_UI.md)与[现役武器表](docs/WEAPON_VFX_AUDIO_REFERENCE.md)。
 
 音频与设置基础：护盾反馈按用户要求裁成干净的一击，去掉末尾小声音；设置中有总音量、背景音乐、武器声音、击杀鼓点、拾取、受击护盾、命中爆炸、界面和独立警报9项控制，即时生效、0%静音并自动保存。见[分类音量说明](docs/V26_AUDIO_CONTROLS.md)。
 
@@ -102,6 +102,6 @@ V10武器画面升级：36件武器使用12类实体弹体、装甲/能量切面
 
 ## 验证
 
-当前验证见[本轮汇总](docs/data-v45/SUMMARY.json)，历史流程见`docs/TEST_REPORT.md`。自动测试使用`--grooveflight-test`与隔离APPDATA；本轮数值模拟使用实际血量、合法购买和脚本走位，不等同于真人胜率/持续帧率验收。
+当前验证见[本轮汇总](docs/data-v46/SUMMARY.json)，历史流程见`docs/TEST_REPORT.md`。自动测试使用`--grooveflight-test`与隔离APPDATA；本轮数值模拟使用实际血量、合法购买和脚本走位，不等同于真人胜率/持续帧率验收。
 
 源码入口：`scripts/main.gd`；星球、波次与数值：`planet_catalog.gd`；微缩星图：`solar_map.gd`；阵形几何：`wave_plan.gd`；装备数据与纯音序：`arsenal_catalog.gd`与`arsenal_loadout.gd`；音乐：`music.gd`；都市：`neon_hub.gd`；批量舰队：`fleet_batch.gd`；状态栏/商店：`arsenal_screen.gd`。旧版`catalog.gd`/`loadout.gd`仅保留历史测试，不参与当前战斗。

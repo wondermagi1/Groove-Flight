@@ -1,5 +1,5 @@
 extends Control
-const SKIN=preload("res://scripts/visual_theme.gd")
+const CLEAR_HUD=preload("res://scripts/combat_hud_style.gd")
 ## Three shared presentations of the same loadout. Combat only inspects; editor
 ## and shop route every inventory transaction through the game's validated API.
 const DATA = preload("res://scripts/arsenal_catalog.gd")
@@ -99,9 +99,6 @@ class ModuleCard:
 		var row: Dictionary = DATA.item(item_id)
 		if row.is_empty(): return
 		var accent: Color = DATA.quality_color(row,item_level)
-		if not flight_compact:
-			draw_line(Vector2(1,7),Vector2(1,size.y-7),Color(accent,.70),2.,true)
-			draw_line(Vector2(10,32),Vector2(size.x-10,32),Color(accent,.13),1.,true)
 		if flight_compact:
 			ART.draw_icon(self, Rect2(Vector2(8, 1), Vector2(size.x - 16, size.y - 4)), item_id)
 			if item_level > 1:
@@ -181,7 +178,6 @@ func _ready() -> void:
 	var theme_value := Theme.new()
 	theme_value.default_font = font
 	theme_value.default_font_size = 20
-	SKIN.apply(theme_value)
 	theme = theme_value
 	resized.connect(_queue_rebuild)
 	refresh()
@@ -190,13 +186,23 @@ func editable() -> bool:
 	return game != null and mode != "combat" and game.can_edit()
 
 func _box(color: Color, border: Color = Color("263242"), radius: int = 7, margin: int = 14) -> StyleBoxFlat:
-	return SKIN.panel(color,border,radius,margin)
+	var style := StyleBoxFlat.new()
+	style.bg_color = color
+	style.border_color = border
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(radius)
+	style.content_margin_left = margin
+	style.content_margin_right = margin
+	style.content_margin_top = margin
+	style.content_margin_bottom = margin
+	return style
+
 func _label(text_value: String, text_size: int = 19, color: Color = Color("c8d3e4")) -> Label:
 	var node := Label.new()
 	node.text = text_value
 	node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	node.add_theme_font_size_override("font_size",roundi(text_size*float(game.settings.get("text_scale",1.))))
-	node.add_theme_color_override("font_color", SKIN.text(color))
+	node.add_theme_color_override("font_color", color)
 	return node
 
 func _button(text_value: String, callback: Callable, accent: Color = Color("83dfd7"), height: float = 38.0) -> Button:
@@ -242,6 +248,7 @@ func refresh() -> void:
 	var left_width: float = 240.0 if compact else 282.0
 	var right_width: float = 290.0 if compact else 420.0
 	var top: float = 122.0
+	if mode=="combat":top=maxf(top,_combat_toolbar_y()+54.)
 	var bottom_height: float = 244.0 if compact else 294.0
 	var sequence_x: float = left_width + 42.0
 	var sequence_width: float = maxf(480.0, view.x - sequence_x - right_width - 42.0)
@@ -260,7 +267,7 @@ func refresh() -> void:
 	if mode != "combat":
 		var shade := ColorRect.new()
 		shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		shade.color = Color(SKIN.VOID,0.96)
+		shade.color = Color(0.015, 0.025, 0.045, 0.92)
 		shade.mouse_filter = Control.MOUSE_FILTER_STOP
 		content.add_child(shade)
 	_build_top(view)
@@ -300,11 +307,14 @@ func _panel(rect: Rect2, title_value: String, subtitle: String = "") -> VBoxCont
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override("separation", 10)
 	panel.add_child(column)
-	var header=HBoxContainer.new();header.add_theme_constant_override("separation",9);column.add_child(header)
-	var marker=ColorRect.new();marker.color=SKIN.GOLD;marker.custom_minimum_size=Vector2(3,20);header.add_child(marker)
-	header.add_child(_label(title_value,21,SKIN.TEXT))
+	column.add_child(_label(title_value, 21, Color("e0e9f5")))
 	if not subtitle.is_empty(): column.add_child(_label(subtitle, 15, Color("7d91ab")))
 	return column
+
+func _combat_toolbar_y() -> float:
+	var timer=game.ui.timer_label
+	if not is_instance_valid(timer):return 70.
+	return maxf(70.,timer.position.y+timer.get_combined_minimum_size().y+8.)
 
 func _build_top(view: Vector2) -> void:
 	if mode != "combat":
@@ -317,7 +327,7 @@ func _build_top(view: Vector2) -> void:
 		currency_label.position = Vector2(232, 24)
 		content.add_child(currency_label)
 	var toggles := HBoxContainer.new()
-	toggles.position = Vector2(24, 70)
+	toggles.position = Vector2(24,_combat_toolbar_y() if mode=="combat" else 70.)
 	toggles.add_theme_constant_override("separation", 6)
 	content.add_child(toggles)
 	for row in PANEL_NAMES:
@@ -327,11 +337,13 @@ func _build_top(view: Vector2) -> void:
 		toggle.name = key
 		toggle.custom_minimum_size.x = 85.0
 		toggle.tooltip_text = "显示或隐藏" + str(row[1]) + "面板"
+		if mode=="combat":CLEAR_HUD.button(toggle,active)
 		toggles.add_child(toggle)
 	var all_visible: bool = true
 	for row in PANEL_NAMES: all_visible = all_visible and _panel_visible(str(row[0]))
 	var all_button := _button("隐藏全部" if all_visible else "显示全部", _toggle_all, Color("c4cae1"), 34)
 	all_button.name = "ToggleAllPanels"
+	if mode=="combat":CLEAR_HUD.button(all_button)
 	toggles.add_child(all_button)
 	if mode != "combat":
 		var codex_button=_button("音色图鉴",open_weapon_codex,Color("8edfda"),34)

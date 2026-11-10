@@ -1,6 +1,6 @@
 # 武器特效与音频对应表（持续维护）
 
-最后更新：2026-11-10。核对版本：`0.45.0-original-backdrop`；按反馈恢复原始星球/星空背景，V44 UI与舰体细节保留。24武器参数、弹道、颜色、声音及V43配装/流派规则不变。备份`3b6b84a`已上传核验。[回退说明](V45_ORIGINAL_BACKDROP.md)与[当前核对](data-v45/SUMMARY.json)。
+最后更新：2026-11-10。核对版本：`0.46.0-clear-combat-ui`；UI恢复换肤前样式，战斗顶部默认透明，白字配大号粗体倒计时；原始背景、舰体细节和24武器/288WAV及V43玩法保留。备份`9e7c967`已上传核验。[本轮说明](V46_CLEAR_COMBAT_UI.md)与[当前核对](data-v46/SUMMARY.json)。
 
 这是当前现役武器的统一查阅入口。后续在同一份文档持续更新；历史版本说明和旧武器档案保留在原处。表中均为已经接入的内容，待开发设想另列。
 
@@ -199,6 +199,7 @@ V35提供9项独立音量，新增独立危险警报；推荐混音可一键恢�
 
 | 日期 | 游戏版本 / 基线 | 本表变更 |
 | --- | --- | --- |
+| 2026-11-10 | V46 / 备份`9e7c967` | 撤销V44 UI皮肤，战斗顶部白字/按钮默认透明、悬停轻反馈，倒计时加大加粗；原始背景、敌我舰体、24武器/288WAV与玩法保留。 |
 | 2026-11-10 | V45 / 备份`3b6b84a` | 撤销V44青绿色战场，背景着色器/贴图绑定精确恢复059ceb2；UI/舰体细节保留。24武器/288WAV及玩法不变；V44截图保留为历史。 |
 | 2026-11-09 | V44 / 备份`059ceb2` | 六组UI与敌我舰体细化、参考视频青绿背景；24武器参数/颜色/运动、288WAV及V43流派/初始不变。更新当前版本/目录/资产核对；新图是实际Forward+自动渲染，未做人工画面评审。 |
 | 2026-11-09 | V43 / 备份`42187dc` | 战前明确选择实弹18/激光3/电链3；全获取路径及道具/祝福按流派过滤，导弹/实体棱镜留实弹。所有关卡取消初始流萤，改两件流派配装；288音源/24参数/VFX不变，更新三份实装试听和当前快照。 |
@@ -242,7 +243,9 @@ V37历史专项：[新配装与长音说明](V37_SUSTAINED_SALVO_VOICES.md) · [
 
 V38历史专项：[一秒音源与十种展开](V38_ONE_SECOND_GRAND_SALVOS.md) · [当前验证](data-v38/SUMMARY.json) · [十种原生齐射总览](screenshots/v38-grand-salvos.png)。
 
-当前V45：[原始背景回退](V45_ORIGINAL_BACKDROP.md) · [当前目录](data-v45/weapon-selection.json) · [验证汇总](data-v45/SUMMARY.json)。
+当前V46：[UI回退与透明HUD](V46_CLEAR_COMBAT_UI.md) · [当前目录](data-v46/weapon-selection.json) · [验证汇总](data-v46/SUMMARY.json)。
+
+历史V45：[原始背景回退](V45_ORIGINAL_BACKDROP.md) · [当前目录](data-v45/weapon-selection.json) · [验证汇总](data-v45/SUMMARY.json)。
 
 历史V44：[UI与舰体说明](V44_JADE_FLEET_UI.md) · [当前目录](data-v44/weapon-selection.json) · [分流目录](data-v44/doctrine-pools.json) · [验证汇总](data-v44/SUMMARY.json)。
 

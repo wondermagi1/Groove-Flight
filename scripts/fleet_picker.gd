@@ -1,5 +1,4 @@
 extends Control
-const SKIN=preload("res://scripts/visual_theme.gd")
 ## The hangar changes the next flight's configuration; departure stays in the city.
 const FLEET = preload("res://scripts/fleet_catalog.gd")
 const ART = preload("res://scripts/fleet_art.gd")
@@ -57,7 +56,7 @@ class FleetCard extends Button:
 
 class HangarBackdrop extends Control:
 	func _draw() -> void:
-		draw_rect(Rect2(Vector2.ZERO, size), SKIN.VOID)
+		draw_rect(Rect2(Vector2.ZERO, size), Color("070d18"))
 		for i in range(58):
 			var x: float = fposmod(float(i * 313 + 73), maxf(size.x, 1.0))
 			var y: float = fposmod(float(i * i * 17 + 43), maxf(size.y, 1.0))
@@ -74,7 +73,6 @@ func _ready() -> void:
 	var hangar_theme := Theme.new()
 	hangar_theme.default_font = system_font
 	hangar_theme.default_font_size = 20
-	SKIN.apply(hangar_theme)
 	theme = hangar_theme
 	var backdrop := HangarBackdrop.new()
 	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -168,12 +166,22 @@ func _label(value: String, font_size: int, color: Color = Color("d7e5f5")) -> La
 	var result := Label.new()
 	result.text = value
 	result.add_theme_font_size_override("font_size", font_size)
-	result.add_theme_color_override("font_color", SKIN.text(color))
+	result.add_theme_color_override("font_color", color)
 	result.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return result
 
 func _box(color: Color, border: Color, radius: int, padding: int = 14) -> StyleBoxFlat:
-	return SKIN.panel(color,border,radius,padding)
+	var style := StyleBoxFlat.new()
+	style.bg_color = color
+	style.border_color = border
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(radius)
+	style.content_margin_left = padding
+	style.content_margin_right = padding
+	style.content_margin_top = padding
+	style.content_margin_bottom = padding
+	return style
+
 func _layout() -> void:
 	if not is_instance_valid(frame):
 		return

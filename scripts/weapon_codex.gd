@@ -1,5 +1,4 @@
 extends Control
-const SKIN=preload("res://scripts/visual_theme.gd")
 ## In-game weapon sound encyclopedia. Every preview loads the same PCM sample
 ## used by the native music renderer; no separate cosmetic audio is invented.
 const DATA=preload("res://scripts/arsenal_catalog.gd")
@@ -150,7 +149,7 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter=Control.MOUSE_FILTER_STOP
 	var font=SystemFont.new(); font.font_names=PackedStringArray(["Microsoft YaHei UI","Noto Sans CJK SC","Arial"])
-	var ui_theme=Theme.new(); ui_theme.default_font=font; ui_theme.default_font_size=18; SKIN.apply(ui_theme);theme=ui_theme
+	var ui_theme=Theme.new(); ui_theme.default_font=font; ui_theme.default_font_size=18; theme=ui_theme
 	_load_manifest()
 	var dim=ColorRect.new(); dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT); dim.color=Color(0.005,.01,.018,.94); add_child(dim)
 	var frame=Panel.new(); frame.name="WeaponCodexFrame"; frame.add_theme_stylebox_override("panel",_box(Color("091321"),Color("36536c"),12,20)); add_child(frame)
@@ -240,10 +239,13 @@ func _record(id: String) -> Dictionary:
 	return {}
 
 func _label(value: String,font_size: int,color: Color) -> Label:
-	var label=Label.new(); label.text=value; label.add_theme_font_size_override("font_size",font_size); label.add_theme_color_override("font_color",SKIN.text(color)); label.mouse_filter=Control.MOUSE_FILTER_IGNORE; return label
+	var label=Label.new(); label.text=value; label.add_theme_font_size_override("font_size",font_size); label.add_theme_color_override("font_color",color); label.mouse_filter=Control.MOUSE_FILTER_IGNORE; return label
 
 func _box(color: Color,border: Color,radius: int,padding: int) -> StyleBoxFlat:
-	return SKIN.panel(color,border,radius,padding)
+	var style=StyleBoxFlat.new(); style.bg_color=color; style.border_color=border; style.set_border_width_all(1); style.set_corner_radius_all(radius)
+	style.content_margin_left=padding; style.content_margin_right=padding; style.content_margin_top=padding; style.content_margin_bottom=padding
+	return style
+
 func select_weapon(id: String) -> void:
 	if DATA.item(id).is_empty(): return
 	queued.clear()

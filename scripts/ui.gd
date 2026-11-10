@@ -1,5 +1,5 @@
 extends CanvasLayer
-const SKIN=preload("res://scripts/visual_theme.gd")
+const CLEAR_HUD=preload("res://scripts/combat_hud_style.gd")
 const DATA=preload("res://scripts/arsenal_catalog.gd")
 const ARSENAL=preload("res://scripts/arsenal_screen.gd")
 const FLEET=preload("res://scripts/fleet_catalog.gd")
@@ -33,15 +33,15 @@ func _ready() -> void:
 	font=SystemFont.new(); font.font_names=PackedStringArray(["Microsoft YaHei UI","Noto Sans CJK SC","Arial"])
 	root_control=Control.new(); root_control.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root_control.mouse_filter=Control.MOUSE_FILTER_IGNORE; add_child(root_control)
-	var theme=Theme.new(); theme.default_font=font; theme.default_font_size=20; SKIN.apply(theme);root_control.theme=theme
+	var theme=Theme.new(); theme.default_font=font; theme.default_font_size=20; root_control.theme=theme
 	get_viewport().size_changed.connect(refresh)
 func box(color: Color,border: Color=Color.TRANSPARENT,radius: int=10) -> StyleBoxFlat:
-	var style=SKIN.panel(color,border,radius,18)
-	style.content_margin_top=12;style.content_margin_bottom=12
-	return style
+	var style=StyleBoxFlat.new(); style.bg_color=color; style.border_color=border
+	style.set_border_width_all(1); style.set_corner_radius_all(radius); style.content_margin_left=18; style.content_margin_right=18
+	style.content_margin_top=12; style.content_margin_bottom=12; return style
 func label(text_value: String,size: int=20,color: Color=Color("edf3ff")) -> Label:
 	var node=Label.new(); node.text=text_value; node.add_theme_font_size_override("font_size",roundi(size*float(game.settings.get("text_scale",1.))))
-	node.add_theme_color_override("font_color",SKIN.text(color)); node.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	node.add_theme_color_override("font_color",color); node.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	return node
 func button(text_value: String,callback: Callable,color: Color=Color("71e8dc"),height: float=54) -> Button:
 	var node=Button.new(); node.text=text_value; node.custom_minimum_size=Vector2(180,height); node.focus_mode=Control.FOCUS_NONE
@@ -157,25 +157,31 @@ func arsenal_screen(mode_value: String) -> void:
 	arsenal.name="ArsenalScreen"; root_control.add_child(arsenal)
 func hud(include_arsenal: bool=true) -> void:
 	var view=get_viewport().get_visible_rect().size
-	var telemetry=Panel.new();telemetry.name="TelemetryMaterial";telemetry.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	telemetry.position=Vector2(12,12);telemetry.size=Vector2(view.x-24,64)
-	telemetry.add_theme_stylebox_override("panel",SKIN.panel(Color(SKIN.VOID,.88),Color(SKIN.LINE,.65),4,0));root_control.add_child(telemetry)
 	wave_label=label("",17,Color("97a7bf")); wave_label.position=Vector2(24,26); root_control.add_child(wave_label)
-	timer_label=label("",35); timer_label.position=Vector2(192,13); root_control.add_child(timer_label)
+	timer_label=label("",56,Color.WHITE); timer_label.position=Vector2(192,5); root_control.add_child(timer_label)
+	# Keep clock/BOSS text inside its reserved column at larger UI text scales.
+	timer_label.add_theme_font_size_override("font_size",mini(56,timer_label.get_theme_font_size("font_size")))
+	var timer_font=SystemFont.new();timer_font.font_names=font.font_names;timer_font.font_weight=700;timer_label.add_theme_font_override("font",timer_font)
 	health_label=label("",20); health_label.position=Vector2(370,26); root_control.add_child(health_label)
 	score_label=label("",21); score_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT; score_label.position=Vector2(view.x-650,27); score_label.size=Vector2(295,32); root_control.add_child(score_label)
 	var pause=button("Ⅱ",game.pause_game,Color("8597af"),38); pause.custom_minimum_size=Vector2(44,38); pause.position=Vector2(view.x-75,23); root_control.add_child(pause)
+	pause.name="CombatPause";CLEAR_HUD.button(pause)
 	var edit=button("返回作曲工坊" if game.free_music_run else game.binding_name("editor")+"  音序工坊",game.return_to_composer if game.free_music_run else game.open_editor,Color("9db4c8"),38); edit.position=Vector2(view.x-285,23); root_control.add_child(edit)
+	edit.name="CombatEditor";CLEAR_HUD.button(edit)
 	notice_label=label("",20); notice_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER; notice_label.position=Vector2(view.x*.42,26); notice_label.size=Vector2(view.x*.22,36); root_control.add_child(notice_label)
 	tutorial_skip=button("跳过教学",game.skip_tutorial,Color("8296ab"),28); tutorial_skip.position=Vector2(view.x*.5-45.,142); root_control.add_child(tutorial_skip)
+	tutorial_skip.name="CombatTutorialSkip";CLEAR_HUD.button(tutorial_skip)
 	var boss_x=maxf(620.,view.x*.28); var boss_width=minf(view.x*.44,view.x-boss_x-25.)
 	boss_panel=Panel.new(); boss_panel.position=Vector2(boss_x,70); boss_panel.size=Vector2(boss_width,76); boss_panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	var boss_style=StyleBoxFlat.new(); boss_style.bg_color=Color(.018,.032,.052,.88); boss_style.set_corner_radius_all(5); boss_panel.add_theme_stylebox_override("panel",boss_style); root_control.add_child(boss_panel)
+	var boss_style=StyleBoxFlat.new(); boss_style.bg_color=Color.TRANSPARENT; boss_style.set_corner_radius_all(5); boss_panel.add_theme_stylebox_override("panel",boss_style); root_control.add_child(boss_panel)
 	boss_bar=thin_bar(boss_width-20,Color("ee8faf")); boss_bar.position=Vector2(boss_x+10,110); root_control.add_child(boss_bar)
 	boss_title=label("",22,Color("e5eaf0")); boss_title.position=Vector2(boss_x+10,77); boss_title.size=Vector2(boss_width-20,28); boss_title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER; root_control.add_child(boss_title)
 	boss_caption=label("",14,Color("a9b9c8")); boss_caption.position=Vector2(boss_x+10,121); boss_caption.size=Vector2(boss_width-20,22); boss_caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER; root_control.add_child(boss_caption)
 	overload_label=label("",16,Color("e4c18c")); overload_label.position=Vector2(590,22); root_control.add_child(overload_label)
 	overload_bar=thin_bar(160,Color("f3d091")); overload_bar.position=Vector2(590,51); root_control.add_child(overload_bar)
+	for node in [wave_label,timer_label,health_label,score_label,notice_label,overload_label,boss_title,boss_caption]:
+		node.add_theme_color_override("font_color",Color.WHITE);CLEAR_HUD.readable(node)
+	timer_label.add_theme_constant_override("outline_size",3)
 	if include_arsenal and not game.free_music_run: arsenal_screen("combat")
 func update_hud() -> void:
 	if not is_instance_valid(wave_label): return
@@ -203,9 +209,7 @@ func update_hud() -> void:
 		boss_title.text=str(PLANETS.planet(game.active_planet).bossname)+"  /  "+str(PLANETS.planet(game.active_planet).machine_type)
 		boss_caption.text="巨型机械接近 · 武器启动中" if game.music.timeline<float(boss.get("entry_until",-1.)) else ("核心暴露 ×1.5 / 炮塔剩余%d"%game.BOSS_SCORE.live_nodes(game,boss) if game.music.timeline<float(boss.get("core_until",-1.)) else str(boss.get("motif","装甲核心"))+" / 拆炮塔削减8%核心")
 func section_title(content: VBoxContainer,text_value: String,subtitle: String="") -> void:
-	var heading=HBoxContainer.new();heading.add_theme_constant_override("separation",12);content.add_child(heading)
-	var marker=ColorRect.new();marker.color=SKIN.GOLD;marker.custom_minimum_size=Vector2(3,32);heading.add_child(marker)
-	heading.add_child(label(text_value,30,SKIN.TEXT))
+	content.add_child(label(text_value,30))
 	if not subtitle.is_empty(): content.add_child(label(subtitle,17,Color("8c9db5")))
 func reward_screen() -> void:
 	arsenal_screen("shop")
