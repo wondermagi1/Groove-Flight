@@ -1,0 +1,126 @@
+{
+  "scope": "V35 onward base-count comparison for current physical weapons shared with V35;charge changes are frequency changes,not exact hit-DPS estimates.",
+  "physical_ids_checked": [
+    "pulse",
+    "scatter",
+    "missile",
+    "nova",
+    "rail",
+    "pulse_needle",
+    "scatter_prism",
+    "beam_split",
+    "rail_horizon",
+    "recorded_heavy",
+    "gilded_helix",
+    "weave_cross",
+    "crown_orbit",
+    "stern_fan",
+    "dawn_fan",
+    "tidal_weave",
+    "firefly_rain"
+  ],
+  "count_reductions_after_v35": [],
+  "charge_changes_v35": [
+    {
+      "id": "missile",
+      "name": "彗星导弹",
+      "charge_before_v35": 1,
+      "charge_after_v35": 2,
+      "base_count_before": 1,
+      "base_count_after": 1
+    },
+    {
+      "id": "nova",
+      "name": "新星环炮",
+      "charge_before_v35": 1,
+      "charge_after_v35": 4,
+      "base_count_before": 10,
+      "base_count_after": 10
+    },
+    {
+      "id": "scatter_prism",
+      "name": "七彩折光匣",
+      "charge_before_v35": 2,
+      "charge_after_v35": 4,
+      "base_count_before": 12,
+      "base_count_after": 12
+    },
+    {
+      "id": "beam_split",
+      "name": "双生棱镜",
+      "charge_before_v35": 1,
+      "charge_after_v35": 2,
+      "base_count_before": 2,
+      "base_count_after": 2
+    },
+    {
+      "id": "recorded_heavy",
+      "name": "终压攻城铳",
+      "charge_before_v35": 1,
+      "charge_after_v35": 4,
+      "base_count_before": 1,
+      "base_count_after": 1
+    },
+    {
+      "id": "gilded_helix",
+      "name": "鎏金螺旋阵",
+      "charge_before_v35": 2,
+      "charge_after_v35": 4,
+      "base_count_before": 48,
+      "base_count_after": 48
+    },
+    {
+      "id": "weave_cross",
+      "name": "虹织十字炮",
+      "charge_before_v35": 2,
+      "charge_after_v35": 3,
+      "base_count_before": 64,
+      "base_count_after": 64
+    },
+    {
+      "id": "crown_orbit",
+      "name": "星冕回旋阵",
+      "charge_before_v35": 2,
+      "charge_after_v35": 3,
+      "base_count_before": 16,
+      "base_count_after": 16
+    },
+    {
+      "id": "stern_fan",
+      "name": "尾羽回响",
+      "charge_before_v35": 1,
+      "charge_after_v35": 3,
+      "base_count_before": 24,
+      "base_count_after": 24
+    },
+    {
+      "id": "dawn_fan",
+      "name": "晨羽前奏",
+      "charge_before_v35": 1,
+      "charge_after_v35": 3,
+      "base_count_before": 18,
+      "base_count_after": 18
+    },
+    {
+      "id": "tidal_weave",
+      "name": "潮汐弦歌",
+      "charge_before_v35": 2,
+      "charge_after_v35": 4,
+      "base_count_before": 24,
+      "base_count_after": 24
+    },
+    {
+      "id": "firefly_rain",
+      "name": "流萤织雨",
+      "charge_before_v35": 2,
+      "charge_after_v35": 3,
+      "base_count_before": 30,
+      "base_count_after": 30
+    }
+  ],
+  "old_ballistic_path_core_points": 12,
+  "v43_default_ballistic_points": 0,
+  "v47_ballistic_start_points": 10,
+  "old_path_removal_commit": "35d7e78",
+  "enemy_hp_increase_commit": "6778a96"
+}

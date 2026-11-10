@@ -1,0 +1,118 @@
+{
+  "version": "0.47.0-quarterstep-enemies",
+  "date": "2026-11-10",
+  "backups": [
+    "a948e86317f33c56d429bc4f47c65d566521f0de",
+    "53b3b90d0cb1e38f3f4803f6632800e47dde5f4d"
+  ],
+  "enemy": {
+    "step_seconds": 0.25,
+    "move_seconds": 0.16,
+    "rest_seconds": 0.09,
+    "non_deployment_speed_scale": 1.2,
+    "turn_radians_per_second": 1.0
+  },
+  "ballistic_start_points": 10,
+  "wave_ballistic_quota": 2,
+  "wave_general_quota": 1,
+  "wave_flat_increases": [
+    3,
+    5,
+    7,
+    10
+  ],
+  "wave_one_shot_multipliers": [
+    1.5,
+    2,
+    3
+  ],
+  "multiplier_mode": "snapshot difference stored as additive grant;future gains add normally",
+  "weapons": 24,
+  "preserved_wavs": 288,
+  "preserved_files": [
+    "scripts/main.gd",
+    "scripts/arsenal_catalog.gd",
+    "scripts/projectile_growth.gd",
+    "scripts/weapon_emission.gd",
+    "scripts/weapon_visuals.gd",
+    "scripts/weapon_render.gd",
+    "scripts/salvo_patterns.gd",
+    "scripts/projectile_fields.gd",
+    "scripts/energy_arsenal.gd",
+    "scripts/energy_growth.gd",
+    "scripts/fleet_art.gd",
+    "scripts/fleet_batch.gd",
+    "scripts/fleet_catalog.gd",
+    "scripts/enemy_arrival.gd",
+    "scripts/run_balance.gd",
+    "scripts/planet_catalog.gd",
+    "scripts/music.gd",
+    "scripts/ui.gd",
+    "scripts/combat_hud_style.gd",
+    "scripts/planet_backdrop_assets.gd",
+    "shaders/planet_uhd.gdshader",
+    "native/crowd/crowd.cpp",
+    "native/crowd/groove_crowd.windows.x86_64.dll",
+    "native/crowd/crowd.gdextension"
+  ],
+  "reports": [
+    {
+      "file": "results-v47-enemy-cadence.json",
+      "checks": 22,
+      "failures": []
+    },
+    {
+      "file": "results-v47-ballistic-growth.json",
+      "checks": 1633,
+      "failures": []
+    },
+    {
+      "file": "results-v28-crowd-kernel.json",
+      "checks": 7,
+      "failures": []
+    },
+    {
+      "file": "results-v21-crowd.json",
+      "checks": 10,
+      "failures": []
+    },
+    {
+      "file": "results-v21-encirclement.json",
+      "checks": 9,
+      "failures": []
+    },
+    {
+      "file": "results-v31-sequence.json",
+      "checks": 85,
+      "failures": []
+    },
+    {
+      "file": "results-v43-doctrine.json",
+      "checks": 3433,
+      "failures": []
+    },
+    {
+      "file": "results-v42-energy.json",
+      "checks": 268,
+      "failures": []
+    },
+    {
+      "file": "results-v29-music-shop-hud.json",
+      "checks": 351,
+      "failures": []
+    },
+    {
+      "file": "results-v28-density-v47-quarterstep.json",
+      "checks": 6,
+      "failures": []
+    }
+  ],
+  "checks": 5824,
+  "failures": [],
+  "limits": {
+    "attribute": 1000,
+    "physical_projectiles_per_salvo": 256,
+    "enemies": 1024
+  },
+  "scope": "Functional/native parity/crowd clearance and weighted reward checks. The1024-unit16sForward+ samples retain frame-time spikes and do not certify sustained campaign60FPS or human difficulty. Wave-reward balance has not been approved by human playtest. Original V46 presentation and images unchanged."
+}

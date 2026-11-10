@@ -1,0 +1,52 @@
+{
+	"checks": 22,
+	"facts": {
+		"pursuit": {
+			"base_world_speed": 142.0,
+			"deadlines": [
+				{
+					"index": 16,
+					"time": 4.0,
+					"x": 2318.3984375
+				},
+				{
+					"index": 16,
+					"time": 4.16,
+					"x": 2275.79833984375
+				},
+				{
+					"index": 16,
+					"time": 4.24,
+					"x": 2275.79833984375
+				},
+				{
+					"index": 17,
+					"time": 4.25,
+					"x": 2275.79833984375
+				},
+				{
+					"index": 17,
+					"time": 4.41,
+					"x": 2233.1982421875
+				},
+				{
+					"index": 17,
+					"time": 4.49,
+					"x": 2233.1982421875
+				},
+				{
+					"index": 18,
+					"time": 4.5,
+					"x": 2233.1982421875
+				}
+			],
+			"measured_distance_four_seconds": 681.6015625,
+			"new_world_speed": 170.400390625,
+			"plans": 16
+		}
+	},
+	"failures": [],
+	"move_seconds": 0.16,
+	"speed_scale": 1.2,
+	"step_seconds": 0.25
+}

@@ -1,0 +1,16 @@
+{
+	"checks": 268,
+	"facts": {
+		"wind": {
+			"50_100hz_endpoint_difference": 5.1236777305603,
+			"burst_to_range_seconds": 0.26,
+			"entry_cruise_seconds": 1.65,
+			"plain_late_speed": 823.323974609375,
+			"right_angle_degrees": 0.456500282211151,
+			"wind_late_speed": 2304.92211914063
+		}
+	},
+	"failures": [],
+	"images": [],
+	"scope": "Production wind speed/heading/duration/range,unique full-effect item,guaranteed3/4shops and locks,Kaleidoscope4rounds/96base,energy growth,actual refraction attenuation/range,nearest-three lightning death forks,delayed dispatch,pause/cleanup and pinned C-track merge. Native gallery when enabled;not human audio/FPS certification."
+}

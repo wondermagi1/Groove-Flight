@@ -50,6 +50,7 @@ func starter_checks() -> void:
 						var uid=int(game.loadout.slots[int(entry.slot)]);var row=C.item(str(entry.kind))
 						check(uid>=0 and game.loadout.find(uid).kind==entry.kind and range(int(row.width)).all(func(i):return game.loadout.slots[int(entry.slot)+i]==uid),"starter span reserved before utilities / "+str(entry.kind))
 					check(game.active_doctrine==id and game.loadout.doctrine_id==id,"run retains chosen campaign doctrine")
+					check(game.loadout.stats().ballistic==(10. if id=="ballistic" else 0.),"V47 starter ten points apply only to ballistic across planets/difficulties/hulls")
 					check(game.loadout.modules.all(func(m):return game.loadout.item_allowed(str(m.kind))),"ship utilities cannot inject foreign gear")
 	game.selected_ship="hex";game.settings.difficulty=0;facts.starting_runs=runs
 

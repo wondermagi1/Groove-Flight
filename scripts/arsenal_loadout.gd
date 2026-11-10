@@ -44,7 +44,13 @@ const WAVE_BOONS=[
 	{"id":"boon_regen","name":"纳米修复","key":"regen","value":.012,"detail":"每秒再生 +0.012 生命","tag":"生存","color":Color("91edbe")},
 	{"id":"boon_magnet","name":"回收磁场","key":"magnet","value":.15,"detail":"拾取范围 +15%","tag":"经济","color":Color("b7d88e")},
 	{"id":"boon_luck","name":"航路直觉","key":"luck","value":1.5,"detail":"幸运 +1.5，改善补给品质","tag":"经济","color":Color("f2cd8a")},
-	{"id":"boon_ballistic","name":"实弹标定","key":"ballistic","value":5.,"detail":"实弹属性 +5","tag":"主属性","color":Color("63e7df")},
+	{"id":"boon_ballistic","name":"实弹标定","key":"ballistic","value":5.,"detail":"实弹属性 +5","tag":"主属性","color":Color("63e7df"),"weight":3.},
+	{"id":"boon_ballistic_3","name":"实弹校准 +3","key":"ballistic","value":3.,"detail":"实弹属性 +3","tag":"主属性","color":Color("63e7df"),"doctrine":"ballistic","weight":3.},
+	{"id":"boon_ballistic_7","name":"实弹扩容 +7","key":"ballistic","value":7.,"detail":"实弹属性 +7","tag":"主属性","color":Color("63e7df"),"doctrine":"ballistic","weight":3.},
+	{"id":"boon_ballistic_10","name":"实弹增幅 +10","key":"ballistic","value":10.,"detail":"实弹属性 +10","tag":"主属性","color":Color("63e7df"),"doctrine":"ballistic","weight":3.},
+	{"id":"boon_ballistic_x15","name":"实弹 ×1.5","key":"ballistic","value":1.5,"operation":"multiply_once","detail":"当前实弹×1.5\n选择时结算一次\n以后正常加点","tag":"主属性","color":Color("e7c88d"),"doctrine":"ballistic","weight":2.},
+	{"id":"boon_ballistic_x2","name":"实弹 ×2","key":"ballistic","value":2.,"operation":"multiply_once","detail":"当前实弹×2\n选择时结算一次\n以后正常加点","tag":"主属性","color":Color("c399ff"),"doctrine":"ballistic","weight":1.},
+	{"id":"boon_ballistic_x3","name":"实弹 ×3","key":"ballistic","value":3.,"operation":"multiply_once","detail":"当前实弹×3\n选择时结算一次\n以后正常加点","tag":"主属性","color":Color("ffd478"),"doctrine":"ballistic","weight":1.},
 	{"id":"boon_energy","name":"能量调谐","key":"energy","value":5.,"detail":"能量属性 +5","tag":"主属性","color":Color("ada2ff")},
 	{"id":"boon_power","name":"动力增幅","key":"power","value":5.,"detail":"动力属性 +5","tag":"主属性","color":Color("ffc16b")},
 	{"id":"boon_support","name":"支援协议","key":"support","value":5.,"detail":"支援属性 +5","tag":"主属性","color":Color("8ed7bf")}
@@ -53,6 +59,7 @@ var modules: Array=[]
 var slots: Array[int]=[]
 var perks: Dictionary={}
 var boons: Dictionary={}
+var attribute_grants: Dictionary={}
 var next_uid: int=1
 var damage_scale: float=1.
 var echo_repeat: bool=false
@@ -84,7 +91,7 @@ func item_allowed(id: String) -> bool:
 func _row(id: String) -> Dictionary: return _catalog.get(id,{})
 func reset() -> void:
 	phrase_offsets.clear()
-	modules.clear(); slots.resize(TRACKS*STEPS); slots.fill(-1); perks.clear(); boons.clear()
+	modules.clear(); slots.resize(TRACKS*STEPS); slots.fill(-1); perks.clear(); boons.clear(); attribute_grants.clear()
 	next_uid=1; damage_scale=1.; echo_repeat=false; _base_health=10; _base_extra=0; _fleet_stats.clear()
 	if audio_guard_enabled: set_starters([])
 	else: set_starters(["pulse","scatter","beam","pulse","nova"])
@@ -274,7 +281,11 @@ func _applies(source: Dictionary,uid: int,serial: int) -> bool:
 func _base_stats() -> Dictionary:
 	var result={"ballistic":0.,"energy":0.,"power":0.,"support":0.,"extra_projectiles":float(_base_extra),"bullet_multiplier":1.,"crit_chance":.05,"crit_damage":1.5,"max_health":float(_base_health),"regen":0.,"armor":0.,"move_percent":0.,"magnet":1.,"luck":0.}
 	for key in _fleet_stats: result[key]=float(_fleet_stats[key])
+	var starting=DOCTRINES.starting_attributes(doctrine_id)
+	for key in starting: result[key]+=float(starting[key])
+	for key in attribute_grants: result[key]+=float(attribute_grants[key])
 	for boon in WAVE_BOONS:
+		if str(boon.get("operation","add"))=="multiply_once": continue
 		var count=int(boons.get(str(boon.id),0))
 		if count>0: result[str(boon.key)]+=float(boon.value)*count
 	return result
@@ -297,12 +308,16 @@ func _stats_for(uid: int,serial: int,sources: Array) -> Dictionary:
 func stats() -> Dictionary: return _stats_for(-1,-1,_rules())
 func stat_sources(key: String) -> Array[Dictionary]:
 	var result: Array[Dictionary]=[]
+	var starting=DOCTRINES.starting_attributes(doctrine_id)
+	if starting.has(key): result.append({"uid":-200,"name":"实弹流开局","value":float(starting[key]),"scope":"run","condition":"always","target":"","slot":-1,"level":1,"active":true})
+	if attribute_grants.has(key): result.append({"uid":-201,"name":"波末倍率已结算加成","value":float(attribute_grants[key]),"scope":"run","condition":"always","target":"","slot":-1,"level":1,"active":true})
 	for source in _rules():
 		var rule: Dictionary=source.rule
 		if str(rule.get("type",""))!="stat" or str(rule.get("key",""))!=key: continue
 		result.append({"uid":source.uid,"name":source.name,"value":float(rule.get("value",0))*float(source.scale),"scope":str(rule.get("scope","all")),"condition":str(rule.get("condition","always")),"target":str(rule.get("target","")),"slot":source.slot,"level":source.level,"active":_applies(source,-1,-1)})
 	for index in range(WAVE_BOONS.size()):
 		var boon: Dictionary=WAVE_BOONS[index]
+		if str(boon.get("operation","add"))=="multiply_once": continue
 		if str(boon.key)!=key: continue
 		var count=int(boons.get(str(boon.id),0))
 		if count>0:
@@ -532,14 +547,32 @@ func reward_choices(rng: RandomNumberGenerator) -> Array:
 		var row=_row(str(shop[i].id)); result.append({"type":"module","kind":str(row.id),"title":str(row.name),"detail":str(row.detail),"tag":"新装备","color":row.color})
 	return result
 
+func _draw_wave_boon(pool: Array,rng: RandomNumberGenerator) -> Dictionary:
+	if pool.is_empty(): return {}
+	var total=0.
+	for boon in pool: total+=float(boon.get("weight",1.))
+	var roll=rng.randf()*total;var picked=pool.size()-1
+	for index in range(pool.size()):
+		roll-=float(pool[index].get("weight",1.))
+		if roll<=0.: picked=index;break
+	return pool.pop_at(picked)
+
 func wave_boon_choices(rng: RandomNumberGenerator) -> Array[Dictionary]:
 	var pool: Array=WAVE_BOONS.filter(func(boon):return DOCTRINES.boon_allowed(boon,doctrine_id)).duplicate(true)
-	for index in range(pool.size()-1,0,-1):
-		var swap=rng.randi_range(0,index)
-		var temporary=pool[index]; pool[index]=pool[swap]; pool[swap]=temporary
+	var selected: Array=[]
+	if doctrine_id=="ballistic":
+		var primary=pool.filter(func(boon):return str(boon.key)=="ballistic")
+		var general=pool.filter(func(boon):return str(boon.key)!="ballistic")
+		for index in range(2): selected.append(_draw_wave_boon(primary,rng))
+		selected.append(_draw_wave_boon(general,rng))
+	else:
+		for index in range(mini(3,pool.size())): selected.append(_draw_wave_boon(pool,rng))
+	# Keep three distinct choices and avoid tying a specific column to a category.
+	for index in range(selected.size()-1,0,-1):
+		var swap=rng.randi_range(0,index);var temporary=selected[index];selected[index]=selected[swap];selected[swap]=temporary
 	var result: Array[Dictionary]=[]
-	for index in range(mini(3,pool.size())):
-		var boon: Dictionary=pool[index].duplicate(true)
+	for entry in selected:
+		var boon: Dictionary=entry.duplicate(true)
 		boon.type="boon"
 		boon.title=str(boon.name)
 		result.append(boon)
@@ -551,6 +584,10 @@ func add_boon(id: String) -> bool:
 		if str(boon.id)==id: found=boon; break
 	if found.is_empty(): return false
 	if not DOCTRINES.boon_allowed(found,doctrine_id): return false
+	if str(found.get("operation","add"))=="multiply_once":
+		var key=str(found.key);var before=float(stats().get(key,0.))
+		var after=clampf(before*float(found.value),-90.,1000.)
+		attribute_grants[key]=float(attribute_grants.get(key,0.))+after-before
 	boons[id]=int(boons.get(id,0))+1
 	return true
 
@@ -558,7 +595,7 @@ func boon_summary() -> Array[String]:
 	var result: Array[String]=[]
 	for boon in WAVE_BOONS:
 		var count=int(boons.get(str(boon.id),0))
-		if count>0: result.append("%s ×%d" % [str(boon.name),count])
+		if count>0: result.append(("%s（%d次）" if str(boon.get("operation","add"))=="multiply_once" else "%s ×%d") % [str(boon.name),count])
 	return result
 
 func take(reward: Dictionary) -> bool:
@@ -577,7 +614,7 @@ func clone():
 	var copy=get_script().new()
 	copy.phrase_offsets=phrase_offsets.duplicate(true)
 	copy.modules=modules.duplicate(true); copy.slots.assign(slots); copy.next_uid=next_uid
-	copy.perks=perks.duplicate(true); copy.boons=boons.duplicate(true); copy.damage_scale=damage_scale; copy.echo_repeat=echo_repeat
+	copy.perks=perks.duplicate(true); copy.boons=boons.duplicate(true); copy.attribute_grants=attribute_grants.duplicate(true); copy.damage_scale=damage_scale; copy.echo_repeat=echo_repeat
 	copy.doctrine_id=doctrine_id
 	copy.active_tracks=active_tracks; copy.audio_guard_enabled=audio_guard_enabled; copy.recorded_starter_quality=recorded_starter_quality
 	copy._base_health=_base_health; copy._base_extra=_base_extra; copy._fleet_stats=_fleet_stats.duplicate(true)

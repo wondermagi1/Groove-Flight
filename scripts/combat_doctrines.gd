@@ -2,7 +2,7 @@ extends RefCounted
 ## Campaign pools follow actual visual/mechanical classes,not legacy family names.
 const IDS=["ballistic","laser","lightning"]
 const ROWS=[
-	{"id":"ballistic","name":"实弹流","color":Color("f5cc8e"),"detail":"实体弹、导弹与环绕弹体。以西风极速右转、万花筒同轨甩射和弹数成长组成弹幕。","starters":[{"kind":"pulse","slot":2},{"kind":"rail","slot":11}]},
+	{"id":"ballistic","name":"实弹流","color":Color("f5cc8e"),"detail":"开局实弹属性+10。实体弹、导弹与环绕弹体，以西风右转、万花筒甩射和弹数成长组成弹幕。波末提供实弹加点或当场倍率强化。","starting_attributes":{"ballistic":10.},"starters":[{"kind":"pulse","slot":2},{"kind":"rail","slot":11}]},
 	{"id":"laser","name":"激光流","color":Color("8ce8df"),"detail":"真实光束与折射。每1点能量增加1次折射，以较低单段伤害覆盖多个目标。","starters":[{"kind":"beam","slot":2},{"kind":"laser_fan","slot":11}]},
 	{"id":"lightning","name":"闪电链流","color":Color("b7aaff"),"detail":"电链传导与击杀三向分流。提升能量增加传导深度，连接成群敌人。","starters":[{"kind":"chain","slot":2},{"kind":"arc_bough","slot":11}]}]
 const PHYSICAL_CLASSES=["feather_projectile","missile_shell","energy_orb","orbital_guard"]
@@ -44,7 +44,12 @@ static func item_allowed(item: Dictionary,id: String) -> bool:
 	return true
 static func starters(id: String) -> Array:
 	return row(id).starters.duplicate(true)
+static func starting_attributes(id: String) -> Dictionary:
+	return row(id).get("starting_attributes",{}).duplicate(true) if valid(id) else {}
 static func weapon_ids(catalogue: Array,id: String) -> Array:
 	return catalogue.filter(func(weapon):return weapon_allowed(weapon,id)).map(func(weapon):return str(weapon.id))
 static func boon_allowed(boon: Dictionary,id: String) -> bool:
-	return primary_allowed(str(boon.get("key","")),id)
+	if not id.is_empty() and boon.has("doctrine") and str(boon.doctrine)!=id:return false
+	var key=str(boon.get("key",""))
+	if id=="ballistic" and key in ["energy","power","support"]:return false
+	return primary_allowed(key,id)
