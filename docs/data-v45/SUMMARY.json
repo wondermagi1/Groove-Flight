@@ -1,0 +1,52 @@
+{
+  "version": "0.45.0-original-backdrop",
+  "date": "2026-11-10",
+  "backup": "3b6b84afa26d4fbc1c615dcd497e58dd75637e90",
+  "background_restored_exactly_from": "059ceb2",
+  "restored_files": [
+    "shaders/planet_uhd.gdshader",
+    "scripts/planet_backdrop_assets.gd"
+  ],
+  "preserved_files": [
+    "scripts/visual_theme.gd",
+    "scripts/ui.gd",
+    "scripts/arsenal_screen.gd",
+    "scripts/solar_map.gd",
+    "scripts/fleet_picker.gd",
+    "scripts/weapon_codex.gd",
+    "scripts/composer_screen.gd",
+    "scripts/fleet_art.gd",
+    "scripts/fleet_batch.gd",
+    "scripts/planet_machine_art.gd",
+    "scripts/main.gd",
+    "scripts/arsenal_loadout.gd",
+    "scripts/arsenal_catalog.gd",
+    "scripts/combat_doctrines.gd",
+    "scripts/fleet_catalog.gd",
+    "scripts/run_balance.gd",
+    "scripts/enemy_maneuver.gd",
+    "scripts/enemy_arrival.gd",
+    "scripts/projectile_fields.gd",
+    "scripts/weapon_emission.gd",
+    "scripts/weapon_visuals.gd",
+    "scripts/weapon_render.gd",
+    "scripts/energy_arsenal.gd",
+    "scripts/energy_growth.gd",
+    "scripts/music.gd",
+    "scripts/salvo_patterns.gd",
+    "shaders/fleet_depth.gdshader",
+    "native/crowd/groove_crowd.windows.x86_64.dll",
+    "native/crowd/crowd.gdextension"
+  ],
+  "preserved_wavs": 288,
+  "startup": "PASS",
+  "reports": [
+    {
+      "file": "results-v29-music-shop-hud.json",
+      "checks": 351,
+      "failures": []
+    }
+  ],
+  "scope": "Exact original background files restored;shared UI/hull refinement,combat/audio/doctrine data/native kernel retained. Headless startup and existing shop/HUD/music regression;no new gameplay tests or manual picture review.",
+  "failures": []
+}

@@ -18,8 +18,6 @@ static func bind_map(material: ShaderMaterial,parameter: String,filename: String
 	return texture
 
 static func apply(material: ShaderMaterial,id: String,quality: int=2,exposure: float=.9) -> void:
-	material.set_shader_parameter("battlefield_deep",Color("082e28"))
-	material.set_shader_parameter("battlefield_light",Color("2d8276"))
 	bind_map(material,"albedo_map",str(MAPS.get(id,MAPS.mercury)))
 	bind_map(material,"star_map","8k_stars_milky_way.jpg")
 	for parameter in EARTH_LAYERS:

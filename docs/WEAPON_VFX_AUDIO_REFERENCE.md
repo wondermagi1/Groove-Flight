@@ -1,6 +1,6 @@
 # 武器特效与音频对应表（持续维护）
 
-最后更新：2026-11-09。核对版本：`0.44.0-jade-fleet`；UI/舰体/青绿战场美术升级，24件武器的弹道、质感、颜色、充能及288份音源保留，V43流派和两件初始保持。备份`059ceb2`已上传核验。[本轮说明](V44_JADE_FLEET_UI.md)与[当前核对](data-v44/SUMMARY.json)。
+最后更新：2026-11-10。核对版本：`0.45.0-original-backdrop`；按反馈恢复原始星球/星空背景，V44 UI与舰体细节保留。24武器参数、弹道、颜色、声音及V43配装/流派规则不变。备份`3b6b84a`已上传核验。[回退说明](V45_ORIGINAL_BACKDROP.md)与[当前核对](data-v45/SUMMARY.json)。
 
 这是当前现役武器的统一查阅入口。后续在同一份文档持续更新；历史版本说明和旧武器档案保留在原处。表中均为已经接入的内容，待开发设想另列。
 
@@ -199,6 +199,7 @@ V35提供9项独立音量，新增独立危险警报；推荐混音可一键恢�
 
 | 日期 | 游戏版本 / 基线 | 本表变更 |
 | --- | --- | --- |
+| 2026-11-10 | V45 / 备份`3b6b84a` | 撤销V44青绿色战场，背景着色器/贴图绑定精确恢复059ceb2；UI/舰体细节保留。24武器/288WAV及玩法不变；V44截图保留为历史。 |
 | 2026-11-09 | V44 / 备份`059ceb2` | 六组UI与敌我舰体细化、参考视频青绿背景；24武器参数/颜色/运动、288WAV及V43流派/初始不变。更新当前版本/目录/资产核对；新图是实际Forward+自动渲染，未做人工画面评审。 |
 | 2026-11-09 | V43 / 备份`42187dc` | 战前明确选择实弹18/激光3/电链3；全获取路径及道具/祝福按流派过滤，导弹/实体棱镜留实弹。所有关卡取消初始流萤，改两件流派配装；288音源/24参数/VFX不变，更新三份实装试听和当前快照。 |
 | 2026-11-09 | V42 / 备份`8516717` | 新增两链两激光、单簧管/长笛48WAV；万花筒4轮/96基础弹，西风完整唯一且第3/4波保证，详情点击固定。激光每能量+1折射，电链每5能量+1传导及击杀三分流，根齐射一声。 |
@@ -241,7 +242,9 @@ V37历史专项：[新配装与长音说明](V37_SUSTAINED_SALVO_VOICES.md) · [
 
 V38历史专项：[一秒音源与十种展开](V38_ONE_SECOND_GRAND_SALVOS.md) · [当前验证](data-v38/SUMMARY.json) · [十种原生齐射总览](screenshots/v38-grand-salvos.png)。
 
-当前V44：[UI与舰体说明](V44_JADE_FLEET_UI.md) · [当前目录](data-v44/weapon-selection.json) · [分流目录](data-v44/doctrine-pools.json) · [验证汇总](data-v44/SUMMARY.json)。
+当前V45：[原始背景回退](V45_ORIGINAL_BACKDROP.md) · [当前目录](data-v45/weapon-selection.json) · [验证汇总](data-v45/SUMMARY.json)。
+
+历史V44：[UI与舰体说明](V44_JADE_FLEET_UI.md) · [当前目录](data-v44/weapon-selection.json) · [分流目录](data-v44/doctrine-pools.json) · [验证汇总](data-v44/SUMMARY.json)。
 
 历史V43：[战前流派说明](V43_DOCTRINE_CAMPAIGNS.md) · [分流目录](data-v43/doctrine-pools.json) · [验证汇总](data-v43/SUMMARY.json)。
 

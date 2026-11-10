@@ -1,10 +1,10 @@
 # 武器开发统一规范（持续维护）
 
-2026-11-09，适用版本 `0.44.0-jade-fleet`。以后新增、重做武器先读本文，再核对[现役特效与音频表](WEAPON_VFX_AUDIO_REFERENCE.md)。本文汇总历次已接受的规则；用户的新决定优先，并须同步更新规范和对应表。
+2026-11-10，适用版本 `0.45.0-original-backdrop`。以后新增、重做武器先读本文，再核对[现役特效与音频表](WEAPON_VFX_AUDIO_REFERENCE.md)。本文汇总历次已接受的规则；用户的新决定优先，并须同步更新规范和对应表。
 
 ## 已实现的基础
 
-24种现役武器，15种共享羽状质感、18种实体弹、3种激光及3种电链。生产目录是 `scripts/arsenal_catalog.gd`，实际发射、运动和绘制分别在 `main.gd`、`weapon_emission.gd`、`weapon_visuals.gd`、`weapon_render.gd`，大范围编排由 `salvo_patterns.gd` 定义。以实际代码和[当前目录快照](data-v44/weapon-selection.json)为准。
+24种现役武器，15种共享羽状质感、18种实体弹、3种激光及3种电链。生产目录是 `scripts/arsenal_catalog.gd`，实际发射、运动和绘制分别在 `main.gd`、`weapon_emission.gd`、`weapon_visuals.gd`、`weapon_render.gd`，大范围编排由 `salvo_patterns.gd` 定义。以实际代码和[当前目录快照](data-v45/weapon-selection.json)为准。
 
 | 项目 | 开发约定 |
 | --- | --- |

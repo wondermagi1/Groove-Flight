@@ -4,7 +4,9 @@
 
 2026-11-09后续配器决定：用户最新合并为[统一13种乐器组开发总体框架](ORCHESTRAL_AUDIO_DIRECTION.md)：钢琴、弦乐4种、竖琴、木管4种、三角铁/钟琴/定音鼓。覆盖此前A/B划分；先建立音源和演奏力度，再按武器定位分配。当前V38素材与乐器尚未替换，圆号不计入最新核心清单。
 
-2026-11-09，工程版本 `0.44.0-jade-fleet`，开发分支 `codex/v44-jade-fleet-ui`，修改前备份`059ceb2`已上传核验。每轮继续遵守先上传Git备份再改游戏。
+2026-11-10，工程版本 `0.45.0-original-backdrop`，开发分支 `codex/v45-original-backdrop`，修改前备份`3b6b84a`已上传核验。每轮继续遵守先上传Git备份再改游戏。
+
+V45用户否定青绿色战场，已将planet_uhd.gdshader与planet_backdrop_assets.gd完整恢复为V44改色前059ceb2的原文件。原始星球/星空、云层/夜景/光环与亮度/画质控制恢复；V44 UI/敌我舰体细节保留，武器/音频/流派/节奏/碰撞不动。V44青绿战场图仅作历史，不代表当前背景。见[V45](V45_ORIGINAL_BACKDROP.md)与[当前验证](data-v45/SUMMARY.json)。
 
 V44：共享visual_theme接主界面/HUD/商店/机库/星图/图鉴/作曲，深青绿、暖白与暖金；5舰体倒角/喷口/散热/检修细节，8敌机网格珊瑚红核心和装甲层次，仍8个单surface共享网格（288–387顶点），1024无独立敌机节点。planet_uhd同pass参考视频青绿背景，无新增模糊/灯光pass。24武器/288WAV、main实际战斗/流派/碰撞/敌群/原生DLL逐文件不变；UI120%文本/1080p/720p及真实Forward+渲染通过。未做人工图片评审。见[V44](V44_JADE_FLEET_UI.md)、[当前验证](data-v44/SUMMARY.json)与[实际舰体预览](screenshots/v44-hull-materials.png)。
 

@@ -8,8 +8,6 @@ uniform vec4 planet_color : source_color=vec4(.56,.58,.63,1.);
 uniform vec4 sky_tint : source_color=vec4(.04,.05,.09,1.);
 uniform int quality_level=2;
 uniform float background_exposure=.9;
-uniform vec4 battlefield_deep : source_color=vec4(.0314,.1804,.1569,1.);
-uniform vec4 battlefield_light : source_color=vec4(.1765,.5098,.4627,1.);
 uniform sampler2D albedo_map : source_color,filter_linear_mipmap_anisotropic,repeat_enable;
 uniform sampler2D cloud_map : filter_linear_mipmap_anisotropic,repeat_enable;
 uniform sampler2D night_map : source_color,filter_linear_mipmap_anisotropic,repeat_enable;
@@ -122,18 +120,5 @@ void fragment(){
  vec2 star_id=floor(star_cell),star_local=fract(star_cell)-.5;
  float point=exp(-dot(star_local,star_local)*1700.)*step(.975,hash(star_id));
  col+=vec3(.36,.48,.64)*point*(1.-body);
- // Reference-derived petrol/jade atmosphere. Retain the photographed planetary
- // relief as a quiet far plane instead of competing with individual hulls.
- // Two low-frequency noise octaves in the SAME pass;no screen blur or extra
- // lights. Travel follows the existing background-motion control.
- vec2 mist_position=p*2.2+world_position*.000006+vec2(travel*.00018,-travel*.00009);
- float mist=noise(mist_position+vec2(14.8,3.1));
- if(quality_level>0) mist=mist*.76+noise(mist_position*2.7+vec2(3.,17.))*.24;
- float relief=clamp(sqrt(max(dot(col,vec3(.2126,.7152,.0722)),0.))*1.05,0.,1.);
- float grade=clamp(-.17+mist*.82+relief*.46,0.,1.);
- vec3 atmosphere=mix(battlefield_deep.rgb,battlefield_light.rgb,grade);
- col=atmosphere*background_exposure+col*.075;
- float vignette=smoothstep(.32,1.18,length((UV-.5)*vec2(1.,.86)));
- col*=1.-vignette*.20;
  COLOR=vec4(max(col,vec3(0.)),1.);
 }
