@@ -2,9 +2,9 @@
 
 长期维护的[武器特效与音频对应表](docs/WEAPON_VFX_AUDIO_REFERENCE.md)：24种现役武器的发射形式、运动、光色、乐器音色与原声试听。以后武器迭代与本表同步提交更新。
 
-当前版本 **0.49.0-boss-pressure**：八星Boss两阶段全面提高出招频率、覆盖、弹速与特效规模；射线范围2500、弹体半径10，保留预警与逃生缺口，冲锋先蓄力再沿锁定走廊突进。普通机持续移动、第2波史诗/第3波传奇商店、实弹开局+10及波末强化、24武器/288WAV和1.5秒音序器继续保留。见[V49说明](docs/V49_BOSS_PRESSURE.md)与[现役武器表](docs/WEAPON_VFX_AUDIO_REFERENCE.md)。
+当前版本 **0.50.0-rhythm-piano**：战斗加入三列下落黑白琴块，A/B/C轨对应J/K/L，也可点击黑块或底部琴键。按准才发射并发声，错键或漏按取消本次齐射。原1.5秒音序器、充能、24武器/288WAV、流派配置与V49敌群/Boss保留。见[V50玩法与验证](docs/V50_RHYTHM_PIANO_COMBAT.md)和[现役武器表](docs/WEAPON_VFX_AUDIO_REFERENCE.md)。
 
-已生成Windows x64独立Demo：`dist/GrooveFlight_Demo_v0.49.0_Windows_x64.zip`。完整解压后双击`GrooveFlightDemo.exe`；无需安装Godot/Python，另附兼容模式入口。运行、重建与验证见[Demo说明](docs/WINDOWS_DEMO.md)。
+历史Windows x64独立Demo：`dist/GrooveFlight_Demo_v0.49.0_Windows_x64.zip`，尚不含V50琴块输入。完整解压后双击`GrooveFlightDemo.exe`；无需安装Godot/Python，另附兼容模式入口。运行、重建与验证见[Demo说明](docs/WINDOWS_DEMO.md)。
 
 音频与设置基础：护盾反馈按用户要求裁成干净的一击，去掉末尾小声音；设置中有总音量、背景音乐、武器声音、击杀鼓点、拾取、受击护盾、命中爆炸、界面和独立警报9项控制，即时生效、0%静音并自动保存。见[分类音量说明](docs/V26_AUDIO_CONTROLS.md)。
 
@@ -58,6 +58,7 @@ V10武器画面升级：36件武器使用12类实体弹体、装甲/能量切面
 | 星图 ← → / Enter / Esc | 切换星球 / 前往所选星球 / 返回 |
 | 星图“难度协议” | 切换标准航线与“棱镜灾变·高压”；高压拥有独立通关记录 |
 | 战斗 WASD / 方向键 | 自由飞行，镜头跟随 |
+| J / K / L 或点击琴键 | A/B/C轨黑块中心到线时击发；错键、漏按或超时不发射 |
 | 空格 | 短距离冲刺，短暂无敌；冷却取决于舰体 |
 | E | 满充能时超载：清除当前敌弹、范围冲击、火力增强、恢复1生命 |
 | Tab | 打开/关闭音序器；音乐与战斗暂停 |

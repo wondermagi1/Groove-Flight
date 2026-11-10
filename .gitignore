@@ -11,3 +11,5 @@ __pycache__/
 *.pyc
 docs/screenshots/*.import
 tests/demo-clean-room-*/
+native/crowd/~*.dll
+tests/v50-piano*.png

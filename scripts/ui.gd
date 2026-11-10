@@ -27,6 +27,7 @@ var slots: Array=[]
 var title_flight: Node2D
 var arsenal: Control
 var solar: Control
+var piano_tiles: Control
 var composer: Control
 func _ready() -> void:
 	layer=30
@@ -63,7 +64,7 @@ func refresh() -> void:
 	# Buttons can request a new screen from inside their own pressed signal.
 	# Hide immediately, release after signal dispatch instead of freeing a lock.
 	for child in root_control.get_children(): child.hide(); child.queue_free()
-	slots.clear(); wave_label=null; timer_label=null; health_label=null; score_label=null; notice_label=null; overload_label=null; overload_bar=null; boss_bar=null; boss_title=null; boss_caption=null; boss_panel=null; title_flight=null; arsenal=null; solar=null; composer=null
+	slots.clear(); wave_label=null; timer_label=null; health_label=null; score_label=null; notice_label=null; overload_label=null; overload_bar=null; boss_bar=null; boss_title=null; boss_caption=null; boss_panel=null; title_flight=null; arsenal=null; solar=null; composer=null;piano_tiles=null
 	match game.state:
 		"title": title_screen()
 		"hub": hub_screen()
@@ -183,6 +184,8 @@ func hud(include_arsenal: bool=true) -> void:
 		node.add_theme_color_override("font_color",Color.WHITE);CLEAR_HUD.readable(node)
 	timer_label.add_theme_constant_override("outline_size",3)
 	if include_arsenal and not game.free_music_run: arsenal_screen("combat")
+	if game.rhythm_required():
+		piano_tiles=load("res://scripts/rhythm_tiles.gd").new();piano_tiles.name="RhythmPianoTiles";piano_tiles.game=game;root_control.add_child(piano_tiles)
 func update_hud() -> void:
 	if not is_instance_valid(wave_label): return
 	wave_label.text="乐谱试飞" if game.free_music_run else "%s%s %02d/%02d"%["棱镜灾变 · " if game.difficulty>0 else "",PLANETS.planet(game.active_planet).name,game.wave,game.wave_count()]
@@ -234,7 +237,7 @@ func doctrine_screen() -> void:
 			starters.append("%s%d%s  %s"%[track,slot%8+1,("–%s%d"%[track,slot%8+int(row.width)]) if int(row.width)>1 else "",str(row.name)])
 		column.add_child(label("\n".join(starters),16,Color("b4c8db")))
 		var select=button("已选择" if chosen else "选择此流派",game.choose_doctrine.bind(str(doctrine.id)),Color(doctrine.color),44);select.name="DoctrineChoice_"+str(doctrine.id);select.custom_minimum_size.x=0.;column.add_child(select)
-	content.add_child(label("流派在本局内固定。流萤织雨不再作为任何关卡的初始武器。",17,Color("8ba7bd")))
+	content.add_child(label("琴块到线时按 "+game.binding_name("rhythm_a")+" / "+game.binding_name("rhythm_b")+" / "+game.binding_name("rhythm_c")+"（A/B/C轨），也可点击琴键。错键或漏按，本次不发射。",17,Color.WHITE))
 	var actions=HBoxContainer.new();actions.add_theme_constant_override("separation",16);content.add_child(actions)
 	var back=button("返回",game.cancel_doctrine_selection,Color("9aaec1"),48);back.name="DoctrineBack";actions.add_child(back)
 	var selected=game.DOCTRINES.valid(game.doctrine_choice)
@@ -278,8 +281,8 @@ func settings_screen() -> void:
 	var aiming=OptionButton.new(); aiming.add_item("自动瞄准 最近目标"); aiming.add_item("移动朝向"); aiming.add_item("固定前向")
 	aiming.select(int(game.settings.aim_mode)); aiming.item_selected.connect(func(index): game.settings.aim_mode=index); content.add_child(aiming)
 	content.add_child(label("操作映射 点击后按新按键 Esc取消",18))
-	for action in ["left","right","up","down","dash","overload","editor","pause"]:
-		var caption={"left":"左移","right":"右移","up":"上移","down":"下移","dash":"冲刺","overload":"超载","editor":"音序工坊","pause":"暂停"}[action]
+	for action in ["left","right","up","down","dash","overload","rhythm_a","rhythm_b","rhythm_c","editor","pause"]:
+		var caption={"left":"左移","right":"右移","up":"上移","down":"下移","dash":"冲刺","overload":"超载","rhythm_a":"A轨击键","rhythm_b":"B轨击键","rhythm_c":"C轨击键","editor":"音序工坊","pause":"暂停"}[action]
 		content.add_child(button("等待按键…" if game.binding_capture==action else caption+"  "+game.binding_name(action),game.capture_binding.bind(action),Color("9abacf"),36))
 	content.add_child(button("补看操作教学",func():game.replay_tutorial(); game.close_settings(),Color("a9cdd8"),36))
 	content.add_child(label("星球背景画质",19))

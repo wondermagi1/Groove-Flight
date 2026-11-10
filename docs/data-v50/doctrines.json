@@ -1,0 +1,14 @@
+{
+	"checks": 3433,
+	"facts": {
+		"initial_and_locked_shops": 288,
+		"starting_runs": 240,
+		"weapon_pools": {
+			"ballistic": 18,
+			"laser": 3,
+			"lightning": 3
+		}
+	},
+	"failures": [],
+	"scope": "Headless production pool,acquisition,reward,boon,all-planet/all-hull starter and explicit prebattle/retry choice checks. No visual review or human listening."
+}

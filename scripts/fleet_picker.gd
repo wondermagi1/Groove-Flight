@@ -87,7 +87,7 @@ func _ready() -> void:
 	frame.add_child(content)
 	heading = _label("机库  /  FLIGHT DECK", 32, Color("eff5ff"))
 	content.add_child(heading)
-	subtitle = _label("选择舰体与驾驶员。武器将按照你的音序，随节拍自动运行。", 19, Color("879db7"))
+	subtitle = _label("选择舰体与驾驶员。出战后跟随下落琴块击键，成功才发射。", 19, Color("879db7"))
 	content.add_child(subtitle)
 	var groups := HBoxContainer.new()
 	groups.add_theme_constant_override("separation", 26)

@@ -1,0 +1,298 @@
+{
+	"checks": 140,
+	"facts": {
+		"comparison": [
+			{
+				"current": {
+					"attack_events": 6,
+					"max_projectile_speed": 205.000015258789,
+					"projectiles": 44,
+					"rams": 0,
+					"rays": 4
+				},
+				"phase": 1,
+				"planet": "mercury",
+				"previous": {
+					"attack_events": 3,
+					"max_projectile_speed": 170.0,
+					"projectiles": 14,
+					"rams": 0,
+					"rays": 2
+				}
+			},
+			{
+				"current": {
+					"attack_events": 8,
+					"max_projectile_speed": 270.0,
+					"projectiles": 62,
+					"rams": 0,
+					"rays": 4
+				},
+				"phase": 2,
+				"planet": "mercury",
+				"previous": {
+					"attack_events": 4,
+					"max_projectile_speed": 225.000015258789,
+					"projectiles": 19,
+					"rams": 0,
+					"rays": 2
+				}
+			},
+			{
+				"current": {
+					"attack_events": 10,
+					"max_projectile_speed": 187.200012207031,
+					"projectiles": 120,
+					"rams": 0,
+					"rays": 2
+				},
+				"phase": 1,
+				"planet": "venus",
+				"previous": {
+					"attack_events": 5,
+					"max_projectile_speed": 156.0,
+					"projectiles": 36,
+					"rams": 0,
+					"rays": 1
+				}
+			},
+			{
+				"current": {
+					"attack_events": 10,
+					"max_projectile_speed": 280.799987792969,
+					"projectiles": 144,
+					"rams": 0,
+					"rays": 2
+				},
+				"phase": 2,
+				"planet": "venus",
+				"previous": {
+					"attack_events": 6,
+					"max_projectile_speed": 223.600006103516,
+					"projectiles": 46,
+					"rams": 0,
+					"rays": 1
+				}
+			},
+			{
+				"current": {
+					"attack_events": 8,
+					"max_projectile_speed": 248.400024414063,
+					"projectiles": 40,
+					"rams": 0,
+					"rays": 8
+				},
+				"phase": 1,
+				"planet": "earth",
+				"previous": {
+					"attack_events": 3,
+					"max_projectile_speed": 226.800003051758,
+					"projectiles": 7,
+					"rams": 0,
+					"rays": 4
+				}
+			},
+			{
+				"current": {
+					"attack_events": 10,
+					"max_projectile_speed": 297.000030517578,
+					"projectiles": 60,
+					"rams": 0,
+					"rays": 12
+				},
+				"phase": 2,
+				"planet": "earth",
+				"previous": {
+					"attack_events": 4,
+					"max_projectile_speed": 232.20002746582,
+					"projectiles": 13,
+					"rams": 0,
+					"rays": 4
+				}
+			},
+			{
+				"current": {
+					"attack_events": 6,
+					"max_projectile_speed": 238.650009155273,
+					"projectiles": 60,
+					"rams": 2,
+					"rays": 2
+				},
+				"phase": 1,
+				"planet": "mars",
+				"previous": {
+					"attack_events": 2,
+					"max_projectile_speed": 199.800018310547,
+					"projectiles": 10,
+					"rams": 1,
+					"rays": 1
+				}
+			},
+			{
+				"current": {
+					"attack_events": 6,
+					"max_projectile_speed": 299.700042724609,
+					"projectiles": 80,
+					"rams": 2,
+					"rays": 2
+				},
+				"phase": 2,
+				"planet": "mars",
+				"previous": {
+					"attack_events": 3,
+					"max_projectile_speed": 238.650024414063,
+					"projectiles": 16,
+					"rams": 1,
+					"rays": 1
+				}
+			},
+			{
+				"current": {
+					"attack_events": 24,
+					"max_projectile_speed": 241.500015258789,
+					"projectiles": 240,
+					"rams": 0,
+					"rays": 0
+				},
+				"phase": 1,
+				"planet": "jupiter",
+				"previous": {
+					"attack_events": 16,
+					"max_projectile_speed": 212.750015258789,
+					"projectiles": 96,
+					"rams": 0,
+					"rays": 0
+				}
+			},
+			{
+				"current": {
+					"attack_events": 24,
+					"max_projectile_speed": 310.500030517578,
+					"projectiles": 304,
+					"rams": 0,
+					"rays": 0
+				},
+				"phase": 2,
+				"planet": "jupiter",
+				"previous": {
+					"attack_events": 16,
+					"max_projectile_speed": 247.250015258789,
+					"projectiles": 134,
+					"rams": 0,
+					"rays": 0
+				}
+			},
+			{
+				"current": {
+					"attack_events": 8,
+					"max_projectile_speed": 196.350021362305,
+					"projectiles": 152,
+					"rams": 0,
+					"rays": 2
+				},
+				"phase": 1,
+				"planet": "saturn",
+				"previous": {
+					"attack_events": 4,
+					"max_projectile_speed": 148.750015258789,
+					"projectiles": 47,
+					"rams": 0,
+					"rays": 1
+				}
+			},
+			{
+				"current": {
+					"attack_events": 10,
+					"max_projectile_speed": 321.300048828125,
+					"projectiles": 203,
+					"rams": 0,
+					"rays": 2
+				},
+				"phase": 2,
+				"planet": "saturn",
+				"previous": {
+					"attack_events": 5,
+					"max_projectile_speed": 255.850021362305,
+					"projectiles": 53,
+					"rams": 0,
+					"rays": 1
+				}
+			},
+			{
+				"current": {
+					"attack_events": 12,
+					"max_projectile_speed": 313.649993896484,
+					"projectiles": 128,
+					"rams": 0,
+					"rays": 0
+				},
+				"phase": 1,
+				"planet": "uranus",
+				"previous": {
+					"attack_events": 5,
+					"max_projectile_speed": 270.600006103516,
+					"projectiles": 29,
+					"rams": 0,
+					"rays": 0
+				}
+			},
+			{
+				"current": {
+					"attack_events": 14,
+					"max_projectile_speed": 350.550018310547,
+					"projectiles": 148,
+					"rams": 0,
+					"rays": 0
+				},
+				"phase": 2,
+				"planet": "uranus",
+				"previous": {
+					"attack_events": 6,
+					"max_projectile_speed": 270.600006103516,
+					"projectiles": 35,
+					"rams": 0,
+					"rays": 0
+				}
+			},
+			{
+				"current": {
+					"attack_events": 8,
+					"max_projectile_speed": 308.610015869141,
+					"projectiles": 44,
+					"rams": 0,
+					"rays": 8
+				},
+				"phase": 1,
+				"planet": "neptune",
+				"previous": {
+					"attack_events": 5,
+					"max_projectile_speed": 257.809997558594,
+					"projectiles": 21,
+					"rams": 0,
+					"rays": 4
+				}
+			},
+			{
+				"current": {
+					"attack_events": 10,
+					"max_projectile_speed": 342.900024414063,
+					"projectiles": 64,
+					"rams": 0,
+					"rays": 8
+				},
+				"phase": 2,
+				"planet": "neptune",
+				"previous": {
+					"attack_events": 5,
+					"max_projectile_speed": 273.050018310547,
+					"projectiles": 30,
+					"rams": 0,
+					"rays": 4
+				}
+			}
+		],
+		"ring_gap_radians": 1.57079648971558
+	},
+	"failures": [],
+	"scope": "All eight planets/two phases,one six-second motif versus preserved V48 score with its old dispatch cadence;real projectiles/rays/deadlines/hit geometry,entry,dodge gaps,ram lock,batch rendering and victory cleanup. Count comparison uses current Main shot transport for both score versions. Not human difficulty approval."
+}

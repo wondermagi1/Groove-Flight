@@ -1,0 +1,152 @@
+{
+	"checks": 89,
+	"facts": {
+		"catalogue": [
+			{
+				"charge": 1,
+				"due": 0.375,
+				"id": "pulse",
+				"voices": 1
+			},
+			{
+				"charge": 1,
+				"due": 0.375,
+				"id": "scatter",
+				"voices": 1
+			},
+			{
+				"charge": 1,
+				"due": 0.375,
+				"id": "beam",
+				"voices": 1
+			},
+			{
+				"charge": 2,
+				"due": 1.875,
+				"id": "missile",
+				"voices": 1
+			},
+			{
+				"charge": 4,
+				"due": 4.875,
+				"id": "nova",
+				"voices": 1
+			},
+			{
+				"charge": 2,
+				"due": 1.875,
+				"id": "chain",
+				"voices": 1
+			},
+			{
+				"charge": 2,
+				"due": 1.875,
+				"id": "rail",
+				"voices": 1
+			},
+			{
+				"charge": 1,
+				"due": 0.375,
+				"id": "pulse_needle",
+				"voices": 1
+			},
+			{
+				"charge": 4,
+				"due": 4.875,
+				"id": "scatter_prism",
+				"voices": 1
+			},
+			{
+				"charge": 2,
+				"due": 1.875,
+				"id": "beam_split",
+				"voices": 1
+			},
+			{
+				"charge": 8,
+				"due": 10.875,
+				"id": "rail_horizon",
+				"voices": 1
+			},
+			{
+				"charge": 4,
+				"due": 4.875,
+				"id": "recorded_heavy",
+				"voices": 1
+			},
+			{
+				"charge": 4,
+				"due": 4.875,
+				"id": "gilded_helix",
+				"voices": 1
+			},
+			{
+				"charge": 3,
+				"due": 3.375,
+				"id": "weave_cross",
+				"voices": 1
+			},
+			{
+				"charge": 3,
+				"due": 3.375,
+				"id": "crown_orbit",
+				"voices": 1
+			},
+			{
+				"charge": 3,
+				"due": 3.375,
+				"id": "stern_fan",
+				"voices": 1
+			},
+			{
+				"charge": 3,
+				"due": 3.375,
+				"id": "dawn_fan",
+				"voices": 1
+			},
+			{
+				"charge": 4,
+				"due": 4.875,
+				"id": "tidal_weave",
+				"voices": 1
+			},
+			{
+				"charge": 3,
+				"due": 3.375,
+				"id": "firefly_rain",
+				"voices": 1
+			},
+			{
+				"charge": 4,
+				"due": 4.875,
+				"id": "kaleidoscope",
+				"voices": 1
+			},
+			{
+				"charge": 1,
+				"due": 0.375,
+				"id": "arc_bough",
+				"voices": 1
+			},
+			{
+				"charge": 4,
+				"due": 4.875,
+				"id": "chain_loop",
+				"voices": 1
+			},
+			{
+				"charge": 1,
+				"due": 0.375,
+				"id": "laser_fan",
+				"voices": 1
+			},
+			{
+				"charge": 6,
+				"due": 7.875,
+				"id": "laser_crown",
+				"voices": 1
+			}
+		]
+	},
+	"failures": []
+}

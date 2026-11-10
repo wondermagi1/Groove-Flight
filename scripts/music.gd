@@ -6,7 +6,7 @@ const SEQUENCE=preload("res://scripts/arsenal_loadout.gd")
 const EXPRESSION=preload("res://scripts/weapon_expression.gd")
 signal step_fired(index: int,serial: int,deadline: float)
 signal prepared(key: String)
-const RENDER_VERSION=16
+const RENDER_VERSION=17
 const RATE=22050
 const STEP=SEQUENCE.SEQUENCE_STEP_SECONDS
 const BPM=SEQUENCE.SEQUENCE_BPM
@@ -33,6 +33,7 @@ var score_events: Array=[]
 var compile_msec: float=0.
 var compiling: bool=false
 var track_mutes=[false,false,false]
+var manual_weapons: bool=false
 var backing_gain: float=0.
 var weapon_gain: float=.34
 var groove_gain: float=0.
@@ -72,13 +73,14 @@ func voice(kind: String,index: int) -> PackedFloat32Array:
 		samples[key]=decode(recording)
 	return samples[key]
 func key_for(loadout) -> String:
-	return str(hash(JSON.stringify([RENDER_VERSION,EXPRESSION.policy.revision,STEP,LENGTH,INTRO_SECONDS,STREAM_LENGTH,BPM,loadout.modules,loadout.slots,loadout.damage_scale,loadout.echo_repeat,loadout.stats(),track_mutes,backing_gain,weapon_gain,groove_gain])))
+	return str(hash(JSON.stringify([RENDER_VERSION,manual_weapons,EXPRESSION.policy.revision,STEP,LENGTH,INTRO_SECONDS,STREAM_LENGTH,BPM,loadout.modules,loadout.slots,loadout.damage_scale,loadout.echo_repeat,loadout.stats(),track_mutes,backing_gain,weapon_gain,groove_gain])))
 func _snapshot(loadout) -> Dictionary:
 	var events: Array=[]; var instruments: Dictionary={}
 	for serial in range(int(STREAM_LENGTH/STEP)):
 		for event in loadout.schedule(serial):
 			if not bool(event.get("audio_eligible",true)): continue
 			var support=str(event.family)=="support"
+			if manual_weapons and not support:continue
 			var instrument="support_"+str(event.category) if support else str(event.voice)
 			var pitch=posmod(int(event.get("pitch",serial%8)),8)
 			var expression={} if support else EXPRESSION.for_event(event)
@@ -247,6 +249,11 @@ func refresh(loadout) -> void:
 		_wanted=key; _replace_cached(key); prepared.emit.call_deferred(key)
 	else: prepare(loadout)
 func hold(value: bool) -> void: _begin_held=value; stream_paused=value
+func input_time() -> float:
+	if not _running or not playing or stream_paused:return timeline
+	var raw=get_playback_position();var loops=loop_count+(1 if raw<_previous_raw-.5 else 0)
+	var correction=AudioServer.get_time_since_last_mix()-AudioServer.get_output_latency() if raw>.000001 else 0.
+	return maxf(timeline,loops*LENGTH+maxf(0.,raw+correction))
 func musical_position() -> Dictionary: return CLOCK.position(timeline,BPM,2,LENGTH,AudioServer.get_output_latency())
 func _process(_delta: float) -> void:
 	if _thread!=null and _thread.is_started() and not _thread.is_alive():

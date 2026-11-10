@@ -23,6 +23,7 @@ const VISUALS=preload("res://scripts/weapon_visuals.gd")
 const PROJECTILE_FIELDS=preload("res://scripts/projectile_fields.gd")
 const ENERGY_WEAPONS=preload("res://scripts/energy_arsenal.gd")
 const SALVOS=preload("res://scripts/salvo_patterns.gd")
+const RHYTHM=preload("res://scripts/rhythm_gate.gd")
 const ARRIVAL=preload("res://scripts/enemy_arrival.gd")
 const PATHS=preload("res://scripts/build_paths.gd")
 const LEVEL_MUSIC_PATH="res://audio/authorized/scott_buckley/filaments.ogg"
@@ -60,6 +61,9 @@ var energy_renderer
 var loadout=LOADOUT.new()
 var music
 var standard_music
+var rhythm=RHYTHM.new()
+var rhythm_voices
+var rhythm_key_down=[false,false,false]
 var menu_music: AudioStreamPlayer
 var planet_music: AudioStreamPlayer
 var music_focus_until: float=-1.
@@ -201,6 +205,7 @@ func _ready() -> void:
 	music=load("res://scripts/music.gd").new(); add_child(music); music.step_fired.connect(on_step)
 	standard_music=music
 	standard_music.prepared.connect(_prepared_resume)
+	rhythm_voices=load("res://scripts/rhythm_voices.gd").new();rhythm_voices.game=self;add_child(rhythm_voices)
 	composer_player=load("res://scripts/composer_player.gd").new(); add_child(composer_player)
 	composer_player.step_fired.connect(on_step)
 	composer_player.event_fired.connect(on_composer_note)
@@ -243,7 +248,7 @@ func _ready() -> void:
 	apply_audio(not is_preview); apply_background_quality(); ui.refresh()
 
 func bind_input() -> void:
-	for row in [["left",KEY_A,KEY_LEFT],["right",KEY_D,KEY_RIGHT],["up",KEY_W,KEY_UP],["down",KEY_S,KEY_DOWN],["dash",KEY_SPACE],["overload",KEY_E],["editor",KEY_TAB],["pause",KEY_ESCAPE],["fullscreen",KEY_F11],["interact",KEY_F]]:
+	for row in [["left",KEY_A,KEY_LEFT],["right",KEY_D,KEY_RIGHT],["up",KEY_W,KEY_UP],["down",KEY_S,KEY_DOWN],["dash",KEY_SPACE],["overload",KEY_E],["editor",KEY_TAB],["pause",KEY_ESCAPE],["fullscreen",KEY_F11],["interact",KEY_F],["rhythm_a",KEY_J],["rhythm_b",KEY_K],["rhythm_c",KEY_L]]:
 		if not InputMap.has_action(row[0]): InputMap.add_action(row[0])
 		for index in range(1,row.size()):
 			var key=InputEventKey.new(); key.physical_keycode=row[index]; InputMap.action_add_event(row[0],key)
@@ -414,6 +419,7 @@ func _load_audio(path: String) -> AudioStream:
 
 func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=false) -> void:
 	run_shop_seconds=0.; run_total_seconds=0.; wave_supply=0
+	rhythm.reset(0.,true);rhythm_key_down=[false,false,false];rhythm_voices.reset()
 	composer_holds.clear(); composer_player.stop_song(); standard_music.stop(); standard_music._running=false
 	for recorded_player in recorded_weapon_players.values():
 		if is_instance_valid(recorded_player):
@@ -443,6 +449,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	weapon_beat_state.clear()
 	mixer.reset_feedback()
 	active_doctrine="" if use_composition else (selected_doctrine if DOCTRINES.valid(selected_doctrine) else "ballistic")
+	standard_music.manual_weapons=rhythm_required()
 	loadout.set_doctrine(active_doctrine)
 	loadout.reset(); music_focus_until=-1.; music_duck_db=0.; enemies.clear(); by_id.clear(); spatial.clear(); bullets.clear(); enemy_bullets.clear(); pickups.clear(); warnings.clear()
 	var craft=FLEET.ship(selected_ship); selected_ship=str(craft.id)
@@ -450,6 +457,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	var planet_number=int(PLANETS.planet(active_planet).index)
 	loadout.recorded_starter_quality=0 if planet_number<3 else (1 if planet_number<6 else 2)
 	loadout.set_fleet(craft,FLEET.pilot(selected_pilot)); loadout.set_starters(craft.start_modules)
+	if rhythm_required():rhythm_voices.warm(loadout)
 	refresh_loadout_stats()
 	move_speed=float(craft.speed); dash_recharge=float(craft.dash_cooldown)
 	fx.particles.clear(); fx.marks.clear(); fire_log.clear(); weapon_damage.clear()
@@ -473,6 +481,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 		tutorial_active=not test_mode and not bool(settings.tutorial_done) and not bool(settings.tutorial_skipped) and active_planet=="mercury"; tutorial_stage=0; tutorial_origin=player; tutorial_retimed=false
 func begin_wave() -> void:
 	pending_triggers.clear(); pending_projectiles.clear(); energy_weapons.clear()
+	if rhythm_required():rhythm_voices.warm(loadout);rhythm.reset(music.timeline,wave==0);rhythm.forecast(loadout,music.timeline)
 	spawn_telegraphs.clear()
 	wave+=1; wave_start=music.timeline; wave_spawn_start=total_spawned; wave_picked_start=picked; spawned=0;
 	kill_combo=0; kill_combo_until=0.
@@ -903,6 +912,26 @@ func return_title() -> void:
 	for voice in voices: voice.stop()
 	enemies.clear(); by_id.clear(); spatial.clear(); pending_splits.clear(); bullets.clear(); enemy_bullets.clear(); warnings.clear(); pickups.clear()
 	fx.particles.clear(); fx.marks.clear(); ui.refresh()
+func rhythm_required() -> bool:
+	return not is_preview and not free_music_run and not active_doctrine.is_empty()
+func rhythm_tick(now: float=-1.) -> void:
+	if state!="combat" or not rhythm_required():return
+	if now<0.:now=music.timeline
+	rhythm.forecast(loadout,now)
+	for event in rhythm.advance(now):dispatch_trigger(event)
+func rhythm_press(track: int) -> bool:
+	if state!="combat" or not rhythm_required() or standard_music._begin_pending or standard_music.stream_paused:return false
+	var now=standard_music.input_time()
+	rhythm_tick(now)
+	var accepted=rhythm.press(track,now);rhythm_tick(now);return accepted
+func _input(event: InputEvent) -> void:
+	for track in range(3):
+		var action=["rhythm_a","rhythm_b","rhythm_c"][track]
+		if event.is_action_released(action):rhythm_key_down[track]=false
+		if not event.is_action_pressed(action) or state!="combat" or not rhythm_required():continue
+		if event is InputEventKey and event.echo:return
+		if rhythm_key_down[track]:return
+		rhythm_key_down[track]=true;rhythm_press(track);get_viewport().set_input_as_handled();return
 func _unhandled_input(event: InputEvent) -> void:
 	if is_preview: return
 	if not binding_capture.is_empty() and event is InputEventKey and event.pressed and not event.echo:
@@ -987,6 +1016,7 @@ func _process(delta: float) -> void:
 	background.set_shader_parameter("world_position",camera.position if camera.enabled else Vector2.ZERO)
 	if state=="combat":
 		var dt=minf(delta,.06)
+		rhythm_tick()
 		for i in range(flight_trail.size()-1,-1,-1):
 			flight_trail[i].life-=delta
 			if flight_trail[i].life<=0: flight_trail.remove_at(i)
@@ -1028,6 +1058,7 @@ func _process(delta: float) -> void:
 	slot_flash=maxf(0,slot_flash-delta); ui.update_hud(); queue_redraw()
 
 func _sync_screen_music() -> void:
+	if is_instance_valid(rhythm_voices):rhythm_voices.transport(state)
 	var candidate=state
 	if state=="settings": candidate=previous_state
 	if is_instance_valid(mixer): mixer.set_combat_state("settings" if state=="settings" else candidate)
@@ -1072,12 +1103,14 @@ func on_step(index: int,serial: int,deadline: float) -> void:
 			shield_until=music.timeline+2.25
 			fx.shield(player,FLEET.ship(selected_ship).color,86.)
 			fx.ring(player,Color("92f4de"),72.,.26)
-	for trigger in loadout.advance_step(index,serial):
-		if str(trigger.family)=="support": continue
-		if bool(trigger.get("recorded_audio",false)): _play_recorded_weapon_group(trigger)
-		if bool(trigger.get("cadence_light",false)): continue
-		if float(trigger.get("offset_seconds",0.))<=0.: dispatch_trigger(trigger)
-		else: pending_triggers.append(trigger)
+	if rhythm_required():rhythm_tick()
+	else:
+		for trigger in loadout.advance_step(index,serial):
+			if str(trigger.family)=="support": continue
+			if bool(trigger.get("recorded_audio",false)): _play_recorded_weapon_group(trigger)
+			if bool(trigger.get("cadence_light",false)): continue
+			if float(trigger.get("offset_seconds",0.))<=0.: dispatch_trigger(trigger)
+			else: pending_triggers.append(trigger)
 
 	if pending_dash_missiles>0:
 		var missiles=mini(12,pending_dash_missiles); pending_dash_missiles=0
@@ -1927,8 +1960,10 @@ func draw_preview_ranges() -> void:
 
 func dispatch_trigger(trigger: Dictionary) -> void:
 	if state!="combat": return
+	if rhythm_required() and not bool(trigger.get("rhythm_authorized",false)):return
 	fire_log.append({"step":posmod(int(trigger.serial),8),"track":trigger.get("track",0),"uid":trigger.uid,"serial":trigger.serial,"deadline":trigger.deadline,"actual":music.timeline,"kind":trigger.kind,"voice":trigger.voice,"pitch":trigger.get("pitch",0),"cadence_step":trigger.get("cadence_step",0),"cadence_scale":trigger.get("cadence_scale",1.),"pilot":trigger.get("pilot",""),"repeat_index":trigger.get("repeat_index",0),"event_id":trigger.event_id})
 	if fire_log.size()>480: fire_log.pop_front()
+	if rhythm_required():rhythm_voices.salvo(trigger)
 	fire_weapon(trigger)
 func flush_triggers() -> void:
 	for i in range(pending_triggers.size()-1,-1,-1):
@@ -1967,7 +2002,7 @@ func update_tutorial() -> void:
 	if tutorial_stage>=4:
 		tutorial_active=false; settings.tutorial_done=true; save_settings(); return
 	var movement=" / ".join([binding_name("up"),binding_name("left"),binding_name("down"),binding_name("right")])
-	var tips=[movement+" 自由飞行 · 武器跟随%.1f秒音序自动开火"%LOADOUT.SEQUENCE_LOOP_SECONDS,"观察下方8格 · 每格%.4f秒，一轮%.1f秒"%[LOADOUT.SEQUENCE_STEP_SECONDS,LOADOUT.SEQUENCE_LOOP_SECONDS],binding_name("editor")+" 打开三轨音序工坊 · 把武器拖到另一个扫描格",binding_name("dash")+" 冲刺穿过缺口 · "+binding_name("overload")+" 满充能后超载"]
+	var tips=[movement+" 移动 · 琴块到线时按 "+binding_name("rhythm_a")+" / "+binding_name("rhythm_b")+" / "+binding_name("rhythm_c")+" 才能开火","右下琴块对应A/B/C轨 · 错键或漏按，本次齐射失败",binding_name("editor")+" 打开三轨音序工坊 · 改变武器位置也会改变琴块时机",binding_name("dash")+" 冲刺穿过缺口 · "+binding_name("overload")+" 满充能后超载"]
 	notice=tips[tutorial_stage]; notice_until=INF
 
 func apply_input_bindings() -> void:
@@ -1987,6 +2022,8 @@ func capture_binding(action: String) -> void:
 
 func resync_pending() -> void:
 	pending_triggers.clear()
+	if rhythm_required():
+		rhythm.reset(music.timeline);rhythm.forecast(loadout,music.timeline);rhythm_voices.warm(loadout);return
 	var serial=floori(music.timeline/LOADOUT.SEQUENCE_STEP_SECONDS)
 	for event in loadout.schedule(serial):
 		if str(event.family)!="support" and float(event.deadline)>music.timeline+.001: pending_triggers.append(event)
@@ -2005,6 +2042,7 @@ func prepare_loadout() -> void:
 	# Phrase materials remain archived; current electronic weapons have no
 	# local phrase, melody counter or slot-based transposition.
 	weapon_beat_state.clear(); loadout.phrase_offsets.clear()
+	if rhythm_required():rhythm_voices.warm(loadout)
 	if not (test_mode and simulation_only): standard_music.prepare(loadout)
 
 func formation_spawn_frame(outward: Vector2,count: int,style: String) -> Dictionary:
