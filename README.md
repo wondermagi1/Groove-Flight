@@ -2,9 +2,9 @@
 
 长期维护的[武器特效与音频对应表](docs/WEAPON_VFX_AUDIO_REFERENCE.md)：24种现役武器的发射形式、运动、光色、乐器音色与原声试听。以后武器迭代与本表同步提交更新。
 
-当前版本 **0.50.0-rhythm-piano**：战斗加入三列下落黑白琴块，A/B/C轨对应J/K/L，也可点击黑块或底部琴键。按准才发射并发声，错键或漏按取消本次齐射。原1.5秒音序器、充能、24武器/288WAV、流派配置与V49敌群/Boss保留。见[V50玩法与验证](docs/V50_RHYTHM_PIANO_COMBAT.md)和[现役武器表](docs/WEAPON_VFX_AUDIO_REFERENCE.md)。
+当前版本 **0.51.0-music-piano**：左手WASD移动，右手H/J/K/L四键跟随《Filaments》音乐琴块，支持短按、长按到尾与双键同时按。错键、漏按或长按中断，本次齐射失败。武器保留原1.5秒音序充能资格，实际发射交给下一音乐点；原24武器/288WAV、弹数伤害与敌群/Boss保留。见[V51玩法与验证](docs/V51_MUSIC_CHART_PIANO.md)和[现役武器表](docs/WEAPON_VFX_AUDIO_REFERENCE.md)。
 
-历史Windows x64独立Demo：`dist/GrooveFlight_Demo_v0.49.0_Windows_x64.zip`，尚不含V50琴块输入。完整解压后双击`GrooveFlightDemo.exe`；无需安装Godot/Python，另附兼容模式入口。运行、重建与验证见[Demo说明](docs/WINDOWS_DEMO.md)。
+历史Windows x64独立Demo：`dist/GrooveFlight_Demo_v0.49.0_Windows_x64.zip`，尚不含V50/V51琴块输入。完整解压后双击`GrooveFlightDemo.exe`；无需安装Godot/Python，另附兼容模式入口。运行、重建与验证见[Demo说明](docs/WINDOWS_DEMO.md)。
 
 音频与设置基础：护盾反馈按用户要求裁成干净的一击，去掉末尾小声音；设置中有总音量、背景音乐、武器声音、击杀鼓点、拾取、受击护盾、命中爆炸、界面和独立警报9项控制，即时生效、0%静音并自动保存。见[分类音量说明](docs/V26_AUDIO_CONTROLS.md)。
 
@@ -16,7 +16,7 @@ V24特效基础：全部16种武器按类别优化，13种实体弹各自拥有�
 
 项目已于2026-11-04正式统一使用 Groove Flight 名称；旧存档与乐谱标识的兼容说明见[品牌更名记录](docs/BRAND_RENAME.md)。
 
-以下为历史版本记录，当前行为以持续维护对应表、最新V49说明及V48/V47约定为准。
+以下为历史版本记录，当前行为以持续维护对应表和最新V51说明为准。
 
 V12 聚焦战术可读性与音乐律动：编队领航机被击破后，幸存敌机会失序再重整；重武器改为“1 重音 + 3 轻拍”的四拍节奏，轻拍只发声、不增加伤害；普通战斗加入程序鼓组、底鼓侧链与连杀鼓填充；真实弹体增加更长的 GPU 光带，击杀加入方向碎片和局部闪击；五型舰体、敌机与飞刃加入座舱、炮口、装甲分层、暗面和金属高光，玩家保留真实路径的分层羽状飞行尾流；护盾增加橙环与青蓝球壳；菜单界面接入授权主题曲；商店试射新增三轨射程覆盖。配装与研发交接记录见[V12修改记录表](docs/V12_CHANGE_LOG.md)。
 

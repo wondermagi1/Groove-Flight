@@ -53,7 +53,7 @@ def build():
    if source.is_file() and source.suffix not in ['.import','.tmp'] and not source.name.startswith('~'):copy(source)
  for source in (ROOT/'audio').iterdir():
   if source.is_file() and source.suffix in ['.wav','.ogg','.json','.md']:copy(source)
- for folder in ['audio/arsenal','audio/authorized','audio/legacy']:
+ for folder in ['audio/arsenal','audio/authorized','audio/legacy','audio/charts']:
   for source in (ROOT/folder).rglob('*'):
    if source.is_file() and source.suffix in ['.wav','.ogg','.json','.txt','.md']:copy(source)
  for filename in ['WEAPON_DYNAMICS.json','GeneralUser-LICENSE.txt','TinySoundFont-LICENSE.txt']:

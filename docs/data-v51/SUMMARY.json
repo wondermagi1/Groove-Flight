@@ -1,0 +1,33 @@
+{
+  "version": "0.51.0-music-piano",
+  "date": "2026-11-11",
+  "backup": "bcf7955ed8be731c7c7d578771e240a8bea400c3",
+  "branch": "codex/music-chart-four-keys",
+  "source_sha256": "075f02a6f81e5819f107616aefa86b96622dd7dee45eacb08faf943fa7ad4420",
+  "chart_events": 561,
+  "chart_forms": {
+    "tap": 414,
+    "hold": 94,
+    "chord": 53
+  },
+  "keys": [
+    "H",
+    "J",
+    "K",
+    "L"
+  ],
+  "estimated_bpm_not_transcription": 95.703,
+  "protected_files_unchanged": 1252,
+  "unchanged_active_wavs": 288,
+  "unchanged_all_arsenal_wavs": 616,
+  "checks": {
+    "chart": 2424,
+    "live": 24,
+    "native": 12
+  },
+  "regressions": {
+    "doctrine": 3433,
+    "boss": 140
+  },
+  "scope": "Algorithmic audio arrangement; automated judge/live-clock/Forward+ checks, no human listening or picture approval. Native live check uses dummy/headless audio, not measured physical keyboard/speaker latency. Historical V49 demo/PPT are untouched."
+}

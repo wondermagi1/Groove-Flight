@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "duration": 339.8806349206349,
+  "source_sha256": "075f02a6f81e5819f107616aefa86b96622dd7dee45eacb08faf943fa7ad4420",
+  "analysis_rate": 11025,
+  "window": 1024,
+  "hop": 128,
+  "estimated_bpm": 95.703,
+  "counts": {
+    "tap": 414,
+    "hold": 94,
+    "chord": 53
+  },
+  "onset_count": 181,
+  "subdivision_count": 380,
+  "min_gap": 0.24379999999999313,
+  "max_gap": 0.9994000000000085,
+  "register_quantiles": [
+    64.42524016573972,
+    66.27684530596194,
+    67.96883697819693
+  ],
+  "claim": "Algorithmic arrangement derived from the audio waveform; not exact piano transcription or human-approved beat tracking."
+}

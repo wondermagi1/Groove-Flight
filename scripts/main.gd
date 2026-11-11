@@ -63,7 +63,10 @@ var music
 var standard_music
 var rhythm=RHYTHM.new()
 var rhythm_voices
-var rhythm_key_down=[false,false,false]
+var rhythm_key_down=[false,false,false,false]
+var rhythm_song_loops: int=0
+var rhythm_song_raw: float=0.
+var rhythm_song_absolute: float=0.
 var menu_music: AudioStreamPlayer
 var planet_music: AudioStreamPlayer
 var music_focus_until: float=-1.
@@ -167,6 +170,7 @@ var sound_times: Dictionary={}
 var audio_cache: Dictionary={}
 var weapon_codex_overlay
 var weapon_codex_return_state: String="title"
+var weapon_codex_music_was_held: bool=false
 var test_mode: bool=false
 var difficulty: int=0
 var is_preview: bool=false
@@ -248,7 +252,7 @@ func _ready() -> void:
 	apply_audio(not is_preview); apply_background_quality(); ui.refresh()
 
 func bind_input() -> void:
-	for row in [["left",KEY_A,KEY_LEFT],["right",KEY_D,KEY_RIGHT],["up",KEY_W,KEY_UP],["down",KEY_S,KEY_DOWN],["dash",KEY_SPACE],["overload",KEY_E],["editor",KEY_TAB],["pause",KEY_ESCAPE],["fullscreen",KEY_F11],["interact",KEY_F],["rhythm_a",KEY_J],["rhythm_b",KEY_K],["rhythm_c",KEY_L]]:
+	for row in [["left",KEY_A,KEY_LEFT],["right",KEY_D,KEY_RIGHT],["up",KEY_W,KEY_UP],["down",KEY_S,KEY_DOWN],["dash",KEY_SPACE],["overload",KEY_E],["editor",KEY_TAB],["pause",KEY_ESCAPE],["fullscreen",KEY_F11],["interact",KEY_F],["rhythm_a",KEY_H],["rhythm_b",KEY_J],["rhythm_c",KEY_K],["rhythm_d",KEY_L]]:
 		if not InputMap.has_action(row[0]): InputMap.add_action(row[0])
 		for index in range(1,row.size()):
 			var key=InputEventKey.new(); key.physical_keycode=row[index]; InputMap.action_add_event(row[0],key)
@@ -419,7 +423,8 @@ func _load_audio(path: String) -> AudioStream:
 
 func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=false) -> void:
 	run_shop_seconds=0.; run_total_seconds=0.; wave_supply=0
-	rhythm.reset(0.,true);rhythm_key_down=[false,false,false];rhythm_voices.reset()
+	rhythm.reset(0.,true);rhythm_key_down=[false,false,false,false];rhythm_voices.reset()
+	planet_music.stop();rhythm_song_loops=0;rhythm_song_raw=0.;rhythm_song_absolute=0.
 	composer_holds.clear(); composer_player.stop_song(); standard_music.stop(); standard_music._running=false
 	for recorded_player in recorded_weapon_players.values():
 		if is_instance_valid(recorded_player):
@@ -450,6 +455,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	mixer.reset_feedback()
 	active_doctrine="" if use_composition else (selected_doctrine if DOCTRINES.valid(selected_doctrine) else "ballistic")
 	standard_music.manual_weapons=rhythm_required()
+	rhythm.music_chart=rhythm_required()
 	loadout.set_doctrine(active_doctrine)
 	loadout.reset(); music_focus_until=-1.; music_duck_db=0.; enemies.clear(); by_id.clear(); spatial.clear(); bullets.clear(); enemy_bullets.clear(); pickups.clear(); warnings.clear()
 	var craft=FLEET.ship(selected_ship); selected_ship=str(craft.id)
@@ -481,7 +487,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 		tutorial_active=not test_mode and not bool(settings.tutorial_done) and not bool(settings.tutorial_skipped) and active_planet=="mercury"; tutorial_stage=0; tutorial_origin=player; tutorial_retimed=false
 func begin_wave() -> void:
 	pending_triggers.clear(); pending_projectiles.clear(); energy_weapons.clear()
-	if rhythm_required():rhythm_voices.warm(loadout);rhythm.reset(music.timeline,wave==0);rhythm.forecast(loadout,music.timeline)
+	if rhythm_required():rhythm_voices.warm(loadout);rhythm.reset(music.timeline,wave==0);rhythm.forecast(loadout,music.timeline,rhythm_song_time(music.timeline))
 	spawn_telegraphs.clear()
 	wave+=1; wave_start=music.timeline; wave_spawn_start=total_spawned; wave_picked_start=picked; spawned=0;
 	kill_combo=0; kill_combo_until=0.
@@ -767,7 +773,9 @@ func open_weapon_codex() -> void:
 	if is_instance_valid(weapon_codex_overlay):
 		return
 	weapon_codex_return_state=state
+	weapon_codex_music_was_held=music.stream_paused
 	state="weapon_codex"
+	music.hold(true)
 	weapon_codex_overlay=WEAPON_CODEX.new()
 	weapon_codex_overlay.name="WeaponCodex"
 	weapon_codex_overlay.game=self
@@ -778,7 +786,7 @@ func _weapon_codex_closed() -> void:
 	weapon_codex_overlay=null
 	if state=="weapon_codex":
 		state=weapon_codex_return_state
-		music.hold(state in ["combat","reward"])
+		music.hold(weapon_codex_music_was_held)
 		ui.refresh()
 func close_editor() -> void:
 	if state!="editor" or loadout.equipped_weapons()==0: return
@@ -900,7 +908,7 @@ func close_settings() -> void:
 	save_settings(); state=previous_state
 	if music==standard_music and state in ["combat","paused"] and not standard_music.is_current(loadout):
 		music.rebuild(loadout); resync_pending()
-	music.hold(state in ["paused","reward","editor"]); ui.refresh()
+	music.hold(state in ["paused","reward","editor","weapon_codex"]); ui.refresh()
 func return_title() -> void:
 	pending_resume=""
 	if is_instance_valid(lab): lab.deactivate()
@@ -914,24 +922,46 @@ func return_title() -> void:
 	fx.particles.clear(); fx.marks.clear(); ui.refresh()
 func rhythm_required() -> bool:
 	return not is_preview and not free_music_run and not active_doctrine.is_empty()
+func rhythm_song_time(now: float) -> float:
+	if not is_instance_valid(planet_music) or not planet_music.has_stream_playback():return now
+	if planet_music.stream_paused:return rhythm_song_absolute
+	var raw=planet_music.get_playback_position()
+	if raw+.5<rhythm_song_raw:rhythm_song_loops+=1
+	rhythm_song_raw=raw
+	var correction=AudioServer.get_time_since_last_mix()-AudioServer.get_output_latency() if raw>0. else 0.
+	rhythm_song_absolute=maxf(rhythm_song_absolute,rhythm_song_loops*float(RHYTHM.CHART.data().duration)+maxf(0.,raw+correction))
+	return rhythm_song_absolute
 func rhythm_tick(now: float=-1.) -> void:
 	if state!="combat" or not rhythm_required():return
 	if now<0.:now=music.timeline
-	rhythm.forecast(loadout,now)
+	rhythm.forecast(loadout,now,rhythm_song_time(now))
 	for event in rhythm.advance(now):dispatch_trigger(event)
-func rhythm_press(track: int) -> bool:
+func rhythm_press(track: int,source: String="") -> bool:
 	if state!="combat" or not rhythm_required() or standard_music._begin_pending or standard_music.stream_paused:return false
 	var now=standard_music.input_time()
 	rhythm_tick(now)
-	var accepted=rhythm.press(track,now);rhythm_tick(now);return accepted
+	var accepted=rhythm.press(track,now,source);rhythm_tick(now);return accepted
+func rhythm_release(source: String) -> void:
+	if not rhythm.down.has(source):return
+	var now=standard_music.input_time()
+	rhythm.release(int(rhythm.down[source]),now,source,state=="combat")
+	if state=="combat":rhythm_tick(now)
+func _notification(what: int) -> void:
+	if what==NOTIFICATION_WM_WINDOW_FOCUS_OUT and rhythm!=null:
+		for source in rhythm.down.keys():rhythm.release(int(rhythm.down[source]),music.timeline,str(source),false)
+		rhythm_key_down=[false,false,false,false]
 func _input(event: InputEvent) -> void:
-	for track in range(3):
-		var action=["rhythm_a","rhythm_b","rhythm_c"][track]
-		if event.is_action_released(action):rhythm_key_down[track]=false
+	# Releases are global: dragging outside a key or opening a menu cannot leave a hold stuck.
+	if event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_LEFT and not event.pressed:rhythm_release("mouse")
+	if event is InputEventScreenTouch and not event.pressed:rhythm_release("touch:%d"%event.index)
+	for track in range(4):
+		var action=["rhythm_a","rhythm_b","rhythm_c","rhythm_d"][track]
+		var source="key:%d"%track
+		if event.is_action_released(action):rhythm_key_down[track]=false;rhythm_release(source)
 		if not event.is_action_pressed(action) or state!="combat" or not rhythm_required():continue
 		if event is InputEventKey and event.echo:return
 		if rhythm_key_down[track]:return
-		rhythm_key_down[track]=true;rhythm_press(track);get_viewport().set_input_as_handled();return
+		rhythm_key_down[track]=true;rhythm_press(track,source);get_viewport().set_input_as_handled();return
 func _unhandled_input(event: InputEvent) -> void:
 	if is_preview: return
 	if not binding_capture.is_empty() and event is InputEventKey and event.pressed and not event.echo:
@@ -1074,7 +1104,8 @@ func _sync_screen_music() -> void:
 		else:
 			recorded_player.stream_paused=candidate in ["paused","editor"]
 	if not is_instance_valid(planet_music): return
-	var planet_wants=candidate in ["combat","reward","paused","editor"] and not is_preview and not free_music_run
+	var codex_in_run=candidate=="weapon_codex" and weapon_codex_return_state in ["combat","reward","paused","editor"]
+	var planet_wants=(candidate in ["combat","reward","paused","editor"] or codex_in_run) and not is_preview and not free_music_run
 	if planet_wants:
 		if planet_music.stream==null:
 			var planet_stream=_load_audio(LEVEL_MUSIC_PATH)
@@ -1082,8 +1113,8 @@ func _sync_screen_music() -> void:
 			planet_music.stream=planet_stream
 		# Paused streams report playing=false but retain their playback/position.
 		# Restart only when no playback exists; sliders must not rewind the song.
-		if planet_music.stream!=null and not planet_music.has_stream_playback(): planet_music.play()
-		planet_music.stream_paused=candidate in ["paused","editor"]
+		if planet_music.stream!=null and not planet_music.has_stream_playback() and (not rhythm_required() or (standard_music.has_stream_playback() and not standard_music._begin_pending)): planet_music.play()
+		planet_music.stream_paused=(state!="combat" if rhythm_required() else candidate in ["paused","editor"])
 	elif planet_music.has_stream_playback():
 		planet_music.stop()
 		planet_music.stream_paused=false
@@ -2002,7 +2033,7 @@ func update_tutorial() -> void:
 	if tutorial_stage>=4:
 		tutorial_active=false; settings.tutorial_done=true; save_settings(); return
 	var movement=" / ".join([binding_name("up"),binding_name("left"),binding_name("down"),binding_name("right")])
-	var tips=[movement+" 移动 · 琴块到线时按 "+binding_name("rhythm_a")+" / "+binding_name("rhythm_b")+" / "+binding_name("rhythm_c")+" 才能开火","右下琴块对应A/B/C轨 · 错键或漏按，本次齐射失败",binding_name("editor")+" 打开三轨音序工坊 · 改变武器位置也会改变琴块时机",binding_name("dash")+" 冲刺穿过缺口 · "+binding_name("overload")+" 满充能后超载"]
+	var tips=[movement+" 移动 · 琴块到线时按 "+binding_name("rhythm_a")+" / "+binding_name("rhythm_b")+" / "+binding_name("rhythm_c")+" / "+binding_name("rhythm_d")+" 才能开火","右下四键跟随音乐 · 短按 / 长按到尾 / 双键同时按",binding_name("editor")+" 打开三轨音序工坊 · 武器充能后等待音乐琴块，命中才开火",binding_name("dash")+" 冲刺穿过缺口 · "+binding_name("overload")+" 满充能后超载"]
 	notice=tips[tutorial_stage]; notice_until=INF
 
 func apply_input_bindings() -> void:
@@ -2023,7 +2054,7 @@ func capture_binding(action: String) -> void:
 func resync_pending() -> void:
 	pending_triggers.clear()
 	if rhythm_required():
-		rhythm.reset(music.timeline);rhythm.forecast(loadout,music.timeline);rhythm_voices.warm(loadout);return
+		rhythm.reset(music.timeline);rhythm.forecast(loadout,music.timeline,rhythm_song_time(music.timeline));rhythm_voices.warm(loadout);return
 	var serial=floori(music.timeline/LOADOUT.SEQUENCE_STEP_SECONDS)
 	for event in loadout.schedule(serial):
 		if str(event.family)!="support" and float(event.deadline)>music.timeline+.001: pending_triggers.append(event)
