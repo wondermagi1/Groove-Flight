@@ -1,4 +1,5 @@
 extends Control
+const UI=preload("res://scripts/ui_materials.gd")
 ## Piano-roll editor. All audible playback and file operations use game callbacks;
 ## the drawing never advances the score or emits a combat attack.
 const DATA=preload("res://scripts/arsenal_catalog.gd")
@@ -123,23 +124,23 @@ class PianoRoll:
 		if screen==null or screen.game==null: return
 		var font=get_theme_font("font"); var width=step_width()
 		var grid_bounds=Rect2(Vector2(key_width,ruler_height),size-Vector2(key_width,ruler_height))
-		draw_rect(Rect2(Vector2.ZERO,size),Color("080f1c"))
+		draw_rect(Rect2(Vector2.ZERO,size),Color("0b0e13"))
 		var rows=ceili((size.y-ruler_height)/row_height)
 		for row in range(rows):
 			var pitch=screen.high_pitch-row
 			if pitch<24: continue
 			var y=ruler_height+row*row_height; var black=posmod(pitch,12) in [1,3,6,8,10]
-			draw_rect(Rect2(key_width,y,size.x-key_width,row_height),Color("0b1422") if black else Color("101c2b"))
-			draw_rect(Rect2(0,y,key_width-2,row_height-1),Color("152233") if black else Color("b6c4cf"))
-			draw_string(font,Vector2(8,y+16),screen.pitch_name(pitch),HORIZONTAL_ALIGNMENT_LEFT,-1,12,Color("94b5d1") if black else Color("172b3a"))
-			draw_line(Vector2(key_width,y),Vector2(size.x,y),Color("182638"),1.)
+			draw_rect(Rect2(key_width,y,size.x-key_width,row_height),Color("101319") if black else Color("161a21"))
+			draw_rect(Rect2(0,y,key_width-2,row_height-1),Color("20252d") if black else Color("e4e5e1"))
+			draw_string(font,Vector2(8,y+16),screen.pitch_name(pitch),HORIZONTAL_ALIGNMENT_LEFT,-1,12,Color("a6acb5") if black else Color("20252d"))
+			draw_line(Vector2(key_width,y),Vector2(size.x,y),Color("272d36"),1.)
 		for step in range(screen.bars_visible*16+1):
 			var x=key_width+step*width
 			var strong=step%16==0; var beat=step%4==0
-			draw_line(Vector2(x,ruler_height),Vector2(x,size.y),Color("3b5368") if strong else (Color("273a4c") if beat else Color("162638")),1.5 if strong else 1.)
+			draw_line(Vector2(x,ruler_height),Vector2(x,size.y),Color("525b67") if strong else (Color("363e49") if beat else Color("252b34")),1.5 if strong else 1.)
 			if step%16==0 and step<screen.bars_visible*16:
-				draw_string(font,Vector2(x+5,20),"%02d"%(screen.page_start_bar+step/16+1),HORIZONTAL_ALIGNMENT_LEFT,-1,15,Color("a9c8df"))
-			elif beat and width>10.: draw_string(font,Vector2(x+4,20),str(step%16/4+1),HORIZONTAL_ALIGNMENT_LEFT,-1,11,Color("47647b"))
+				draw_string(font,Vector2(x+5,20),"%02d"%(screen.page_start_bar+step/16+1),HORIZONTAL_ALIGNMENT_LEFT,-1,15,Color("d9dde1"))
+			elif beat and width>10.: draw_string(font,Vector2(x+4,20),str(step%16/4+1),HORIZONTAL_ALIGNMENT_LEFT,-1,11,Color("747d89"))
 		# Quiet ghost notes preserve the harmonic context of the other voices.
 		for index in range(screen.score().tracks.size()):
 			var track: Dictionary=screen.score().tracks[index]
@@ -163,27 +164,26 @@ class PianoRoll:
 		if beat>=screen.page_start_bar*4. and beat<(screen.page_start_bar+screen.bars_visible)*4.:
 			var x=key_width+(beat-screen.page_start_bar*4.)*width*4.
 			draw_line(Vector2(x,0),Vector2(x,size.y),Color("ffd49b"),2.)
-		draw_rect(Rect2(Vector2.ZERO,size),Color("2a4056"),false,1.)
+		draw_rect(Rect2(Vector2.ZERO,size),Color("3b424d"),false,1.)
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT); mouse_filter=Control.MOUSE_FILTER_STOP
-	var font=SystemFont.new(); font.font_names=PackedStringArray(["Microsoft YaHei UI","Noto Sans CJK SC","Arial"])
-	var t=Theme.new(); t.default_font=font; t.default_font_size=18; theme=t
+	theme=UI.theme(18)
 	resized.connect(_queue_refresh); refresh()
 func score(): return game.composer_score
 func current_track() -> Dictionary:
 	if game==null or score().tracks.is_empty(): return {}
 	return score().tracks[clampi(track_index,0,score().tracks.size()-1)]
 static func pitch_name(pitch: int) -> String: return str(PITCH_NAMES[posmod(pitch,12)])+str(floori(float(pitch)/12.)-1)
-func _label(value: String,size_value: int=18,color: Color=Color("a7bed4")) -> Label:
+func _label(value: String,size_value: int=18,color: Color=UI.MUTED) -> Label:
 	var n=Label.new(); n.text=value; n.mouse_filter=Control.MOUSE_FILTER_IGNORE; n.add_theme_font_size_override("font_size",size_value); n.add_theme_color_override("font_color",color); return n
 func _box(color: Color,border: Color=Color("23384e"),margin: int=14) -> StyleBoxFlat:
-	var s=StyleBoxFlat.new(); s.bg_color=color; s.border_color=border; s.set_border_width_all(1); s.set_corner_radius_all(7)
-	s.content_margin_left=margin; s.content_margin_right=margin; s.content_margin_top=margin; s.content_margin_bottom=margin; return s
+	return UI.surface(color,border,8,margin)
+
 func _button(value: String,callback: Callable,name_value: String="",color: Color=Color("82ddd5")) -> Button:
 	var n=Button.new(); n.text=value; n.name=name_value if not name_value.is_empty() else value; n.focus_mode=Control.FOCUS_NONE; n.custom_minimum_size=Vector2(88,40)
-	for state_name in ["normal","hover","pressed"]: n.add_theme_stylebox_override(state_name,_box(Color("112132") if state_name=="normal" else Color("253e51"),Color(color,.35 if state_name=="normal" else .8),9))
-	n.add_theme_color_override("font_color",color); n.pressed.connect(callback); return n
+	UI.button(n,color,9)
+	n.pressed.connect(callback); return n
 func _spin(value: float,minimum: float,maximum: float,step: float,callback: Callable,name_value: String="") -> SpinBox:
 	var n=SpinBox.new()
 	if not name_value.is_empty(): n.name=name_value
@@ -199,11 +199,11 @@ func refresh() -> void:
 	track_index=clampi(track_index,0,maxi(0,score().tracks.size()-1)); page_start_bar=clampi(page_start_bar,0,maxi(0,score().bars-bars_visible))
 	if is_instance_valid(content): content.hide(); content.queue_free()
 	content=Control.new(); content.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT); add_child(content)
-	var bg=ColorRect.new(); bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT); bg.color=Color("050b14"); content.add_child(bg)
+	var bg=ColorRect.new(); bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT); bg.color=UI.INK; content.add_child(bg)
 	var view=get_viewport_rect().size; var compact=view.x<1500 or view.y<850
 	var left=216. if compact else 248.; var right=250. if compact else 278.
 	var piano_x=left+40.; var piano_width=view.x-piano_x-right-38.
-	var heading=_label("自由作曲  /  SCORE LAB",29,Color("e5f1fa")); heading.position=Vector2(25,19); content.add_child(heading)
+	var heading=_label("自由作曲  /  SCORE LAB",29,UI.TEXT); heading.position=Vector2(25,19); content.add_child(heading)
 	title_edit=LineEdit.new(); title_edit.name="ComposerTitle"; title_edit.text=str(score().title); title_edit.placeholder_text="为你的乐曲命名"; title_edit.position=Vector2(465 if not compact else 405,20); title_edit.size=Vector2(maxf(210.,view.x-(840 if not compact else 750)),42)
 	title_edit.text_changed.connect(func(value):score().title=value; _changed(false)); content.add_child(title_edit)
 	var back=_button("返回",game.close_composer,"ComposerBack",Color("8ea5be")); back.position=Vector2(view.x-120,20); back.size=Vector2(94,42); content.add_child(back)

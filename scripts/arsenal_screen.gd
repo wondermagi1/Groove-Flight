@@ -1,4 +1,5 @@
 extends Control
+const UI=preload("res://scripts/ui_materials.gd")
 const CLEAR_HUD=preload("res://scripts/combat_hud_style.gd")
 ## Three shared presentations of the same loadout. Combat only inspects; editor
 ## and shop route every inventory transaction through the game's validated API.
@@ -173,12 +174,8 @@ class DetailIllustration:
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	font = SystemFont.new()
-	font.font_names = PackedStringArray(["Microsoft YaHei UI", "Noto Sans CJK SC", "Arial"])
-	var theme_value := Theme.new()
-	theme_value.default_font = font
-	theme_value.default_font_size = 20
-	theme = theme_value
+	font=UI.font()
+	theme=UI.theme(20)
 	resized.connect(_queue_rebuild)
 	refresh()
 
@@ -186,18 +183,9 @@ func editable() -> bool:
 	return game != null and mode != "combat" and game.can_edit()
 
 func _box(color: Color, border: Color = Color("263242"), radius: int = 7, margin: int = 14) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = color
-	style.border_color = border
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(radius)
-	style.content_margin_left = margin
-	style.content_margin_right = margin
-	style.content_margin_top = margin
-	style.content_margin_bottom = margin
-	return style
+	return UI.surface(color,border,radius,margin)
 
-func _label(text_value: String, text_size: int = 19, color: Color = Color("c8d3e4")) -> Label:
+func _label(text_value: String, text_size: int = 19, color: Color = UI.TEXT) -> Label:
 	var node := Label.new()
 	node.text = text_value
 	node.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -212,12 +200,7 @@ func _button(text_value: String, callback: Callable, accent: Color = Color("83df
 	node.focus_mode = Control.FOCUS_NONE
 	node.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	node.add_theme_font_size_override("font_size", 18)
-	node.add_theme_stylebox_override("normal", _box(Color("111b28"), Color(accent, 0.30), 5, 9))
-	node.add_theme_stylebox_override("hover", _box(Color("21313e"), Color(accent, 0.85), 5, 9))
-	node.add_theme_stylebox_override("pressed", _box(Color("2c454e"), accent, 5, 9))
-	node.add_theme_stylebox_override("disabled", _box(Color("0c121c"), Color("202a37"), 5, 9))
-	node.add_theme_color_override("font_color", accent)
-	node.add_theme_color_override("font_disabled_color", Color("526177"))
+	UI.button(node,accent,9)
 	node.pressed.connect(callback)
 	return node
 
@@ -307,8 +290,8 @@ func _panel(rect: Rect2, title_value: String, subtitle: String = "") -> VBoxCont
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override("separation", 10)
 	panel.add_child(column)
-	column.add_child(_label(title_value, 21, Color("e0e9f5")))
-	if not subtitle.is_empty(): column.add_child(_label(subtitle, 15, Color("7d91ab")))
+	column.add_child(_label(title_value, 21, UI.TEXT))
+	if not subtitle.is_empty(): column.add_child(_label(subtitle, 15, UI.MUTED))
 	return column
 
 func _combat_toolbar_y() -> float:
@@ -319,7 +302,7 @@ func _combat_toolbar_y() -> float:
 func _build_top(view: Vector2) -> void:
 	if mode != "combat":
 		var title_value: String = "波间补给" if mode == "shop" else "音序工坊"
-		var title_label := _label(title_value, 30, Color("f0f6ff"))
+		var title_label := _label(title_value, 30, UI.TEXT)
 		title_label.position = Vector2(24, 18)
 		content.add_child(title_label)
 	if mode != "combat":
@@ -361,7 +344,7 @@ func _build_top(view: Vector2) -> void:
 		if pending_choice==null: pending_choice=true
 		resume.disabled = game.loadout.equipped_weapons() == 0 or (mode=="shop" and not pending_boons.is_empty() and not bool(pending_choice))
 		content.add_child(resume)
-		var hint := _label("拖动编排 · 右键卸下 · 同类同级可合成", 17, Color("7790aa"))
+		var hint := _label("拖动编排 · 右键卸下 · 同类同级可合成", 17, UI.QUIET)
 		hint.position = Vector2(maxf(680.0, view.x - 650.0), 79)
 		content.add_child(hint)
 
@@ -475,7 +458,7 @@ func _build_inventory(rect: Rect2) -> void:
 		area.add_child(card)
 	area.custom_minimum_size = Vector2(rect.size.x - 42.0, maxf(82.0, ceilf(float(used.size()) / float(cols)) * 72.0))
 	if unequipped.is_empty():
-		var empty := _label("暂无备用模块\n将已装备模块拖回此处。", 17, Color("657f99"))
+		var empty := _label("暂无备用模块\n将已装备模块拖回此处。", 17, UI.QUIET)
 		empty.position = Vector2(3, 10)
 		area.add_child(empty)
 
@@ -505,7 +488,7 @@ func _build_sequencer(rect: Rect2) -> void:
 		var panel := PanelContainer.new()
 		panel.name = "FlightSequencer"
 		panel.position = rect.position; panel.size = rect.size
-		panel.add_theme_stylebox_override("panel", _box(Color(0.02, 0.035, 0.055, 0.78), Color(0.13, 0.20, 0.27, 0.55), 6, 8))
+		panel.add_theme_stylebox_override("panel", _box(Color(UI.INK,.82), Color(UI.LINE,.62), 6, 8))
 		content.add_child(panel)
 		panel.add_child(rows_area)
 	else:
@@ -522,7 +505,7 @@ func _build_sequencer(rect: Rect2) -> void:
 	var stride: float = cell_width + gap
 	if compact_flight:
 		for track in range(row_count):
-			var track_label := _label(char(65 + track), 10, Color("607b90"))
+			var track_label := _label(char(65 + track), 10, UI.QUIET)
 			track_label.position = Vector2(0, float(track) * (row_height + row_gap) + row_height * 0.5 - 7)
 			rows_area.add_child(track_label)
 	for at in range(game.loadout.active_tracks*8):
@@ -591,11 +574,11 @@ func _build_buffs(rect: Rect2) -> void:
 		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		grid.add_child(card)
 	if buffs.is_empty():
-		var empty := _label("尚无增益\n从补给站购买模块，\n装入音序后生效。", 18, Color("6c829d"))
+		var empty := _label("尚无增益\n从补给站购买模块，\n装入音序后生效。", 18, UI.QUIET)
 		grid.add_child(empty)
 
 func _build_shop(rect: Rect2) -> void:
-	var title_label := _label("本轮补给", 25, Color("d7e5f2"))
+	var title_label := _label("本轮补给", 25, UI.TEXT)
 	title_label.position = rect.position
 	content.add_child(title_label)
 	var reroll_price: int = 8
@@ -692,7 +675,7 @@ func _build_inspector(view: Vector2, center_x: float, center_width: float, top: 
 	detail_controls.add_theme_constant_override("separation", 6)
 	body.add_child(detail_controls)
 	if mode == "editor" and game.selected_uid < 0:
-		editor_hint = _label("把旋律排成火力。\n\n点击后固定详情，拖动调整位置。\n选中后可合成、回收，或点空格放置。", 24, Color("6e87a3"))
+		editor_hint = _label("把旋律排成火力。\n\n点击后固定详情，拖动调整位置。\n选中后可合成、回收，或点空格放置。", 24, UI.QUIET)
 		editor_hint.position = Vector2(center_x + 40.0, top + 85.0)
 		editor_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		content.add_child(editor_hint)
@@ -752,7 +735,7 @@ func _update_detail() -> void:
 		detail_panel.visible = false
 		return
 	detail_panel.visible = true
-	_detail_text(str(row.name), 27, Color("f0f6ff"))
+	_detail_text(str(row.name), 27, UI.TEXT)
 	if detail_pinned: _detail_text("已固定详情 · 点击其他物品切换",14,Color("83b9bb"))
 	var detail_level=int(game.loadout.find(preview_uid).get("level",1))
 	_detail_text("//%s  /  %s  /  占 %d 格" % [DATA.quality_name(row,detail_level), CATEGORY_NAMES.get(str(row.category), "模块"), int(row.width)], 16, DATA.quality_color(row,detail_level))
@@ -915,7 +898,7 @@ func _process(delta: float) -> void:
 func _update_sequence_cursor() -> void:
 	var step: int = int(game.music.timeline / game.LOADOUT.SEQUENCE_STEP_SECONDS) % 8 if game.music != null else -1
 	for cell in step_cells:
-		if is_instance_valid(cell): cell.modulate = Color("a8e9e7") if cell.slot_index % 8 == step and mode == "combat" else Color.WHITE
+		if is_instance_valid(cell): cell.modulate = Color("f5f0df") if cell.slot_index % 8 == step and mode == "combat" else Color.WHITE
 	for index in range(step_lights.size()):
 		if is_instance_valid(step_lights[index]): step_lights[index].set_active(index % 8 == step)
 func _update_live() -> void:
@@ -932,7 +915,7 @@ func _update_live() -> void:
 	var step: int = int(game.music.timeline / game.LOADOUT.SEQUENCE_STEP_SECONDS) % 8 if game.music != null else -1
 	for card in step_cards:
 		if is_instance_valid(card):
-			card.modulate = Color("c8faff") if card.slot_index % 8 == step and mode == "combat" else Color.WHITE
+			card.modulate = Color("fff5df") if card.slot_index % 8 == step and mode == "combat" else Color.WHITE
 
 func _build_lab(rect: Rect2) -> void:
 	lab_mutes.clear()

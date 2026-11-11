@@ -1,4 +1,5 @@
 extends Control
+const UI=preload("res://scripts/ui_materials.gd")
 ## The hangar changes the next flight's configuration; departure stays in the city.
 const FLEET = preload("res://scripts/fleet_catalog.gd")
 const ART = preload("res://scripts/fleet_art.gd")
@@ -43,8 +44,8 @@ class FleetCard extends Button:
 		var tag_size: int = 14 if compact else 16
 		var name_width: float = font.get_string_size(row.name, HORIZONTAL_ALIGNMENT_LEFT, -1, name_size).x
 		var tag_width: float = font.get_string_size(row.tag, HORIZONTAL_ALIGNMENT_LEFT, -1, tag_size).x
-		draw_string(font, Vector2((size.x - name_width) * 0.5, size.y - 34.0), row.name, HORIZONTAL_ALIGNMENT_LEFT, -1, name_size, Color("eff5ff"))
-		draw_string(font, Vector2((size.x - tag_width) * 0.5, size.y - 12.0), row.tag, HORIZONTAL_ALIGNMENT_LEFT, -1, tag_size, accent if selected else Color("8d9cb2"))
+		draw_string(font, Vector2((size.x - name_width) * 0.5, size.y - 34.0), row.name, HORIZONTAL_ALIGNMENT_LEFT, -1, name_size, UI.TEXT)
+		draw_string(font, Vector2((size.x - tag_width) * 0.5, size.y - 12.0), row.tag, HORIZONTAL_ALIGNMENT_LEFT, -1, tag_size, accent if selected else UI.MUTED)
 		if selected:
 			draw_circle(Vector2(size.x - 17.0, 17.0), 4.0, accent)
 			draw_line(Vector2(13.0, 0.0), Vector2(size.x - 13.0, 0.0), accent, 3.0, true)
@@ -56,7 +57,7 @@ class FleetCard extends Button:
 
 class HangarBackdrop extends Control:
 	func _draw() -> void:
-		draw_rect(Rect2(Vector2.ZERO, size), Color("070d18"))
+		draw_rect(Rect2(Vector2.ZERO, size), UI.INK)
 		for i in range(58):
 			var x: float = fposmod(float(i * 313 + 73), maxf(size.x, 1.0))
 			var y: float = fposmod(float(i * i * 17 + 43), maxf(size.y, 1.0))
@@ -68,12 +69,7 @@ class HangarBackdrop extends Control:
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	var system_font := SystemFont.new()
-	system_font.font_names = PackedStringArray(["Microsoft YaHei UI", "Noto Sans CJK SC", "Arial"])
-	var hangar_theme := Theme.new()
-	hangar_theme.default_font = system_font
-	hangar_theme.default_font_size = 20
-	theme = hangar_theme
+	theme=UI.theme(20)
 	var backdrop := HangarBackdrop.new()
 	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -85,9 +81,9 @@ func _ready() -> void:
 	content = VBoxContainer.new()
 	content.add_theme_constant_override("separation", 14)
 	frame.add_child(content)
-	heading = _label("机库  /  FLIGHT DECK", 32, Color("eff5ff"))
+	heading = _label("机库  /  FLIGHT DECK", 32, UI.TEXT)
 	content.add_child(heading)
-	subtitle = _label("选择舰体与驾驶员。出战后跟随下落琴块击键，成功才发射。", 19, Color("879db7"))
+	subtitle = _label("选择舰体与驾驶员。出战后跟随下落琴块击键，成功才发射。", 19, UI.MUTED)
 	content.add_child(subtitle)
 	var groups := HBoxContainer.new()
 	groups.add_theme_constant_override("separation", 26)
@@ -162,7 +158,7 @@ func _ready() -> void:
 	_layout()
 	_refresh_selection()
 
-func _label(value: String, font_size: int, color: Color = Color("d7e5f5")) -> Label:
+func _label(value: String, font_size: int, color: Color = UI.TEXT) -> Label:
 	var result := Label.new()
 	result.text = value
 	result.add_theme_font_size_override("font_size", font_size)
@@ -171,16 +167,7 @@ func _label(value: String, font_size: int, color: Color = Color("d7e5f5")) -> La
 	return result
 
 func _box(color: Color, border: Color, radius: int, padding: int = 14) -> StyleBoxFlat:
-	var style := StyleBoxFlat.new()
-	style.bg_color = color
-	style.border_color = border
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(radius)
-	style.content_margin_left = padding
-	style.content_margin_right = padding
-	style.content_margin_top = padding
-	style.content_margin_bottom = padding
-	return style
+	return UI.surface(color,border,radius,padding)
 
 func _layout() -> void:
 	if not is_instance_valid(frame):

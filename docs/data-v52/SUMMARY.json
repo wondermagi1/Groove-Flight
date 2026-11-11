@@ -1,0 +1,20 @@
+{
+  "version": "0.52.0-ui-harmony",
+  "date": "2026-11-11",
+  "backup": "c22af8bd6b7b3cfc90fb9129ebf0d5cc45bbc635",
+  "branch": "codex/ui-harmony",
+  "checks": {
+    "ui": 27,
+    "chart": 2424,
+    "live": 24,
+    "native": 12
+  },
+  "native_renderer": "forward_plus",
+  "unchanged_non_ui_files": 1667,
+  "unchanged_all_arsenal_wavs": 616,
+  "unchanged_active_weapons": 24,
+  "unchanged_active_wavs": 288,
+  "main_rhythm_gate_chart_voices_bgm_background_native": "unchanged byte content via Git blob hashes",
+  "screenshots": 15,
+  "scope": "Neutral UI materials, hierarchy and presentation only. Actual Forward+ screenshots reviewed for layout; test combat uses acquired equipment and direct-fire visual fixtures. Existing rhythm/transport input tests remain mandatory. No performance or subjective music approval claim; historical demo and user presentation untouched."
+}

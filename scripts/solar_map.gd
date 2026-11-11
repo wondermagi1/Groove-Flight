@@ -1,4 +1,5 @@
 extends Control
+const UI=preload("res://scripts/ui_materials.gd")
 ## An independent miniature 3D solar model. Selection changes the actual route;
 ## orbit animation is decorative and never drives campaign progress.
 const DATA=preload("res://scripts/planet_catalog.gd")
@@ -40,8 +41,7 @@ var _initial_ready: bool=false
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter=Control.MOUSE_FILTER_STOP
-	var font=SystemFont.new(); font.font_names=PackedStringArray(["Microsoft YaHei UI","Noto Sans CJK SC","Arial"])
-	var theme_value=Theme.new(); theme_value.default_font=font; theme_value.default_font_size=20; theme=theme_value
+	theme=UI.theme(20)
 	var background=ColorRect.new(); background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	background.color=Color("030711"); background.mouse_filter=Control.MOUSE_FILTER_IGNORE; add_child(background)
 	_build_world(); _build_interface()
@@ -50,21 +50,17 @@ func _ready() -> void:
 	_update_projected_labels()
 
 func _box(color: Color,border: Color=Color("26364d"),margin: int=16) -> StyleBoxFlat:
-	var style=StyleBoxFlat.new(); style.bg_color=color; style.border_color=border
-	style.set_border_width_all(1); style.set_corner_radius_all(8)
-	style.content_margin_left=margin; style.content_margin_right=margin; style.content_margin_top=margin; style.content_margin_bottom=margin
-	return style
-func _label(value: String,font_size: int=20,color: Color=Color("dceaf6")) -> Label:
+	return UI.surface(color,border,8,margin)
+
+func _label(value: String,font_size: int=20,color: Color=UI.TEXT) -> Label:
 	var node=Label.new(); node.text=value; node.add_theme_font_size_override("font_size",font_size)
 	node.add_theme_color_override("font_color",color); node.mouse_filter=Control.MOUSE_FILTER_IGNORE; return node
 func _button(value: String,callback: Callable,accent: Color=Color("87dbe5")) -> Button:
 	var node=Button.new(); node.text=value; node.focus_mode=Control.FOCUS_NONE
 	node.mouse_default_cursor_shape=Control.CURSOR_POINTING_HAND
 	node.add_theme_font_size_override("font_size",18)
-	node.add_theme_stylebox_override("normal",_box(Color("0c1522"),Color(accent,.25),10))
-	node.add_theme_stylebox_override("hover",_box(Color("1b2d3d"),Color(accent,.8),10))
-	node.add_theme_stylebox_override("pressed",_box(Color("243d4e"),accent,10))
-	node.add_theme_color_override("font_color",accent); node.pressed.connect(callback); return node
+	UI.button(node,accent,10)
+	node.pressed.connect(callback); return node
 func _emissive(color: Color,energy: float=.4) -> StandardMaterial3D:
 	var material=StandardMaterial3D.new(); material.albedo_color=color
 	material.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
@@ -202,7 +198,7 @@ func _selected_id() -> String: return str(game.selected_planet) if game!=null el
 func _record(id: String) -> Dictionary:
 	if game.has_method("planet_record"): return game.planet_record(id)
 	return game.planet_records.get(id,{})
-func _detail(value: String,font_size: int=19,color: Color=Color("a7b9cd")) -> Label:
+func _detail(value: String,font_size: int=19,color: Color=UI.MUTED) -> Label:
 	var label_value=_label(value,font_size,color); label_value.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; detail_content.add_child(label_value); return label_value
 func _refresh_selection() -> void:
 	if not is_instance_valid(detail_content): return

@@ -1,4 +1,5 @@
 extends Control
+const UI=preload("res://scripts/ui_materials.gd")
 ## In-game weapon sound encyclopedia. Every preview loads the same PCM sample
 ## used by the native music renderer; no separate cosmetic audio is invented.
 const DATA=preload("res://scripts/arsenal_catalog.gd")
@@ -64,7 +65,7 @@ func _refresh_cards(_choice: int=0) -> void:
 			if (str(row.instrument_group)==str(key) if group_mode.selected==0 else int(row.charge)==int(key)): members.append(row)
 		if members.is_empty(): continue
 		var caption=GROUPS.title(str(key)) if group_mode.selected==0 else "%d轮充能 · 每%.1f秒发射"%[int(key),float(key)*LOADOUT.SEQUENCE_LOOP_SECONDS]
-		card_sections.add_child(_label("%s  ·  %d种"%[caption,members.size()],19,Color("9de5dc")))
+		card_sections.add_child(_label("%s  ·  %d种"%[caption,members.size()],19,UI.GOLD))
 		var grid=GridContainer.new(); grid.columns=4; grid.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		grid.add_theme_constant_override("h_separation",7); grid.add_theme_constant_override("v_separation",7); card_sections.add_child(grid)
 		for row in members:
@@ -76,11 +77,11 @@ func _refresh_cards(_choice: int=0) -> void:
 			button.add_theme_stylebox_override("normal",_box(Color("0d1927"),Color(row.color,.28),6,7))
 			button.add_theme_stylebox_override("hover",_box(Color("172c3a"),Color(row.color,.82),6,7))
 			button.add_theme_stylebox_override("pressed",_box(Color("244354"),row.color,6,7))
-			button.add_theme_color_override("font_color",Color("dce9f5")); button.pressed.connect(select_weapon.bind(str(row.id)))
+			button.add_theme_color_override("font_color",UI.TEXT); button.pressed.connect(select_weapon.bind(str(row.id)))
 			grid.add_child(button); card_buttons[str(row.id)]=button
 	var detail=get_node_or_null("WeaponCodexFrame/WeaponCodexDetail")
 	if detail: detail.visible=not rows.is_empty()
-	if rows.is_empty(): card_sections.add_child(_label("这个分类的武器尚未开发",18,Color("8ca9bf")))
+	if rows.is_empty(): card_sections.add_child(_label("这个分类的武器尚未开发",18,UI.MUTED))
 	elif not audition_players.is_empty(): select_weapon(selected_id if card_buttons.has(selected_id) else str(rows[0].id))
 	_layout()
 
@@ -122,7 +123,7 @@ class CodexArt:
 	extends Control
 	var item_id: String="pulse"
 	func _draw() -> void:
-		draw_rect(Rect2(Vector2.ZERO,size),Color("050b14"))
+		draw_rect(Rect2(Vector2.ZERO,size),UI.INK)
 		ART.draw_item(self,Rect2(Vector2(6,4),size-Vector2(12,8)),item_id,1,.18)
 
 class RhythmBars:
@@ -130,7 +131,7 @@ class RhythmBars:
 	var cadence: Dictionary={"label":"匀速四连","scales":[.25,.25,.25,.25]}
 	var accent: Color=Color("6ce6df")
 	func _draw() -> void:
-		draw_rect(Rect2(Vector2.ZERO,size),Color("07111f"))
+		draw_rect(Rect2(Vector2.ZERO,size),UI.INK)
 		var scales: Array=cadence.get("scales",[.25,.25,.25,.25])
 		var beats=maxi(1,scales.size())
 		var gap=8.
@@ -148,16 +149,15 @@ class RhythmBars:
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter=Control.MOUSE_FILTER_STOP
-	var font=SystemFont.new(); font.font_names=PackedStringArray(["Microsoft YaHei UI","Noto Sans CJK SC","Arial"])
-	var ui_theme=Theme.new(); ui_theme.default_font=font; ui_theme.default_font_size=18; theme=ui_theme
+	theme=UI.theme(18)
 	_load_manifest()
 	var dim=ColorRect.new(); dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT); dim.color=Color(0.005,.01,.018,.94); add_child(dim)
 	var frame=Panel.new(); frame.name="WeaponCodexFrame"; frame.add_theme_stylebox_override("panel",_box(Color("091321"),Color("36536c"),12,20)); add_child(frame)
-	var title=_label("武器音色图鉴  /  WEAPON SONIC CODEX",30,Color("eff7ff")); title.position=Vector2(24,18); frame.add_child(title)
-	var subtitle=_label("%d种精选武器 · 乐器固定音色 · 三轨8格 / 每格%.4f秒 / 一轮%.1f秒"%[DATA.playable_weapons().size(),LOADOUT.SEQUENCE_STEP_SECONDS,LOADOUT.SEQUENCE_LOOP_SECONDS],17,Color("83a4bd")); subtitle.position=Vector2(26,59); frame.add_child(subtitle)
+	var title=_label("武器音色图鉴  /  WEAPON SONIC CODEX",30,UI.TEXT); title.position=Vector2(24,18); frame.add_child(title)
+	var subtitle=_label("%d种精选武器 · 乐器固定音色 · 三轨编排 / 一轮%.1f秒"%[DATA.playable_weapons().size(),LOADOUT.SEQUENCE_LOOP_SECONDS],17,UI.MUTED); subtitle.position=Vector2(26,59); frame.add_child(subtitle)
 	var close=Button.new(); close.name="WeaponCodexClose"; close.text="关闭  /  ESC"; close.position=Vector2(1020,24); close.size=Vector2(170,42)
 	close.add_theme_stylebox_override("normal",_box(Color("122233"),Color("5c768c"),6,7)); close.add_theme_stylebox_override("hover",_box(Color("213c4d"),Color("9bdde0"),6,7))
-	close.add_theme_color_override("font_color",Color("c5e7ed")); close.pressed.connect(queue_free); frame.add_child(close)
+	UI.button(close,UI.GOLD,7); close.pressed.connect(queue_free); frame.add_child(close)
 	var left=PanelContainer.new(); left.position=Vector2(24,92); left.size=Vector2(560,700); left.add_theme_stylebox_override("panel",_box(Color("07101c"),Color("263d52"),8,12)); frame.add_child(left)
 	var listing=VBoxContainer.new(); listing.size_flags_horizontal=Control.SIZE_EXPAND_FILL; listing.add_theme_constant_override("separation",10); left.add_child(listing)
 	var filters=HBoxContainer.new(); filters.add_theme_constant_override("separation",6); listing.add_child(filters)
@@ -170,30 +170,30 @@ func _ready() -> void:
 	filters.add_child(instrument_filter)
 	for control in [group_mode,charge_filter,instrument_filter]:
 		control.size_flags_horizontal=Control.SIZE_EXPAND_FILL; control.add_theme_font_size_override("font_size",16); control.item_selected.connect(_refresh_cards)
-	filter_count=_label("",16,Color("8ca9bf")); listing.add_child(filter_count)
+	filter_count=_label("",16,UI.MUTED); listing.add_child(filter_count)
 	var scroll=ScrollContainer.new(); scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED; scroll.size_flags_vertical=Control.SIZE_EXPAND_FILL; listing.add_child(scroll)
 	card_sections=VBoxContainer.new(); card_sections.size_flags_horizontal=Control.SIZE_EXPAND_FILL; card_sections.add_theme_constant_override("separation",12); scroll.add_child(card_sections)
-	var detail=PanelContainer.new(); detail.name="WeaponCodexDetail"; detail.position=Vector2(602,92); detail.size=Vector2(590,700); detail.add_theme_stylebox_override("panel",_box(Color("07111f"),Color("2b455b"),8,18)); frame.add_child(detail)
+	var detail=PanelContainer.new(); detail.name="WeaponCodexDetail"; detail.position=Vector2(602,92); detail.size=Vector2(590,700); detail.add_theme_stylebox_override("panel",_box(UI.INK,Color("2b455b"),8,18)); frame.add_child(detail)
 	var detail_scroll=ScrollContainer.new(); detail_scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED; detail_scroll.size_flags_vertical=Control.SIZE_EXPAND_FILL; detail.add_child(detail_scroll)
 	var detail_column=VBoxContainer.new(); detail_column.add_theme_constant_override("separation",8); detail_column.size_flags_horizontal=Control.SIZE_EXPAND_FILL; detail_scroll.add_child(detail_column)
 	detail_title=_label("",30,Color("f2f7ff")); detail_column.add_child(detail_title)
-	detail_meta=_label("",17,Color("8ca9bf")); detail_meta.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; detail_column.add_child(detail_meta)
-	quality_caption=_label("品质",15,Color("8ca9bf")); detail_column.add_child(quality_caption)
+	detail_meta=_label("",17,UI.MUTED); detail_meta.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; detail_column.add_child(detail_meta)
+	quality_caption=_label("品质",15,UI.MUTED); detail_column.add_child(quality_caption)
 	quality_row=HBoxContainer.new(); quality_row.name="WeaponCodexQuality"; quality_row.add_theme_constant_override("separation",7); detail_column.add_child(quality_row)
-	quality_summary=_label("",15,Color("91a9bd")); quality_summary.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; detail_column.add_child(quality_summary)
+	quality_summary=_label("",15,UI.MUTED); quality_summary.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; detail_column.add_child(quality_summary)
 	var art=CodexArt.new(); art.name="WeaponCodexArt"; art.custom_minimum_size=Vector2(0,92); art.mouse_filter=Control.MOUSE_FILTER_IGNORE; detail_column.add_child(art)
 	rhythm_view=RhythmBars.new(); rhythm_view.custom_minimum_size=Vector2(0,125); rhythm_view.mouse_filter=Control.MOUSE_FILTER_IGNORE; detail_column.add_child(rhythm_view)
 	cadence_label=_label("",16,Color("e9cb8d")); cadence_label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; detail_column.add_child(cadence_label)
-	sound_record=_label("",15,Color("82a8c1")); sound_record.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; detail_column.add_child(sound_record)
-	sample_caption=_label("实际PCM样本切片",15,Color("7895ac")); detail_column.add_child(sample_caption)
+	sound_record=_label("",15,UI.MUTED); sound_record.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; detail_column.add_child(sound_record)
+	sample_caption=_label("实际PCM样本切片",15,UI.MUTED); detail_column.add_child(sample_caption)
 	pitch_row=HBoxContainer.new(); pitch_row.add_theme_constant_override("separation",5); detail_column.add_child(pitch_row)
 	for pitch in range(8):
 		var pitch_button=Button.new(); pitch_button.text=str(pitch+1); pitch_button.custom_minimum_size=Vector2(48,36); pitch_button.focus_mode=Control.FOCUS_NONE
 		pitch_button.pressed.connect(func(): selected_pitch=pitch; play_one(pitch))
 		pitch_row.add_child(pitch_button)
 	play_all_button=Button.new(); play_all_button.name="WeaponCodexPlay"; play_all_button.text="试听固定声音"; play_all_button.custom_minimum_size=Vector2(180,44)
-	play_all_button.add_theme_stylebox_override("normal",_box(Color("153a3d"),Color("65d9ce"),6,8)); play_all_button.add_theme_color_override("font_color",Color("c9fff5")); play_all_button.pressed.connect(play_cadence); detail_column.add_child(play_all_button)
-	status=_label("选择武器后试听。播放的是战斗音频实际使用的WAV样本。",15,Color("7893a9")); status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; detail_column.add_child(status)
+	UI.button(play_all_button,UI.GOLD,8); play_all_button.pressed.connect(play_cadence); detail_column.add_child(play_all_button)
+	status=_label("选择武器后试听。播放的是战斗音频实际使用的WAV样本。",15,UI.MUTED); status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; detail_column.add_child(status)
 	audio_player=AudioStreamPlayer.new(); audio_player.name="WeaponCodexAudio"
 	audio_player.bus=game.AUDIO.WEAPONS; audio_player.volume_db=-2.
 	audio_player.max_polyphony=1
@@ -242,9 +242,7 @@ func _label(value: String,font_size: int,color: Color) -> Label:
 	var label=Label.new(); label.text=value; label.add_theme_font_size_override("font_size",font_size); label.add_theme_color_override("font_color",color); label.mouse_filter=Control.MOUSE_FILTER_IGNORE; return label
 
 func _box(color: Color,border: Color,radius: int,padding: int) -> StyleBoxFlat:
-	var style=StyleBoxFlat.new(); style.bg_color=color; style.border_color=border; style.set_border_width_all(1); style.set_corner_radius_all(radius)
-	style.content_margin_left=padding; style.content_margin_right=padding; style.content_margin_top=padding; style.content_margin_bottom=padding
-	return style
+	return UI.surface(color,border,radius,padding)
 
 func select_weapon(id: String) -> void:
 	if DATA.item(id).is_empty(): return
@@ -263,7 +261,7 @@ func select_weapon(id: String) -> void:
 	rhythm_view.visible=false; rhythm_view.cadence=cadence; rhythm_view.accent=DATA.quality_color(row); rhythm_view.queue_redraw()
 	var strengths: PackedStringArray=[]
 	for value in cadence.get("scales",[.25,.25,.25,.25]): strengths.append("%d%%"%roundi(float(value)*100.))
-	cadence_label.text="%s · 每次发射推进一次\n每 %.1f 秒发声；充能等待轮静音，尾音自然延续。"%[EXPRESSION.describe(int(row.charge)),float(row.charge)*LOADOUT.SEQUENCE_LOOP_SECONDS]
+	cadence_label.text="%s · 每次发射推进一次\n试听间隔 %.1f 秒；实战完成琴块后演奏，尾音自然延续。"%[EXPRESSION.describe(int(row.charge)),float(row.charge)*LOADOUT.SEQUENCE_LOOP_SECONDS]
 	if record.get("dynamics",{}).has("performance_instrument"):
 		cadence_label.text+="\n重音演奏："+str(record.dynamics.performance_instrument)
 	var samples=record.get("samples",[])

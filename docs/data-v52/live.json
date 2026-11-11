@@ -1,0 +1,19 @@
+{
+  "checks": 24,
+  "failures": [],
+  "gestures": {
+    "chord": 7,
+    "hold": 1,
+    "tap": 10
+  },
+  "hits": 18,
+  "max_dispatch_error": 0.00421157801818839,
+  "misses": 5,
+  "output_latency": 0.0,
+  "pcm_loops": 1,
+  "salvos": 19,
+  "song_loops": 1,
+  "song_time": 342.094573033081,
+  "timeline": 160.983776049927,
+  "voices": 19
+}

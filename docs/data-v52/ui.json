@@ -1,0 +1,23 @@
+{
+  "captures": [
+    "res://tests/v52-combat-1920.png",
+    "res://tests/v52-combat-1280-120.png",
+    "res://tests/v52-boss-1280.png",
+    "res://tests/v52-shop-1920.png",
+    "res://tests/v52-shop-detail-1920.png",
+    "res://tests/v52-settings-1920.png",
+    "res://tests/v52-doctrine-1920.png",
+    "res://tests/v52-hangar-1920.png",
+    "res://tests/v52-solar-1920.png",
+    "res://tests/v52-composer-1920.png",
+    "res://tests/v52-settings-1280-120.png",
+    "res://tests/v52-doctrine-1280-120.png",
+    "res://tests/v52-reward-1280-120.png",
+    "res://tests/v52-title-1920.png",
+    "res://tests/v52-codex-1920.png"
+  ],
+  "checks": 27,
+  "failures": [],
+  "renderer": "forward_plus",
+  "scope": "Visual fixtures use acquired high-attribute loadouts and direct fire only for screenshots; production rhythm judgement is checked separately by V51 tests."
+}
