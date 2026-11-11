@@ -1,0 +1,157 @@
+{
+  "checks": 2494,
+  "facts": {
+    "catalogue": [
+      {
+        "charge_due": 0.375,
+        "id": "pulse",
+        "kind": "tap",
+        "music_due": 0.9735
+      },
+      {
+        "charge_due": 0.375,
+        "id": "scatter",
+        "kind": "tap",
+        "music_due": 0.9735
+      },
+      {
+        "charge_due": 0.375,
+        "id": "beam",
+        "kind": "tap",
+        "music_due": 0.9735
+      },
+      {
+        "charge_due": 1.875,
+        "id": "missile",
+        "kind": "tap",
+        "music_due": 1.9255
+      },
+      {
+        "charge_due": 4.875,
+        "id": "nova",
+        "kind": "chord",
+        "music_due": 5.3388
+      },
+      {
+        "charge_due": 1.875,
+        "id": "chain",
+        "kind": "tap",
+        "music_due": 1.9255
+      },
+      {
+        "charge_due": 1.875,
+        "id": "rail",
+        "kind": "tap",
+        "music_due": 1.9255
+      },
+      {
+        "charge_due": 0.375,
+        "id": "pulse_needle",
+        "kind": "tap",
+        "music_due": 0.9735
+      },
+      {
+        "charge_due": 4.875,
+        "id": "scatter_prism",
+        "kind": "chord",
+        "music_due": 5.3388
+      },
+      {
+        "charge_due": 1.875,
+        "id": "beam_split",
+        "kind": "tap",
+        "music_due": 1.9255
+      },
+      {
+        "charge_due": 10.875,
+        "id": "rail_horizon",
+        "kind": "tap",
+        "music_due": 11.0741
+      },
+      {
+        "charge_due": 4.875,
+        "id": "recorded_heavy",
+        "kind": "chord",
+        "music_due": 5.3388
+      },
+      {
+        "charge_due": 4.875,
+        "id": "gilded_helix",
+        "kind": "chord",
+        "music_due": 5.3388
+      },
+      {
+        "charge_due": 3.375,
+        "id": "weave_cross",
+        "kind": "tap",
+        "music_due": 3.5044
+      },
+      {
+        "charge_due": 3.375,
+        "id": "crown_orbit",
+        "kind": "tap",
+        "music_due": 3.5044
+      },
+      {
+        "charge_due": 3.375,
+        "id": "stern_fan",
+        "kind": "tap",
+        "music_due": 3.5044
+      },
+      {
+        "charge_due": 3.375,
+        "id": "dawn_fan",
+        "kind": "tap",
+        "music_due": 3.5044
+      },
+      {
+        "charge_due": 4.875,
+        "id": "tidal_weave",
+        "kind": "chord",
+        "music_due": 5.3388
+      },
+      {
+        "charge_due": 3.375,
+        "id": "firefly_rain",
+        "kind": "tap",
+        "music_due": 3.5044
+      },
+      {
+        "charge_due": 4.875,
+        "id": "kaleidoscope",
+        "kind": "chord",
+        "music_due": 5.3388
+      },
+      {
+        "charge_due": 0.375,
+        "id": "arc_bough",
+        "kind": "tap",
+        "music_due": 0.9735
+      },
+      {
+        "charge_due": 4.875,
+        "id": "chain_loop",
+        "kind": "chord",
+        "music_due": 5.3388
+      },
+      {
+        "charge_due": 0.375,
+        "id": "laser_fan",
+        "kind": "tap",
+        "music_due": 0.9735
+      },
+      {
+        "charge_due": 7.875,
+        "id": "laser_crown",
+        "kind": "tap",
+        "music_due": 7.9162
+      }
+    ],
+    "chart_counts": {
+      "chord": 39,
+      "hold": 108,
+      "tap": 435
+    }
+  },
+  "failures": []
+}

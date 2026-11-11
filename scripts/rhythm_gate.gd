@@ -7,6 +7,8 @@ const CHORD_SPREAD=.060
 const LOOKAHEAD=2.2
 const LANES=4
 var music_chart: bool=false
+var chart_id: String="mercury"
+var offset_seconds: float=0.
 var notes: Array[Dictionary]=[]
 var down: Dictionary={}
 var last_serial: int=-1
@@ -16,16 +18,22 @@ var best_combo: int=0
 var hits: int=0
 var misses: int=0
 var wrong: int=0
+var perfects: int=0
+var judge_serial: int=0
+var judged_lanes: Array=[]
+var last_delta: float=0.
+var last_success: bool=false
 var last_result: String="跟随音乐 · 短按 / 长按 / 双键"
 var result_at: float=-10.
 var result_track: int=-1
 func reset(now: float=0.,new_run: bool=false) -> void:
 	notes.clear();down.clear();cutoff=now-.00001 if new_run else now+.00001
 	last_serial=maxi(-1,floori(now/STEP)-1)
-	if new_run:combo=0;best_combo=0;hits=0;misses=0;wrong=0
+	if new_run:combo=0;best_combo=0;hits=0;misses=0;wrong=0;perfects=0;judge_serial=0;judged_lanes.clear()
 	last_result="跟随音乐 · 短按 / 长按 / 双键";result_at=-10.;result_track=-1
+	last_delta=0.;last_success=false
 func forecast(loadout,now: float,song_time: float=-1.) -> void:
-	var offset=now-(song_time if song_time>=0. else now)
+	var offset=now-(song_time if song_time>=0. else now)+(offset_seconds if music_chart else 0.)
 	if music_chart:
 		for note in notes:
 			if note.has("song_due") and str(note.status) in ["pending","holding","armed"]:
@@ -42,7 +50,7 @@ func forecast(loadout,now: float,song_time: float=-1.) -> void:
 			var id="%d:%d"%[track,roundi(charged*1000000.)]
 			var due=charged;var required: Array=[track];var kind="tap";var hold=0.;var cue: Dictionary={}
 			if music_chart:
-				cue=CHART.next_cue(maxf(0.,charged-offset));id=str(cue.id)
+				cue=CHART.next_cue(maxf(0.,charged-offset),chart_id);id=str(cue.id)
 				due=float(cue.song_due)+offset;required=cue.lanes;kind=str(cue.kind);hold=float(cue.hold)
 			var found=false
 			for note in notes:
@@ -51,7 +59,8 @@ func forecast(loadout,now: float,song_time: float=-1.) -> void:
 					found=true;break
 			if not found:
 				var note={"id":id,"track":int(required[0]),"required":required.duplicate(),"due":due,"end":due+hold,"hold":hold,"kind":kind,"events":[event],"status":"pending","delta":0.,"pressed":{}}
-				if music_chart:note.song_due=float(cue.song_due)
+				if music_chart:
+					note.song_due=float(cue.song_due);note.accent=bool(cue.get("accent",false));note.measure=int(cue.get("measure",0));note.phrase=int(cue.get("phrase",0))
 				notes.append(note)
 	for note in notes:
 		if now-float(note.end)>=2. and str(note.status) in ["pending","holding","armed"]:_fail(note,"超时",now)
@@ -61,6 +70,8 @@ func held(lane: int) -> bool:
 	return lane in down.values()
 func _fail(note: Dictionary,label: String,now: float) -> void:
 	note.status="miss";misses+=1;combo=0;last_result=label+" · 发射失败";result_at=now;result_track=int(note.track)
+	judge_serial+=1;judged_lanes=note.required.duplicate()
+	last_success=false;last_delta=0.
 func advance(now: float) -> Array[Dictionary]:
 	var ready: Array[Dictionary]=[]
 	for note in notes:
@@ -70,6 +81,9 @@ func advance(now: float) -> Array[Dictionary]:
 		if str(note.status)=="armed" and now+.000001>=float(note.end):
 			note.status="fired";hits+=1;combo+=1;best_combo=maxi(best_combo,combo)
 			last_result="完美" if absf(float(note.delta))<=PERFECT+.000001 else "成功"
+			if last_result=="完美":perfects+=1
+			judge_serial+=1;judged_lanes=note.required.duplicate()
+			last_success=true;last_delta=float(note.delta)
 			result_at=now;result_track=int(note.track)
 			for source in note.events:
 				var event: Dictionary=source.duplicate(true)
@@ -112,5 +126,7 @@ func release(lane: int,now: float,source: String="",allow_success: bool=true) ->
 	for note in notes:
 		if str(note.status)=="holding" and lane in note.required:
 			if not allow_success or now<float(note.end)-WINDOW-.000001:_fail(note,"长按中断",now)
-			else:note.status="armed";note.delta=maxf(absf(float(note.delta)),absf(now-float(note.end)))
+			else:
+				note.status="armed"
+				if absf(now-float(note.end))>absf(float(note.delta)):note.delta=now-float(note.end)
 		elif str(note.status)=="pending" and note.pressed.has(lane):_fail(note,"双键未同时按住",now)

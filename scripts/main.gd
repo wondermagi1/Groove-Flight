@@ -26,6 +26,8 @@ const SALVOS=preload("res://scripts/salvo_patterns.gd")
 const RHYTHM=preload("res://scripts/rhythm_gate.gd")
 const ARRIVAL=preload("res://scripts/enemy_arrival.gd")
 const PATHS=preload("res://scripts/build_paths.gd")
+const MISSION=preload("res://scripts/planet_mission.gd")
+const PLANET_MUSIC=preload("res://scripts/planet_music_catalog.gd")
 const LEVEL_MUSIC_PATH="res://audio/authorized/scott_buckley/filaments.ogg"
 const URANUS_MUSIC_PATH=LEVEL_MUSIC_PATH
 const RECORDED_WEAPON_GROUPS={
@@ -62,6 +64,7 @@ var loadout=LOADOUT.new()
 var music
 var standard_music
 var rhythm=RHYTHM.new()
+var mission=MISSION.new()
 var rhythm_voices
 var rhythm_key_down=[false,false,false,false]
 var rhythm_song_loops: int=0
@@ -163,7 +166,7 @@ var shop_reroll_cost: int=8
 var editor_return: String="combat"
 var notice: String=""
 var notice_until: float=0
-var settings={"backing":0.,"weapons":.255,"audio_schema":3,"kill":.55,"pickup":.55,"shield":.55,"combat":.55,"ui":.55,"alerts":.55,"music_duck":true,"audio_mix_backup":{},"groove":0.,"background_motion":.55,"text_scale":1.,"low_dynamic":false,"starting_path":0,"combat_doctrine":"ballistic","difficulty":0,"aim_mode":0,"input_bindings":{},"tutorial_done":false,"tutorial_skipped":false,"master":.75,"music":.75,"sfx":.55,"reduced_fx":false,"fullscreen":true,"background_quality":2,"background_exposure":.9,"panel_attributes":true,"panel_status":true,"panel_buffs":true,"panel_inventory":true,"panel_sequencer":true,"combat_panel_attributes":false,"combat_panel_status":false,"combat_panel_buffs":false,"combat_panel_inventory":false,"combat_panel_sequencer":true}
+var settings={"backing":0.,"weapons":.255,"audio_schema":3,"kill":.55,"pickup":.55,"shield":.55,"combat":.55,"ui":.55,"alerts":.55,"music_duck":true,"audio_mix_backup":{},"groove":0.,"background_motion":.55,"text_scale":1.,"low_dynamic":false,"starting_path":0,"combat_doctrine":"ballistic","difficulty":0,"aim_mode":0,"input_bindings":{},"rhythm_offset_ms":0.,"tutorial_done":false,"tutorial_skipped":false,"master":.75,"music":.75,"sfx":.55,"reduced_fx":false,"fullscreen":true,"background_quality":2,"background_exposure":.9,"panel_attributes":true,"panel_status":true,"panel_buffs":true,"panel_inventory":true,"panel_sequencer":true,"combat_panel_attributes":false,"combat_panel_status":false,"combat_panel_buffs":false,"combat_panel_inventory":false,"combat_panel_sequencer":true}
 var voices: Array[AudioStreamPlayer]=[]
 var voice_index: int=0
 var sound_times: Dictionary={}
@@ -424,7 +427,7 @@ func _load_audio(path: String) -> AudioStream:
 func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=false) -> void:
 	run_shop_seconds=0.; run_total_seconds=0.; wave_supply=0
 	rhythm.reset(0.,true);rhythm_key_down=[false,false,false,false];rhythm_voices.reset()
-	planet_music.stop();rhythm_song_loops=0;rhythm_song_raw=0.;rhythm_song_absolute=0.
+	planet_music.stop();planet_music.stream=null;rhythm_song_loops=0;rhythm_song_raw=0.;rhythm_song_absolute=0.
 	composer_holds.clear(); composer_player.stop_song(); standard_music.stop(); standard_music._running=false
 	for recorded_player in recorded_weapon_players.values():
 		if is_instance_valid(recorded_player):
@@ -456,6 +459,8 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	active_doctrine="" if use_composition else (selected_doctrine if DOCTRINES.valid(selected_doctrine) else "ballistic")
 	standard_music.manual_weapons=rhythm_required()
 	rhythm.music_chart=rhythm_required()
+	rhythm.chart_id=active_planet
+	rhythm.offset_seconds=float(settings.get("rhythm_offset_ms",0.))*.001
 	loadout.set_doctrine(active_doctrine)
 	loadout.reset(); music_focus_until=-1.; music_duck_db=0.; enemies.clear(); by_id.clear(); spatial.clear(); bullets.clear(); enemy_bullets.clear(); pickups.clear(); warnings.clear()
 	var craft=FLEET.ship(selected_ship); selected_ship=str(craft.id)
@@ -474,6 +479,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	wave=0; kills=0; score=0; dust=0; picked=0; next_enemy=1; actual_steps=0; selected_uid=-1; drop_fraction=0.
 	kill_combo=0; kill_combo_until=0.
 	player=Vector2.ZERO; facing=Vector2.UP; movement_facing=facing; camera.enabled=true; camera.position=player; camera.reset_smoothing()
+	mission.reset(self,rhythm_required())
 	apply_audio()
 	if free_music_run:
 		state="composer_loading"; composer_pending_battle=true; composer_status="正在准备乐谱试飞……"
@@ -498,6 +504,7 @@ func begin_wave() -> void:
 		spawn_enemy("boss",boss_anchor); sound("metal",-13,.55)
 	notice=("棱镜灾变 · " if difficulty>0 else "")+PLANETS.planet(active_planet).name+" / "+str(wave_profile().name); notice_until=music.timeline+2.
 	if free_music_run: notice="乐谱试飞 · 无敌练习 · 不计航线战绩"; notice_until=INF
+	mission.on_wave(self)
 
 func open_composer() -> void:
 	if state not in ["title","hub","hangar","solar","victory","defeat"]: return
@@ -929,13 +936,17 @@ func rhythm_song_time(now: float) -> float:
 	if raw+.5<rhythm_song_raw:rhythm_song_loops+=1
 	rhythm_song_raw=raw
 	var correction=AudioServer.get_time_since_last_mix()-AudioServer.get_output_latency() if raw>0. else 0.
-	rhythm_song_absolute=maxf(rhythm_song_absolute,rhythm_song_loops*float(RHYTHM.CHART.data().duration)+maxf(0.,raw+correction))
+	rhythm_song_absolute=maxf(rhythm_song_absolute,rhythm_song_loops*float(PLANET_MUSIC.track(active_planet).duration)+maxf(0.,raw+correction))
 	return rhythm_song_absolute
 func rhythm_tick(now: float=-1.) -> void:
 	if state!="combat" or not rhythm_required():return
 	if now<0.:now=music.timeline
 	rhythm.forecast(loadout,now,rhythm_song_time(now))
 	for event in rhythm.advance(now):dispatch_trigger(event)
+func set_rhythm_offset(value: float) -> void:
+	settings.rhythm_offset_ms=clampf(value,-150.,150.);rhythm.offset_seconds=float(settings.rhythm_offset_ms)*.001
+	if rhythm_required():resync_pending()
+	save_settings()
 func rhythm_press(track: int,source: String="") -> bool:
 	if state!="combat" or not rhythm_required() or standard_music._begin_pending or standard_music.stream_paused:return false
 	var now=standard_music.input_time()
@@ -1047,6 +1058,8 @@ func _process(delta: float) -> void:
 	if state=="combat":
 		var dt=minf(delta,.06)
 		rhythm_tick()
+		mission.step(self)
+		if state!="combat":return
 		for i in range(flight_trail.size()-1,-1,-1):
 			flight_trail[i].life-=delta
 			if flight_trail[i].life<=0: flight_trail.remove_at(i)
@@ -1108,7 +1121,7 @@ func _sync_screen_music() -> void:
 	var planet_wants=(candidate in ["combat","reward","paused","editor"] or codex_in_run) and not is_preview and not free_music_run
 	if planet_wants:
 		if planet_music.stream==null:
-			var planet_stream=_load_audio(LEVEL_MUSIC_PATH)
+			var planet_stream=_load_audio(str(PLANET_MUSIC.track(active_planet).runtime))
 			if planet_stream is AudioStreamOggVorbis: planet_stream.loop=true
 			planet_music.stream=planet_stream
 		# Paused streams report playing=false but retain their playback/position.
@@ -1298,7 +1311,9 @@ func update_enemies(delta: float) -> void:
 			SWARM.update(enemy,music.timeline,player)
 		elif not FORMATION.update(enemy,music.timeline,delta,player):
 			enemy.at+=to_player.normalized()*float(enemy.speed)*delta
-		if Geometry2D.get_closest_point_to_segment(player,previous_at,enemy.at).distance_to(player)<float(enemy.radius)+13 and music.timeline>=float(enemy.get("armed_after",0.)): last_damage_reason=str(enemy.kind)+"接触"; hurt_player(float(enemy.damage))
+		mission.enemy_contact(self,enemy,previous_at)
+		if enemy.hp<=0.:continue
+		if float(enemy.damage)>0. and Geometry2D.get_closest_point_to_segment(player,previous_at,enemy.at).distance_to(player)<float(enemy.radius)+13 and music.timeline>=float(enemy.get("armed_after",0.)): last_damage_reason=str(enemy.kind)+"接触"; hurt_player(float(enemy.damage))
 		enemy.trail_delta=enemy.at-previous_at
 func enemy_fire(enemy: Dictionary) -> void:
 	if SWARM.is_ordinary(enemy): return
@@ -1750,11 +1765,12 @@ func check_wave() -> void:
 	if free_music_run or is_preview: return
 	if state!="combat": return
 	if wave==wave_count():
-		if boss_down: finish_run(true)
+		if boss_down and (not mission.enabled or mission.complete()): finish_run(true)
 		return
 	var config=wave_profile()
 	if music.timeline-wave_start<float(config.seconds): return
 	spawn_telegraphs.clear()
+	mission.wave_cleared(self)
 	# Ordinary waves are survival passages. Remaining enemies withdraw without
 	# fake kills or loot, rather than making a large arena a tedious cleanup hunt.
 	for enemy in enemies:
@@ -1812,6 +1828,7 @@ func _draw() -> void:
 	fleet_batch.visible=batch
 	if batch: fleet_batch.update_fleet(enemies,visible_rect)
 	draw_rect(field(),Color(.10,.29,.49,.40),false,5.)
+	mission.draw_world(self)
 	for plan in spawn_telegraphs: ARRIVAL.draw_warning(self,plan,music.timeline,visible_world())
 	if is_preview and preview_show_ranges: draw_preview_ranges()
 	for item in pickups:
@@ -1828,6 +1845,7 @@ func _draw() -> void:
 		draw_dashed_line(warning.at,warning.to,color,2.+progress,16.,true)
 	for enemy in enemies:
 		if enemy.hp<=0: continue
+		if bool(enemy.get("mission_node",false)):continue
 		var draw_bounds=visible_rect.grow(maxf(0.,float(enemy.radius)*1.8-140.)) if enemy.kind=="boss" else visible_rect
 		if not draw_bounds.has_point(enemy.at): continue
 		if enemy.has("boss_owner"):

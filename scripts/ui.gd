@@ -184,12 +184,15 @@ func hud(include_arsenal: bool=true) -> void:
 	if include_arsenal and not game.free_music_run: arsenal_screen("combat")
 	if game.rhythm_required():
 		piano_tiles=load("res://scripts/rhythm_tiles.gd").new();piano_tiles.name="RhythmPianoTiles";piano_tiles.game=game;root_control.add_child(piano_tiles)
+	if game.mission.enabled:
+		var objective=load("res://scripts/mission_hud.gd").new();objective.game=game;objective.name="MissionHud";root_control.add_child(objective)
 func update_hud() -> void:
 	if not is_instance_valid(wave_label): return
 	wave_label.text="乐谱试飞" if game.free_music_run else "%s · %02d/%02d"%[PLANETS.planet(game.active_planet).name,game.wave,game.wave_count()]
 	var remaining=maxf(0,float(game.wave_profile().seconds)-(game.music.timeline-game.wave_start))
 	wave_label.tooltip_text="当前流派："+str(game.DOCTRINES.row(game.active_doctrine).name) if not game.free_music_run else "显式乐谱试飞，不限制武器流派"
 	timer_label.text=("%02d:%02d"%[int(game.music.timeline)/60,int(game.music.timeline)%60]) if game.free_music_run else ("BOSS" if game.wave==game.wave_count() else ("清场" if remaining<=0 else str(int(ceil(remaining)))))
+	if not game.free_music_run and game.boss_down and game.mission.enabled and not game.mission.complete():timer_label.text="撤离"
 	health_label.text="无敌练习 · 不计战绩" if game.free_music_run else "生命  %.1f / %d"%[game.health,game.loadout.max_health]
 	score_label.text="✦ %d   /   击破 %d"%[game.dust,game.kills]
 	notice_label.text="正在准备当前配装的音乐…" if game.music==game.standard_music and game.standard_music.compiling and not game.music.playing else (game.notice if game.music.timeline<game.notice_until else "")
@@ -268,6 +271,11 @@ func settings_screen() -> void:
 	var restore=button("恢复切换前音量",game.restore_previous_mix,Color("9badc4"),36); restore.name="RestorePreviousMix"; restore.disabled=not (game.settings.get("audio_mix_backup",{}) is Dictionary) or game.settings.get("audio_mix_backup",{}).is_empty(); mix_row.add_child(restore)
 	mix_row.add_child(button("默认音量",game.reset_audio_volumes,Color("9badc4"),36))
 	var duck=CheckButton.new(); duck.name="MusicDucking"; duck.text="战斗时背景自动让位"; duck.button_pressed=bool(game.settings.get("music_duck",true)); duck.toggled.connect(game.set_music_ducking); content.add_child(duck)
+	content.add_child(label("节拍校准",22,UI.GOLD))
+	var offset_label=label("琴块时间偏移  %+.0f ms"%float(game.settings.get("rhythm_offset_ms",0.)),18);content.add_child(offset_label)
+	var offset=HSlider.new();offset.name="RhythmOffset";offset.min_value=-150.;offset.max_value=150.;offset.step=5.;offset.value=float(game.settings.get("rhythm_offset_ms",0.))
+	offset.value_changed.connect(func(value):offset_label.text="琴块时间偏移  %+.0f ms"%value;game.set_rhythm_offset(value));content.add_child(offset)
+	content.add_child(label("正值让琴块与发射稍晚，负值稍早。可按耳机与屏幕的实际听感校准。",15,UI.MUTED))
 	content.add_child(label("画面与操作",22,UI.GOLD))
 	var motion_label=label("背景节奏强度",19); content.add_child(motion_label)
 	var motion=HSlider.new(); motion.min_value=0.; motion.max_value=1.; motion.step=.05; motion.value=float(game.settings.background_motion)
@@ -298,8 +306,8 @@ func settings_screen() -> void:
 	fullscreen.toggle_mode=true; fullscreen.button_pressed=DisplayServer.window_get_mode()==DisplayServer.WINDOW_MODE_FULLSCREEN
 	fullscreen.toggled.connect(func(value):game.settings.fullscreen=value; fullscreen.text="显示：全屏" if value else "显示：窗口"; DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if value else DisplayServer.WINDOW_MODE_WINDOWED)); content.add_child(fullscreen)
 	content.add_child(label("背景素材：Solar System Scope / INOVE · CC BY4.0",14,UI.QUIET))
-	var music_credit=RichTextLabel.new(); music_credit.name="MusicAttribution"; music_credit.bbcode_enabled=true; music_credit.fit_content=true
-	music_credit.text="背景音乐：Filaments — Scott Buckley · CC BY 4.0\n[url=https://www.scottbuckley.com.au/library/filaments/]www.scottbuckley.com.au[/url] · [url=https://creativecommons.org/licenses/by/4.0/]许可与署名[/url]"
+	var music_credit=RichTextLabel.new(); music_credit.name="MusicAttribution"; music_credit.bbcode_enabled=true; music_credit.fit_content=true; music_credit.custom_minimum_size.y=86.
+	music_credit.text="背景音乐：Filaments / Helios / Reverie / Legionnaire (Original) / Titan / Cassini / Luminance / Omega — Scott Buckley · CC BY 4.0\n[url=https://www.scottbuckley.com.au/library/]www.scottbuckley.com.au[/url] · [url=https://creativecommons.org/licenses/by/4.0/]许可与署名[/url]"
 	music_credit.add_theme_font_size_override("normal_font_size",14)
 	music_credit.meta_clicked.connect(func(url): OS.shell_open(str(url))); content.add_child(music_credit)
 	shell.add_child(button("保存并返回",game.close_settings))
@@ -310,6 +318,7 @@ func results_screen() -> void:
 	var content=VBoxContainer.new(); content.add_theme_constant_override("separation",14); content.size_flags_horizontal=Control.SIZE_EXPAND_FILL; scroll.add_child(content)
 	var destination=PLANETS.planet(game.active_planet)
 	section_title(content,destination.name+(" · 航线突破" if game.state=="victory" else " · 信号中断"),str(destination.cleartext) if game.state=="victory" else "重新编排后，可以再次挑战这条航线。")
+	if game.mission.enabled:content.add_child(label("任务：%s  %d/%d · %s"%[str(game.mission.spec().title),game.mission.done,int(game.mission.spec().goal),"完成" if game.mission.complete() else "未完成"],18,UI.GOLD))
 	content.add_child(label("击破 %d   /   得分 %d   /   最佳 %d"%[game.kills,game.score,game.best],24))
 	content.add_child(label("抵达第 %d 波  /  完成 %d 次节拍触发"%[game.wave,game.actual_steps],18,UI.MUTED))
 	content.add_child(label("本局用时 %d分%02d秒（含购物 %.0f秒）"%[int(game.run_total_seconds)/60,int(game.run_total_seconds)%60,game.run_shop_seconds],18,UI.MUTED))

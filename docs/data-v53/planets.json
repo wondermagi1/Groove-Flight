@@ -1,0 +1,98 @@
+{
+  "checks": 9636,
+  "facts": {
+    "outpost_minimum_swept_margin": -3.814697265625e-05,
+    "planets": [
+      {
+        "counts": {
+          "chord": 39,
+          "hold": 108,
+          "tap": 435
+        },
+        "duration": 339.880612,
+        "mission": "航标采样",
+        "planet": "mercury",
+        "song": "Filaments"
+      },
+      {
+        "counts": {
+          "chord": 4,
+          "hold": 102,
+          "tap": 331
+        },
+        "duration": 358.088912,
+        "mission": "护送勘测艇",
+        "planet": "venus",
+        "song": "Helios"
+      },
+      {
+        "counts": {
+          "chord": 37,
+          "hold": 54,
+          "tap": 362
+        },
+        "duration": 223.672925,
+        "mission": "守住通讯站",
+        "planet": "earth",
+        "song": "Reverie"
+      },
+      {
+        "counts": {
+          "chord": 41,
+          "hold": 42,
+          "tap": 260
+        },
+        "duration": 184.0,
+        "mission": "拔除攻城据点",
+        "planet": "mars",
+        "song": "Legionnaire (Original)"
+      },
+      {
+        "counts": {
+          "chord": 5,
+          "hold": 50,
+          "tap": 184
+        },
+        "duration": 175.756735,
+        "mission": "风暴追猎",
+        "planet": "jupiter",
+        "song": "Titan"
+      },
+      {
+        "counts": {
+          "chord": 4,
+          "hold": 118,
+          "tap": 495
+        },
+        "duration": 290.499002,
+        "mission": "星环航门",
+        "planet": "saturn",
+        "song": "Cassini"
+      },
+      {
+        "counts": {
+          "chord": 3,
+          "hold": 65,
+          "tap": 453
+        },
+        "duration": 293.273787,
+        "mission": "冰轴共振",
+        "planet": "uranus",
+        "song": "Luminance"
+      },
+      {
+        "counts": {
+          "chord": 3,
+          "hold": 73,
+          "tap": 219
+        },
+        "duration": 245.217937,
+        "mission": "终潮远征",
+        "planet": "neptune",
+        "song": "Omega"
+      }
+    ],
+    "total_cues": 3487
+  },
+  "failures": []
+}

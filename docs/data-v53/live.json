@@ -1,0 +1,92 @@
+{
+  "checks": 45,
+  "failures": [],
+  "gestures": {
+    "chord": 2,
+    "hold": 5,
+    "tap": 30
+  },
+  "planets": [
+    {
+      "actual_length": 339.880615234375,
+      "clock_loops": 1,
+      "hits": 7,
+      "misses": 1,
+      "planet": "mercury",
+      "song_loops": 1,
+      "title": "Filaments",
+      "voices": 7
+    },
+    {
+      "actual_length": 358.088897705078,
+      "clock_loops": 1,
+      "hits": 5,
+      "misses": 1,
+      "planet": "venus",
+      "song_loops": 1,
+      "title": "Helios",
+      "voices": 6
+    },
+    {
+      "actual_length": 223.672927856445,
+      "clock_loops": 1,
+      "hits": 4,
+      "misses": 3,
+      "planet": "earth",
+      "song_loops": 1,
+      "title": "Reverie",
+      "voices": 4
+    },
+    {
+      "actual_length": 184.0,
+      "clock_loops": 1,
+      "hits": 4,
+      "misses": 2,
+      "planet": "mars",
+      "song_loops": 1,
+      "title": "Legionnaire (Original)",
+      "voices": 5
+    },
+    {
+      "actual_length": 175.756729125977,
+      "clock_loops": 1,
+      "hits": 6,
+      "misses": 1,
+      "planet": "jupiter",
+      "song_loops": 1,
+      "title": "Titan",
+      "voices": 7
+    },
+    {
+      "actual_length": 290.498992919922,
+      "clock_loops": 1,
+      "hits": 2,
+      "misses": 3,
+      "planet": "saturn",
+      "song_loops": 1,
+      "title": "Cassini",
+      "voices": 4
+    },
+    {
+      "actual_length": 293.273773193359,
+      "clock_loops": 1,
+      "hits": 4,
+      "misses": 2,
+      "planet": "uranus",
+      "song_loops": 1,
+      "title": "Luminance",
+      "voices": 4
+    },
+    {
+      "actual_length": 245.21794128418,
+      "clock_loops": 1,
+      "hits": 3,
+      "misses": 2,
+      "planet": "neptune",
+      "song_loops": 1,
+      "title": "Omega",
+      "voices": 4
+    }
+  ],
+  "scope": "Actual native clock/OGG transport and realtime approved voices, with dummy headless audio; not human listening approval or physical-device latency measurement."
+}

@@ -1,0 +1,20 @@
+{
+  "captures": [
+    "res://tests/v53-mercury-1920.png",
+    "res://tests/v53-venus-1920.png",
+    "res://tests/v53-earth-1920.png",
+    "res://tests/v53-mars-1920.png",
+    "res://tests/v53-jupiter-1920.png",
+    "res://tests/v53-saturn-1920.png",
+    "res://tests/v53-uranus-1920.png",
+    "res://tests/v53-uranus-1280-120.png",
+    "res://tests/v53-neptune-1920.png",
+    "res://tests/v53-piano-hit-1920.png",
+    "res://tests/v53-calibration-1920.png",
+    "res://tests/v53-routes-1920.png"
+  ],
+  "checks": 26,
+  "failures": [],
+  "renderer": "forward_plus",
+  "scope": "Actual Forward+ frames, eight original planet backdrops and real objective/score UI; staged screenshots do not certify human music judgement or whole-run balance."
+}

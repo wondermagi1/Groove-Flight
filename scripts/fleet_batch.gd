@@ -132,6 +132,7 @@ func update_fleet(enemies: Array,bounds: Rect2) -> void:
 	for kind in TYPES: counts[kind]=0
 	for enemy in enemies:
 		var kind=str(enemy.kind)
+		if bool(enemy.get("mission_node",false)):continue
 		if enemy.hp<=0 or not fleets.has(kind) or not bounds.has_point(enemy.at): continue
 		var index=int(counts[kind]); var mesh: MultiMesh=fleets[kind]
 		if index>=CAPACITY: continue

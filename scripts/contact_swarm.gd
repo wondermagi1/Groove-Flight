@@ -55,7 +55,7 @@ static func plan_individuals(enemies: Array,time: float,player: Vector2) -> void
 	if not needs_plan: return
 	var clock=Time.get_ticks_usec() if profile_enabled else 0
 	var native=use_native and native_available()
-	var motions: Array[Move]=[]; var grid: Dictionary={}; var max_travel=0.
+	var motions: Array[Move]=[]; var grid: Dictionary={}; var max_travel=0.;var max_clearance=0.
 	for enemy in enemies:
 		if enemy.hp<=0. or not is_ordinary(enemy): continue
 		var old: Dictionary=enemy.get("march",{})
@@ -67,7 +67,8 @@ static func plan_individuals(enemies: Array,time: float,player: Vector2) -> void
 		var completed=not old.is_empty() and int(old.index)<beat and float(enemy.speed)>0.
 		motion.start=old.from if already else (old.to if completed else enemy.at)
 		motion.target=old.to if already else motion.start
-		motion.radius=ARRIVAL.clearance(str(enemy.kind))
+		motion.radius=ARRIVAL.entity_clearance(enemy)
+		max_clearance=maxf(max_clearance,motion.radius)
 		motion.movable=bool(enemy.get("warned_entry",false)) and float(enemy.speed)>0. and not already and beat>=ceili((float(enemy.born)-.000001)/STEP_SECONDS)
 		if motion.movable:
 			var deployment=MANEUVER.scatter_step(enemy,plan_time,motion.start)
@@ -77,7 +78,7 @@ static func plan_individuals(enemies: Array,time: float,player: Vector2) -> void
 				var route: Dictionary=enemy.maneuver
 				motion.deployment=str(route.scatter_start)+":"+str(route.batch_center)
 			else:
-				var toward: Vector2=MANEUVER.target(enemy,plan_time,player,motion.start)-motion.start
+				var toward: Vector2=MANEUVER.target(enemy,plan_time,Vector2(enemy.get("mission_target",player)),motion.start)-motion.start
 				var travel=float(enemy.speed)*float(enemy.get("individual_speed_scale",1.))*STEP_SECONDS*CADENCE.SPEED_SCALE
 				var route: Dictionary=enemy.get("maneuver",{})
 				if str(route.get("phase","")) in ["外围绕行","侧后方合围"]: travel*=1.8
@@ -92,6 +93,10 @@ static func plan_individuals(enemies: Array,time: float,player: Vector2) -> void
 		max_travel=maxf(max_travel,motion.wanted.length())
 		if not native: _reserve(grid,motions.size(),motion.start,motion.start)
 		motions.append(motion)
+	# The unchanged numerical kernel's broad phase assumes a66-unit hull-pair
+	# allowance. Supply a conservative query budget for larger mission stations;
+	# actual movement vectors, speeds, time and swept constraints stay unchanged.
+	if max_clearance>32.:max_travel=maxf(max_travel,(max_clearance*2.+2.-66.)/2.6)
 	# One newly born batch follows a shared monotone expansion field: rows
 	# retain order and every within-row gap grows. No all-pairs solver is needed
 	# until another crowd can intersect it or deployment ends.
@@ -250,6 +255,7 @@ static func is_ordinary(enemy: Dictionary) -> bool:
 	return str(enemy.get("kind","")) not in ["elite","boss"] and not enemy.has("boss_owner")
 
 static func update(enemy: Dictionary,time: float,player: Vector2) -> bool:
+	player=Vector2(enemy.get("mission_target",player))
 	if float(enemy.speed)<=0.: return true
 	var born=float(enemy.get("born",0.))
 	var index=floori((time+.000001)/STEP_SECONDS)

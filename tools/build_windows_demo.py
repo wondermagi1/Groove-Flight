@@ -3,7 +3,7 @@ from pathlib import Path
 import argparse,hashlib,json,os,re,shutil,subprocess,time,zipfile
 
 ROOT=Path(__file__).resolve().parents[1]
-VERSION='0.49.0'
+VERSION=re.search(r'config/version="(\d+\.\d+\.\d+)',(ROOT/'project.godot').read_text(encoding='utf-8')).group(1)
 NAME=f'GrooveFlight_Demo_v{VERSION}_Windows_x64'
 
 def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -30,7 +30,7 @@ def build():
  assert args.template is not None,'Provide --template <official windows_release_x86_64.exe>'
  template=args.template.resolve()
  assert template.is_file() and template.read_bytes()[:2]==b'MZ','Windows release template missing'
- stage=ROOT/'work/demo-stage-v49';stage.mkdir(parents=True,exist_ok=True)
+ stage=ROOT/'work'/('demo-stage-'+VERSION);stage.mkdir(parents=True,exist_ok=True)
  out=ROOT/'dist'/NAME;out.mkdir(parents=True,exist_ok=True)
  logdir=ROOT/'work/demo-build';logdir.mkdir(exist_ok=True)
  inputs=[]
@@ -92,11 +92,11 @@ def build():
  assert (helper/'BeatDriftTranscribe.exe').is_file()
  shutil.copytree(helper,out/'tools/audio_recognizer/BeatDriftTranscribe',dirs_exist_ok=True)
  credits=out/'Credits';credits.mkdir(exist_ok=True)
- for source,name in [(ROOT/'CREDITS.md','MUSIC_AND_ASSETS.md'),(ROOT/'audio/CREDITS.md','AUDIO_PROVENANCE.md'),(ROOT/'assets/planets/CREDITS.md','PLANET_TEXTURES.md'),(ROOT/'audio/authorized/scott_buckley/LICENSE.md','FILAMENTS_LICENSE.md'),(ROOT/'audio/instruments/GeneralUser-LICENSE.txt','GENERALUSER_LICENSE.txt'),(ROOT/'audio/instruments/TinySoundFont-LICENSE.txt','TINYSOUNDFONT_LICENSE.txt')]:shutil.copy2(source,credits/name)
+ for source,name in [(ROOT/'CREDITS.md','MUSIC_AND_ASSETS.md'),(ROOT/'audio/CREDITS.md','AUDIO_PROVENANCE.md'),(ROOT/'assets/planets/CREDITS.md','PLANET_TEXTURES.md'),(ROOT/'audio/authorized/scott_buckley/LICENSE.md','FILAMENTS_LICENSE.md'),(ROOT/'audio/authorized/scott_buckley/planets/LICENSE.md','PLANET_MUSIC_LICENSE.md'),(ROOT/'audio/instruments/GeneralUser-LICENSE.txt','GENERALUSER_LICENSE.txt'),(ROOT/'audio/instruments/TinySoundFont-LICENSE.txt','TINYSOUNDFONT_LICENSE.txt')]:shutil.copy2(source,credits/name)
  for folder in ['third_party/audio-recognizer','third_party/basic-pitch','third_party/godot']:
   if (ROOT/folder).is_dir():shutil.copytree(ROOT/folder,credits/Path(folder).name,dirs_exist_ok=True)
  (out/'LaunchCompatibility.bat').write_text('@echo off\r\ncd /d "%~dp0"\r\nstart "" "%~dp0GrooveFlightDemo.exe" --rendering-method gl_compatibility\r\n',encoding='utf-8')
- (out/'README_中文.txt').write_text('Groove Flight 节拍飞行 · Windows Demo\n版本0.49.0 / 2026-11-10\n\n完整解压此文件夹，双击 GrooveFlightDemo.exe。无需安装Godot或Python。\n如默认模式无法启动，可双击 LaunchCompatibility.bat 使用兼容模式。请保留同目录的.pck、DLL及附带文件夹。\n\n快速体验：主菜单 → 星球航图 → 选择星球 → 选择流派 → 确认出击。\nWASD／方向键移动，空格冲刺，E超载，Tab打开音序编排，Esc暂停，F11切换全屏。\n武器随音序器自动开火；波间购买、合成和调整音轨。Boss击败后通关。\n\n本版包括24种武器、三种流派、八颗星球、音色图鉴与自由作曲，星球按游玩进度解锁。实弹流开局10点；敌人持续推进；第二波可刷史诗武器、第三波起可刷传奇；Boss攻势与特效已增强。\n设置中可分别调整背景音乐、武器、拾取、受击等音量。\n\n存档与音量保存在当前Windows用户的 %APPDATA%/GrooveFlightDemo 中，与开发项目分开。\n音乐、纹理和组件署名见Credits文件夹。\n',encoding='utf-8-sig')
+ (out/'README_中文.txt').write_text(f'Groove Flight 节拍飞行 · Windows Demo\n版本{VERSION} / 2026-11-11\n\n完整解压此文件夹，双击 GrooveFlightDemo.exe。无需安装Godot或Python。\n如默认模式无法启动，可双击 LaunchCompatibility.bat 使用兼容模式。请保留同目录的.pck、DLL及附带文件夹。\n\n快速体验：主菜单 → 星球航图 → 选择星球 → 选择流派 → 确认出击。\nWASD／方向键移动，空格冲刺，E超载，Tab打开音序编排，Esc暂停，F11切换全屏。\nH/J/K/L完成短按、长按到尾或双键琴块，错键/漏按本次不发射。波间购买、合成和调整音轨；完成星球任务且击败Boss后通关。\n\n本版包括24种武器、三种流派、八颗星球的独立歌曲/任务、音色图鉴与自由作曲，星球按游玩进度解锁。实弹流开局10点；敌人持续推进；第二波可刷史诗武器、第三波起可刷传奇；Boss攻势与特效已增强。\n设置中可分别调整背景音乐、武器、拾取、受击等音量。\n\n存档与音量保存在当前Windows用户的 %APPDATA%/GrooveFlightDemo 中，与开发项目分开。\n音乐、纹理和组件署名见Credits文件夹。\n',encoding='utf-8-sig')
  game_commit=subprocess.check_output(['git','log','-1','--format=%H','--','scripts','project.godot'],cwd=ROOT,text=True).strip()
  manifest={'version':VERSION,'platform':'Windows x86_64','game_commit':game_commit,'source_inputs':sorted(inputs),'template_sha256':digest(template),'native_kernel_sha256':digest(ROOT/'native/crowd/groove_crowd.windows.x86_64.dll'),'separate_demo_user_directory':'GrooveFlightDemo'}
  (out/'BUILD_INFO.json').write_text(json.dumps({k:manifest[k] for k in ['version','platform','game_commit','native_kernel_sha256','separate_demo_user_directory']},indent=2),encoding='utf-8')

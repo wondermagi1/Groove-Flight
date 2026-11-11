@@ -10,6 +10,8 @@ var judge_y=0.
 var frame_style: StyleBoxFlat
 var note_styles: Array[StyleBoxFlat]=[]
 var key_styles: Array[StyleBoxFlat]=[]
+var hit_effects: Array[Dictionary]=[]
+var last_judge_serial: int=0
 func _ready() -> void:
 	mouse_filter=Control.MOUSE_FILTER_STOP;focus_mode=Control.FOCUS_NONE
 	font=UI.font()
@@ -22,6 +24,11 @@ func _process(_delta: float) -> void:
 	var view=get_viewport_rect().size
 	size=Vector2(clampf(view.x*.22,320.,430.),clampf(view.y*.30,240.,330.))
 	position=Vector2(view.x-size.x-22.,view.y-size.y-18.);judge_y=size.y-key_height-32.
+	var now=float(game.music.timeline)
+	if game.rhythm.judge_serial!=last_judge_serial:
+		last_judge_serial=game.rhythm.judge_serial
+		hit_effects.append({"at":now,"lanes":game.rhythm.judged_lanes.duplicate(),"ok":game.rhythm.last_success})
+	hit_effects=hit_effects.filter(func(fx):return now-float(fx.at)>=0. and now-float(fx.at)<.36)
 	queue_redraw()
 func _gui_input(event: InputEvent) -> void:
 	if not visible or game.state!="combat":return
@@ -45,7 +52,10 @@ func _draw() -> void:
 	var now=game.standard_music.input_time();var lane=size.x/4.;var key_y=size.y-key_height-24.;var travel=judge_y-TOP
 	var text_scale=clampf(float(game.settings.text_scale),.85,1.2)
 	draw_style_box(frame_style,Rect2(Vector2.ZERO,size))
-	draw_string(font,Vector2(12,22),"节拍演奏",HORIZONTAL_ALIGNMENT_LEFT,size.x-24.,roundi(15.*text_scale),UI.TEXT)
+	var title=str(game.PLANET_MUSIC.track(game.active_planet).title)
+	var title_size=roundi(14.*text_scale)
+	while title.length()>2 and font.get_string_size(title,HORIZONTAL_ALIGNMENT_LEFT,-1,title_size).x>size.x-122.:title=title.left(title.length()-2)+"…"
+	draw_string(font,Vector2(12,22),title,HORIZONTAL_ALIGNMENT_LEFT,size.x-122.,title_size,UI.TEXT)
 	var counter="%02d  连击"%game.rhythm.combo if game.rhythm.combo>0 else "H / J / K / L"
 	var counter_size=roundi(12.*text_scale);var counter_width=font.get_string_size(counter,HORIZONTAL_ALIGNMENT_LEFT,-1,counter_size).x
 	draw_string(font,Vector2(size.x-12.-counter_width,22),counter,HORIZONTAL_ALIGNMENT_LEFT,counter_width,counter_size,UI.MUTED)
@@ -68,19 +78,40 @@ func _draw() -> void:
 		var y=judge_y-delta/RHYTHM.LOOKAHEAD*travel;var tail_y=judge_y-tail_delta/RHYTHM.LOOKAHEAD*travel
 		var index=1 if str(note.status) in ["holding","armed","fired"] else (2 if str(note.status)=="miss" else 0)
 		var color=[UI.TEXT,UI.GOLD,UI.ERROR][index]
+		if bool(note.get("accent",false)) and y>=TOP and y<key_y:draw_line(Vector2(4.,y),Vector2(size.x-4.,y),Color(UI.MUTED,.16),1.)
 		for track in note.required:
 			var center=(float(track)+.5)*lane
 			if float(note.hold)>0.:
-				var body=Rect2(center-5.,tail_y-8.,10.,maxf(1.,y-tail_y)).intersection(clip)
+				var body=Rect2(center-8.,tail_y-8.,16.,maxf(1.,y-tail_y)).intersection(clip)
 				if body.has_area():
-					draw_rect(body,Color(color,.27));draw_line(Vector2(center,body.position.y),Vector2(center,body.end.y),Color(color,.85),2.)
+					draw_rect(body,Color(color,.18));draw_line(Vector2(center-4.,body.position.y),Vector2(center-4.,body.end.y),Color(color,.65),1.5)
+					draw_line(Vector2(center+4.,body.position.y),Vector2(center+4.,body.end.y),Color(color,.65),1.5)
+					for segment in range(ceili(body.size.y/13.)):
+						var tick_y=body.position.y+segment*13.+5.
+						if tick_y<body.end.y:draw_line(Vector2(center-3.,tick_y),Vector2(center+3.,tick_y),Color(color,.35),1.)
 				if tail_y>=TOP and tail_y<key_y:draw_line(Vector2(center-10.,tail_y),Vector2(center+10.,tail_y),color,3.)
 			var head=Rect2(int(track)*lane+9.,y-11.,lane-18.,22.).intersection(clip)
 			if not head.has_area():continue
+			if absf(delta)<.24:draw_rect(head.grow(3.).intersection(clip),Color(color,.07))
 			draw_style_box(note_styles[index],head)
-			if head.size.y>10.:draw_line(Vector2(head.position.x+6.,head.end.y-5.),Vector2(head.end.x-6.,head.end.y-5.),Color(UI.INK,.25),1.)
+			if head.size.y>10.:
+				draw_line(Vector2(head.position.x+5.,head.position.y+3.),Vector2(head.end.x-5.,head.position.y+3.),Color.WHITE,1.)
+				draw_line(Vector2(head.position.x+6.,head.end.y-5.),Vector2(head.end.x-6.,head.end.y-5.),Color(UI.INK,.28),2.)
+				if float(note.hold)>0.:draw_line(Vector2(center,head.position.y+7.),Vector2(center,head.end.y-8.),Color(UI.INK,.35),2.)
 		if note.required.size()>1 and y>=TOP and y<key_y:
 			draw_line(Vector2((int(note.required[0])+.5)*lane,y),Vector2((int(note.required[-1])+.5)*lane,y),Color(color,.8),2.)
 	var result=game.rhythm.last_result if now-game.rhythm.result_at<.8 else "短按 · 长按到尾 · 双键同按"
-	var result_color=UI.ERROR if "失败" in result else (UI.GOLD if result in ["成功","完美"] else UI.MUTED)
+	if now-game.rhythm.result_at<.8 and result in ["成功","完美"]:
+		var delta_ms=roundi(absf(game.rhythm.last_delta)*1000.)
+		result+=" · "+("正点" if delta_ms<2 else (("早 " if game.rhythm.last_delta<0. else "晚 ")+str(delta_ms)+" ms"))
+	var result_color=UI.ERROR if "失败" in result else (UI.GOLD if result.begins_with("成功") or result.begins_with("完美") else UI.MUTED)
 	draw_string(font,Vector2(10,size.y-6.),result,HORIZONTAL_ALIGNMENT_LEFT,size.x-20.,roundi(13.*text_scale),result_color)
+	for fx in hit_effects:
+		var age=clampf((now-float(fx.at))/.36,0.,1.);var color=UI.GOLD if bool(fx.ok) else UI.ERROR
+		for track in fx.lanes:
+			var center=Vector2((float(track)+.5)*lane,judge_y)
+			draw_line(center-Vector2(lane*.42,0),center+Vector2(lane*.42,0),Color(color,(1.-age)*.8),3.)
+			if bool(fx.ok):
+				for spark in range(5):
+					var axis=Vector2.from_angle(-PI+spark*PI*.25);var at=center+axis*(7.+age*28.)+Vector2(0,age*age*9.)
+					draw_line(at,at+axis*4.,Color(color,(1.-age)*.7),1.4,true)

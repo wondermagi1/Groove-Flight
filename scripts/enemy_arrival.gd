@@ -9,6 +9,8 @@ const CLEARANCE={"mote":25.,"armor":21.,"shooter":22.5,"dart":24.,"splitter":23.
 
 static func clearance(kind: String) -> float:
 	return float(CLEARANCE.get(kind,25.))
+static func entity_clearance(enemy: Dictionary) -> float:
+	return maxf(clearance(str(enemy.kind)),float(enemy.radius)+6.) if bool(enemy.get("mission_node",false)) else clearance(str(enemy.kind))
 
 static func batch_size(wave: int,budget: int,style: String="battalion_grid") -> int:
 	var target=64 if wave<=2 else (144 if wave<=4 else (300 if wave<=6 else 600))
@@ -24,7 +26,7 @@ static func is_clear(game,plan: Dictionary) -> bool:
 		var motion: Dictionary=enemy.get("march",{})
 		var start: Vector2=motion.get("from",enemy.at)
 		var finish: Vector2=motion.get("to",enemy.at)
-		var swept=Rect2(start.min(finish),(finish-start).abs()).grow(clearance(str(enemy.kind))+12.)
+		var swept=Rect2(start.min(finish),(finish-start).abs()).grow(entity_clearance(enemy)+12.)
 		if plan.rect.intersects(swept): return false
 	return true
 
@@ -40,6 +42,9 @@ static func player_safe(game,plan: Dictionary) -> bool:
 	var swept: Rect2=plan.deployment.swept
 	var closest=Vector2(game.player).clamp(swept.position,swept.end)
 	if closest.distance_to(game.player)<PLAYER_CLEARANCE-.01: return false
+	var mission=game.get("mission")
+	if mission!=null and mission.enabled and not mission.complete() and mission.role() in ["escort","defend"]:
+		if Rect2(plan.rect).grow(105.).has_point(mission.beacon) or swept.grow(70.).has_point(mission.beacon):return false
 	return Rect2(plan.rect).end.y<=game.player.y-PLAYER_CLEARANCE
 
 static func birth_grid(enemies: Array) -> Dictionary:
@@ -70,7 +75,7 @@ static func birth_position(grid: Dictionary,origin: Vector2,kind: String) -> Vec
 					checked[enemy.uid]=true
 					var motion: Dictionary=enemy.get("march",{})
 					var nearest=Geometry2D.get_closest_point_to_segment(point,motion.get("from",enemy.at),motion.get("to",enemy.at))
-					if point.distance_to(nearest)<clearance(kind)+clearance(str(enemy.kind))+3.: safe=false; break
+					if point.distance_to(nearest)<clearance(kind)+entity_clearance(enemy)+3.: safe=false; break
 				if not safe: break
 			if not safe: break
 		if safe: return point
@@ -136,7 +141,7 @@ static func choose(game,count: int,kind: String,style: String="battalion_grid") 
 		if occupied: continue
 		# Warning plans reserve empty space: no later birth lands on an old swarm.
 		for enemy in game.enemies:
-			if float(enemy.hp)>0. and area.rect.grow(clearance(str(enemy.kind))+12.).has_point(enemy.at): occupied=true; break
+			if float(enemy.hp)>0. and area.rect.grow(entity_clearance(enemy)+12.).has_point(enemy.at): occupied=true; break
 		if occupied: continue
 		area.center=center; return area
 	return {}

@@ -3,6 +3,8 @@ extends RefCounted
 ## encounter data is authored for Groove Flight, not extracted from another game.
 const IDS=["mercury","venus","earth","mars","jupiter","saturn","uranus","neptune"]
 const THEMES=["rocky","volcanic","ocean","desert","gas","ringed","ice","storm"]
+const MISSION=preload("res://scripts/planet_mission.gd")
+const MUSIC=preload("res://scripts/planet_music_catalog.gd")
 const BALANCE=preload("res://scripts/run_balance.gd")
 const WAVE_COUNTS=[8,8,8,8,8,8,8,8]
 const HP_SCALES=[1.0,1.18,1.38,1.62,1.92,2.22,2.55,2.90]
@@ -63,14 +65,14 @@ static func rows() -> Array[Dictionary]:
 	var names=["水星","金星","地球","火星","木星","土星","天王星","海王星"]
 	var subtitles=["炽昼边界","硫云余晖","蔚蓝防线","赤砂前哨","巨斑风暴","光环封锁","冰轴偏转","深蓝终潮"]
 	var descriptions=[
-		"沿昼夜交界穿过受扰动的采矿航道，以清楚的追击编队学习节奏击键与音序编排。",
-		"进入厚重云层外缘，远射舰与分裂机藏在弯月和群簇队列之间，节奏开始变得多变。",
-		"守住蔚蓝轨道上的撤离航路。护航舰队采用多角色协同，开始考验射程和清群能力。",
-		"赤砂矿带的重装舰挡住航道，突进机沿侧翼穿插，需要在集火与机动之间取舍。",
-		"在巨斑风暴上空迎击气旋舰队。高速突进与远程火力交织，长充能武器必须配合走位。",
-		"穿行冰尘光环的多层防线。装甲和哨戒机组成稳定阵列，连锁与贯穿武器更有价值。",
-		"进入倾斜冰轴附近的极夜航区。分裂蜂群和高速双流压缩安全空间，防御构筑同样重要。",
-		"抵达最远的深蓝风暴。多类精锐同时压境，以完整的火力编排和持续机动面对终奏核心。"
+		"采集三处失联航标的数据。靠近光圈完成采样，在追击群中保持节奏火力，击破采掘核心后撤离。",
+		"护送勘测艇通过七处航点。靠近时推进、离开时停航；拦截撞向艇体的敌群，保护目标耐久。",
+		"守住固定通讯站，撑过七波防线。部分敌人会改攻站体，需要主动拦截；波间可自动修复站体。",
+		"摧毁三座标记攻城据点。据点耐久跨波次保留，正常武器命中才能破坏，完成后击败攻城旗舰。",
+		"追猎三艘风暴标记舰。目标沿外围绕行逃逸，利用射程、预判与走位追上目标，避免只留在原地清群。",
+		"按航标箭头穿过四道星环门。要从入口侧穿过中央缺口，随波次向更远的航门推进。",
+		"在三处冰轴晶体旁完成节奏共振。光圈内每次成功琴块推进充能，错键与漏按不生效。",
+		"多阶段终潮任务：采样、护送、摧毁核心、共振解锁。完成任务链后击败终奏舰，完成太阳系远航。"
 	]
 	var hints=[
 		"先看清当前拍位，再用冲刺脱离追击群；波间商店可调整装备。",
@@ -97,7 +99,7 @@ static func rows() -> Array[Dictionary]:
 	var orbits=[3.0,4.5,6.0,7.5,9.3,11.1,12.9,14.7]
 	var angles=[.15,1.1,2.25,3.2,4.0,5.1,.7,2.8]
 	for i in range(IDS.size()):
-		result.append({"id":IDS[i],"name":names[i],"subtitle":subtitles[i],"description":descriptions[i],"index":i,"color":COLORS[i],"radius":radii[i],"orbit":orbits[i],"seedangle":angles[i],"theme":THEMES[i],"threat":i+1,"bossname":bosses[i],"machine_type":MACHINE_TYPES[i],"boss_radius":BOSS_RADII[i],"hint":hints[i],"cleartext":clears[i]})
+		result.append({"id":IDS[i],"name":names[i],"subtitle":subtitles[i],"description":descriptions[i],"index":i,"color":COLORS[i],"radius":radii[i],"orbit":orbits[i],"seedangle":angles[i],"theme":THEMES[i],"threat":i+1,"bossname":bosses[i],"machine_type":MACHINE_TYPES[i],"boss_radius":BOSS_RADII[i],"hint":hints[i],"cleartext":clears[i],"objective":MISSION.SPECS[IDS[i]],"song":MUSIC.track(IDS[i]).title})
 	return result
 
 static func _index(id: String) -> int:
