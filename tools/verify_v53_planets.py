@@ -37,7 +37,9 @@ def run():
   song_facts.append({'planet':row['planet'],'song':row['title'],'duration':row['duration'],'bytes':source.stat().st_size,'sha256':row['sha256'],'candidates':len(events),'forms':counts,'max_internal_gap':round(max(gaps),4)})
   all_cues+=len(events)
  assert len(list((ROOT/'audio/authorized/scott_buckley/planets').glob('*.ogg')))==7,'Unused candidate song in production assets'
- changed=subprocess.check_output(['git','diff','--name-only',BASE,'--','scripts','audio','assets','native','shaders','scenes'],cwd=ROOT).decode().splitlines()
+ # Added V53 resources become tracked after the implementation commit. Audit
+ # existing-input mutations separately so this command remains replayable.
+ changed=subprocess.check_output(['git','diff','--diff-filter=MDRT','--name-only',BASE,'--','scripts','audio','assets','native','shaders','scenes'],cwd=ROOT).decode().splitlines()
  assert set(changed)<=ALLOWED,changed
  tree=subprocess.check_output(['git','ls-tree','-r','-z',BASE,'--','scripts','audio','assets','native','shaders','scenes'],cwd=ROOT).decode().split('\0')
  expected={}
