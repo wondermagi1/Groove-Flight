@@ -16,7 +16,6 @@ static func next_cue(song_time: float,planet: String="mercury") -> Dictionary:
 		else:high=mid
 	if low==events.size():low=0;cycle+=1
 	var cue: Dictionary=events[low].duplicate(true)
-	# JSON numbers decode as floats; Array.has uses strict Variant types.
-	cue.lanes=cue.lanes.map(func(lane):return int(lane))
+	# The song provides timing/holds; equipment A/B/C determines the input lane.
 	cue.id="%d:%d"%[cycle,low];cue.song_due=cycle*duration+float(cue.t)
 	return cue

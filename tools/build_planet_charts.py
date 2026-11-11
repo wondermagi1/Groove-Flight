@@ -1,4 +1,4 @@
-"""V53: beat-tracked, phrase-shaped four-key arrangements from licensed songs.
+"""V54: beat-tracked timing/hold cues for three equipment-bound scoring lanes.
 
 This is an algorithmic gameplay arrangement, not exact instrument transcription.
 Original full audio and all weapon samples are untouched. Requires numpy/scipy.
@@ -9,12 +9,6 @@ import numpy as np
 from scipy.ndimage import gaussian_filter1d,median_filter
 from scipy.signal import fftconvolve,find_peaks
 ROOT=Path(__file__).resolve().parents[1]
-MOTIFS={
- 'mercury':[0,1,2,1,0,1,3,2], 'venus':[0,1,1,2,3,2,2,1],
- 'earth':[1,2,3,2,0,1,2,1], 'mars':[0,2,0,3,1,3,1,2],
- 'jupiter':[0,1,3,2,3,2,0,1], 'saturn':[0,1,2,3,3,2,1,0],
- 'uranus':[0,1,2,3,2,1,0], 'neptune':[0,2,1,3,2,0,3,1],
-}
 def track_beats(novelty,frame_seconds):
  ac=fftconvolve(novelty-novelty.mean(),(novelty-novelty.mean())[::-1],mode='full')[len(novelty)-1:]
  lags=np.arange(round(.39/frame_seconds),round(.91/frame_seconds))
@@ -78,33 +72,22 @@ def build(row,ffmpeg):
    t=(a['t']+b['t'])*.5;frame=min(len(onset)-1,round(t/dt))
    thin.append({'t':t,'beat':(a['beat']+b['beat'])*.5,'frame':frame,'strength':float(onset[frame]),'origin':'beat_subdivision'})
  thin.sort(key=lambda e:e['t'])
- midi=69+12*np.log2(np.maximum(frequencies,1)/440.);register=(midi>=45)&(midi<=88)
- pitches=[]
- for e in thin:
-  energy=spec[e['frame']:e['frame']+3].mean(axis=0)
-  pitches.append(float(np.sum(energy[register]*midi[register])/max(1e-8,energy[register].sum())))
- quantiles=np.quantile(pitches,[.25,.5,.75]);accent=np.quantile([e['strength'] for e in thin],.72)
- events=[];motif=MOTIFS[row['planet']];last_lane=motif[0];meter=7 if row['planet']=='uranus' else 4;phrase_size=meter*2;skip=set()
+ accent=np.quantile([e['strength'] for e in thin],.72)
+ events=[];meter=7 if row['planet']=='uranus' else 4;phrase_size=meter*2;skip=set()
  for i,e in enumerate(thin):
   if i in skip:continue
   phrase=int(e['beat'])//phrase_size;position=int(e['beat'])%phrase_size
-  melodic=int(np.searchsorted(quantiles,pitches[i]));lane=motif[position%len(motif)]
-  # Strong audible attacks anchor actual register; quieter notes repeat a
-  # planet-specific phrase rather than switching randomly every tiny peak.
-  if e['strength']>=accent and abs(melodic-last_lane)<=2:lane=melodic
-  if abs(lane-last_lane)>2 and e['strength']<accent:lane=last_lane+(1 if lane>last_lane else -1)
-  last_lane=lane;kind='tap';hold=0.;lanes=[lane]
+  kind='tap';hold=0.
   gap=thin[i+1]['t']-e['t'] if i+1<len(thin) else duration-e['t']
   after=min(len(rms)-1,e['frame']+round(.3/dt));sustain=float(rms[after])>=float(rms[e['frame']])*.64
   if row['planet']=='saturn' and position in [2,6] and sustain and i+2<len(thin) and thin[i+1]['strength']<accent and thin[i+2]['t']-e['t']>=.48:
    hold=round(min(.65,thin[i+2]['t']-e['t']-.145),3);kind='hold';skip.add(i+1)
   elif position in [meter-1,phrase_size-1] and gap>=.48 and sustain:
    hold=round(min(.65,gap-.145,max(.3,period*.5)),3);kind='hold'
-  elif position in [0,meter,phrase_size-1] and e['strength']>=accent and e['origin'] in ['beat_onset','audible_subdivision']:
-   kind='chord';lanes=sorted([lane,(lane+2)%4])
-  events.append({'t':round(e['t'],4),'lanes':lanes,'kind':kind,'hold':hold,'strength':round(min(e['strength'],12),3),'origin':e['origin'],'beat':round(e['beat'],3),'measure':int(e['beat']//meter),'phrase':phrase,'accent':position in [0,meter]})
- counts={kind:sum(e['kind']==kind for e in events) for kind in ['tap','hold','chord']}
- chart={'schema':2,'planet':row['planet'],'id':row['id'],'title':row['title'],'artist':row['artist'],'source':row['runtime'],'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'duration':round(duration,6),'estimated_bpm':round(60/period,3),'meter':('7/8' if meter==7 else '4-pulse arrangement'),'keys':['H','J','K','L'],'method':'dynamic-programming local beat path, nearby audible onset anchors, phrase-shaped lane motifs and sustain/strong-attack gestures','events':events}
+  strong=bool(position in [0,meter,phrase_size-1] and e['strength']>=accent and e['origin'] in ['beat_onset','audible_subdivision'])
+  events.append({'t':round(e['t'],4),'kind':kind,'hold':hold,'strength':round(min(e['strength'],12),3),'origin':e['origin'],'beat':round(e['beat'],3),'measure':int(e['beat']//meter),'phrase':phrase,'accent':position in [0,meter] or strong})
+ counts={kind:sum(e['kind']==kind for e in events) for kind in ['tap','hold']}
+ chart={'schema':3,'planet':row['planet'],'id':row['id'],'title':row['title'],'artist':row['artist'],'source':row['runtime'],'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'duration':round(duration,6),'estimated_bpm':round(60/period,3),'meter':('7/8' if meter==7 else '4-pulse arrangement'),'keys':['J','K','L'],'tracks':['A','B','C'],'lane_mode':'weapon_track','method':'dynamic-programming local beat path, nearby audible onset anchors and sustained phrase endings; input lane follows actual equipment track','events':events}
  out=ROOT/'audio/charts/planets';out.mkdir(exist_ok=True);(out/(row['planet']+'.json')).write_text(json.dumps(chart,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
  report={'planet':row['planet'],'title':row['title'],'duration':chart['duration'],'bpm_estimate':chart['estimated_bpm'],'counts':counts,'cue_count':len(events),'max_gap':max(b['t']-a['t'] for a,b in zip(events,events[1:])),'audible_anchors':sum(e['origin'] in ['beat_onset','audible_subdivision'] for e in events),'source_sha256':chart['source_sha256'],'claim':'Automatic beat/phrase gameplay arrangement. No exact instrumental MIDI or human listening approval claim.'}
  print(json.dumps(report,ensure_ascii=False),flush=True);return report
@@ -116,5 +99,5 @@ def run():
  out=ROOT/'audio/charts/planets/ANALYSIS.json'
  if args.planet and out.exists():
   old=json.loads(out.read_text(encoding='utf-8'))['reports'];by_id={r['planet']:r for r in old};by_id.update({r['planet']:r for r in reports});reports=list(by_id.values())
- out.write_text(json.dumps({'revision':'v53','reports':reports},ensure_ascii=False,indent=2),encoding='utf-8')
+ out.write_text(json.dumps({'revision':'v54','reports':reports},ensure_ascii=False,indent=2),encoding='utf-8')
 if __name__=='__main__':run()

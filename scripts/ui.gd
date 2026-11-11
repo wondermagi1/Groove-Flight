@@ -239,7 +239,7 @@ func doctrine_screen() -> void:
 			starters.append("%s%d%s  %s"%[track,slot%8+1,("–%s%d"%[track,slot%8+int(row.width)]) if int(row.width)>1 else "",str(row.name)])
 		column.add_child(label("\n".join(starters),16,Color("b4c8db")))
 		var select=button("已选择" if chosen else "选择此流派",game.choose_doctrine.bind(str(doctrine.id)),Color(doctrine.color),44);select.name="DoctrineChoice_"+str(doctrine.id);select.custom_minimum_size.x=0.;column.add_child(select)
-	content.add_child(label("琴块到线时按 "+game.binding_name("rhythm_a")+" / "+game.binding_name("rhythm_b")+" / "+game.binding_name("rhythm_c")+" / "+game.binding_name("rhythm_d")+"。短块单击、长块按到尾端、连线双块同时按。错键、漏按或长按中断，本次不发射。",17,Color.WHITE))
+	content.add_child(label(game.binding_name("rhythm_a")+" / "+game.binding_name("rhythm_b")+" / "+game.binding_name("rhythm_c")+" 对应 A / B / C 武器轨。每6秒分别计分：完美100、成功70、漏按或中断0分，决定下一段该轨弹量；首段100%。武器按原充能与音乐点自动齐射。",17,Color.WHITE))
 	var actions=HBoxContainer.new();actions.add_theme_constant_override("separation",16);content.add_child(actions)
 	var back=button("返回",game.cancel_doctrine_selection,Color("9aaec1"),48);back.name="DoctrineBack";actions.add_child(back)
 	var selected=game.DOCTRINES.valid(game.doctrine_choice)
@@ -288,8 +288,8 @@ func settings_screen() -> void:
 	var aiming=OptionButton.new(); aiming.add_item("自动瞄准 最近目标"); aiming.add_item("移动朝向"); aiming.add_item("固定前向")
 	aiming.select(int(game.settings.aim_mode)); aiming.item_selected.connect(func(index): game.settings.aim_mode=index); content.add_child(aiming)
 	content.add_child(label("操作映射 点击后按新按键 Esc取消",18))
-	for action in ["left","right","up","down","dash","overload","rhythm_a","rhythm_b","rhythm_c","rhythm_d","editor","pause"]:
-		var caption={"left":"左移","right":"右移","up":"上移","down":"下移","dash":"冲刺","overload":"超载","rhythm_a":"琴键1（H）","rhythm_b":"琴键2（J）","rhythm_c":"琴键3（K）","rhythm_d":"琴键4（L）","editor":"音序工坊","pause":"暂停"}[action]
+	for action in ["left","right","up","down","dash","overload","rhythm_a","rhythm_b","rhythm_c","editor","pause"]:
+		var caption={"left":"左移","right":"右移","up":"上移","down":"下移","dash":"冲刺","overload":"超载","rhythm_a":"A轨琴键（J）","rhythm_b":"B轨琴键（K）","rhythm_c":"C轨琴键（L）","editor":"音序工坊","pause":"暂停"}[action]
 		content.add_child(button("等待按键…" if game.binding_capture==action else caption+"  "+game.binding_name(action),game.capture_binding.bind(action),Color("9abacf"),36))
 	content.add_child(button("补看操作教学",func():game.replay_tutorial(); game.close_settings(),Color("a9cdd8"),36))
 	content.add_child(label("星球背景画质",19))

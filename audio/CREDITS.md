@@ -1,6 +1,6 @@
 # Audio provenance
 
-## Current V53 campaign music and weapon voices
+## Current V54 campaign music and weapon voices
 
 Eight planet-specific full tracks by Scott Buckley, CC BY 4.0: Filaments,
 Helios, Reverie, Legionnaire (Original), Titan, Cassini, Luminance and Omega.
@@ -12,11 +12,13 @@ Charts in `charts/planets/` are waveform-derived gameplay arrangements; no sourc
 music is retimed or transposed. Settings also display the eight credits.
 
 The 24 active weapon voices remain 192 composer pitch WAVs plus 96 expressive
-performance WAVs. Successful campaign inputs play independent realtime voices;
-unapproved weapon voices are excluded from the 156-second native PCM clock.
+performance WAVs. Campaign salvos retain their charge/music deadlines and use
+the corresponding track's previous six-second score as their projectile quota.
+Every nonzero salvo plays one independent realtime voice; zero quota is silent.
+All campaign weapon voices are excluded from the 156-second native PCM clock.
 Composer/codex/shop auditions keep their existing paths. This supersedes the
 historical synthesized catalogue and shared-background descriptions below.
-No V53 weapon WAV or licensed feedback recording was replaced.
+No V54 weapon WAV, full background track or licensed feedback recording was replaced.
 
 ## Historical provenance (retained sources, not the active catalogue)
 

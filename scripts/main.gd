@@ -66,7 +66,7 @@ var standard_music
 var rhythm=RHYTHM.new()
 var mission=MISSION.new()
 var rhythm_voices
-var rhythm_key_down=[false,false,false,false]
+var rhythm_key_down=[false,false,false]
 var rhythm_song_loops: int=0
 var rhythm_song_raw: float=0.
 var rhythm_song_absolute: float=0.
@@ -255,7 +255,10 @@ func _ready() -> void:
 	apply_audio(not is_preview); apply_background_quality(); ui.refresh()
 
 func bind_input() -> void:
-	for row in [["left",KEY_A,KEY_LEFT],["right",KEY_D,KEY_RIGHT],["up",KEY_W,KEY_UP],["down",KEY_S,KEY_DOWN],["dash",KEY_SPACE],["overload",KEY_E],["editor",KEY_TAB],["pause",KEY_ESCAPE],["fullscreen",KEY_F11],["interact",KEY_F],["rhythm_a",KEY_H],["rhythm_b",KEY_J],["rhythm_c",KEY_K],["rhythm_d",KEY_L]]:
+	if InputMap.has_action("rhythm_d"):InputMap.erase_action("rhythm_d")
+	for action in ["rhythm_a","rhythm_b","rhythm_c"]:
+		if InputMap.has_action(action):InputMap.action_erase_events(action)
+	for row in [["left",KEY_A,KEY_LEFT],["right",KEY_D,KEY_RIGHT],["up",KEY_W,KEY_UP],["down",KEY_S,KEY_DOWN],["dash",KEY_SPACE],["overload",KEY_E],["editor",KEY_TAB],["pause",KEY_ESCAPE],["fullscreen",KEY_F11],["interact",KEY_F],["rhythm_a",KEY_J],["rhythm_b",KEY_K],["rhythm_c",KEY_L]]:
 		if not InputMap.has_action(row[0]): InputMap.add_action(row[0])
 		for index in range(1,row.size()):
 			var key=InputEventKey.new(); key.physical_keycode=row[index]; InputMap.action_add_event(row[0],key)
@@ -426,7 +429,7 @@ func _load_audio(path: String) -> AudioStream:
 
 func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=false) -> void:
 	run_shop_seconds=0.; run_total_seconds=0.; wave_supply=0
-	rhythm.reset(0.,true);rhythm_key_down=[false,false,false,false];rhythm_voices.reset()
+	rhythm.reset(0.,true);rhythm_key_down=[false,false,false];rhythm_voices.reset()
 	planet_music.stop();planet_music.stream=null;rhythm_song_loops=0;rhythm_song_raw=0.;rhythm_song_absolute=0.
 	composer_holds.clear(); composer_player.stop_song(); standard_music.stop(); standard_music._running=false
 	for recorded_player in recorded_weapon_players.values():
@@ -960,13 +963,14 @@ func rhythm_release(source: String) -> void:
 func _notification(what: int) -> void:
 	if what==NOTIFICATION_WM_WINDOW_FOCUS_OUT and rhythm!=null:
 		for source in rhythm.down.keys():rhythm.release(int(rhythm.down[source]),music.timeline,str(source),false)
-		rhythm_key_down=[false,false,false,false]
+		rhythm_key_down=[false,false,false]
 func _input(event: InputEvent) -> void:
 	# Releases are global: dragging outside a key or opening a menu cannot leave a hold stuck.
 	if event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_LEFT and not event.pressed:rhythm_release("mouse")
 	if event is InputEventScreenTouch and not event.pressed:rhythm_release("touch:%d"%event.index)
-	for track in range(4):
-		var action=["rhythm_a","rhythm_b","rhythm_c","rhythm_d"][track]
+	for track in range(RHYTHM.LANES):
+		var action=["rhythm_a","rhythm_b","rhythm_c"][track]
+		if not InputMap.has_action(action):continue
 		var source="key:%d"%track
 		if event.is_action_released(action):rhythm_key_down[track]=false;rhythm_release(source)
 		if not event.is_action_pressed(action) or state!="combat" or not rhythm_required():continue
@@ -1357,6 +1361,11 @@ func nearest(at: Vector2,exclude: Array=[]) -> Dictionary:
 		if d<distance: distance=d; selected=enemy
 	return selected
 
+func full_salvo_count(trigger: Dictionary) -> int:
+	var count=int(trigger.get("count",1))
+	if selected_pilot=="volt" and music.timeline<pilot_amp_until:count+=1
+	if music.timeline<overload_until:count+=2
+	return clampi(count,1,C.GROWTH.count_limit(C.item(str(trigger.kind))))
 func fire_weapon(trigger: Dictionary) -> void:
 	var trigger_family=str(trigger.get("family",trigger.get("kind","pulse")))
 	var pattern=str(C.item(str(trigger.kind)).get("emission",""))
@@ -1382,11 +1391,12 @@ func fire_weapon(trigger: Dictionary) -> void:
 	var track=clampi(int(trigger.get("track",floori(float(trigger.get("source_slot",trigger.get("slot",8)))/8.))),0,2)
 	var origin=player+direction.orthogonal()*([-17.,0.,17.][track]+float(motion.get("offset_side",0.)))+direction*float(motion.get("offset_forward",0.))
 	var color=C.color(str(trigger.kind)); var damage=float(trigger.damage)
-	var count=int(trigger.get("count",1)); var kind=str(trigger.kind); var family=trigger_family
+	var count=int(trigger.count) if bool(trigger.get("rhythm_count_scaled",false)) else full_salvo_count(trigger)
+	var kind=str(trigger.kind); var family=trigger_family
 	if prism_cross: origin=EMISSION.prism_origin(player,motion)
-	if selected_pilot=="volt" and music.timeline<pilot_amp_until: damage*=1.25; count+=1
+	if selected_pilot=="volt" and music.timeline<pilot_amp_until: damage*=1.25
 	if selected_pilot=="nova" and posmod(floori(music.timeline/(.25 if free_music_run else LOADOUT.SEQUENCE_STEP_SECONDS)),8)==0: damage*=1.20
-	if music.timeline<overload_until: damage*=1.75; count+=2
+	if music.timeline<overload_until: damage*=1.75
 	count=clampi(count,1,C.GROWTH.count_limit(C.item(kind)))
 	var context=trigger.duplicate(true)
 	context.root_uid=int(context.get("root_uid",context.get("uid",-1)))
@@ -2010,7 +2020,16 @@ func draw_preview_ranges() -> void:
 func dispatch_trigger(trigger: Dictionary) -> void:
 	if state!="combat": return
 	if rhythm_required() and not bool(trigger.get("rhythm_authorized",false)):return
+	if rhythm_required() and bool(trigger.get("rhythm_scored_auto",false)):
+		var track=clampi(int(trigger.rhythm_track),0,2)
+		var full=full_salvo_count(trigger)
+		var scaled=rhythm.score.projectile_count(int(trigger.uid),track,full)
+		if scaled<=0:return
+		trigger=trigger.duplicate(true);trigger.count=scaled;trigger.rhythm_count_scaled=true
+		trigger.rhythm_full_count=full;trigger.rhythm_ratio=rhythm.score.ratios[track]
 	fire_log.append({"step":posmod(int(trigger.serial),8),"track":trigger.get("track",0),"uid":trigger.uid,"serial":trigger.serial,"deadline":trigger.deadline,"actual":music.timeline,"kind":trigger.kind,"voice":trigger.voice,"pitch":trigger.get("pitch",0),"cadence_step":trigger.get("cadence_step",0),"cadence_scale":trigger.get("cadence_scale",1.),"pilot":trigger.get("pilot",""),"repeat_index":trigger.get("repeat_index",0),"event_id":trigger.event_id})
+	fire_log.back().count=int(trigger.get("count",0));fire_log.back().full_count=int(trigger.get("rhythm_full_count",trigger.get("count",0)))
+	fire_log.back().rhythm_ratio=float(trigger.get("rhythm_ratio",1.))
 	if fire_log.size()>480: fire_log.pop_front()
 	if rhythm_required():rhythm_voices.salvo(trigger)
 	fire_weapon(trigger)
@@ -2051,7 +2070,7 @@ func update_tutorial() -> void:
 	if tutorial_stage>=4:
 		tutorial_active=false; settings.tutorial_done=true; save_settings(); return
 	var movement=" / ".join([binding_name("up"),binding_name("left"),binding_name("down"),binding_name("right")])
-	var tips=[movement+" 移动 · 琴块到线时按 "+binding_name("rhythm_a")+" / "+binding_name("rhythm_b")+" / "+binding_name("rhythm_c")+" / "+binding_name("rhythm_d")+" 才能开火","右下四键跟随音乐 · 短按 / 长按到尾 / 双键同时按",binding_name("editor")+" 打开三轨音序工坊 · 武器充能后等待音乐琴块，命中才开火",binding_name("dash")+" 冲刺穿过缺口 · "+binding_name("overload")+" 满充能后超载"]
+	var tips=[movement+" 移动 · "+binding_name("rhythm_a")+" / "+binding_name("rhythm_b")+" / "+binding_name("rhythm_c")+" 对应 A / B / C 武器轨","每6秒分别计分 · 当前成绩决定下一段弹量 · 首段100%",binding_name("editor")+" 打开三轨音序工坊 · 武器保留充能与音乐点自动齐射",binding_name("dash")+" 冲刺穿过缺口 · "+binding_name("overload")+" 满充能后超载"]
 	notice=tips[tutorial_stage]; notice_until=INF
 
 func apply_input_bindings() -> void:

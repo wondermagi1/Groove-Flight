@@ -1,0 +1,140 @@
+{
+  "checks": 45,
+  "failures": [],
+  "gestures": {
+    "chord": 0,
+    "hold": 4,
+    "tap": 37
+  },
+  "planets": [
+    {
+      "actual_length": 339.880615234375,
+      "clock_loops": 1,
+      "hits": 16,
+      "misses": 6,
+      "planet": "mercury",
+      "ratios": [
+        0.75,
+        0.0,
+        1.0
+      ],
+      "score_window": 26,
+      "song_loops": 1,
+      "title": "Filaments",
+      "voices": 22
+    },
+    {
+      "actual_length": 358.088897705078,
+      "clock_loops": 1,
+      "hits": 3,
+      "misses": 1,
+      "planet": "venus",
+      "ratios": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "score_window": 26,
+      "song_loops": 1,
+      "title": "Helios",
+      "voices": 5
+    },
+    {
+      "actual_length": 223.672927856445,
+      "clock_loops": 1,
+      "hits": 3,
+      "misses": 3,
+      "planet": "earth",
+      "ratios": [
+        0.666666666666667,
+        0.0,
+        1.0
+      ],
+      "score_window": 26,
+      "song_loops": 1,
+      "title": "Reverie",
+      "voices": 6
+    },
+    {
+      "actual_length": 184.0,
+      "clock_loops": 1,
+      "hits": 4,
+      "misses": 2,
+      "planet": "mars",
+      "ratios": [
+        0.666666666666667,
+        1.0,
+        1.0
+      ],
+      "score_window": 26,
+      "song_loops": 1,
+      "title": "Legionnaire (Original)",
+      "voices": 7
+    },
+    {
+      "actual_length": 175.756729125977,
+      "clock_loops": 1,
+      "hits": 6,
+      "misses": 1,
+      "planet": "jupiter",
+      "ratios": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "score_window": 26,
+      "song_loops": 1,
+      "title": "Titan",
+      "voices": 7
+    },
+    {
+      "actual_length": 290.498992919922,
+      "clock_loops": 1,
+      "hits": 3,
+      "misses": 2,
+      "planet": "saturn",
+      "ratios": [
+        0.5,
+        1.0,
+        1.0
+      ],
+      "score_window": 26,
+      "song_loops": 1,
+      "title": "Cassini",
+      "voices": 6
+    },
+    {
+      "actual_length": 293.273773193359,
+      "clock_loops": 1,
+      "hits": 3,
+      "misses": 3,
+      "planet": "uranus",
+      "ratios": [
+        0.666666666666667,
+        0.0,
+        1.0
+      ],
+      "score_window": 26,
+      "song_loops": 1,
+      "title": "Luminance",
+      "voices": 7
+    },
+    {
+      "actual_length": 245.21794128418,
+      "clock_loops": 1,
+      "hits": 2,
+      "misses": 2,
+      "planet": "neptune",
+      "ratios": [
+        0.5,
+        1.0,
+        1.0
+      ],
+      "score_window": 26,
+      "song_loops": 1,
+      "title": "Omega",
+      "voices": 5
+    }
+  ],
+  "scope": "Actual native clock/OGG transport and realtime nonzero-salvo voices, with dummy headless audio; not human listening approval or physical-device latency measurement."
+}

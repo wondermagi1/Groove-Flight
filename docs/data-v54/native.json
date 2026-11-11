@@ -1,0 +1,12 @@
+{
+  "captures": [
+    "res://tests/v54-three-tracks-1280.png",
+    "res://tests/v54-three-tracks-1920.png",
+    "res://tests/v54-inventory-layout-1280.png",
+    "res://tests/v54-score-feedback-1920.png"
+  ],
+  "checks": 18,
+  "failures": [],
+  "renderer": "forward_plus",
+  "scope": "Actual three-track controls and Forward+ layout; displayed85/50/100percent is an explicit visual fixture, not a player result."
+}

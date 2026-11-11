@@ -1,5 +1,5 @@
 {
-  "revision": "v53",
+  "revision": "v54",
   "reports": [
     {
       "planet": "mercury",
@@ -7,9 +7,8 @@
       "duration": 339.880635,
       "bpm_estimate": 95.703,
       "counts": {
-        "tap": 435,
-        "hold": 108,
-        "chord": 39
+        "tap": 474,
+        "hold": 108
       },
       "cue_count": 582,
       "max_gap": 0.6966000000000179,
@@ -23,9 +22,8 @@
       "duration": 358.088889,
       "bpm_estimate": 73.828,
       "counts": {
-        "tap": 331,
-        "hold": 102,
-        "chord": 4
+        "tap": 335,
+        "hold": 102
       },
       "cue_count": 437,
       "max_gap": 0.9056000000000495,
@@ -39,9 +37,8 @@
       "duration": 223.672925,
       "bpm_estimate": 123.047,
       "counts": {
-        "tap": 362,
-        "hold": 54,
-        "chord": 37
+        "tap": 399,
+        "hold": 54
       },
       "cue_count": 453,
       "max_gap": 0.6037000000000035,
@@ -55,9 +52,8 @@
       "duration": 184.0,
       "bpm_estimate": 86.133,
       "counts": {
-        "tap": 260,
-        "hold": 42,
-        "chord": 41
+        "tap": 301,
+        "hold": 42
       },
       "cue_count": 343,
       "max_gap": 0.7430999999999983,
@@ -71,9 +67,8 @@
       "duration": 175.756735,
       "bpm_estimate": 80.75,
       "counts": {
-        "tap": 184,
-        "hold": 50,
-        "chord": 5
+        "tap": 189,
+        "hold": 50
       },
       "cue_count": 239,
       "max_gap": 0.8127000000000004,
@@ -87,9 +82,8 @@
       "duration": 290.499048,
       "bpm_estimate": 151.999,
       "counts": {
-        "tap": 495,
-        "hold": 118,
-        "chord": 4
+        "tap": 499,
+        "hold": 118
       },
       "cue_count": 617,
       "max_gap": 0.859099999999998,
@@ -103,9 +97,8 @@
       "duration": 293.273832,
       "bpm_estimate": 107.666,
       "counts": {
-        "tap": 453,
-        "hold": 65,
-        "chord": 3
+        "tap": 456,
+        "hold": 65
       },
       "cue_count": 521,
       "max_gap": 0.7663000000000011,
@@ -119,9 +112,8 @@
       "duration": 245.217959,
       "bpm_estimate": 71.777,
       "counts": {
-        "tap": 219,
-        "hold": 73,
-        "chord": 3
+        "tap": 222,
+        "hold": 73
       },
       "cue_count": 295,
       "max_gap": 0.9288000000000096,

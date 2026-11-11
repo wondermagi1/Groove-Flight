@@ -1,11 +1,13 @@
 extends Control
-## Four input lanes are a music arrangement, independent of the three loadout tracks.
+## Three scoring lanes correspond directly to the A/B/C loadout tracks.
 const RHYTHM=preload("res://scripts/rhythm_gate.gd")
 const UI=preload("res://scripts/ui_materials.gd")
-const TOP=32.
+const TOP=46.
+const TRACKS=["A","B","C"]
+const ACTIONS=["rhythm_a","rhythm_b","rhythm_c"]
 var game
 var font: SystemFont
-var key_height=38.
+var key_height=54.
 var judge_y=0.
 var frame_style: StyleBoxFlat
 var note_styles: Array[StyleBoxFlat]=[]
@@ -22,8 +24,15 @@ func _process(_delta: float) -> void:
 	visible=game.state=="combat" and game.rhythm_required()
 	if not visible:return
 	var view=get_viewport_rect().size
-	size=Vector2(clampf(view.x*.22,320.,430.),clampf(view.y*.30,240.,330.))
-	position=Vector2(view.x-size.x-22.,view.y-size.y-18.);judge_y=size.y-key_height-32.
+	size=Vector2(clampf(view.x*.22,320.,430.),clampf(view.y*.34,280.,360.))
+	position=Vector2(view.x-size.x-22.,view.y-size.y-18.)
+	if game.panel_visible("panel_sequencer","combat") and is_instance_valid(game.ui.arsenal):
+		var sequence: Rect2=game.ui.arsenal.panel_rects.get("sequencer",Rect2())
+		if sequence.has_area():
+			var beside=sequence.end.x+12.
+			if beside+size.x<=view.x-22.:position=Vector2(beside,sequence.end.y-size.y)
+			else:position=Vector2(view.x-size.x-22.,maxf(0.,sequence.position.y-size.y-12.))
+	judge_y=size.y-key_height-32.
 	var now=float(game.music.timeline)
 	if game.rhythm.judge_serial!=last_judge_serial:
 		last_judge_serial=game.rhythm.judge_serial
@@ -38,10 +47,10 @@ func _gui_input(event: InputEvent) -> void:
 		click_at(event.position,"touch:%d"%event.index);accept_event()
 func click_at(point: Vector2,source: String="mouse") -> void:
 	if point.y<TOP:return
-	var track=clampi(int(point.x/(size.x/4.)),0,3);var key_y=size.y-key_height-24.
+	var track=clampi(int(point.x/(size.x/RHYTHM.LANES)),0,RHYTHM.LANES-1);var key_y=size.y-key_height-24.
 	if point.y>=key_y+key_height:return
 	if point.y>=key_y:game.rhythm_press(track,source);return
-	var now=game.standard_music.input_time();var travel=judge_y-TOP;var lane=size.x/4.
+	var now=game.standard_music.input_time();var travel=judge_y-TOP;var lane=size.x/RHYTHM.LANES
 	for note in game.rhythm.notes:
 		if track not in note.required or str(note.status)!="pending":continue
 		var y=judge_y-(float(note.due)-now)/RHYTHM.LOOKAHEAD*travel
@@ -49,28 +58,33 @@ func click_at(point: Vector2,source: String="mouse") -> void:
 	game.rhythm_press(-1,source)
 func _draw() -> void:
 	if not visible or judge_y<TOP:return
-	var now=game.standard_music.input_time();var lane=size.x/4.;var key_y=size.y-key_height-24.;var travel=judge_y-TOP
+	var now=game.standard_music.input_time();var lane=size.x/RHYTHM.LANES;var key_y=size.y-key_height-24.;var travel=judge_y-TOP
 	var text_scale=clampf(float(game.settings.text_scale),.85,1.2)
 	draw_style_box(frame_style,Rect2(Vector2.ZERO,size))
 	var title=str(game.PLANET_MUSIC.track(game.active_planet).title)
 	var title_size=roundi(14.*text_scale)
 	while title.length()>2 and font.get_string_size(title,HORIZONTAL_ALIGNMENT_LEFT,-1,title_size).x>size.x-122.:title=title.left(title.length()-2)+"…"
 	draw_string(font,Vector2(12,22),title,HORIZONTAL_ALIGNMENT_LEFT,size.x-122.,title_size,UI.TEXT)
-	var counter="%02d  连击"%game.rhythm.combo if game.rhythm.combo>0 else "H / J / K / L"
+	var counter="%02d  连击"%game.rhythm.combo if game.rhythm.combo>0 else "6秒一段"
 	var counter_size=roundi(12.*text_scale);var counter_width=font.get_string_size(counter,HORIZONTAL_ALIGNMENT_LEFT,-1,counter_size).x
 	draw_string(font,Vector2(size.x-12.-counter_width,22),counter,HORIZONTAL_ALIGNMENT_LEFT,counter_width,counter_size,UI.MUTED)
 	draw_line(Vector2(10,TOP-3.),Vector2(size.x-10.,TOP-3.),Color(UI.LINE,.6),1.)
-	for track in range(4):
+	for track in range(RHYTHM.LANES):
 		var x=track*lane
+		var scored=game.rhythm.score.current(track)
+		draw_string(font,Vector2(x+8.,40),"已判 %d/%d"%[scored.earned,scored.possible],HORIZONTAL_ALIGNMENT_LEFT,lane-12.,roundi(11.*text_scale),UI.MUTED)
 		draw_rect(Rect2(x+2.,TOP,lane-4.,key_y-TOP),Color(1,1,1,.018 if track%2==0 else .035))
 		if track>0:draw_line(Vector2(x,TOP),Vector2(x,key_y),Color(UI.LINE,.35),1.)
 		if game.rhythm.held(track):draw_rect(Rect2(x+2.,judge_y-42.,lane-4.,42.),Color(UI.GOLD,.07))
 		draw_rect(Rect2(x+2.,judge_y-travel*RHYTHM.WINDOW/RHYTHM.LOOKAHEAD,lane-4.,travel*RHYTHM.WINDOW/RHYTHM.LOOKAHEAD*2.),Color(UI.GOLD,.12))
 		draw_line(Vector2(x+3.,judge_y),Vector2(x+lane-3.,judge_y),Color(UI.GOLD,.8),1.5)
 		draw_style_box(key_styles[1 if game.rhythm.held(track) else 0],Rect2(x+5.,key_y,lane-10.,key_height))
-		var key=game.binding_name(["rhythm_a","rhythm_b","rhythm_c","rhythm_d"][track])
-		var key_size=roundi(19.*text_scale);var key_width=font.get_string_size(key,HORIZONTAL_ALIGNMENT_LEFT,-1,key_size).x
-		draw_string(font,Vector2(x+(lane-key_width)*.5,key_y+26.),key,HORIZONTAL_ALIGNMENT_LEFT,lane-10.,key_size,UI.INK)
+		var key=TRACKS[track]+" · "+game.binding_name(ACTIONS[track])
+		var key_size=roundi(17.*text_scale);var key_width=font.get_string_size(key,HORIZONTAL_ALIGNMENT_LEFT,-1,key_size).x
+		draw_string(font,Vector2(x+(lane-key_width)*.5,key_y+23.),key,HORIZONTAL_ALIGNMENT_LEFT,lane-10.,key_size,UI.INK)
+		var percent="弹量 %d%%"%roundi(game.rhythm.score.ratios[track]*100.)
+		var percent_size=roundi(12.*text_scale);var percent_width=font.get_string_size(percent,HORIZONTAL_ALIGNMENT_LEFT,-1,percent_size).x
+		draw_string(font,Vector2(x+(lane-percent_width)*.5,key_y+43.),percent,HORIZONTAL_ALIGNMENT_LEFT,lane-10.,percent_size,UI.INK)
 	var clip=Rect2(4,TOP,size.x-8.,key_y-TOP-3.)
 	for note in game.rhythm.notes:
 		var delta=float(note.due)-now;var tail_delta=float(note.end)-now
@@ -100,11 +114,11 @@ func _draw() -> void:
 				if float(note.hold)>0.:draw_line(Vector2(center,head.position.y+7.),Vector2(center,head.end.y-8.),Color(UI.INK,.35),2.)
 		if note.required.size()>1 and y>=TOP and y<key_y:
 			draw_line(Vector2((int(note.required[0])+.5)*lane,y),Vector2((int(note.required[-1])+.5)*lane,y),Color(color,.8),2.)
-	var result=game.rhythm.last_result if now-game.rhythm.result_at<.8 else "短按 · 长按到尾 · 双键同按"
-	if now-game.rhythm.result_at<.8 and result in ["成功","完美"]:
+	var result=game.rhythm.last_result if now-game.rhythm.result_at<.8 else "%.1f秒后更新各轨弹量"%game.rhythm.score.remaining(now)
+	if now-game.rhythm.result_at<.8 and (result.begins_with("成功") or result.begins_with("完美")):
 		var delta_ms=roundi(absf(game.rhythm.last_delta)*1000.)
 		result+=" · "+("正点" if delta_ms<2 else (("早 " if game.rhythm.last_delta<0. else "晚 ")+str(delta_ms)+" ms"))
-	var result_color=UI.ERROR if "失败" in result else (UI.GOLD if result.begins_with("成功") or result.begins_with("完美") else UI.MUTED)
+	var result_color=UI.ERROR if "0分" in result else (UI.GOLD if result.begins_with("成功") or result.begins_with("完美") else UI.MUTED)
 	draw_string(font,Vector2(10,size.y-6.),result,HORIZONTAL_ALIGNMENT_LEFT,size.x-20.,roundi(13.*text_scale),result_color)
 	for fx in hit_effects:
 		var age=clampf((now-float(fx.at))/.36,0.,1.);var color=UI.GOLD if bool(fx.ok) else UI.ERROR

@@ -1,11 +1,12 @@
 extends RefCounted
 const CHART=preload("res://scripts/rhythm_chart.gd")
+const SCORE=preload("res://scripts/rhythm_score.gd")
 const STEP=preload("res://scripts/arsenal_loadout.gd").SEQUENCE_STEP_SECONDS
 const WINDOW=.075
 const PERFECT=.035
-const CHORD_SPREAD=.060
 const LOOKAHEAD=2.2
-const LANES=4
+const LANES=3
+var score=SCORE.new()
 var music_chart: bool=false
 var chart_id: String="mercury"
 var offset_seconds: float=0.
@@ -23,14 +24,14 @@ var judge_serial: int=0
 var judged_lanes: Array=[]
 var last_delta: float=0.
 var last_success: bool=false
-var last_result: String="跟随音乐 · 短按 / 长按 / 双键"
+var last_result: String="三轨计分 · 下一段弹量"
 var result_at: float=-10.
 var result_track: int=-1
 func reset(now: float=0.,new_run: bool=false) -> void:
 	notes.clear();down.clear();cutoff=now-.00001 if new_run else now+.00001
 	last_serial=maxi(-1,floori(now/STEP)-1)
-	if new_run:combo=0;best_combo=0;hits=0;misses=0;wrong=0;perfects=0;judge_serial=0;judged_lanes.clear()
-	last_result="跟随音乐 · 短按 / 长按 / 双键";result_at=-10.;result_track=-1
+	if new_run:combo=0;best_combo=0;hits=0;misses=0;wrong=0;perfects=0;judge_serial=0;judged_lanes.clear();score.reset()
+	last_result="三轨计分 · 下一段弹量";result_at=-10.;result_track=-1
 	last_delta=0.;last_success=false
 func forecast(loadout,now: float,song_time: float=-1.) -> void:
 	var offset=now-(song_time if song_time>=0. else now)+(offset_seconds if music_chart else 0.)
@@ -50,15 +51,15 @@ func forecast(loadout,now: float,song_time: float=-1.) -> void:
 			var id="%d:%d"%[track,roundi(charged*1000000.)]
 			var due=charged;var required: Array=[track];var kind="tap";var hold=0.;var cue: Dictionary={}
 			if music_chart:
-				cue=CHART.next_cue(maxf(0.,charged-offset),chart_id);id=str(cue.id)
-				due=float(cue.song_due)+offset;required=cue.lanes;kind=str(cue.kind);hold=float(cue.hold)
+				cue=CHART.next_cue(maxf(0.,charged-offset),chart_id);id="%d:%s"%[track,str(cue.id)]
+				due=float(cue.song_due)+offset;hold=float(cue.hold);kind="hold" if hold>0. else "tap"
 			var found=false
 			for note in notes:
 				if str(note.id)==id:
 					if str(note.status) in ["pending","holding","armed"]:note.events.append(event)
 					found=true;break
 			if not found:
-				var note={"id":id,"track":int(required[0]),"required":required.duplicate(),"due":due,"end":due+hold,"hold":hold,"kind":kind,"events":[event],"status":"pending","delta":0.,"pressed":{}}
+				var note={"id":id,"track":track,"required":required.duplicate(),"due":due,"end":due+hold,"hold":hold,"kind":kind,"events":[event],"status":"pending","delta":0.,"pressed":{},"emitted":false,"scored":false}
 				if music_chart:
 					note.song_due=float(cue.song_due);note.accent=bool(cue.get("accent",false));note.measure=int(cue.get("measure",0));note.phrase=int(cue.get("phrase",0))
 				notes.append(note)
@@ -69,9 +70,16 @@ func forecast(loadout,now: float,song_time: float=-1.) -> void:
 func held(lane: int) -> bool:
 	return lane in down.values()
 func _fail(note: Dictionary,label: String,now: float) -> void:
-	note.status="miss";misses+=1;combo=0;last_result=label+" · 发射失败";result_at=now;result_track=int(note.track)
+	note.status="miss";misses+=1;combo=0;last_result=label+" · 0分";result_at=now;result_track=int(note.track)
 	judge_serial+=1;judged_lanes=note.required.duplicate()
 	last_success=false;last_delta=0.
+	_record_score(note,0)
+func _record_score(note: Dictionary,points: int) -> void:
+	if bool(note.get("scored",false)):return
+	note.scored=true
+	# Assign boundary notes by the END of their valid judgement, preserving the
+	# full75ms late/tail grace without changing an already active fire ratio.
+	score.record(int(note.track),float(note.end)+WINDOW,points)
 func advance(now: float) -> Array[Dictionary]:
 	var ready: Array[Dictionary]=[]
 	for note in notes:
@@ -80,18 +88,25 @@ func advance(now: float) -> Array[Dictionary]:
 			else:_fail(note,"长按中断",now)
 		if str(note.status)=="armed" and now+.000001>=float(note.end):
 			note.status="fired";hits+=1;combo+=1;best_combo=maxi(best_combo,combo)
-			last_result="完美" if absf(float(note.delta))<=PERFECT+.000001 else "成功"
-			if last_result=="完美":perfects+=1
+			var perfect=absf(float(note.delta))<=PERFECT+.000001
+			last_result="完美 +100" if perfect else "成功 +70"
+			if perfect:perfects+=1
+			_record_score(note,SCORE.PERFECT_POINTS if perfect else SCORE.GOOD_POINTS)
 			judge_serial+=1;judged_lanes=note.required.duplicate()
 			last_success=true;last_delta=float(note.delta)
 			result_at=now;result_track=int(note.track)
-			for source in note.events:
-				var event: Dictionary=source.duplicate(true)
-				event.charged_deadline=event.deadline;event.deadline=note.end;event.rhythm_authorized=true
-				event.rhythm_delta=note.delta;event.performed_at=now;event.rhythm_kind=note.kind;ready.append(event)
 		elif str(note.status)=="pending" and now>float(note.due)+WINDOW+.000001:_fail(note,"漏按",now)
+	score.advance(now)
+	for note in notes:
+		if bool(note.get("emitted",false)) or now+.000001<float(note.end):continue
+		note.emitted=true
+		for source in note.events:
+			var event: Dictionary=source.duplicate(true)
+			event.charged_deadline=event.deadline;event.deadline=note.end;event.rhythm_authorized=true;event.rhythm_scored_auto=true
+			event.rhythm_track=int(note.track);event.performed_at=now;event.rhythm_kind=note.kind;ready.append(event)
 	return ready
 func press(lane: int,now: float,source: String="") -> bool:
+	if lane<0 or lane>=LANES:wrong+=1;combo=0;return false
 	if not source.is_empty():
 		if down.has(source):return false
 		down[source]=lane
@@ -103,13 +118,11 @@ func press(lane: int,now: float,source: String="") -> bool:
 	if not target.is_empty():
 		target.pressed[lane]=now
 		if absf(now-float(target.due))>absf(float(target.delta)):target.delta=now-float(target.due)
-		if target.required.size()>1 and target.pressed.size()>1:
-			var times: Array=target.pressed.values();times.sort()
-			if float(times.back())-float(times.front())>CHORD_SPREAD+.000001:_fail(target,"双键不同步",now);return false
 		if target.pressed.size()==target.required.size():target.status="holding" if float(target.hold)>0. else "armed"
-		last_result="持续按住到尾端" if str(target.status)=="holding" else ("双键还差一键" if str(target.status)=="pending" else "已击键")
+		last_result="持续按住到尾端" if str(target.status)=="holding" else "已击键"
 		result_at=now;result_track=lane;return true
 	for note in notes:
+		if lane not in note.required:continue
 		if str(note.status)=="holding" and now<=float(note.end)+WINDOW:
 			var distance_to_hold=absf(now-float(note.due))
 			if distance_to_hold<distance:target=note;distance=distance_to_hold
@@ -117,8 +130,8 @@ func press(lane: int,now: float,source: String="") -> bool:
 		var delta=absf(now-float(note.due))
 		if delta<=WINDOW+.000001 and delta<distance:target=note;distance=delta
 	wrong+=1;combo=0
-	if not target.is_empty():_fail(target,"错键",now)
-	else:last_result="空击 · 未命中琴块";result_at=now;result_track=lane
+	if not target.is_empty():_fail(target,"重复击键",now)
+	else:last_result="空击 · 该轨无琴块";result_at=now;result_track=lane
 	return false
 func release(lane: int,now: float,source: String="",allow_success: bool=true) -> void:
 	down.erase(source)
