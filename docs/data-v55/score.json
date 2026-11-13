@@ -1,0 +1,450 @@
+{
+  "checks": 1814,
+  "facts": {
+    "catalogue": [
+      {
+        "full_count": 3,
+        "kind": "pulse",
+        "ten_salvo_total": 21,
+        "track": 0
+      },
+      {
+        "full_count": 3,
+        "kind": "pulse",
+        "ten_salvo_total": 21,
+        "track": 1
+      },
+      {
+        "full_count": 3,
+        "kind": "pulse",
+        "ten_salvo_total": 21,
+        "track": 2
+      },
+      {
+        "full_count": 5,
+        "kind": "scatter",
+        "ten_salvo_total": 35,
+        "track": 0
+      },
+      {
+        "full_count": 5,
+        "kind": "scatter",
+        "ten_salvo_total": 35,
+        "track": 1
+      },
+      {
+        "full_count": 5,
+        "kind": "scatter",
+        "ten_salvo_total": 35,
+        "track": 2
+      },
+      {
+        "full_count": 3,
+        "kind": "beam",
+        "ten_salvo_total": 21,
+        "track": 0
+      },
+      {
+        "full_count": 3,
+        "kind": "beam",
+        "ten_salvo_total": 21,
+        "track": 1
+      },
+      {
+        "full_count": 3,
+        "kind": "beam",
+        "ten_salvo_total": 21,
+        "track": 2
+      },
+      {
+        "full_count": 3,
+        "kind": "missile",
+        "ten_salvo_total": 21,
+        "track": 0
+      },
+      {
+        "full_count": 3,
+        "kind": "missile",
+        "ten_salvo_total": 21,
+        "track": 1
+      },
+      {
+        "full_count": 3,
+        "kind": "missile",
+        "ten_salvo_total": 21,
+        "track": 2
+      },
+      {
+        "full_count": 12,
+        "kind": "nova",
+        "ten_salvo_total": 84,
+        "track": 0
+      },
+      {
+        "full_count": 12,
+        "kind": "nova",
+        "ten_salvo_total": 84,
+        "track": 1
+      },
+      {
+        "full_count": 12,
+        "kind": "nova",
+        "ten_salvo_total": 84,
+        "track": 2
+      },
+      {
+        "full_count": 3,
+        "kind": "chain",
+        "ten_salvo_total": 21,
+        "track": 0
+      },
+      {
+        "full_count": 3,
+        "kind": "chain",
+        "ten_salvo_total": 21,
+        "track": 1
+      },
+      {
+        "full_count": 3,
+        "kind": "chain",
+        "ten_salvo_total": 21,
+        "track": 2
+      },
+      {
+        "full_count": 3,
+        "kind": "rail",
+        "ten_salvo_total": 21,
+        "track": 0
+      },
+      {
+        "full_count": 3,
+        "kind": "rail",
+        "ten_salvo_total": 21,
+        "track": 1
+      },
+      {
+        "full_count": 3,
+        "kind": "rail",
+        "ten_salvo_total": 21,
+        "track": 2
+      },
+      {
+        "full_count": 3,
+        "kind": "pulse_needle",
+        "ten_salvo_total": 21,
+        "track": 0
+      },
+      {
+        "full_count": 3,
+        "kind": "pulse_needle",
+        "ten_salvo_total": 21,
+        "track": 1
+      },
+      {
+        "full_count": 3,
+        "kind": "pulse_needle",
+        "ten_salvo_total": 21,
+        "track": 2
+      },
+      {
+        "full_count": 16,
+        "kind": "scatter_prism",
+        "ten_salvo_total": 112,
+        "track": 0
+      },
+      {
+        "full_count": 16,
+        "kind": "scatter_prism",
+        "ten_salvo_total": 112,
+        "track": 1
+      },
+      {
+        "full_count": 16,
+        "kind": "scatter_prism",
+        "ten_salvo_total": 112,
+        "track": 2
+      },
+      {
+        "full_count": 6,
+        "kind": "beam_split",
+        "ten_salvo_total": 42,
+        "track": 0
+      },
+      {
+        "full_count": 6,
+        "kind": "beam_split",
+        "ten_salvo_total": 42,
+        "track": 1
+      },
+      {
+        "full_count": 6,
+        "kind": "beam_split",
+        "ten_salvo_total": 42,
+        "track": 2
+      },
+      {
+        "full_count": 8,
+        "kind": "rail_horizon",
+        "ten_salvo_total": 56,
+        "track": 0
+      },
+      {
+        "full_count": 8,
+        "kind": "rail_horizon",
+        "ten_salvo_total": 56,
+        "track": 1
+      },
+      {
+        "full_count": 8,
+        "kind": "rail_horizon",
+        "ten_salvo_total": 56,
+        "track": 2
+      },
+      {
+        "full_count": 7,
+        "kind": "recorded_heavy",
+        "ten_salvo_total": 49,
+        "track": 0
+      },
+      {
+        "full_count": 7,
+        "kind": "recorded_heavy",
+        "ten_salvo_total": 49,
+        "track": 1
+      },
+      {
+        "full_count": 7,
+        "kind": "recorded_heavy",
+        "ten_salvo_total": 49,
+        "track": 2
+      },
+      {
+        "full_count": 52,
+        "kind": "gilded_helix",
+        "ten_salvo_total": 364,
+        "track": 0
+      },
+      {
+        "full_count": 52,
+        "kind": "gilded_helix",
+        "ten_salvo_total": 364,
+        "track": 1
+      },
+      {
+        "full_count": 52,
+        "kind": "gilded_helix",
+        "ten_salvo_total": 364,
+        "track": 2
+      },
+      {
+        "full_count": 70,
+        "kind": "weave_cross",
+        "ten_salvo_total": 490,
+        "track": 0
+      },
+      {
+        "full_count": 70,
+        "kind": "weave_cross",
+        "ten_salvo_total": 490,
+        "track": 1
+      },
+      {
+        "full_count": 70,
+        "kind": "weave_cross",
+        "ten_salvo_total": 490,
+        "track": 2
+      },
+      {
+        "full_count": 20,
+        "kind": "crown_orbit",
+        "ten_salvo_total": 140,
+        "track": 0
+      },
+      {
+        "full_count": 20,
+        "kind": "crown_orbit",
+        "ten_salvo_total": 140,
+        "track": 1
+      },
+      {
+        "full_count": 20,
+        "kind": "crown_orbit",
+        "ten_salvo_total": 140,
+        "track": 2
+      },
+      {
+        "full_count": 26,
+        "kind": "stern_fan",
+        "ten_salvo_total": 182,
+        "track": 0
+      },
+      {
+        "full_count": 26,
+        "kind": "stern_fan",
+        "ten_salvo_total": 182,
+        "track": 1
+      },
+      {
+        "full_count": 26,
+        "kind": "stern_fan",
+        "ten_salvo_total": 182,
+        "track": 2
+      },
+      {
+        "full_count": 20,
+        "kind": "dawn_fan",
+        "ten_salvo_total": 140,
+        "track": 0
+      },
+      {
+        "full_count": 20,
+        "kind": "dawn_fan",
+        "ten_salvo_total": 140,
+        "track": 1
+      },
+      {
+        "full_count": 20,
+        "kind": "dawn_fan",
+        "ten_salvo_total": 140,
+        "track": 2
+      },
+      {
+        "full_count": 28,
+        "kind": "tidal_weave",
+        "ten_salvo_total": 196,
+        "track": 0
+      },
+      {
+        "full_count": 28,
+        "kind": "tidal_weave",
+        "ten_salvo_total": 196,
+        "track": 1
+      },
+      {
+        "full_count": 28,
+        "kind": "tidal_weave",
+        "ten_salvo_total": 196,
+        "track": 2
+      },
+      {
+        "full_count": 34,
+        "kind": "firefly_rain",
+        "ten_salvo_total": 238,
+        "track": 0
+      },
+      {
+        "full_count": 34,
+        "kind": "firefly_rain",
+        "ten_salvo_total": 238,
+        "track": 1
+      },
+      {
+        "full_count": 34,
+        "kind": "firefly_rain",
+        "ten_salvo_total": 238,
+        "track": 2
+      },
+      {
+        "full_count": 100,
+        "kind": "kaleidoscope",
+        "ten_salvo_total": 700,
+        "track": 0
+      },
+      {
+        "full_count": 100,
+        "kind": "kaleidoscope",
+        "ten_salvo_total": 700,
+        "track": 1
+      },
+      {
+        "full_count": 100,
+        "kind": "kaleidoscope",
+        "ten_salvo_total": 700,
+        "track": 2
+      },
+      {
+        "full_count": 4,
+        "kind": "arc_bough",
+        "ten_salvo_total": 28,
+        "track": 0
+      },
+      {
+        "full_count": 4,
+        "kind": "arc_bough",
+        "ten_salvo_total": 28,
+        "track": 1
+      },
+      {
+        "full_count": 4,
+        "kind": "arc_bough",
+        "ten_salvo_total": 28,
+        "track": 2
+      },
+      {
+        "full_count": 8,
+        "kind": "chain_loop",
+        "ten_salvo_total": 56,
+        "track": 0
+      },
+      {
+        "full_count": 8,
+        "kind": "chain_loop",
+        "ten_salvo_total": 56,
+        "track": 1
+      },
+      {
+        "full_count": 8,
+        "kind": "chain_loop",
+        "ten_salvo_total": 56,
+        "track": 2
+      },
+      {
+        "full_count": 5,
+        "kind": "laser_fan",
+        "ten_salvo_total": 35,
+        "track": 0
+      },
+      {
+        "full_count": 5,
+        "kind": "laser_fan",
+        "ten_salvo_total": 35,
+        "track": 1
+      },
+      {
+        "full_count": 5,
+        "kind": "laser_fan",
+        "ten_salvo_total": 35,
+        "track": 2
+      },
+      {
+        "full_count": 16,
+        "kind": "laser_crown",
+        "ten_salvo_total": 112,
+        "track": 0
+      },
+      {
+        "full_count": 16,
+        "kind": "laser_crown",
+        "ten_salvo_total": 112,
+        "track": 1
+      },
+      {
+        "full_count": 16,
+        "kind": "laser_crown",
+        "ten_salvo_total": 112,
+        "track": 2
+      }
+    ],
+    "combined_track_totals": [
+      51,
+      51,
+      51
+    ],
+    "three_window_salvos": [
+      4,
+      0,
+      4
+    ]
+  },
+  "failures": []
+}

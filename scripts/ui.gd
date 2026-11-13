@@ -239,7 +239,7 @@ func doctrine_screen() -> void:
 			starters.append("%s%d%s  %s"%[track,slot%8+1,("–%s%d"%[track,slot%8+int(row.width)]) if int(row.width)>1 else "",str(row.name)])
 		column.add_child(label("\n".join(starters),16,Color("b4c8db")))
 		var select=button("已选择" if chosen else "选择此流派",game.choose_doctrine.bind(str(doctrine.id)),Color(doctrine.color),44);select.name="DoctrineChoice_"+str(doctrine.id);select.custom_minimum_size.x=0.;column.add_child(select)
-	content.add_child(label(game.binding_name("rhythm_a")+" / "+game.binding_name("rhythm_b")+" / "+game.binding_name("rhythm_c")+" 对应 A / B / C 武器轨。每6秒分别计分：完美100、成功70、漏按或中断0分，决定下一段该轨弹量；首段100%。武器按原充能与音乐点自动齐射。",17,Color.WHITE))
+	content.add_child(label(game.binding_name("rhythm_a")+" / "+game.binding_name("rhythm_b")+" / "+game.binding_name("rhythm_c")+" 对应 A / B / C 武器轨。每6秒将三轨得分相加，除以三轨总满分，统一决定下一段全武器弹量；首段100%。完美100、成功70、漏按或中断0分。武器按原充能与音乐点自动齐射。",17,Color.WHITE))
 	var actions=HBoxContainer.new();actions.add_theme_constant_override("separation",16);content.add_child(actions)
 	var back=button("返回",game.cancel_doctrine_selection,Color("9aaec1"),48);back.name="DoctrineBack";actions.add_child(back)
 	var selected=game.DOCTRINES.valid(game.doctrine_choice)

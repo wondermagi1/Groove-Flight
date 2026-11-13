@@ -68,11 +68,12 @@ func _draw() -> void:
 	var counter="%02d  连击"%game.rhythm.combo if game.rhythm.combo>0 else "6秒一段"
 	var counter_size=roundi(12.*text_scale);var counter_width=font.get_string_size(counter,HORIZONTAL_ALIGNMENT_LEFT,-1,counter_size).x
 	draw_string(font,Vector2(size.x-12.-counter_width,22),counter,HORIZONTAL_ALIGNMENT_LEFT,counter_width,counter_size,UI.MUTED)
+	var combined=game.rhythm.score.total()
+	draw_string(font,Vector2(8.,40),"本段 %d/%d · 当前弹量 %.1f%%"%[combined.earned,combined.possible,game.rhythm.score.ratio*100.],HORIZONTAL_ALIGNMENT_LEFT,size.x-16.,roundi(11.*text_scale),UI.TEXT)
 	draw_line(Vector2(10,TOP-3.),Vector2(size.x-10.,TOP-3.),Color(UI.LINE,.6),1.)
 	for track in range(RHYTHM.LANES):
 		var x=track*lane
 		var scored=game.rhythm.score.current(track)
-		draw_string(font,Vector2(x+8.,40),"已判 %d/%d"%[scored.earned,scored.possible],HORIZONTAL_ALIGNMENT_LEFT,lane-12.,roundi(11.*text_scale),UI.MUTED)
 		draw_rect(Rect2(x+2.,TOP,lane-4.,key_y-TOP),Color(1,1,1,.018 if track%2==0 else .035))
 		if track>0:draw_line(Vector2(x,TOP),Vector2(x,key_y),Color(UI.LINE,.35),1.)
 		if game.rhythm.held(track):draw_rect(Rect2(x+2.,judge_y-42.,lane-4.,42.),Color(UI.GOLD,.07))
@@ -82,7 +83,7 @@ func _draw() -> void:
 		var key=TRACKS[track]+" · "+game.binding_name(ACTIONS[track])
 		var key_size=roundi(17.*text_scale);var key_width=font.get_string_size(key,HORIZONTAL_ALIGNMENT_LEFT,-1,key_size).x
 		draw_string(font,Vector2(x+(lane-key_width)*.5,key_y+23.),key,HORIZONTAL_ALIGNMENT_LEFT,lane-10.,key_size,UI.INK)
-		var percent="弹量 %d%%"%roundi(game.rhythm.score.ratios[track]*100.)
+		var percent="已判 %d/%d"%[scored.earned,scored.possible]
 		var percent_size=roundi(12.*text_scale);var percent_width=font.get_string_size(percent,HORIZONTAL_ALIGNMENT_LEFT,-1,percent_size).x
 		draw_string(font,Vector2(x+(lane-percent_width)*.5,key_y+43.),percent,HORIZONTAL_ALIGNMENT_LEFT,lane-10.,percent_size,UI.INK)
 	var clip=Rect2(4,TOP,size.x-8.,key_y-TOP-3.)
@@ -114,7 +115,7 @@ func _draw() -> void:
 				if float(note.hold)>0.:draw_line(Vector2(center,head.position.y+7.),Vector2(center,head.end.y-8.),Color(UI.INK,.35),2.)
 		if note.required.size()>1 and y>=TOP and y<key_y:
 			draw_line(Vector2((int(note.required[0])+.5)*lane,y),Vector2((int(note.required[-1])+.5)*lane,y),Color(color,.8),2.)
-	var result=game.rhythm.last_result if now-game.rhythm.result_at<.8 else "%.1f秒后更新各轨弹量"%game.rhythm.score.remaining(now)
+	var result=game.rhythm.last_result if now-game.rhythm.result_at<.8 else "%.1f秒后更新全武器弹量"%game.rhythm.score.remaining(now)
 	if now-game.rhythm.result_at<.8 and (result.begins_with("成功") or result.begins_with("完美")):
 		var delta_ms=roundi(absf(game.rhythm.last_delta)*1000.)
 		result+=" · "+("正点" if delta_ms<2 else (("早 " if game.rhythm.last_delta<0. else "晚 ")+str(delta_ms)+" ms"))

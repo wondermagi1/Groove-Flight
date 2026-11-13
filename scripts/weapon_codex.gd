@@ -261,7 +261,7 @@ func select_weapon(id: String) -> void:
 	rhythm_view.visible=false; rhythm_view.cadence=cadence; rhythm_view.accent=DATA.quality_color(row); rhythm_view.queue_redraw()
 	var strengths: PackedStringArray=[]
 	for value in cadence.get("scales",[.25,.25,.25,.25]): strengths.append("%d%%"%roundi(float(value)*100.))
-	cadence_label.text="%s · 有弹齐射时推进一次\n试听间隔 %.1f 秒；实战按音乐点自动齐射，弹量由该轨上一段6秒成绩决定。"%[EXPRESSION.describe(int(row.charge)),float(row.charge)*LOADOUT.SEQUENCE_LOOP_SECONDS]
+	cadence_label.text="%s · 有弹齐射时推进一次\n试听间隔 %.1f 秒；实战按音乐点自动齐射，弹量由三轨上一段6秒总成绩统一决定。"%[EXPRESSION.describe(int(row.charge)),float(row.charge)*LOADOUT.SEQUENCE_LOOP_SECONDS]
 	if record.get("dynamics",{}).has("performance_instrument"):
 		cadence_label.text+="\n重音演奏："+str(record.dynamics.performance_instrument)
 	var samples=record.get("samples",[])

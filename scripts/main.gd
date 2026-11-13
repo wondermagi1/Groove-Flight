@@ -2026,7 +2026,7 @@ func dispatch_trigger(trigger: Dictionary) -> void:
 		var scaled=rhythm.score.projectile_count(int(trigger.uid),track,full)
 		if scaled<=0:return
 		trigger=trigger.duplicate(true);trigger.count=scaled;trigger.rhythm_count_scaled=true
-		trigger.rhythm_full_count=full;trigger.rhythm_ratio=rhythm.score.ratios[track]
+		trigger.rhythm_full_count=full;trigger.rhythm_ratio=rhythm.score.ratio
 	fire_log.append({"step":posmod(int(trigger.serial),8),"track":trigger.get("track",0),"uid":trigger.uid,"serial":trigger.serial,"deadline":trigger.deadline,"actual":music.timeline,"kind":trigger.kind,"voice":trigger.voice,"pitch":trigger.get("pitch",0),"cadence_step":trigger.get("cadence_step",0),"cadence_scale":trigger.get("cadence_scale",1.),"pilot":trigger.get("pilot",""),"repeat_index":trigger.get("repeat_index",0),"event_id":trigger.event_id})
 	fire_log.back().count=int(trigger.get("count",0));fire_log.back().full_count=int(trigger.get("rhythm_full_count",trigger.get("count",0)))
 	fire_log.back().rhythm_ratio=float(trigger.get("rhythm_ratio",1.))
@@ -2070,7 +2070,7 @@ func update_tutorial() -> void:
 	if tutorial_stage>=4:
 		tutorial_active=false; settings.tutorial_done=true; save_settings(); return
 	var movement=" / ".join([binding_name("up"),binding_name("left"),binding_name("down"),binding_name("right")])
-	var tips=[movement+" 移动 · "+binding_name("rhythm_a")+" / "+binding_name("rhythm_b")+" / "+binding_name("rhythm_c")+" 对应 A / B / C 武器轨","每6秒分别计分 · 当前成绩决定下一段弹量 · 首段100%",binding_name("editor")+" 打开三轨音序工坊 · 武器保留充能与音乐点自动齐射",binding_name("dash")+" 冲刺穿过缺口 · "+binding_name("overload")+" 满充能后超载"]
+	var tips=[movement+" 移动 · "+binding_name("rhythm_a")+" / "+binding_name("rhythm_b")+" / "+binding_name("rhythm_c")+" 对应 A / B / C 武器轨","每6秒合并三轨总分 · 决定下一段全武器弹量 · 首段100%",binding_name("editor")+" 打开三轨音序工坊 · 武器保留充能与音乐点自动齐射",binding_name("dash")+" 冲刺穿过缺口 · "+binding_name("overload")+" 满充能后超载"]
 	notice=tips[tutorial_stage]; notice_until=INF
 
 func apply_input_bindings() -> void:

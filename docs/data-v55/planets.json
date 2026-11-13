@@ -1,0 +1,90 @@
+{
+  "checks": 9636,
+  "facts": {
+    "outpost_minimum_swept_margin": -3.814697265625e-05,
+    "planets": [
+      {
+        "counts": {
+          "hold": 108,
+          "tap": 474
+        },
+        "duration": 339.880612,
+        "mission": "航标采样",
+        "planet": "mercury",
+        "song": "Filaments"
+      },
+      {
+        "counts": {
+          "hold": 102,
+          "tap": 335
+        },
+        "duration": 358.088912,
+        "mission": "护送勘测艇",
+        "planet": "venus",
+        "song": "Helios"
+      },
+      {
+        "counts": {
+          "hold": 54,
+          "tap": 399
+        },
+        "duration": 223.672925,
+        "mission": "守住通讯站",
+        "planet": "earth",
+        "song": "Reverie"
+      },
+      {
+        "counts": {
+          "hold": 42,
+          "tap": 301
+        },
+        "duration": 184.0,
+        "mission": "拔除攻城据点",
+        "planet": "mars",
+        "song": "Legionnaire (Original)"
+      },
+      {
+        "counts": {
+          "hold": 50,
+          "tap": 189
+        },
+        "duration": 175.756735,
+        "mission": "风暴追猎",
+        "planet": "jupiter",
+        "song": "Titan"
+      },
+      {
+        "counts": {
+          "hold": 118,
+          "tap": 499
+        },
+        "duration": 290.499002,
+        "mission": "星环航门",
+        "planet": "saturn",
+        "song": "Cassini"
+      },
+      {
+        "counts": {
+          "hold": 65,
+          "tap": 456
+        },
+        "duration": 293.273787,
+        "mission": "冰轴共振",
+        "planet": "uranus",
+        "song": "Luminance"
+      },
+      {
+        "counts": {
+          "hold": 73,
+          "tap": 222
+        },
+        "duration": 245.217937,
+        "mission": "终潮远征",
+        "planet": "neptune",
+        "song": "Omega"
+      }
+    ],
+    "total_cues": 3487
+  },
+  "failures": []
+}
