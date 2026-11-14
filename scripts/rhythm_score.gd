@@ -6,13 +6,17 @@ const EXCELLENT_POINTS=80
 const GENERAL_POINTS=40
 const TRACKS=3
 var window: int=0
-var ratio: float=1.
+var base_ratio: float=1.
+var reward_bonus: float=0.
+var ratio: float:
+	get:return clampf(base_ratio*(1.+reward_bonus),0.,1.2)
+	set(value):base_ratio=clampf(value/(1.+reward_bonus),0.,1.)
 var previous: Dictionary={}
 var ledger: Dictionary={}
 var remainders: Dictionary={}
 func _init() -> void:reset()
 func reset() -> void:
-	window=0;ratio=1.;ledger.clear();remainders.clear()
+	window=0;base_ratio=1.;reward_bonus=0.;ledger.clear();remainders.clear()
 	previous={"earned":0,"possible":0,"notes":0,"ratio":1.,"carried":true}
 func record(track: int,judgement_end: float,points: int) -> void:
 	if track<0 or track>=TRACKS:return
@@ -27,7 +31,7 @@ func advance(now: float) -> void:
 	while window<target:
 		var row=total()
 		row.carried=int(row.possible)==0
-		if not row.carried:ratio=clampf(float(row.earned)/float(row.possible),0.,1.)
+		if not row.carried:base_ratio=clampf(float(row.earned)/float(row.possible),0.,1.)
 		row.ratio=ratio;previous=row
 		ledger.erase(window);window+=1
 func current(track: int) -> Dictionary:
@@ -39,10 +43,10 @@ func total() -> Dictionary:
 		result.earned+=int(row.earned);result.possible+=int(row.possible);result.notes+=int(row.notes)
 	return result
 func remaining(now: float) -> float:return maxf(0.,(window+1)*SECONDS-now)
-func projectile_count(uid: int,track: int,full_count: int) -> int:
+func projectile_count(uid: int,track: int,full_count: int,count_cap: int=256) -> int:
 	if full_count<=0 or track<0 or track>=TRACKS:return 0
 	var key="%d:%d"%[uid,track]
 	var expected=full_count*ratio+float(remainders.get(key,0.))
-	var result=clampi(floori(expected+.0000001),0,full_count)
-	remainders[key]=maxf(0.,expected-result)
+	var result=clampi(floori(expected+.0000001),0,maxi(0,count_cap))
+	remainders[key]=maxf(0.,expected-floorf(expected+.0000001))
 	return result

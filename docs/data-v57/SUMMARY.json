@@ -1,0 +1,91 @@
+{
+  "version": "0.57.0-perfect-pilots",
+  "date": "2026-11-14",
+  "backup": "8bc289aa7caf06b6c95a0abbf16918ac7907dfbd",
+  "branch": "codex/perfect-rewards-pilots",
+  "ordinary_combo": "all successful grades; separate from Perfect chain",
+  "default_perfect_thresholds": [
+    10,
+    25,
+    50,
+    100
+  ],
+  "tier_bonuses": [
+    0.05,
+    0.1,
+    0.15,
+    0.2
+  ],
+  "ammo": "previous6second base accuracy * (1+current earned reward), cap1.2; class count caps remain; opening base1.0",
+  "pilots": [
+    "echo:2.8s pre-read",
+    "volt:8/20/40/80 thresholds",
+    "mender:one chain guard per6s with real grades",
+    "nova:hold45/85ms+180ms tail",
+    "rime:up to10percent linger4combat seconds, no self refresh"
+  ],
+  "retired_pilot_physical_buffs": [
+    "echo extra salvo",
+    "volt dash damage/count",
+    "mender pickup heal",
+    "nova downbeat damage",
+    "rime timed shield"
+  ],
+  "talents": {
+    "initial_points": 2,
+    "distinct_clear_points": 1,
+    "max_points": 6,
+    "nodes": 6,
+    "respec": "free; hangar only; next run; sanitized config roundtrip tested"
+  },
+  "unchanged_active_weapon_catalogue": 24,
+  "unchanged_songs": 8,
+  "unchanged_source_cues": 3487,
+  "archived_weapon_wavs_unchanged": 616,
+  "protected_files_unchanged": 1735,
+  "core_functions_unchanged": {
+    "scripts/main.gd:shot": "c27d4ccbd61974c66dec6b6dfc4a6d8e39608f1df251501beef7515358dd4e32",
+    "scripts/main.gd:update_bullets": "1aab33dc8ad9c2e38971fe168e53e47198eeb8168521bb2c3474e0980f83f5c0",
+    "scripts/main.gd:update_enemies": "70fdb995be369d01f30d4d3e40a8682c028ccc4ced2ee54c982209b422efa47a",
+    "scripts/main.gd:boss_step": "3329a7e25114dbfacaf66a99edb6da3cd4eded511c26f33a57e51f9d1e28ecc4",
+    "scripts/main.gd:split_projectile": "96de316e535f4f3b368a7775b28342d8bda9fff5a529d0b0aedb6c342737b037",
+    "scripts/arsenal_loadout.gd:trigger": "3d411e8e23ba1321f42d6bcc5f31f2fdbef9342d8cf2e717a4d5b87369ca2275",
+    "scripts/arsenal_loadout.gd:_stats_for": "3bf88d8c93c26a752ab78dcc7d785c13acdf11253c0e3e5a1521c85d2cc139be",
+    "scripts/arsenal_loadout.gd:make_shop": "8e421c9c97c6bfac6f827c031599e94f0b486b30639243b8442ef09117daf51d",
+    "scripts/arsenal_loadout.gd:add_boon": "33975a8e8a0b3203a23debb1b148e8156b4aefdb4414fac31e3b96da8f6ec9dc"
+  },
+  "native_kernel_sha256": "0046a79a8dd2eb63f7c13ea4d3e20720651b851aaa71892902701077c3c2c84e",
+  "checks": {
+    "score": 191,
+    "native": 31,
+    "live": 47,
+    "planets": 9636,
+    "base_regression": 3919
+  },
+  "warnings": {
+    "score": [],
+    "native": [],
+    "live": [],
+    "planets": [],
+    "base_regression": []
+  },
+  "renderer": "forward_plus",
+  "captures": [
+    "res://tests/v57-three-tracks-1280.png",
+    "res://tests/v57-three-tracks-1920.png",
+    "res://tests/v57-inventory-layout-1280.png",
+    "res://tests/v57-score-feedback-1920.png",
+    "res://tests/v57-grade-perfect.png",
+    "res://tests/v57-grade-excellent.png",
+    "res://tests/v57-grade-general.png",
+    "res://tests/v57-grade-miss.png",
+    "res://tests/v57-weapon-codex.png",
+    "res://tests/v57-weapon-codex-1280.png",
+    "res://tests/v57-perfect-100-reward.png",
+    "res://tests/v57-protected-chain.png",
+    "res://tests/v57-rhythm-pilots-talents-1920.png",
+    "res://tests/v57-rhythm-pilots-talents-1280.png"
+  ],
+  "visual_review": "Native1280/1920, reward120percent/protectedMiss, readouts and scrollable hangar with pinned confirm/free reset inspected. Controlled milestone fixture is not a human play achievement.",
+  "scope": "Reward/pilot/talent unit and actual-count checks, isolated real config roundtrip, music-first base/8planet mission regression, live song/clock pause/loop and no weapon voices, native inputs and UI. No human listening, progression difficulty or sustained FPS certification; historical Demo/PPT/private reports excluded."
+}

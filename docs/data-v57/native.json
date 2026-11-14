@@ -1,0 +1,22 @@
+{
+  "captures": [
+    "res://tests/v57-three-tracks-1280.png",
+    "res://tests/v57-three-tracks-1920.png",
+    "res://tests/v57-inventory-layout-1280.png",
+    "res://tests/v57-score-feedback-1920.png",
+    "res://tests/v57-grade-perfect.png",
+    "res://tests/v57-grade-excellent.png",
+    "res://tests/v57-grade-general.png",
+    "res://tests/v57-grade-miss.png",
+    "res://tests/v57-weapon-codex.png",
+    "res://tests/v57-weapon-codex-1280.png",
+    "res://tests/v57-perfect-100-reward.png",
+    "res://tests/v57-protected-chain.png",
+    "res://tests/v57-rhythm-pilots-talents-1920.png",
+    "res://tests/v57-rhythm-pilots-talents-1280.png"
+  ],
+  "checks": 31,
+  "failures": [],
+  "renderer": "forward_plus",
+  "scope": "Actual three-track controls and Forward+ layout; displayed shared60percent is an explicit visual fixture, not a player result."
+}

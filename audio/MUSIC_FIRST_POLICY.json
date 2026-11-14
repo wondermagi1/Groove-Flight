@@ -1,5 +1,5 @@
 {
-  "version": "0.56.0-music-first",
+  "version": "0.57.0-perfect-pilots",
   "date": "2026-11-14",
   "lead": "eight licensed full background songs",
   "weapon_voices": "removed from combat, shop preview and codex; legacy sources archived only",
@@ -31,7 +31,23 @@
       "points": 0
     }
   ],
-  "ammo": "sum(all3keys earned)/sum(all3keys possible), applied to next6combat seconds; opening100percent; fully empty window carries prior ratio",
+  "ammo": "sum(all3keys earned)/sum(all3keys possible) sets next6second base; multiply current earnedPerfect bonus, max120percent; opening base100percent",
   "tail_grace_ms": 140,
-  "feedback": "kill, pickup, shield, impacts and UI remain on separate buses; dedicated rhythm hitsounds are future work"
+  "feedback": "kill, pickup, shield, impacts and UI remain on separate buses; dedicated rhythm hitsounds are future work",
+  "perfect_rewards": {
+    "thresholds": [
+      10,
+      25,
+      50,
+      100
+    ],
+    "bonuses": [
+      0.05,
+      0.1,
+      0.15,
+      0.2
+    ],
+    "scope": "immediate multiplier on existing base ratio, not score/damage; class count limits remain"
+  },
+  "pilot_modifiers": "readability/thresholds/protection/holds/linger only; see scripts/rhythm_pilots.gd"
 }

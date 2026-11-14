@@ -2,7 +2,7 @@ extends Control
 ## Song-authored three-key highway; equipment never creates these notes.
 const RHYTHM=preload("res://scripts/rhythm_gate.gd")
 const UI=preload("res://scripts/ui_materials.gd")
-const TOP=92.
+const TOP=124.
 const TRACKS=["A","B","C"]
 const ACTIONS=["rhythm_a","rhythm_b","rhythm_c"]
 var game
@@ -25,7 +25,7 @@ func _process(_delta: float) -> void:
 	visible=game.state=="combat" and game.rhythm_required()
 	if not visible:return
 	var view=get_viewport_rect().size
-	size=Vector2(clampf(view.x*.24,330.,460.),clampf(view.y*.39,330.,420.))
+	size=Vector2(clampf(view.x*.24,330.,460.),clampf(view.y*.43,368.,468.))
 	position=Vector2(view.x-size.x-22.,view.y-size.y-18.)
 	if game.panel_visible("panel_sequencer","combat") and is_instance_valid(game.ui.arsenal):
 		var sequence: Rect2=game.ui.arsenal.panel_rects.get("sequencer",Rect2())
@@ -54,7 +54,7 @@ func click_at(point: Vector2,source: String="mouse") -> void:
 	var now=game.standard_music.input_time();var travel=judge_y-TOP;var lane=size.x/RHYTHM.LANES
 	for note in game.rhythm.notes:
 		if track not in note.required or str(note.status)!="pending":continue
-		var y=judge_y-(float(note.due)-now)/RHYTHM.LOOKAHEAD*travel
+		var y=judge_y-(float(note.due)-now)/game.rhythm.lookahead()*travel
 		if Rect2(track*lane+4.,y-13.,lane-9.,26.).has_point(point):game.rhythm_press(track,source);return
 	game.rhythm_press(-1,source)
 func _draw() -> void:
@@ -73,10 +73,20 @@ func _draw() -> void:
 	draw_string(font,Vector2(12,43),"本段 %d / %d"%[combined.earned,combined.possible],HORIZONTAL_ALIGNMENT_LEFT,size.x*.52,roundi(12.*text_scale),UI.MUTED)
 	draw_string(font,Vector2(size.x*.53,43),"弹量 %.1f%%"%(ratio*100.),HORIZONTAL_ALIGNMENT_LEFT,size.x*.45,roundi(14.*text_scale),UI.TEXT)
 	draw_rect(Rect2(12,51,size.x-24.,4.),Color(UI.TEXT,.1))
-	draw_rect(Rect2(12,51,(size.x-24.)*ratio,4.),UI.GOLD)
+	draw_rect(Rect2(12,51,(size.x-24.)*clampf(ratio/1.2,0.,1.),4.),UI.GOLD)
 	var counts=game.rhythm.grade_counts
 	var stats="P %d   E %d   G %d   M %d"%[counts.perfect,counts.excellent,counts.general,counts.miss]
 	draw_string(font,Vector2(12,76),stats,HORIZONTAL_ALIGNMENT_LEFT,size.x-24.,roundi(12.*text_scale),UI.MUTED)
+	var reward=game.rhythm.rewards;var bonus=reward.bonus(now)
+	var perfect_line="%d PERFECT链 · 奖励 +%d%%"%[reward.perfect_chain,roundi(bonus*100.)]
+	draw_string(font,Vector2(12,98),perfect_line,HORIZONTAL_ALIGNMENT_LEFT,size.x-24.,roundi(12.*text_scale),UI.GOLD if bonus>0. else UI.TEXT)
+	var next=reward.next_threshold()
+	var hint="再%d次Perfect升档"%maxi(0,next-reward.perfect_chain) if next>0 else "MAX · 满分时120%弹量"
+	if now<reward.linger_until:hint="余韵 %.1fs · 不与新链叠加"%(reward.linger_until-now)
+	draw_string(font,Vector2(12,114),hint,HORIZONTAL_ALIGNMENT_LEFT,size.x-24.,roundi(11.*text_scale),UI.MUTED)
+	var tick=12.+(size.x-24.)/1.2
+	draw_line(Vector2(tick,48),Vector2(tick,58),Color(UI.TEXT,.55),1.)
+	tooltip_text="上一段基础 %.1f%% × 连击奖励 %.0f%% = 当前弹量 %.1f%%\nPerfect链与普通Combo独立；单弹伤害不随奖励提高。"%[game.rhythm.score.base_ratio*100.,(1.+bonus)*100.,ratio*100.]
 	draw_line(Vector2(10,TOP-5.),Vector2(size.x-10.,TOP-5.),Color(UI.LINE,.7),1.)
 	for track in range(RHYTHM.LANES):
 		var x=track*lane
@@ -84,7 +94,7 @@ func _draw() -> void:
 		draw_rect(Rect2(x+2.,TOP,lane-4.,key_y-TOP),Color(1,1,1,.018 if track%2==0 else .035))
 		if track>0:draw_line(Vector2(x,TOP),Vector2(x,key_y),Color(UI.LINE,.35),1.)
 		if game.rhythm.held(track):draw_rect(Rect2(x+2.,judge_y-42.,lane-4.,42.),Color(UI.GOLD,.07))
-		draw_rect(Rect2(x+2.,judge_y-travel*RHYTHM.WINDOW/RHYTHM.LOOKAHEAD,lane-4.,travel*RHYTHM.WINDOW/RHYTHM.LOOKAHEAD*2.),Color(UI.GOLD,.09))
+		draw_rect(Rect2(x+2.,judge_y-travel*RHYTHM.WINDOW/game.rhythm.lookahead(),lane-4.,travel*RHYTHM.WINDOW/game.rhythm.lookahead()*2.),Color(UI.GOLD,.09))
 		draw_line(Vector2(x+3.,judge_y),Vector2(x+lane-3.,judge_y),Color(UI.GOLD,.95),2.5)
 		draw_style_box(key_styles[1 if game.rhythm.held(track) else 0],Rect2(x+5.,key_y,lane-10.,key_height))
 		var key=game.binding_name(ACTIONS[track])
@@ -96,8 +106,8 @@ func _draw() -> void:
 	var clip=Rect2(4,TOP,size.x-8.,key_y-TOP-3.)
 	for note in game.rhythm.notes:
 		var delta=float(note.due)-now;var tail_delta=float(note.end)-now
-		if delta>RHYTHM.LOOKAHEAD or tail_delta<-.14:continue
-		var y=judge_y-delta/RHYTHM.LOOKAHEAD*travel;var tail_y=judge_y-tail_delta/RHYTHM.LOOKAHEAD*travel
+		if delta>game.rhythm.lookahead() or tail_delta<-.14:continue
+		var y=judge_y-delta/game.rhythm.lookahead()*travel;var tail_y=judge_y-tail_delta/game.rhythm.lookahead()*travel
 		var index=1 if str(note.status) in ["holding","armed","fired"] else (2 if str(note.status)=="miss" else 0)
 		var color=[UI.TEXT,UI.GOLD,UI.ERROR][index]
 		if bool(note.get("accent",false)) and y>=TOP and y<key_y:draw_line(Vector2(4.,y),Vector2(size.x-4.,y),Color(UI.MUTED,.16),1.)
@@ -146,3 +156,14 @@ func _draw() -> void:
 				for spark in range(5):
 					var axis=Vector2.from_angle(-PI+spark*PI*.25);var at=center+axis*(7.+age*28.)+Vector2(0,age*age*9.)
 					draw_line(at,at+axis*4.,Color(color,(1.-age)*.7),1.4,true)
+
+	if now>=reward.notice_at and now-reward.notice_at<2.4 and not reward.notice.is_empty():
+		var toast_y=60.
+		var accent=UI.ERROR if reward.notice_kind=="break" else UI.GOLD
+		var style=UI.surface(Color(UI.INK,1.),Color(accent,.7),8,0)
+		draw_style_box(style,Rect2(5,toast_y,size.x-10.,59.))
+		var toast_size=14
+		while toast_size>11 and font.get_string_size(reward.notice,HORIZONTAL_ALIGNMENT_LEFT,-1,toast_size).x>size.x-24.:toast_size-=1
+		draw_string(font,Vector2(12,toast_y+22.),reward.notice,HORIZONTAL_ALIGNMENT_LEFT,size.x-24.,toast_size,accent)
+		var detail="当前弹量 %.1f%% · 满分基础100%%，连击最高120%%"%(game.rhythm.score.ratio*100.)
+		draw_string(font,Vector2(12,toast_y+42.),detail,HORIZONTAL_ALIGNMENT_LEFT,size.x-24.,11,UI.MUTED)

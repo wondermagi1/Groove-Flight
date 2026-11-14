@@ -16,6 +16,8 @@ var frame: PanelContainer
 var heading: Label
 var subtitle: Label
 var footer_hint: Label
+var talent_buttons: Dictionary={}
+var talent_caption: Label
 
 class FleetCard extends Button:
 	var category: String = "ship"
@@ -80,10 +82,12 @@ func _ready() -> void:
 	add_child(frame)
 	content = VBoxContainer.new()
 	content.add_theme_constant_override("separation", 14)
-	frame.add_child(content)
+	var shell=VBoxContainer.new();shell.add_theme_constant_override("separation",12);frame.add_child(shell)
+	var scroll=ScrollContainer.new();scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED;scroll.size_flags_vertical=Control.SIZE_EXPAND_FILL;shell.add_child(scroll)
+	content.size_flags_horizontal=Control.SIZE_EXPAND_FILL;scroll.add_child(content)
 	heading = _label("机库  /  FLIGHT DECK", 32, UI.TEXT)
 	content.add_child(heading)
-	subtitle = _label("选择舰体与驾驶员。出战后跟随下落琴块击键，成功才发射。", 19, UI.MUTED)
+	subtitle = _label("驾驶员：音游辅助与Perfect奖励　／　战机＋天赋：生存、机动与武器数值。", 19, UI.MUTED)
 	content.add_child(subtitle)
 	var groups := HBoxContainer.new()
 	groups.add_theme_constant_override("separation", 26)
@@ -133,16 +137,23 @@ func _ready() -> void:
 	pilot_description = _label("", 18, Color("8ea3bb"))
 	pilot_description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	pilot_info.add_child(pilot_description)
+	talent_caption=_label("",16,UI.GOLD);talent_caption.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;content.add_child(talent_caption)
+	var talent_grid=GridContainer.new();talent_grid.columns=3;talent_grid.add_theme_constant_override("h_separation",8);talent_grid.add_theme_constant_override("v_separation",8);content.add_child(talent_grid)
+	for talent in game.TALENTS.ROWS:
+		var button=Button.new();button.name="Talent_"+str(talent.id);button.custom_minimum_size=Vector2(0,46);button.size_flags_horizontal=Control.SIZE_EXPAND_FILL;button.add_theme_font_size_override("font_size",14);UI.button(button,UI.GOLD,6)
+		button.pressed.connect(_choose_talent.bind(str(talent.id)));talent_grid.add_child(button);talent_buttons[str(talent.id)]=button
+	var reset=Button.new();reset.name="ResetTalents";reset.text="免费重置天赋";reset.tooltip_text="清空所有舰装天赋，返还点数；下次出战生效";reset.custom_minimum_size=Vector2(170,46);UI.button(reset,UI.MUTED,6);reset.pressed.connect(func():game.reset_talents();_refresh_selection())
 	var space := Control.new()
 	space.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	content.add_child(space)
 	var footer := HBoxContainer.new()
 	footer.add_theme_constant_override("separation", 24)
-	content.add_child(footer)
+	shell.add_child(footer)
 	footer_hint = _label("配置自动保存\n返回都市后，前往漩涡按 F 出发。", 17, Color("768ba4"))
 	footer_hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	footer_hint.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	footer.add_child(footer_hint)
+	footer.add_child(reset)
 	confirm_button = Button.new()
 	confirm_button.text = "确认配置 · 返回都市"
 	confirm_button.custom_minimum_size = Vector2(302, 54)
@@ -178,7 +189,7 @@ func _layout() -> void:
 	content.add_theme_constant_override("separation", 11 if compact else 20)
 	heading.add_theme_font_size_override("font_size", 28 if compact else 38)
 	subtitle.add_theme_font_size_override("font_size", 17 if compact else 21)
-	var card_height: float = 208.0 if compact else 314.0
+	var card_height: float = 155.0 if compact else 230.0
 	for card in ship_cards + pilot_cards:
 		card.custom_minimum_size = Vector2(0.0, card_height)
 		card.compact = compact
@@ -206,13 +217,22 @@ func _refresh_selection() -> void:
 		card.add_theme_stylebox_override("pressed", _box(Color("2b4d5a"), accent, 8))
 		card.add_theme_stylebox_override("focus", _box(Color.TRANSPARENT, Color(accent, 0.9), 8))
 		card.queue_redraw()
-	var ship: Dictionary = FLEET.ship(ship_id)
+	var ship: Dictionary = game.flight_craft()
 	var pilot: Dictionary = FLEET.pilot(pilot_id)
 	ship_stats.text = "生命 %d   /   移速 %d   /   伤害 %d%%\n冲刺冷却 %.2f 秒" % [ship.health, int(ship.speed), roundi(ship.damage_scale * 100.0), ship.dash_cooldown]
 	ship_description.text = ship.detail
 	pilot_name.text = "%s  ·  %s" % [pilot.name, pilot.tag]
 	pilot_name.add_theme_color_override("font_color", pilot.color)
 	pilot_description.text = pilot.detail
+	var selected=game.TALENTS.clean(game.talent_selection,game.talent_points())
+	talent_caption.text="03  舰装天赋 · 剩余 %d / %d点 · 初始2点，每颗星球首次通关+1，最多6点"%[game.talent_points()-selected.size(),game.talent_points()]
+	for row in game.TALENTS.ROWS:
+		var button: Button=talent_buttons[str(row.id)];var learned=str(row.id) in selected
+		var prerequisite=str(row.requires).is_empty() or str(row.requires) in selected
+		button.text=("已装 · " if learned else ("需前置 · " if not prerequisite else "+ "))+str(row.name)+"\n"+str(row.detail)
+		button.disabled=learned or not prerequisite or selected.size()>=game.talent_points()
+		button.add_theme_color_override("font_disabled_color",UI.GOLD if learned else UI.MUTED)
+		button.tooltip_text="已装配，下次出战生效；可以免费重置" if learned else str(row.detail)+("；需先解锁："+str(row.requires) if not prerequisite else "；消耗1天赋点")
 
 func _select_ship(id: String) -> void:
 	if game == null:
@@ -233,3 +253,6 @@ func _select_pilot(id: String) -> void:
 func _confirm() -> void:
 	if game != null:
 		game.close_hangar()
+
+func _choose_talent(id: String) -> void:
+	if game.choose_talent(id):_refresh_selection()

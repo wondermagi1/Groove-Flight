@@ -7,7 +7,9 @@ const EXCELLENT=.075
 const PERFECT=.035
 const LOOKAHEAD=2.2
 const LANES=3
+const REWARDS=preload("res://scripts/rhythm_rewards.gd")
 var score=SCORE.new()
+var rewards=REWARDS.new()
 var salvos: Array[Dictionary]=[]
 var song_cursor: float=-1.
 var last_grade: String=""
@@ -36,7 +38,7 @@ var result_track: int=-1
 func reset(now: float=0.,new_run: bool=false) -> void:
 	notes.clear();salvos.clear();song_cursor=-1.;down.clear();cutoff=now-.00001 if new_run else now+.00001
 	last_serial=maxi(-1,floori(now/STEP)-1)
-	if new_run:grade_counts={"perfect":0,"excellent":0,"general":0,"miss":0};combo=0;best_combo=0;hits=0;misses=0;wrong=0;perfects=0;judge_serial=0;judged_lanes.clear();score.reset()
+	if new_run:rewards.reset();grade_counts={"perfect":0,"excellent":0,"general":0,"miss":0};combo=0;best_combo=0;hits=0;misses=0;wrong=0;perfects=0;judge_serial=0;judged_lanes.clear();score.reset()
 	last_result="三键合计 · 下一段弹量";result_at=-10.;result_track=-1
 	last_delta=0.;last_success=false;last_grade="";last_points=0
 func forecast(loadout,now: float,song_time: float=-1.) -> void:
@@ -45,7 +47,7 @@ func forecast(loadout,now: float,song_time: float=-1.) -> void:
 		for note in notes+salvos:
 			if note.has("song_due") and str(note.status) in ["pending","holding","armed"]:
 				note.due=float(note.song_due)+offset;note.end=float(note.due)+float(note.hold)
-	var end_serial=floori((now+LOOKAHEAD)/STEP)
+	var end_serial=floori((now+lookahead())/STEP)
 	last_serial=maxi(last_serial,floori((now-WINDOW)/STEP)-1)
 	while last_serial<end_serial:
 		last_serial+=1
@@ -75,7 +77,7 @@ func forecast(loadout,now: float,song_time: float=-1.) -> void:
 		if song_cursor<0.:song_cursor=maxf(0.,song_now-WINDOW)
 		while true:
 			var cue=CHART.next_cue(song_cursor,chart_id);var due=float(cue.song_due)+offset
-			if due>now+LOOKAHEAD:break
+			if due>now+lookahead():break
 			song_cursor=float(cue.song_due)+.0001
 			if due<cutoff:continue
 			var lane=int(cue.lane);var hold=float(cue.hold)
@@ -85,6 +87,10 @@ func forecast(loadout,now: float,song_time: float=-1.) -> void:
 		if now-float(note.end)>=2. and str(note.status) in ["pending","holding","armed"]:_fail(note,"超时",now)
 	notes=notes.filter(func(n):return now-float(n.end)<2.)
 	notes.sort_custom(func(a,b):return float(a.due)<float(b.due))
+func configure_pilot(id: String) -> void:rewards.pilot_id=id
+func lookahead() -> float:return float(rewards.profile().get("lookahead",LOOKAHEAD))
+func tail_window(note: Dictionary) -> float:return float(rewards.profile().get("tail_window",WINDOW)) if float(note.hold)>0. else WINDOW
+func sync_reward(now: float) -> void:score.reward_bonus=rewards.bonus(now)
 func held(lane: int) -> bool:
 	return lane in down.values()
 func resync_loadout(now: float) -> void:
@@ -94,13 +100,13 @@ func _fail(note: Dictionary,label: String,now: float) -> void:
 	note.status="miss";misses+=1;grade_counts.miss+=1;last_grade="miss";last_points=0;combo=0;last_result="MISS · "+label+" · 0";result_at=now;result_track=int(note.track)
 	judge_serial+=1;judged_lanes=note.required.duplicate()
 	last_success=false;last_delta=0.
-	_record_score(note,0)
+	_record_score(note,0);rewards.judge("miss",0,now);sync_reward(now)
 func _record_score(note: Dictionary,points: int) -> void:
 	if bool(note.get("scored",false)):return
 	note.scored=true
 	# Assign boundary notes by the END of their valid judgement, preserving the
 	# full140ms late/tail grace without changing an already active fire ratio.
-	score.record(int(note.track),float(note.end)+WINDOW,points)
+	score.record(int(note.track),float(note.end)+tail_window(note),points)
 func advance(now: float) -> Array[Dictionary]:
 	var ready: Array[Dictionary]=[]
 	for note in notes:
@@ -110,17 +116,19 @@ func advance(now: float) -> Array[Dictionary]:
 		if str(note.status)=="armed" and now+.000001>=float(note.end):
 			note.status="fired";hits+=1;combo+=1;best_combo=maxi(best_combo,combo)
 			var error=absf(float(note.delta))
-			last_grade="perfect" if error<=PERFECT+.000001 else ("excellent" if error<=EXCELLENT+.000001 else "general")
+			var perfect_window=float(rewards.profile().get("hold_perfect",PERFECT)) if float(note.hold)>0. else PERFECT
+			var excellent_window=float(rewards.profile().get("hold_excellent",EXCELLENT)) if float(note.hold)>0. else EXCELLENT
+			last_grade="perfect" if error<=perfect_window+.000001 else ("excellent" if error<=excellent_window+.000001 else "general")
 			last_points={"perfect":SCORE.PERFECT_POINTS,"excellent":SCORE.EXCELLENT_POINTS,"general":SCORE.GENERAL_POINTS}[last_grade]
 			last_result={"perfect":"PERFECT 完美","excellent":"EXCELLENT 优秀","general":"GOOD 一般"}[last_grade]+" +"+str(last_points)
 			grade_counts[last_grade]+=1
 			if last_grade=="perfect":perfects+=1
-			_record_score(note,last_points)
+			_record_score(note,last_points);rewards.judge(last_grade,combo,now)
 			judge_serial+=1;judged_lanes=note.required.duplicate()
 			last_success=true;last_delta=float(note.delta)
 			result_at=now;result_track=int(note.track)
 		elif str(note.status)=="pending" and now>float(note.due)+WINDOW+.000001:_fail(note,"漏按",now)
-	score.advance(now)
+	sync_reward(now);score.advance(now)
 	for note in (salvos if music_chart else notes):
 		if bool(note.get("emitted",false)) or now+.000001<float(note.end):continue
 		note.emitted=true
@@ -130,7 +138,7 @@ func advance(now: float) -> Array[Dictionary]:
 			event.rhythm_track=int(note.track);event.performed_at=now;event.rhythm_kind=note.kind;ready.append(event)
 	return ready
 func press(lane: int,now: float,source: String="") -> bool:
-	if lane<0 or lane>=LANES:wrong+=1;combo=0;return false
+	if lane<0 or lane>=LANES:wrong+=1;combo=0;rewards.judge("wrong",0,now);sync_reward(now);return false
 	if not source.is_empty():
 		if down.has(source):return false
 		down[source]=lane
@@ -156,14 +164,14 @@ func press(lane: int,now: float,source: String="") -> bool:
 		if delta<=WINDOW+.000001 and delta<distance:target=note;distance=delta
 	wrong+=1;combo=0
 	if not target.is_empty():_fail(target,"重复击键",now)
-	else:last_grade="";last_result="空击 · 此键无琴块";result_at=now;result_track=lane
+	else:last_grade="";last_result="空击 · 此键无琴块";result_at=now;result_track=lane;rewards.judge("wrong",0,now);sync_reward(now)
 	return false
 func release(lane: int,now: float,source: String="",allow_success: bool=true) -> void:
 	down.erase(source)
 	if held(lane):return
 	for note in notes:
 		if str(note.status)=="holding" and lane in note.required:
-			if not allow_success or now<float(note.end)-WINDOW-.000001:_fail(note,"长按中断",now)
+			if not allow_success or now<float(note.end)-tail_window(note)-.000001:_fail(note,"长按中断",now)
 			else:
 				note.status="armed"
 				if absf(now-float(note.end))>absf(float(note.delta)):note.delta=now-float(note.end)

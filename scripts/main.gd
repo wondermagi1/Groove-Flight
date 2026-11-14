@@ -3,6 +3,8 @@ extends Node2D
 const C=preload("res://scripts/arsenal_catalog.gd")
 const LOADOUT=preload("res://scripts/arsenal_loadout.gd")
 const FLEET=preload("res://scripts/fleet_catalog.gd")
+const TALENTS=preload("res://scripts/flight_talents.gd")
+var talent_selection: Array[String]=[]
 const ART=preload("res://scripts/fleet_art.gd")
 const WEAPON_CODEX=preload("res://scripts/weapon_codex.gd")
 const MACHINE_ART=preload("res://scripts/planet_machine_art.gd")
@@ -267,6 +269,17 @@ func field() -> Rect2:
 func visible_world() -> Rect2:
 	var size_value=get_viewport_rect().size/camera.zoom
 	return Rect2(camera.get_screen_center_position()-size_value*.5,size_value)
+func talent_points() -> int:return TALENTS.points(planet_records)
+func flight_craft() -> Dictionary:return TALENTS.apply(FLEET.ship(selected_ship),talent_selection,talent_points())
+func choose_talent(id: String) -> bool:
+	if state!="hangar" or id in talent_selection:return false
+	var proposal=talent_selection.duplicate();proposal.append(id)
+	var valid=TALENTS.clean(proposal,talent_points())
+	if id not in valid:return false
+	talent_selection=valid;save_settings();return true
+func reset_talents() -> void:
+	if state!="hangar":return
+	talent_selection.clear();save_settings()
 func wave_count() -> int: return wave_rows.size()
 func wave_profile() -> Dictionary: return wave_rows[clampi(wave-1,0,wave_rows.size()-1)]
 func load_settings() -> void:
@@ -279,6 +292,7 @@ func load_settings() -> void:
 	selected_ship=str(FLEET.ship(str(config.get_value("fleet","ship","hex"))).id)
 	selected_pilot=str(FLEET.pilot(str(config.get_value("fleet","pilot","echo"))).id)
 	restore_planet_progress(config)
+	talent_selection=TALENTS.clean(config.get_value("fleet","talents",[]),talent_points())
 
 func planet_record(id: String) -> Dictionary:
 	var result={"attempts":0,"clears":0,"best_score":0,"best_time":0.,"hard_attempts":0,"hard_clears":0,"hard_best_score":0,"hard_best_time":0.,"last_result":""}
@@ -324,6 +338,7 @@ func save_settings() -> void:
 	AUDIO.store(settings,config)
 	config.set_value("score","best",best)
 	config.set_value("fleet","ship",selected_ship); config.set_value("fleet","pilot",selected_pilot)
+	config.set_value("fleet","talents",talent_selection.duplicate())
 	store_planet_progress(config)
 	config.save("user://settings.cfg")
 func apply_audio(update_levels: bool=true) -> void:
@@ -464,8 +479,9 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	rhythm.offset_seconds=float(settings.get("rhythm_offset_ms",0.))*.001
 	loadout.set_doctrine(active_doctrine)
 	loadout.reset(); loadout.attribute_grants["ballistic"]=10.; music_focus_until=-1.; music_duck_db=0.; enemies.clear(); by_id.clear(); spatial.clear(); bullets.clear(); enemy_bullets.clear(); pickups.clear(); warnings.clear()
-	var craft=FLEET.ship(selected_ship); selected_ship=str(craft.id)
+	var craft=flight_craft(); selected_ship=str(craft.id)
 	selected_pilot=str(FLEET.pilot(selected_pilot).id)
+	rhythm.configure_pilot(selected_pilot)
 	var planet_number=int(PLANETS.planet(active_planet).index)
 	loadout.recorded_starter_quality=0 if planet_number<3 else (1 if planet_number<6 else 2)
 	loadout.set_fleet(craft,FLEET.pilot(selected_pilot)); loadout.set_starters(craft.start_modules)
@@ -1003,8 +1019,6 @@ func _physics_process(delta: float) -> void:
 	if dash_left>0:
 		dash_left-=delta; player+=dash_dir*1450*delta
 		fx.burst(player,Color("d5f9ff"),2,30)
-		if dash_left<=0 and selected_pilot=="volt":
-			pilot_amp_until=music.timeline+2.; fx.ring(player,Color("ffc173"),85,.25)
 	else: player+=input*move_speed*(1.+float(stats_snapshot.get("move_percent",0)))*delta
 	player=player.clamp(field().position+Vector2.ONE*18,field().end-Vector2.ONE*18)
 	flight_trail_clock=maxf(0.,flight_trail_clock-delta)
@@ -1138,11 +1152,6 @@ func on_step(index: int,serial: int,deadline: float) -> void:
 	if free_music_run: return
 	if posmod(serial,16)==0:
 		health=minf(float(stats_snapshot.max_health),health+float(event_snapshot.get("heal_bar",0)))
-		if selected_pilot=="rime" and posmod(serial,128)==0:
-			shield_points=minf(3.,shield_points+1.)
-			shield_until=music.timeline+2.25
-			fx.shield(player,FLEET.ship(selected_ship).color,86.)
-			fx.ring(player,Color("92f4de"),72.,.26)
 	if rhythm_required():rhythm_tick()
 	else:
 		for trigger in loadout.advance_step(index,serial):
@@ -1348,7 +1357,6 @@ func nearest(at: Vector2,exclude: Array=[]) -> Dictionary:
 
 func full_salvo_count(trigger: Dictionary) -> int:
 	var count=int(trigger.get("count",1))
-	if selected_pilot=="volt" and music.timeline<pilot_amp_until:count+=1
 	if music.timeline<overload_until:count+=2
 	return clampi(count,1,C.GROWTH.count_limit(C.item(str(trigger.kind))))
 func fire_weapon(trigger: Dictionary) -> void:
@@ -1379,8 +1387,6 @@ func fire_weapon(trigger: Dictionary) -> void:
 	var count=int(trigger.count) if bool(trigger.get("rhythm_count_scaled",false)) else full_salvo_count(trigger)
 	var kind=str(trigger.kind); var family=trigger_family
 	if prism_cross: origin=EMISSION.prism_origin(player,motion)
-	if selected_pilot=="volt" and music.timeline<pilot_amp_until: damage*=1.25
-	if selected_pilot=="nova" and posmod(floori(music.timeline/(.25 if free_music_run else LOADOUT.SEQUENCE_STEP_SECONDS)),8)==0: damage*=1.20
 	if music.timeline<overload_until: damage*=1.75
 	count=clampi(count,1,C.GROWTH.count_limit(C.item(kind)))
 	var context=trigger.duplicate(true)
@@ -1714,13 +1720,6 @@ func collect_pickup(item: Dictionary,with_sound: bool=true) -> void:
 	picked+=amount
 	if item.get("heal",false): health=minf(health+1,loadout.max_health)
 	health=minf(float(stats_snapshot.get("max_health",10)),health+float(event_snapshot.get("heal_pickup",0))*amount)
-	if selected_pilot=="mender":
-		pilot_heal_progress+=amount
-		var repairs=int(pilot_heal_progress/16)
-		pilot_heal_progress=posmod(pilot_heal_progress,16)
-		if repairs>0:
-			health=minf(health+repairs,loadout.max_health)
-			if with_sound: fx.ring(player,Color("b6a5fa"),62,.35)
 	if with_sound: sound("pickup",-15,1.+(picked%3)*.025)
 func _grant_player_guard(duration: float) -> void:
 	var was_active=music.timeline<player_guard_until
@@ -1998,7 +1997,7 @@ func dispatch_trigger(trigger: Dictionary) -> void:
 	if rhythm_required() and bool(trigger.get("rhythm_scored_auto",false)):
 		var track=clampi(int(trigger.rhythm_track),0,2)
 		var full=full_salvo_count(trigger)
-		var scaled=rhythm.score.projectile_count(int(trigger.uid),track,full)
+		var scaled=rhythm.score.projectile_count(int(trigger.uid),track,full,C.GROWTH.count_limit(C.item(str(trigger.kind))))
 		if scaled<=0:return
 		trigger=trigger.duplicate(true);trigger.count=scaled;trigger.rhythm_count_scaled=true
 		trigger.rhythm_full_count=full;trigger.rhythm_ratio=rhythm.score.ratio

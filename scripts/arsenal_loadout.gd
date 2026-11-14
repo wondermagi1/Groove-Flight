@@ -102,11 +102,11 @@ func configure_live_rules() -> void:
 	slots.resize(TRACKS*STEPS); slots.fill(-1)
 	set_starters([])
 
-func set_fleet(craft: Dictionary,pilot: Dictionary) -> void:
+func set_fleet(craft: Dictionary,_pilot: Dictionary) -> void:
 	# Preserve inventory. A new run explicitly calls set_starters after this.
 	_base_health=maxi(1,int(craft.get("health",10)))
 	damage_scale=maxf(.01,float(craft.get("damage_scale",1.)))
-	echo_repeat=str(pilot.get("id",""))=="echo" or str(pilot.get("passive",""))=="echo_repeat"
+	echo_repeat=false
 	_fleet_stats.clear()
 	for key in STAT_KEYS:
 		if key in ["max_health","extra_projectiles"]: continue
@@ -444,17 +444,6 @@ func schedule(serial: int, local_beats: Dictionary={}) -> Array[Dictionary]:
 			result.append(event)
 		else:
 			result.append({"uid":int(module.uid),"kind":str(row.id),"voice":str(row.get("voice","")),"pitch":index,"family":"support","category":str(row.category),"name":str(row.name),"attr":str(row.attr),"level":int(module.level),"width":int(row.width),"slot":at,"damage":0.,"count":0,"extra":0,"pierce":0,"speed":0.,"life":0.,"spread":0.,"explosion":0.,"homing":0.,"bounces":0,"chain_count":0,"chord":false,"repeat":0,"repeat_index":0,"angle":0.,"charge":1,"eligible":true,"rules":row.get("rules",[]).duplicate(true),"events":_events_for(int(module.uid),serial,sources)})
-	if echo_repeat and index==7 and not first.is_empty() and bool(first.eligible):
-		var echo=first.duplicate(true)
-		echo.damage=float(echo.damage)*.5
-		echo.cadence_scale=.5
-		echo.repeat=0
-		echo.repeat_index=0
-		echo.pilot="echo"
-		echo.source_slot=first.slot
-		echo.slot=7
-		echo.track=-1
-		result.append(echo)
 	for i in range(result.size()):
 		result[i]=CLOCK.stamp(result[i],serial,SEQUENCE_STEP_SECONDS,SEQUENCE_BPM,"arsenal",SEQUENCE_LOOP_SECONDS)
 	return result

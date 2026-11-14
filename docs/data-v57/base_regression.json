@@ -1,0 +1,453 @@
+{
+  "actual_salvos": [
+    {
+      "full_count": 3,
+      "kind": "pulse",
+      "ten_salvos": 12,
+      "track": 0
+    },
+    {
+      "full_count": 3,
+      "kind": "pulse",
+      "ten_salvos": 12,
+      "track": 1
+    },
+    {
+      "full_count": 3,
+      "kind": "pulse",
+      "ten_salvos": 12,
+      "track": 2
+    },
+    {
+      "full_count": 5,
+      "kind": "scatter",
+      "ten_salvos": 20,
+      "track": 0
+    },
+    {
+      "full_count": 5,
+      "kind": "scatter",
+      "ten_salvos": 20,
+      "track": 1
+    },
+    {
+      "full_count": 5,
+      "kind": "scatter",
+      "ten_salvos": 20,
+      "track": 2
+    },
+    {
+      "full_count": 3,
+      "kind": "beam",
+      "ten_salvos": 12,
+      "track": 0
+    },
+    {
+      "full_count": 3,
+      "kind": "beam",
+      "ten_salvos": 12,
+      "track": 1
+    },
+    {
+      "full_count": 3,
+      "kind": "beam",
+      "ten_salvos": 12,
+      "track": 2
+    },
+    {
+      "full_count": 3,
+      "kind": "missile",
+      "ten_salvos": 12,
+      "track": 0
+    },
+    {
+      "full_count": 3,
+      "kind": "missile",
+      "ten_salvos": 12,
+      "track": 1
+    },
+    {
+      "full_count": 3,
+      "kind": "missile",
+      "ten_salvos": 12,
+      "track": 2
+    },
+    {
+      "full_count": 12,
+      "kind": "nova",
+      "ten_salvos": 48,
+      "track": 0
+    },
+    {
+      "full_count": 12,
+      "kind": "nova",
+      "ten_salvos": 48,
+      "track": 1
+    },
+    {
+      "full_count": 12,
+      "kind": "nova",
+      "ten_salvos": 48,
+      "track": 2
+    },
+    {
+      "full_count": 3,
+      "kind": "chain",
+      "ten_salvos": 12,
+      "track": 0
+    },
+    {
+      "full_count": 3,
+      "kind": "chain",
+      "ten_salvos": 12,
+      "track": 1
+    },
+    {
+      "full_count": 3,
+      "kind": "chain",
+      "ten_salvos": 12,
+      "track": 2
+    },
+    {
+      "full_count": 3,
+      "kind": "rail",
+      "ten_salvos": 12,
+      "track": 0
+    },
+    {
+      "full_count": 3,
+      "kind": "rail",
+      "ten_salvos": 12,
+      "track": 1
+    },
+    {
+      "full_count": 3,
+      "kind": "rail",
+      "ten_salvos": 12,
+      "track": 2
+    },
+    {
+      "full_count": 3,
+      "kind": "pulse_needle",
+      "ten_salvos": 12,
+      "track": 0
+    },
+    {
+      "full_count": 3,
+      "kind": "pulse_needle",
+      "ten_salvos": 12,
+      "track": 1
+    },
+    {
+      "full_count": 3,
+      "kind": "pulse_needle",
+      "ten_salvos": 12,
+      "track": 2
+    },
+    {
+      "full_count": 16,
+      "kind": "scatter_prism",
+      "ten_salvos": 64,
+      "track": 0
+    },
+    {
+      "full_count": 16,
+      "kind": "scatter_prism",
+      "ten_salvos": 64,
+      "track": 1
+    },
+    {
+      "full_count": 16,
+      "kind": "scatter_prism",
+      "ten_salvos": 64,
+      "track": 2
+    },
+    {
+      "full_count": 6,
+      "kind": "beam_split",
+      "ten_salvos": 24,
+      "track": 0
+    },
+    {
+      "full_count": 6,
+      "kind": "beam_split",
+      "ten_salvos": 24,
+      "track": 1
+    },
+    {
+      "full_count": 6,
+      "kind": "beam_split",
+      "ten_salvos": 24,
+      "track": 2
+    },
+    {
+      "full_count": 8,
+      "kind": "rail_horizon",
+      "ten_salvos": 32,
+      "track": 0
+    },
+    {
+      "full_count": 8,
+      "kind": "rail_horizon",
+      "ten_salvos": 32,
+      "track": 1
+    },
+    {
+      "full_count": 8,
+      "kind": "rail_horizon",
+      "ten_salvos": 32,
+      "track": 2
+    },
+    {
+      "full_count": 7,
+      "kind": "recorded_heavy",
+      "ten_salvos": 28,
+      "track": 0
+    },
+    {
+      "full_count": 7,
+      "kind": "recorded_heavy",
+      "ten_salvos": 28,
+      "track": 1
+    },
+    {
+      "full_count": 7,
+      "kind": "recorded_heavy",
+      "ten_salvos": 28,
+      "track": 2
+    },
+    {
+      "full_count": 52,
+      "kind": "gilded_helix",
+      "ten_salvos": 208,
+      "track": 0
+    },
+    {
+      "full_count": 52,
+      "kind": "gilded_helix",
+      "ten_salvos": 208,
+      "track": 1
+    },
+    {
+      "full_count": 52,
+      "kind": "gilded_helix",
+      "ten_salvos": 208,
+      "track": 2
+    },
+    {
+      "full_count": 70,
+      "kind": "weave_cross",
+      "ten_salvos": 280,
+      "track": 0
+    },
+    {
+      "full_count": 70,
+      "kind": "weave_cross",
+      "ten_salvos": 280,
+      "track": 1
+    },
+    {
+      "full_count": 70,
+      "kind": "weave_cross",
+      "ten_salvos": 280,
+      "track": 2
+    },
+    {
+      "full_count": 20,
+      "kind": "crown_orbit",
+      "ten_salvos": 80,
+      "track": 0
+    },
+    {
+      "full_count": 20,
+      "kind": "crown_orbit",
+      "ten_salvos": 80,
+      "track": 1
+    },
+    {
+      "full_count": 20,
+      "kind": "crown_orbit",
+      "ten_salvos": 80,
+      "track": 2
+    },
+    {
+      "full_count": 26,
+      "kind": "stern_fan",
+      "ten_salvos": 104,
+      "track": 0
+    },
+    {
+      "full_count": 26,
+      "kind": "stern_fan",
+      "ten_salvos": 104,
+      "track": 1
+    },
+    {
+      "full_count": 26,
+      "kind": "stern_fan",
+      "ten_salvos": 104,
+      "track": 2
+    },
+    {
+      "full_count": 20,
+      "kind": "dawn_fan",
+      "ten_salvos": 80,
+      "track": 0
+    },
+    {
+      "full_count": 20,
+      "kind": "dawn_fan",
+      "ten_salvos": 80,
+      "track": 1
+    },
+    {
+      "full_count": 20,
+      "kind": "dawn_fan",
+      "ten_salvos": 80,
+      "track": 2
+    },
+    {
+      "full_count": 28,
+      "kind": "tidal_weave",
+      "ten_salvos": 112,
+      "track": 0
+    },
+    {
+      "full_count": 28,
+      "kind": "tidal_weave",
+      "ten_salvos": 112,
+      "track": 1
+    },
+    {
+      "full_count": 28,
+      "kind": "tidal_weave",
+      "ten_salvos": 112,
+      "track": 2
+    },
+    {
+      "full_count": 34,
+      "kind": "firefly_rain",
+      "ten_salvos": 136,
+      "track": 0
+    },
+    {
+      "full_count": 34,
+      "kind": "firefly_rain",
+      "ten_salvos": 136,
+      "track": 1
+    },
+    {
+      "full_count": 34,
+      "kind": "firefly_rain",
+      "ten_salvos": 136,
+      "track": 2
+    },
+    {
+      "full_count": 100,
+      "kind": "kaleidoscope",
+      "ten_salvos": 400,
+      "track": 0
+    },
+    {
+      "full_count": 100,
+      "kind": "kaleidoscope",
+      "ten_salvos": 400,
+      "track": 1
+    },
+    {
+      "full_count": 100,
+      "kind": "kaleidoscope",
+      "ten_salvos": 400,
+      "track": 2
+    },
+    {
+      "full_count": 4,
+      "kind": "arc_bough",
+      "ten_salvos": 16,
+      "track": 0
+    },
+    {
+      "full_count": 4,
+      "kind": "arc_bough",
+      "ten_salvos": 16,
+      "track": 1
+    },
+    {
+      "full_count": 4,
+      "kind": "arc_bough",
+      "ten_salvos": 16,
+      "track": 2
+    },
+    {
+      "full_count": 8,
+      "kind": "chain_loop",
+      "ten_salvos": 32,
+      "track": 0
+    },
+    {
+      "full_count": 8,
+      "kind": "chain_loop",
+      "ten_salvos": 32,
+      "track": 1
+    },
+    {
+      "full_count": 8,
+      "kind": "chain_loop",
+      "ten_salvos": 32,
+      "track": 2
+    },
+    {
+      "full_count": 5,
+      "kind": "laser_fan",
+      "ten_salvos": 20,
+      "track": 0
+    },
+    {
+      "full_count": 5,
+      "kind": "laser_fan",
+      "ten_salvos": 20,
+      "track": 1
+    },
+    {
+      "full_count": 5,
+      "kind": "laser_fan",
+      "ten_salvos": 20,
+      "track": 2
+    },
+    {
+      "full_count": 16,
+      "kind": "laser_crown",
+      "ten_salvos": 64,
+      "track": 0
+    },
+    {
+      "full_count": 16,
+      "kind": "laser_crown",
+      "ten_salvos": 64,
+      "track": 1
+    },
+    {
+      "full_count": 16,
+      "kind": "laser_crown",
+      "ten_salvos": 64,
+      "track": 2
+    }
+  ],
+  "charts": {
+    "earth": 36,
+    "jupiter": 24,
+    "mars": 41,
+    "mercury": 38,
+    "neptune": 22,
+    "saturn": 38,
+    "uranus": 32,
+    "venus": 22
+  },
+  "checks": 3919,
+  "failures": [],
+  "three_window_salvos": [
+    4,
+    0,
+    4
+  ]
+}
