@@ -5,11 +5,10 @@ const MASTER="GrooveFlight_Master"
 const MUSIC="GrooveFlight_Music"
 const WEAPONS="GrooveFlight_Weapons"
 const DEFAULTS={"master":.75,"music":.75,"weapons":.255,"kill":.55,"pickup":.55,"shield":.55,"combat":.55,"ui":.55,"alerts":.55}
-const COMBAT_PRESET={"music":.38,"weapons":.68,"kill":.72,"pickup":.45,"shield":.60,"combat":.28,"ui":.22,"alerts":.52}
+const COMBAT_PRESET={"music":.75,"weapons":0.,"kill":.35,"pickup":.32,"shield":.50,"combat":.20,"ui":.22,"alerts":.42}
 const CONTROLS=[
 	["master","总音量","控制所有游戏声音"],
 	["music","背景音乐","菜单与关卡背景音乐"],
-	["weapons","武器声音","战斗乐器、图鉴试听、商店试射与自由作曲"],
 	["kill","击杀鼓点","击败敌人后的低沉鼓声与连续鼓点"],
 	["pickup","道具与拾取","拾取金币、补给与掉落物的清脆声音"],
 	["shield","受击与护盾","我方受击、碰撞和护盾反馈"],
@@ -51,5 +50,5 @@ static func apply(settings: Dictionary) -> void:
 	ensure_buses(); normalize(settings)
 	for key in DEFAULTS:
 		var index=AudioServer.get_bus_index(BUSES[key]); var gain=float(settings[key])
-		AudioServer.set_bus_mute(index,gain<=0.)
+		AudioServer.set_bus_mute(index,key=="weapons" or gain<=0.)
 		AudioServer.set_bus_volume_db(index,linear_to_db(maxf(.0001,gain)))

@@ -234,7 +234,7 @@ func _refresh_selection() -> void:
 	_detail("最终旗舰  /  "+str(row.bossname),18,row.color)
 	_detail(str(row.hint),18,Color("b9cfdf"))
 	_detail("战前选择：实弹流 / 激光流 / 闪电链流",17,Color("8fb7c5"))
-	_detail("确认星球后选择流派；本局仅出现该流派武器、适用改装及通用生存道具。",16,Color("89a9c0"))
+	_detail("选择星球与歌曲后直接出击。跟随三键谱面，成绩统一驱动所有武器弹量。",16,Color("89a9c0"))
 	var clears=int(record.get("clears",0)); var attempts=int(record.get("attempts",0))
 	if clears>0:
 		_detail("✓ 航线已突破  %d 次"%clears,19,Color("9de3b7"))
@@ -243,7 +243,7 @@ func _refresh_selection() -> void:
 	if int(record.get("hard_clears",0))>0:
 		_detail("棱镜灾变突破 %d 次 · 最高 %d" % [int(record.get("hard_clears",0)),int(record.get("hard_best_score",0))],16,Color("ffab92"))
 	summary_label.text=FLEET.ship(str(game.selected_ship)).name+" / "+FLEET.pilot(str(game.selected_pilot)).name
-	launch_button.text=("高压 · %s · 选流派 →" if difficulty>0 else "%s · 选流派 →")%str(row.name)
+	launch_button.text=("高压 · %s · 开始演奏 →" if difficulty>0 else "%s · 开始演奏 →")%str(row.name)
 	for key in planet_buttons:
 		var selected=key==id; var accent: Color=DATA.planet(key).color
 		planet_buttons[key].add_theme_stylebox_override("normal",_box(Color(accent,.15) if selected else Color("0b1320"),Color(accent,.85 if selected else .20),9))

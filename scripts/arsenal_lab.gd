@@ -74,7 +74,7 @@ func sync() -> void:
 	arena.music.backing_gain=source_game.standard_music.backing_gain; arena.music.weapon_gain=source_game.standard_music.weapon_gain
 	arena.music.groove_gain=source_game.standard_music.groove_gain
 	arena.music.volume_db=source_game.standard_music.volume_db-7.
-	set_targets(target_layout); status="准备当前配装音频…"
+	set_targets(target_layout); status="准备弹道演示…"
 	if arena.music.has_prepared(arena.loadout): _prepared(key)
 	else: arena.music.prepare(arena.loadout)
 func _prepared(key: String) -> void:

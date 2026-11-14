@@ -55,7 +55,7 @@ def build():
   if source.is_file() and source.suffix in ['.wav','.ogg','.json','.md']:copy(source)
  for folder in ['audio/arsenal','audio/authorized','audio/legacy','audio/charts']:
   for source in (ROOT/folder).rglob('*'):
-   if source.is_file() and source.suffix in ['.wav','.ogg','.json','.txt','.md']:copy(source)
+   if source.is_file() and source.suffix in ['.wav','.ogg','.json','.txt','.md'] and not (folder in ['audio/arsenal','audio/legacy'] and source.suffix in ['.wav','.ogg']):copy(source)
  for filename in ['WEAPON_DYNAMICS.json','GeneralUser-LICENSE.txt','TinySoundFont-LICENSE.txt']:
   copy(ROOT/'audio/instruments'/filename)
  for filename in ['crowd.gdextension','groove_crowd.windows.x86_64.dll']:copy(ROOT/'native/crowd'/filename)
@@ -96,7 +96,7 @@ def build():
  for folder in ['third_party/audio-recognizer','third_party/basic-pitch','third_party/godot']:
   if (ROOT/folder).is_dir():shutil.copytree(ROOT/folder,credits/Path(folder).name,dirs_exist_ok=True)
  (out/'LaunchCompatibility.bat').write_text('@echo off\r\ncd /d "%~dp0"\r\nstart "" "%~dp0GrooveFlightDemo.exe" --rendering-method gl_compatibility\r\n',encoding='utf-8')
- (out/'README_中文.txt').write_text(f'Groove Flight 节拍飞行 · Windows Demo\n版本{VERSION} / 2026-11-11\n\n完整解压此文件夹，双击 GrooveFlightDemo.exe。无需安装Godot或Python。\n如默认模式无法启动，可双击 LaunchCompatibility.bat 使用兼容模式。请保留同目录的.pck、DLL及附带文件夹。\n\n快速体验：主菜单 → 星球航图 → 选择星球 → 选择流派 → 确认出击。\nWASD／方向键移动，空格冲刺，E超载，Tab打开音序编排，Esc暂停，F11切换全屏。\nJ/K/L对应A/B/C武器轨，每6秒三轨合计成绩统一决定下一段全武器弹量，开场100%。武器按原充能与音乐点自动齐射。波间购买、合成和调整音轨；完成星球任务且击败Boss后通关。\n\n本版包括24种武器、三种流派、八颗星球的独立歌曲/任务、音色图鉴与自由作曲，星球按游玩进度解锁。实弹流开局10点；敌人持续推进；第二波可刷史诗武器、第三波起可刷传奇；Boss攻势与特效已增强。\n设置中可分别调整背景音乐、武器、拾取、受击等音量。\n\n存档与音量保存在当前Windows用户的 %APPDATA%/GrooveFlightDemo 中，与开发项目分开。\n音乐、纹理和组件署名见Credits文件夹。\n',encoding='utf-8-sig')
+ (out/'README_中文.txt').write_text(f'Groove Flight 节拍飞行 · Windows Demo\n版本{VERSION} / 2026-11-14\n\n完整解压此文件夹，双击 GrooveFlightDemo.exe。无需安装Godot或Python。\n如默认模式无法启动，可双击 LaunchCompatibility.bat 使用兼容模式。请保留同目录的.pck、DLL及附带文件夹。\n\n快速体验：主菜单 → 星球航图 → 选择星球 → 直接出击。\nWASD／方向键移动，空格冲刺，E超载，Tab打开音序编排，Esc暂停，F11切换全屏。\nJ/K/L跟随背景音乐谱面，每6秒三轨合计成绩统一决定下一段全武器弹量，开场100%。Perfect100／优秀80／一般40／Miss0；武器按原充能与音乐点自动齐射，不播放武器配音。波间购买、合成和调整音轨；完成星球任务且击败Boss后通关。\n\n本版包括24种武器、统一武器池、八颗星球的独立歌曲/任务、武器图鉴，星球按游玩进度解锁。开局10点实弹基础加成；敌人持续推进；第二波可刷史诗武器、第三波起可刷传奇；Boss攻势与特效已增强。\n设置中可分别调整背景音乐、拾取、受击等音量。\n\n存档与音量保存在当前Windows用户的 %APPDATA%/GrooveFlightDemo 中，与开发项目分开。\n音乐、纹理和组件署名见Credits文件夹。\n',encoding='utf-8-sig')
  game_commit=subprocess.check_output(['git','log','-1','--format=%H','--','scripts','project.godot'],cwd=ROOT,text=True).strip()
  manifest={'version':VERSION,'platform':'Windows x86_64','game_commit':game_commit,'source_inputs':sorted(inputs),'template_sha256':digest(template),'native_kernel_sha256':digest(ROOT/'native/crowd/groove_crowd.windows.x86_64.dll'),'separate_demo_user_directory':'GrooveFlightDemo'}
  (out/'BUILD_INFO.json').write_text(json.dumps({k:manifest[k] for k in ['version','platform','game_commit','native_kernel_sha256','separate_demo_user_directory']},indent=2),encoding='utf-8')

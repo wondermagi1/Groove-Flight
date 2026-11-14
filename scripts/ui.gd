@@ -68,7 +68,6 @@ func refresh() -> void:
 		"hub": hub_screen()
 		"hangar": hangar_screen()
 		"solar": solar_screen()
-		"doctrine": doctrine_screen()
 		"composer","composer_loading": composer_screen()
 		"combat": hud()
 		"reward": reward_screen()
@@ -89,17 +88,16 @@ func title_screen() -> void:
 	title_flight=TITLE.new(); title_flight.game=game; title_flight.name="InteractiveTitle"; root_control.add_child(title_flight)
 	var content=VBoxContainer.new(); content.position=view*Vector2(.10,.09 if compact else .12)
 	content.custom_minimum_size.x=minf(424,view.x*.35); content.add_theme_constant_override("separation",9 if compact else 13); root_control.add_child(content)
-	content.add_child(label("S E Q U E N C E   /   S U R V I V E",14 if compact else 17,UI.QUIET))
+	content.add_child(label("R H Y T H M   /   S U R V I V E",14 if compact else 17,UI.QUIET))
 	content.add_child(label("GROOVE FLIGHT",55 if compact else 80))
 	content.add_child(label("节拍飞行",25 if compact else 32,UI.MUTED))
-	content.add_child(label("把武器排进节拍，把深空打成合奏。",17 if compact else 21,UI.MUTED))
+	content.add_child(label("跟随音乐击键，让每一拍化为弹幕。",17 if compact else 21,UI.MUTED))
 	var spacer=Control.new(); spacer.custom_minimum_size.y=15 if compact else 27; content.add_child(spacer)
 	var entries=[
 		["hub","进入霓光港","01",Color("71e8dc")],
 		["solar","星球航图","02",Color("83cafa")],
-		["composer","自由作曲","03",Color("ac9cf5")],
 		["hangar","机库与驾驶员","04",Color("b1b9fa")],
-		["codex","武器音色图鉴","05",Color("8edfda")],
+		["codex","武器图鉴","05",Color("8edfda")],
 		["settings","设置","06",Color("8fa9c1")],
 		["quit","退出","07",Color("71839a")]]
 	for entry in entries:
@@ -190,7 +188,7 @@ func update_hud() -> void:
 	if not is_instance_valid(wave_label): return
 	wave_label.text="乐谱试飞" if game.free_music_run else "%s · %02d/%02d"%[PLANETS.planet(game.active_planet).name,game.wave,game.wave_count()]
 	var remaining=maxf(0,float(game.wave_profile().seconds)-(game.music.timeline-game.wave_start))
-	wave_label.tooltip_text="当前流派："+str(game.DOCTRINES.row(game.active_doctrine).name) if not game.free_music_run else "显式乐谱试飞，不限制武器流派"
+	wave_label.tooltip_text="背景音乐驱动谱面 · 六秒成绩控制全武器弹量"
 	timer_label.text=("%02d:%02d"%[int(game.music.timeline)/60,int(game.music.timeline)%60]) if game.free_music_run else ("BOSS" if game.wave==game.wave_count() else ("清场" if remaining<=0 else str(int(ceil(remaining)))))
 	if not game.free_music_run and game.boss_down and game.mission.enabled and not game.mission.complete():timer_label.text="撤离"
 	health_label.text="无敌练习 · 不计战绩" if game.free_music_run else "生命  %.1f / %d"%[game.health,game.loadout.max_health]
@@ -220,31 +218,8 @@ func reward_screen() -> void:
 	arsenal_screen("shop")
 
 func doctrine_screen() -> void:
-	var view=get_viewport().get_visible_rect().size
-	var content=panel(minf(1080.,view.x-56.),minf(610.,view.y-56.))
-	section_title(content,"选择本局流派",str(PLANETS.planet(game.doctrine_planet).name)+" · 只出现本流派武器、适用改装和通用生存道具")
-	var cards=HBoxContainer.new();cards.add_theme_constant_override("separation",14);cards.size_flags_vertical=Control.SIZE_EXPAND_FILL;content.add_child(cards)
-	for doctrine in game.DOCTRINES.ROWS:
-		var chosen=game.doctrine_choice==str(doctrine.id)
-		var card=PanelContainer.new();card.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-		card.add_theme_stylebox_override("panel",box(Color("152838") if chosen else Color("101c2b"),Color(doctrine.color) if chosen else Color("324258"),9));cards.add_child(card)
-		var column=VBoxContainer.new();column.add_theme_constant_override("separation",12);card.add_child(column)
-		column.add_child(label(str(doctrine.name),28,Color(doctrine.color)))
-		var description=label(str(doctrine.detail),17,Color("b7c9da"));description.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;description.size_flags_vertical=Control.SIZE_EXPAND_FILL;column.add_child(description)
-		var count=game.DOCTRINES.weapon_ids(DATA.playable_weapons(),str(doctrine.id)).size()
-		column.add_child(label("武器池 %d种 · 初始2件"%count,16,Color("87b8c4")))
-		var starters: PackedStringArray=[]
-		for placement in doctrine.starters:
-			var row=DATA.item(str(placement.kind));var slot=int(placement.slot);var track=["A","B","C"][slot/8]
-			starters.append("%s%d%s  %s"%[track,slot%8+1,("–%s%d"%[track,slot%8+int(row.width)]) if int(row.width)>1 else "",str(row.name)])
-		column.add_child(label("\n".join(starters),16,Color("b4c8db")))
-		var select=button("已选择" if chosen else "选择此流派",game.choose_doctrine.bind(str(doctrine.id)),Color(doctrine.color),44);select.name="DoctrineChoice_"+str(doctrine.id);select.custom_minimum_size.x=0.;column.add_child(select)
-	content.add_child(label(game.binding_name("rhythm_a")+" / "+game.binding_name("rhythm_b")+" / "+game.binding_name("rhythm_c")+" 对应 A / B / C 武器轨。每6秒将三轨得分相加，除以三轨总满分，统一决定下一段全武器弹量；首段100%。完美100、成功70、漏按或中断0分。武器按原充能与音乐点自动齐射。",17,Color.WHITE))
-	var actions=HBoxContainer.new();actions.add_theme_constant_override("separation",16);content.add_child(actions)
-	var back=button("返回",game.cancel_doctrine_selection,Color("9aaec1"),48);back.name="DoctrineBack";actions.add_child(back)
-	var selected=game.DOCTRINES.valid(game.doctrine_choice)
-	var launch=button("确认出击 · "+str(game.DOCTRINES.row(game.doctrine_choice).name) if selected else "先选择一个流派",game.confirm_doctrine,Color("9ce3cf"),48)
-	launch.name="DoctrineLaunch";launch.disabled=not selected;launch.size_flags_horizontal=Control.SIZE_EXPAND_FILL;actions.add_child(launch)
+	pass
+
 func editor_screen() -> void:
 	arsenal_screen("editor")
 func pause_screen() -> void:
@@ -267,10 +242,9 @@ func settings_screen() -> void:
 		var percent=label("%d%%"%roundi(float(slider.value)*100.),18); percent.name="Percent_"+str(item[0]); percent.custom_minimum_size.x=56; percent.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT; row.add_child(percent)
 		slider.value_changed.connect(func(value): percent.text="%d%%"%roundi(value*100.); game.set_audio_volume(str(item[0]),value))
 	var mix_row=HBoxContainer.new(); mix_row.add_theme_constant_override("separation",8); content.add_child(mix_row)
-	var preset=button("推荐战斗混音",game.apply_combat_mix,Color("8ecbc4"),36); preset.name="RecommendedCombatMix"; mix_row.add_child(preset)
+	var preset=button("音乐优先混音",game.apply_combat_mix,Color("8ecbc4"),36); preset.name="RecommendedCombatMix"; mix_row.add_child(preset)
 	var restore=button("恢复切换前音量",game.restore_previous_mix,Color("9badc4"),36); restore.name="RestorePreviousMix"; restore.disabled=not (game.settings.get("audio_mix_backup",{}) is Dictionary) or game.settings.get("audio_mix_backup",{}).is_empty(); mix_row.add_child(restore)
 	mix_row.add_child(button("默认音量",game.reset_audio_volumes,Color("9badc4"),36))
-	var duck=CheckButton.new(); duck.name="MusicDucking"; duck.text="战斗时背景自动让位"; duck.button_pressed=bool(game.settings.get("music_duck",true)); duck.toggled.connect(game.set_music_ducking); content.add_child(duck)
 	content.add_child(label("节拍校准",22,UI.GOLD))
 	var offset_label=label("琴块时间偏移  %+.0f ms"%float(game.settings.get("rhythm_offset_ms",0.)),18);content.add_child(offset_label)
 	var offset=HSlider.new();offset.name="RhythmOffset";offset.min_value=-150.;offset.max_value=150.;offset.step=5.;offset.value=float(game.settings.get("rhythm_offset_ms",0.))
@@ -289,7 +263,7 @@ func settings_screen() -> void:
 	aiming.select(int(game.settings.aim_mode)); aiming.item_selected.connect(func(index): game.settings.aim_mode=index); content.add_child(aiming)
 	content.add_child(label("操作映射 点击后按新按键 Esc取消",18))
 	for action in ["left","right","up","down","dash","overload","rhythm_a","rhythm_b","rhythm_c","editor","pause"]:
-		var caption={"left":"左移","right":"右移","up":"上移","down":"下移","dash":"冲刺","overload":"超载","rhythm_a":"A轨琴键（J）","rhythm_b":"B轨琴键（K）","rhythm_c":"C轨琴键（L）","editor":"音序工坊","pause":"暂停"}[action]
+		var caption={"left":"左移","right":"右移","up":"上移","down":"下移","dash":"冲刺","overload":"超载","rhythm_a":"音乐键1（J）","rhythm_b":"音乐键2（K）","rhythm_c":"音乐键3（L）","editor":"音序工坊","pause":"暂停"}[action]
 		content.add_child(button("等待按键…" if game.binding_capture==action else caption+"  "+game.binding_name(action),game.capture_binding.bind(action),Color("9abacf"),36))
 	content.add_child(button("补看操作教学",func():game.replay_tutorial(); game.close_settings(),Color("a9cdd8"),36))
 	content.add_child(label("星球背景画质",19))

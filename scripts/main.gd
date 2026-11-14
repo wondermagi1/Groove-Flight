@@ -44,8 +44,8 @@ const MAX_ENEMY_BULLETS=700
 const GRID=96.
 const MAX_PROJECTILE_RADIUS=13.
 var wave_rows: Array[Dictionary]=PLANETS.route("mercury")
-var selected_doctrine: String="ballistic"
-var active_doctrine: String="ballistic"
+var selected_doctrine: String=""
+var active_doctrine: String=""
 var doctrine_choice: String=""
 var doctrine_planet: String="mercury"
 var doctrine_return_state: String="solar"
@@ -166,7 +166,7 @@ var shop_reroll_cost: int=8
 var editor_return: String="combat"
 var notice: String=""
 var notice_until: float=0
-var settings={"backing":0.,"weapons":.255,"audio_schema":3,"kill":.55,"pickup":.55,"shield":.55,"combat":.55,"ui":.55,"alerts":.55,"music_duck":true,"audio_mix_backup":{},"groove":0.,"background_motion":.55,"text_scale":1.,"low_dynamic":false,"starting_path":0,"combat_doctrine":"ballistic","difficulty":0,"aim_mode":0,"input_bindings":{},"rhythm_offset_ms":0.,"tutorial_done":false,"tutorial_skipped":false,"master":.75,"music":.75,"sfx":.55,"reduced_fx":false,"fullscreen":true,"background_quality":2,"background_exposure":.9,"panel_attributes":true,"panel_status":true,"panel_buffs":true,"panel_inventory":true,"panel_sequencer":true,"combat_panel_attributes":false,"combat_panel_status":false,"combat_panel_buffs":false,"combat_panel_inventory":false,"combat_panel_sequencer":true}
+var settings={"backing":0.,"weapons":.255,"audio_schema":3,"kill":.55,"pickup":.55,"shield":.55,"combat":.55,"ui":.55,"alerts":.55,"music_duck":false,"audio_mix_backup":{},"groove":0.,"background_motion":.55,"text_scale":1.,"low_dynamic":false,"starting_path":0,"combat_doctrine":"","difficulty":0,"aim_mode":0,"input_bindings":{},"rhythm_offset_ms":0.,"tutorial_done":false,"tutorial_skipped":false,"master":.75,"music":.75,"sfx":.55,"reduced_fx":false,"fullscreen":true,"background_quality":2,"background_exposure":.9,"panel_attributes":true,"panel_status":true,"panel_buffs":true,"panel_inventory":true,"panel_sequencer":true,"combat_panel_attributes":false,"combat_panel_status":false,"combat_panel_buffs":false,"combat_panel_inventory":false,"combat_panel_sequencer":true}
 var voices: Array[AudioStreamPlayer]=[]
 var voice_index: int=0
 var sound_times: Dictionary={}
@@ -203,7 +203,7 @@ func _ready() -> void:
 	test_mode=is_preview or "--grooveflight-test" in test_args or "--beatdrift-test" in test_args
 	if not is_preview: bind_input()
 	loadout.configure_live_rules(); loadout.reset(); load_settings(); apply_input_bindings()
-	selected_doctrine=str(settings.combat_doctrine) if DOCTRINES.valid(str(settings.combat_doctrine)) else "ballistic"
+	selected_doctrine="";settings.combat_doctrine=""
 	background_layer=CanvasLayer.new(); background_layer.layer=-20; add_child(background_layer)
 	var back=ColorRect.new(); back.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	background=ShaderMaterial.new(); background.shader=load("res://shaders/planet_uhd.gdshader"); back.material=background
@@ -368,12 +368,10 @@ func set_music_ducking(value: bool) -> void:
 func request_music_space(seconds: float=.24) -> void:
 	if is_preview or free_music_run or state!="combat": return
 	music_focus_until=maxf(music_focus_until,music.timeline+seconds)
-func update_background_mix(delta: float) -> void:
-	var focused=state=="combat" and not is_preview and not free_music_run and bool(settings.get("music_duck",true)) and music.timeline<music_focus_until
-	var target=-3. if focused else 0.
-	var smooth=.035 if target<music_duck_db else .38
-	music_duck_db=lerpf(music_duck_db,target,1.-exp(-maxf(0.,delta)/smooth))
-	if is_instance_valid(planet_music): planet_music.volume_db=-10.+music_duck_db
+func update_background_mix(_delta: float) -> void:
+	# The song is the lead, not a bed ducked by weapon salvos.
+	music_duck_db=0.
+	if is_instance_valid(planet_music):planet_music.volume_db=-10.
 
 func apply_background_quality() -> void:
 	settings.background_quality=clampi(int(settings.get("background_quality",2)),0,2)
@@ -459,13 +457,13 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	run_seed=rng.seed
 	weapon_beat_state.clear()
 	mixer.reset_feedback()
-	active_doctrine="" if use_composition else (selected_doctrine if DOCTRINES.valid(selected_doctrine) else "ballistic")
+	active_doctrine=""
 	standard_music.manual_weapons=rhythm_required()
 	rhythm.music_chart=rhythm_required()
 	rhythm.chart_id=active_planet
 	rhythm.offset_seconds=float(settings.get("rhythm_offset_ms",0.))*.001
 	loadout.set_doctrine(active_doctrine)
-	loadout.reset(); music_focus_until=-1.; music_duck_db=0.; enemies.clear(); by_id.clear(); spatial.clear(); bullets.clear(); enemy_bullets.clear(); pickups.clear(); warnings.clear()
+	loadout.reset(); loadout.attribute_grants["ballistic"]=10.; music_focus_until=-1.; music_duck_db=0.; enemies.clear(); by_id.clear(); spatial.clear(); bullets.clear(); enemy_bullets.clear(); pickups.clear(); warnings.clear()
 	var craft=FLEET.ship(selected_ship); selected_ship=str(craft.id)
 	selected_pilot=str(FLEET.pilot(selected_pilot).id)
 	var planet_number=int(PLANETS.planet(active_planet).index)
@@ -496,7 +494,10 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 		tutorial_active=not test_mode and not bool(settings.tutorial_done) and not bool(settings.tutorial_skipped) and active_planet=="mercury"; tutorial_stage=0; tutorial_origin=player; tutorial_retimed=false
 func begin_wave() -> void:
 	pending_triggers.clear(); pending_projectiles.clear(); energy_weapons.clear()
-	if rhythm_required():rhythm_voices.warm(loadout);rhythm.reset(music.timeline,wave==0);rhythm.forecast(loadout,music.timeline,rhythm_song_time(music.timeline))
+	if rhythm_required():
+		if wave==0:rhythm.reset(music.timeline,true)
+		else:rhythm.resync_loadout(music.timeline)
+		rhythm.forecast(loadout,music.timeline,rhythm_song_time(music.timeline))
 	spawn_telegraphs.clear()
 	wave+=1; wave_start=music.timeline; wave_spawn_start=total_spawned; wave_picked_start=picked; spawned=0;
 	kill_combo=0; kill_combo_until=0.
@@ -510,15 +511,9 @@ func begin_wave() -> void:
 	mission.on_wave(self)
 
 func open_composer() -> void:
-	if state not in ["title","hub","hangar","solar","victory","defeat"]: return
-	composer_return_state="title" if state=="title" else "hub"
-	_restore_standard_music()
-	if is_instance_valid(hub): hub.deactivate()
-	camera.enabled=false; background_layer.visible=false; post.visible=false; fx.visible=false
-	state="composer"; apply_audio(); ui.refresh()
-	# Legacy drafts commonly have every note routed to one synth. Revoice only
-	# untouched legacy mappings; the original file is backed up before saving.
-	if composer_needs_arrangement(): composer_arrange(false)
+	# The former weapon-voice composer is retired from the music-first game.
+	return
+
 func _restore_standard_music() -> void:
 	if is_instance_valid(lab): lab.deactivate()
 	pending_resume=""
@@ -708,18 +703,15 @@ func launch_selected_planet() -> bool:
 	return open_doctrine_selection(selected_planet)
 
 func open_doctrine_selection(planet_id: String) -> bool:
-	if state not in ["solar","title","hub","hangar","victory","defeat"] or planet_id not in PLANETS.IDS or not is_planet_unlocked(planet_id): return false
-	doctrine_return_state=state; doctrine_planet=planet_id; doctrine_choice=""
-	state="doctrine"; music.hold(true); ui.refresh(); return true
+	# Legacy callers (retry/menu) now launch directly, without a doctrine screen.
+	if state not in ["solar","title","hub","hangar","victory","defeat"] or planet_id not in PLANETS.IDS or not is_planet_unlocked(planet_id):return false
+	start_run(0,planet_id);return true
 
-func choose_doctrine(id: String) -> bool:
-	if state!="doctrine" or not DOCTRINES.valid(id): return false
-	doctrine_choice=id; ui.refresh(); return true
+func choose_doctrine(_id: String) -> bool:
+	return false
 
 func confirm_doctrine() -> bool:
-	if state!="doctrine" or not DOCTRINES.valid(doctrine_choice): return false
-	selected_doctrine=doctrine_choice; settings.combat_doctrine=selected_doctrine; save_settings()
-	start_run(0,doctrine_planet); return true
+	return false
 
 func cancel_doctrine_selection() -> void:
 	if state!="doctrine": return
@@ -931,7 +923,7 @@ func return_title() -> void:
 	enemies.clear(); by_id.clear(); spatial.clear(); pending_splits.clear(); bullets.clear(); enemy_bullets.clear(); warnings.clear(); pickups.clear()
 	fx.particles.clear(); fx.marks.clear(); ui.refresh()
 func rhythm_required() -> bool:
-	return not is_preview and not free_music_run and not active_doctrine.is_empty()
+	return not is_preview and not free_music_run
 func rhythm_song_time(now: float) -> float:
 	if not is_instance_valid(planet_music) or not planet_music.has_stream_playback():return now
 	if planet_music.stream_paused:return rhythm_song_absolute
@@ -1166,15 +1158,8 @@ func on_step(index: int,serial: int,deadline: float) -> void:
 		event.crit_chance=stats_snapshot.crit_chance; event.crit_damage=stats_snapshot.crit_damage; fire_weapon(event)
 		play_note("missile",index,-18.)
 
-func play_note(voice_id: String,_pitch: int,volume: float=-18.) -> void:
-	if voices.is_empty(): return
-	var row=C.item(voice_id)
-	if row.is_empty() or not C.is_weapon_audio_ready(voice_id): return
-	var stream=_load_audio("res://audio/arsenal/notes/%s_0.wav"%str(row.voice))
-	if stream==null: return
-	var voice=voices[voice_index%voices.size()]; voice_index+=1
-	voice.stream=stream; voice.pitch_scale=1.
-	voice.volume_db=volume; voice.play()
+func play_note(_voice_id: String,_pitch: int,_volume: float=-18.) -> void:
+	pass
 
 func spawn_for_step(serial: int) -> void:
 	if is_preview: return
@@ -1529,18 +1514,8 @@ func _create_recorded_weapon_player(uid: int) -> AudioStreamPlayer:
 	recorded_weapon_player=player
 	return player
 
-func _play_recorded_weapon_group(trigger: Dictionary) -> void:
-	var recorded_id=str(trigger.get("kind",""))
-	if not RECORDED_WEAPON_GROUPS.has(recorded_id) or int(trigger.get("cadence_step",-1))!=0: return
-	var uid=int(trigger.get("uid",-1))
-	if uid<0: return
-	var player=_create_recorded_weapon_player(uid)
-	if player.playing: return
-	if player.stream==null:
-		player.stream=_load_audio(str(RECORDED_WEAPON_GROUPS[recorded_id]))
-	if player.stream!=null:
-		player.pitch_scale=1.
-		player.play()
+func _play_recorded_weapon_group(_trigger: Dictionary) -> void:
+	pass
 
 func _stop_recorded_player_uid(uid: int) -> void:
 	var key=str(uid)
@@ -2031,7 +2006,6 @@ func dispatch_trigger(trigger: Dictionary) -> void:
 	fire_log.back().count=int(trigger.get("count",0));fire_log.back().full_count=int(trigger.get("rhythm_full_count",trigger.get("count",0)))
 	fire_log.back().rhythm_ratio=float(trigger.get("rhythm_ratio",1.))
 	if fire_log.size()>480: fire_log.pop_front()
-	if rhythm_required():rhythm_voices.salvo(trigger)
 	fire_weapon(trigger)
 func flush_triggers() -> void:
 	for i in range(pending_triggers.size()-1,-1,-1):
@@ -2070,7 +2044,7 @@ func update_tutorial() -> void:
 	if tutorial_stage>=4:
 		tutorial_active=false; settings.tutorial_done=true; save_settings(); return
 	var movement=" / ".join([binding_name("up"),binding_name("left"),binding_name("down"),binding_name("right")])
-	var tips=[movement+" 移动 · "+binding_name("rhythm_a")+" / "+binding_name("rhythm_b")+" / "+binding_name("rhythm_c")+" 对应 A / B / C 武器轨","每6秒合并三轨总分 · 决定下一段全武器弹量 · 首段100%",binding_name("editor")+" 打开三轨音序工坊 · 武器保留充能与音乐点自动齐射",binding_name("dash")+" 冲刺穿过缺口 · "+binding_name("overload")+" 满充能后超载"]
+	var tips=[movement+" 移动 · "+binding_name("rhythm_a")+" / "+binding_name("rhythm_b")+" / "+binding_name("rhythm_c")+" 跟随背景音乐谱面","Perfect100／优秀80／一般40／Miss0 · 每6秒总成绩决定下一段弹量",binding_name("editor")+" 打开三轨音序工坊 · 武器保留充能与音乐点自动齐射",binding_name("dash")+" 冲刺穿过缺口 · "+binding_name("overload")+" 满充能后超载"]
 	notice=tips[tutorial_stage]; notice_until=INF
 
 func apply_input_bindings() -> void:
@@ -2091,7 +2065,7 @@ func capture_binding(action: String) -> void:
 func resync_pending() -> void:
 	pending_triggers.clear()
 	if rhythm_required():
-		rhythm.reset(music.timeline);rhythm.forecast(loadout,music.timeline,rhythm_song_time(music.timeline));rhythm_voices.warm(loadout);return
+		rhythm.resync_loadout(music.timeline);rhythm.forecast(loadout,music.timeline,rhythm_song_time(music.timeline));return
 	var serial=floori(music.timeline/LOADOUT.SEQUENCE_STEP_SECONDS)
 	for event in loadout.schedule(serial):
 		if str(event.family)!="support" and float(event.deadline)>music.timeline+.001: pending_triggers.append(event)

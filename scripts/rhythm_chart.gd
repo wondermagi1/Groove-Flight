@@ -4,7 +4,16 @@ const MUSIC=preload("res://scripts/planet_music_catalog.gd")
 static var _data: Dictionary={}
 static func data(planet: String="mercury") -> Dictionary:
 	var row=MUSIC.track(planet);var id=str(row.planet)
-	if not _data.has(id):_data[id]=JSON.parse_string(FileAccess.get_file_as_string(str(row.chart)))
+	if not _data.has(id):
+		var chart=JSON.parse_string(FileAccess.get_file_as_string(str(row.chart)))
+		var available=[-1.,-1.,-1.];var motif=[0,1,2,1,0,2,0,1]
+		for index in range(chart.events.size()):
+			var event: Dictionary=chart.events[index];var lane=int(motif[index%motif.size()])
+			for attempt in range(3):
+				var candidate=(lane+attempt)%3
+				if float(event.t)>=float(available[candidate]):lane=candidate;break
+			event.lane=lane;available[lane]=float(event.t)+float(event.hold)+.16
+		_data[id]=chart
 	return _data[id]
 static func next_cue(song_time: float,planet: String="mercury") -> Dictionary:
 	var chart=data(planet);var duration=float(chart.duration)
@@ -16,6 +25,6 @@ static func next_cue(song_time: float,planet: String="mercury") -> Dictionary:
 		else:high=mid
 	if low==events.size():low=0;cycle+=1
 	var cue: Dictionary=events[low].duplicate(true)
-	# The song provides timing/holds; equipment A/B/C determines the input lane.
+	# Song timing, holds and deterministic lane arrangement never depend on equipment.
 	cue.id="%d:%d"%[cycle,low];cue.song_due=cycle*duration+float(cue.t)
 	return cue

@@ -1,0 +1,37 @@
+{
+  "version": "0.56.0-music-first",
+  "date": "2026-11-14",
+  "lead": "eight licensed full background songs",
+  "weapon_voices": "removed from combat, shop preview and codex; legacy sources archived only",
+  "composer": "retired from game entry points",
+  "instrumental_pcm": "silent gameplay clock; no weapons/support/backing/groove",
+  "chart": "song cue timing/holds with deterministic three-key arrangement, independent of equipment",
+  "judgements": [
+    {
+      "id": "perfect",
+      "label": "完美 / Perfect",
+      "points": 100,
+      "window_ms": 35
+    },
+    {
+      "id": "excellent",
+      "label": "优秀 / Excellent",
+      "points": 80,
+      "window_ms": 75
+    },
+    {
+      "id": "general",
+      "label": "一般 / Good",
+      "points": 40,
+      "window_ms": 140
+    },
+    {
+      "id": "miss",
+      "label": "Miss",
+      "points": 0
+    }
+  ],
+  "ammo": "sum(all3keys earned)/sum(all3keys possible), applied to next6combat seconds; opening100percent; fully empty window carries prior ratio",
+  "tail_grace_ms": 140,
+  "feedback": "kill, pickup, shield, impacts and UI remain on separate buses; dedicated rhythm hitsounds are future work"
+}

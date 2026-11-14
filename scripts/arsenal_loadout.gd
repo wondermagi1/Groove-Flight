@@ -82,9 +82,9 @@ func _init() -> void:
 	for row in C.rows(): _catalog[str(row.id)]=row
 	slots.resize(TRACKS*STEPS); slots.fill(-1)
 
-func set_doctrine(id: String) -> bool:
-	if not id.is_empty() and not DOCTRINES.valid(id): return false
-	doctrine_id=id; return true
+func set_doctrine(_id: String) -> bool:
+	doctrine_id="";return true
+
 func item_allowed(id: String) -> bool:
 	return DOCTRINES.item_allowed(_row(id),doctrine_id)
 

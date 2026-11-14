@@ -1,24 +1,22 @@
 # Audio provenance
 
-## Current V55 campaign music and weapon voices
+## Current V56: background music leads
 
-Eight planet-specific full tracks by Scott Buckley, CC BY 4.0: Filaments,
-Helios, Reverie, Legionnaire (Original), Titan, Cassini, Luminance and Omega.
-Music by Scott Buckley — www.scottbuckley.com.au. Official song links, license,
-source hashes and full-track Vorbis conversion are in
-[PLANET_MUSIC.json](PLANET_MUSIC.json) and
-[planet attribution](authorized/scott_buckley/planets/LICENSE.md).
-Charts in `charts/planets/` are waveform-derived gameplay arrangements; no source
-music is retimed or transposed. Settings also display the eight credits.
+Eight full Scott Buckley CC BY4.0 tracks remain unchanged: Filaments, Helios,
+Reverie, Legionnaire (Original), Titan, Cassini, Luminance and Omega.
+Music by Scott Buckley — www.scottbuckley.com.au.
+See [catalogue](PLANET_MUSIC.json), [license](authorized/scott_buckley/planets/LICENSE.md)
+and [current playback policy](MUSIC_FIRST_POLICY.json).
+Waveform-derived three-key gameplay arrangements are not the artist's original
+score or a human-approved exact transcription. Source time and pitch are unchanged.
 
-The 24 active weapon voices remain 192 composer pitch WAVs plus 96 expressive
-performance WAVs. Campaign salvos retain their charge/music deadlines and use
-the combined three-track previous six-second score as their projectile quota.
-Every nonzero salvo plays one independent realtime voice; zero quota is silent.
-All campaign weapon voices are excluded from the 156-second native PCM clock.
-Composer/codex/shop auditions keep their existing paths. This supersedes the
-historical synthesized catalogue and shared-background descriptions below.
-No V55 weapon WAV, full background track or licensed feedback recording was replaced.
+ALL weapon performances and their codex/shop auditions have been retired.
+The native PCM is a silent gameplay clock, including no support or backing instruments.
+Weapon WAVs below are historical sources only, retained with provenance/licenses;
+they are not active music and future builds exclude arsenal/legacy WAV/OGG assets.
+The former composer is removed from player entry points. Kill/shield/pickup,
+combat and UI/alerts remain independent feedback layers. Nothing restarts the
+background when changing volume or pausing/resuming.
 
 ## Historical provenance (retained sources, not the active catalogue)
 

@@ -1,0 +1,18 @@
+{
+  "captures": [
+    "res://tests/v56-three-tracks-1280.png",
+    "res://tests/v56-three-tracks-1920.png",
+    "res://tests/v56-inventory-layout-1280.png",
+    "res://tests/v56-score-feedback-1920.png",
+    "res://tests/v56-grade-perfect.png",
+    "res://tests/v56-grade-excellent.png",
+    "res://tests/v56-grade-general.png",
+    "res://tests/v56-grade-miss.png",
+    "res://tests/v56-weapon-codex.png",
+    "res://tests/v56-weapon-codex-1280.png"
+  ],
+  "checks": 25,
+  "failures": [],
+  "renderer": "forward_plus",
+  "scope": "Actual three-track controls and Forward+ layout; displayed shared60percent is an explicit visual fixture, not a player result."
+}

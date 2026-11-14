@@ -2,7 +2,8 @@ extends RefCounted
 ## Combined earned/max points from all three lanes control the NEXT six seconds.
 const SECONDS=6.
 const PERFECT_POINTS=100
-const GOOD_POINTS=70
+const EXCELLENT_POINTS=80
+const GENERAL_POINTS=40
 const TRACKS=3
 var window: int=0
 var ratio: float=1.

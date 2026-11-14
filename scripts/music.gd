@@ -6,7 +6,7 @@ const SEQUENCE=preload("res://scripts/arsenal_loadout.gd")
 const EXPRESSION=preload("res://scripts/weapon_expression.gd")
 signal step_fired(index: int,serial: int,deadline: float)
 signal prepared(key: String)
-const RENDER_VERSION=17
+const RENDER_VERSION=18
 const RATE=22050
 const STEP=SEQUENCE.SEQUENCE_STEP_SECONDS
 const BPM=SEQUENCE.SEQUENCE_BPM
@@ -74,33 +74,11 @@ func voice(kind: String,index: int) -> PackedFloat32Array:
 	return samples[key]
 func key_for(loadout) -> String:
 	return str(hash(JSON.stringify([RENDER_VERSION,manual_weapons,EXPRESSION.policy.revision,STEP,LENGTH,INTRO_SECONDS,STREAM_LENGTH,BPM,loadout.modules,loadout.slots,loadout.damage_scale,loadout.echo_repeat,loadout.stats(),track_mutes,backing_gain,weapon_gain,groove_gain])))
-func _snapshot(loadout) -> Dictionary:
-	var events: Array=[]; var instruments: Dictionary={}
-	for serial in range(int(STREAM_LENGTH/STEP)):
-		for event in loadout.schedule(serial):
-			if not bool(event.get("audio_eligible",true)): continue
-			var support=str(event.family)=="support"
-			if manual_weapons and not support:continue
-			var instrument="support_"+str(event.category) if support else str(event.voice)
-			var pitch=posmod(int(event.get("pitch",serial%8)),8)
-			var expression={} if support else EXPRESSION.for_event(event)
-			var sample_voice=instrument if support else "dyn_"+str(event.kind)
-			var sample_index=pitch if support else int(expression.strength)
-			var id=sample_voice+"_"+str(sample_index)
-			if not instruments.has(id): instruments[id]=voice(sample_voice,sample_index)
-			var note=event.duplicate(true); note.voice=instrument; note.sample_key=id
-			# The volume slider scales the entire voice, including level gain.
-			# Dynamics select different performances,not copies with changed volume.
-			note.gain=maxf(0.,weapon_gain)*(.35 if support else 1.)*(1.+.035*maxi(0,int(event.level)-1))
-			if not support:
-				note.expression=expression
-				note.gain*=db_to_linear(float(expression.balance_db))
-			if bool(event.get("recorded_audio",false)): note.gain=0.
-			if event.get("pilot","")=="echo": note.gain*=.55
-			if int(event.get("repeat_index",0))>0: note.gain*=.75
-			if bool(track_mutes[clampi(int(note.get("track",0)),0,2)]): note.gain=0.
-			events.append(note)
-	return {"events":events,"instruments":instruments,"backing":base,"backing_gain":backing_gain,"groove":groove,"groove_gain":groove_gain,"duck":duck}
+func _snapshot(_loadout) -> Dictionary:
+	# Native PCM remains only a silent, sample-accurate gameplay clock.
+	# Neither weapons nor support modules render instrumental audio.
+	return {"events":[],"instruments":{},"backing":PackedFloat32Array(),"backing_gain":0.,"groove":PackedFloat32Array(),"groove_gain":0.,"duck":duck}
+
 func _cancel(value: bool) -> void:
 	_mutex.lock(); _cancelled=value; _mutex.unlock()
 func _is_cancelled() -> bool:

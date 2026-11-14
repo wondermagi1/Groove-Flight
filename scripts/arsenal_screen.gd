@@ -329,9 +329,9 @@ func _build_top(view: Vector2) -> void:
 	if mode=="combat":CLEAR_HUD.button(all_button)
 	toggles.add_child(all_button)
 	if mode != "combat":
-		var codex_button=_button("音色图鉴",open_weapon_codex,Color("8edfda"),34)
+		var codex_button=_button("武器图鉴",open_weapon_codex,Color("8edfda"),34)
 		codex_button.name="WeaponCodexOpen"
-		codex_button.tooltip_text="查看全部%d件现役武器的实际音源、八音样本和固定扫描规则"%DATA.playable_weapons().size()
+		codex_button.tooltip_text="查看全部%d件现役武器的弹道、射程、充能与弹量规则"%DATA.playable_weapons().size()
 		toggles.add_child(codex_button)
 	if mode != "combat":
 		var resume := _button("继续下一波 →" if mode == "shop" else "应用并返回  /  TAB", _resume, Color("94f0d6"), 47)
@@ -767,7 +767,7 @@ func _update_detail() -> void:
 			_detail_text("单发伤害 %.1f  ·  弹丸 %d\n穿透 %d  ·  速度 %.0f\n爆破半径 %.0f  ·  %d 小节充能" % [float(actual.get("damage", row.get("damage", 0.0))), int(actual.get("count", row.get("count", 1))), int(actual.get("pierce", row.get("pierce", 0))), float(actual.get("speed", row.get("speed", 0.0))), float(actual.get("explosion", row.get("explosion", 0.0))), int(actual.get("charge", row.get("charge", 1)))], 18)
 		if str(row.id) in DATA.VISUALS.MOVING_IDS and str(row.family)!="orbit":
 			_detail_text("有效射程 %.0f\n到达射程后缩小消散"%game.EMISSION.weapon_reach(float(actual.get("speed",row.speed)),float(actual.get("life",row.life))),17,Color("aacdbd"))
-		_detail_text("固定音色 · 实际发射时播放一次\n同种武器各自发声，可错位重奏\n充能 %d 轮；等待轮静音，声音与发射同步"%int(actual.get("charge",1)),16,Color("e7c78d"))
+		_detail_text("无武器演奏声 · 背景音乐为主\n六秒琴块总成绩决定下一段全武器弹量\n充能 %d 轮；弹道与射程保持"%int(actual.get("charge",1)),16,Color("e7c78d"))
 		_detail_text(str(row.detail),17,Color("879db6"))
 		if not actual.get("calculation",{}).is_empty():
 			var f: Dictionary=actual.calculation
@@ -781,7 +781,7 @@ func _update_detail() -> void:
 		var damage: float = float(game.weapon_damage.get(str(row.id), 0.0))
 		_detail_text("本局实际伤害  %s" % _short_number(damage), 19, Color("f0ce9c"))
 		_detail_text("属性归属  " + _stat_name(str(row.attr)), 17, Color("879db6"))
-		_detail_text("拍位决定触发时刻；武器保持固定乐器音色。其他音高素材用于显式作曲。",16,Color("69819b"))
+		_detail_text("装备格控制充能与齐射；琴块由歌曲独立驱动，换装不会改变谱面。",16,Color("69819b"))
 	else:
 		_detail_text(str(row.detail),19)
 
@@ -807,7 +807,7 @@ func _update_detail() -> void:
 				actions.add_child(_button("卸下", drop_module.bind(preview_uid, -1), Color("92adca"), 37))
 			_detail_text("合成需要另一个同类、同级模块；最高 Lv.4。", 16, Color("7189a5"))
 	if module.is_empty() and editable() and is_instance_valid(game.get("lab")):
-		detail_controls.add_child(_button("试听此卡 / 不购买",game.lab.try_item.bind(str(row.id)),Color("91dcd4"),34))
+		detail_controls.add_child(_button("试射此卡 / 不购买",game.lab.try_item.bind(str(row.id)),Color("91dcd4"),34))
 	_add_detail_close()
 
 func _add_detail_close() -> void:
@@ -935,7 +935,7 @@ func _build_lab(rect: Rect2) -> void:
 	controls.add_child(_button("重播",game.lab.replay,Color("a9d8df"),26))
 	var targets=OptionButton.new(); targets.add_item("纵列"); targets.add_item("矩阵"); targets.add_item("巨物靶")
 	targets.select(game.lab.target_layout); targets.item_selected.connect(game.lab.set_targets); controls.add_child(targets)
-	var tracks=HBoxContainer.new(); tracks.add_theme_constant_override("separation",4); column.add_child(tracks)
+	var tracks=HBoxContainer.new(); tracks.add_theme_constant_override("separation",4); column.add_child(tracks);tracks.visible=false
 	for i in range(game.loadout.active_tracks):
 		var mute=_button(("静音 " if bool(game.standard_music.track_mutes[i]) else "有声 ")+char(65+i),game.lab.toggle_track.bind(i),Color("a9bde0"),25)
 		mute.tooltip_text="左键切换静音，右键独奏此轨。只改变声音。"
@@ -949,17 +949,17 @@ func _build_lab(rect: Rect2) -> void:
 	ranges.add_theme_font_size_override("font_size",13)
 	ranges.toggled.connect(func(value):
 		game.lab.show_ranges=value; game.lab.arena.preview_show_ranges=value; game.lab.arena.queue_redraw()
-		lab_status.text="青/金/紫线：A/B/C轨实际射程；仅试射显示" if value else "静音只影响声音")
+		lab_status.text="青/金/紫线：A/B/C轨实际射程；仅试射显示" if value else "武器演奏声已移除")
 	options.add_child(ranges)
 	var solo=OptionButton.new(); solo.add_item("全部轨道")
-	for index in range(game.loadout.active_tracks): solo.add_item("独奏 "+char(65+index))
+	for index in range(game.loadout.active_tracks): solo.add_item("查看 "+char(65+index))
 	solo.add_theme_font_size_override("font_size",13)
 	solo.item_selected.connect(func(index):
 		if index==0:
 			game.standard_music.track_mutes=[false,false,false]; game.lab.signature=""; game.lab.sync()
 		else: game.lab.toggle_track(index-1,true))
-	options.add_child(solo)
-	lab_status=_label("试听默认关闭；点击“试听此卡”“播放”或“重播”后才发声。" if not bool(game.lab.active) else "试听播放中；可暂停或关闭详情。",13,Color("6d899f")); lab_status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; column.add_child(lab_status)
+	options.add_child(solo);solo.visible=false
+	lab_status=_label("试射默认关闭；播放仅演示弹道，不播放武器配音。" if not bool(game.lab.active) else "弹道演示中；可暂停或关闭详情。",13,Color("6d899f")); lab_status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; column.add_child(lab_status)
 	for bar in [controls,tracks]:
 		for control in bar.get_children():
 			if control is Button:

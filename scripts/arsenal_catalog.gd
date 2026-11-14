@@ -230,7 +230,7 @@ static func _build_weapons() -> void:
 		else:
 			data.audio_ready=true
 			data.audio_status="original_synth"
-			data.tags.append("原创电子音色")
+			data.tags.append("弹幕模块")
 		if str(data.id)=="scatter_prism":
 			data.emission="prism_cross"
 			data.tags.append("四向彩色羽状弹流")
@@ -263,7 +263,10 @@ static func _build_weapons() -> void:
 			data.instrument_program=int(INSTRUMENT_PROGRAMS.get(str(data.id),0))
 			data.instrument_group=str(INSTRUMENT_GROUP_OVERRIDES.get(str(data.id),INSTRUMENT_GROUPS.from_program(data.instrument_program)))
 			data.percussion=str(data.id) in PERCUSSION_IDS
-			data.audio_status="sampled_instrument"
+			data.audio_status="retired_weapon_voice"
+			data.instrument_samples=false
+			data.tags.erase("原创电子音色")
+			data.tags.append("歌曲成绩驱动弹量")
 			if str(data.family)!="orbit": data.life*=1.3
 			if str(data.id)=="kaleidoscope": data.life=float(SALVOS.PROFILES.kaleidoscope.reach)/float(data.speed)
 			if ENERGY.handles(str(data.id)): data.life=float(ENERGY.PROFILES[str(data.id)].reach)/float(data.speed)
@@ -306,13 +309,7 @@ static func weapon_description(data: Dictionary) -> String:
 	if data.explosion>0: parts.append("爆炸半径%s像素"%_number(data.explosion))
 	if data.homing>0: parts.append("追踪转向强度%s"%_number(data.homing))
 	if data.bounces>0: parts.append("连跳/反弹%d次"%int(data.bounces))
-	parts.append("占%d格；%s独立音色"%[int(data.width),str(data.get("instrument",data.voice))])
-	var motif: Array[String]=[]
-	for degree in data.get("melody",[]): motif.append(str(int(degree)+1))
-	if bool(data.get("instrument_samples",false)): parts.append(str(data.get("instrument","乐器"))+"；充能满足才发声，逐次发射改变演奏力度，音高固定")
-	else: parts.append("历史八音素材 "+"-".join(motif))
-	if bool(data.get("recorded_audio",false)): parts.append("直接播放已授权连续原声组；四拍只分配伤害与触发")
-	elif not bool(data.get("audio_ready",false)): parts.append("电子占位音色暂时停用，等待录制音源替换")
+	parts.append("占%d格；无武器演奏声，弹量受六秒音游总成绩影响"%int(data.width))
 	return "；".join(parts)+"。"
 
 static func _build_mods() -> void:

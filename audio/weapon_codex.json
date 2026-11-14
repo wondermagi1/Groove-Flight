@@ -3,7 +3,7 @@
 	"pitch_sample_count": 192,
 	"sample_file_count": 288,
 	"schema": 2,
-	"scope": "Fixed-root acoustic performances selected on actual shots by effective charge. Four independently rendered dynamic layers per weapon;original8pitches remain for explicit composer. No automatic pitch melody or damage-strength cycle.",
+	"scope": "Historical source and license manifest only. No weapon performance is played in the current game. See MUSIC_FIRST_POLICY.json.",
 	"sequence_loop_seconds": 1.5,
 	"sequence_step_seconds": 0.1875,
 	"version": "0.46.0-clear-combat-ui",
@@ -4370,5 +4370,8 @@
 			"strength_phrase": "强 → 很强",
 			"voice": "inst_laser_crown"
 		}
-	]
+	],
+	"status": "archived_weapon_voices",
+	"active": false,
+	"retired_in": "0.56.0-music-first"
 }
