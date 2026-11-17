@@ -1,0 +1,81 @@
+{
+  "actual_full_count": 15,
+  "checks": 191,
+  "failures": [],
+  "pilots": [
+    {
+      "base_count": 13,
+      "pilot": "echo",
+      "profile": {
+        "color": "(0.3961, 0.8941, 0.8745, 1.0)",
+        "detail": "预读：琴块提前2.8秒可见（基础2.2秒），便于提前读谱；不改变判定与分数。",
+        "id": "echo",
+        "lookahead": 2.8,
+        "name": "回声",
+        "passive": "rhythm_preview",
+        "tag": "节拍引导"
+      }
+    },
+    {
+      "base_count": 13,
+      "pilot": "volt",
+      "profile": {
+        "color": "(1.0, 0.7569, 0.451, 1.0)",
+        "detail": "快热：连续Perfect奖励改为8／20／40／80次，仍为+5／10／15／20%弹量，最高120%。",
+        "id": "volt",
+        "name": "伏特",
+        "passive": "rhythm_thresholds",
+        "tag": "连击先锋",
+        "thresholds": [
+          8,
+          20,
+          40,
+          80
+        ]
+      }
+    },
+    {
+      "base_count": 13,
+      "pilot": "mender",
+      "profile": {
+        "color": "(0.7137, 0.6471, 0.9804, 1.0)",
+        "detail": "稳拍：每6秒可保护一次已有Perfect链，优秀／一般／Miss或空击不使该链归零；本次判定与得分不变，也不增加Perfect数。",
+        "guard": true,
+        "id": "mender",
+        "name": "绫",
+        "passive": "rhythm_guard",
+        "tag": "容错调律师"
+      }
+    },
+    {
+      "base_count": 13,
+      "pilot": "nova",
+      "profile": {
+        "color": "(0.949, 0.8157, 0.4353, 1.0)",
+        "detail": "长音：长按Perfect窗口45ms、优秀85ms（普通35／75ms），尾端宽容180ms；短按不变，不自动完成长按。",
+        "hold_excellent": 0.085,
+        "hold_perfect": 0.045,
+        "id": "nova",
+        "name": "曜",
+        "passive": "rhythm_hold",
+        "tag": "长音领航员",
+        "tail_window": 0.18
+      }
+    },
+    {
+      "base_count": 13,
+      "pilot": "rime",
+      "profile": {
+        "color": "(0.4941, 0.8745, 0.8196, 1.0)",
+        "detail": "余韵：Perfect链中断后，最多保留+10%奖励4秒；连击仍归零，新链奖励与余韵取高值，不叠加。",
+        "id": "rime",
+        "linger": 4.0,
+        "name": "凛",
+        "passive": "rhythm_linger",
+        "tag": "余韵观测员"
+      }
+    }
+  ],
+  "talent_budget": 3,
+  "ten_rewarded_salvos": 180
+}

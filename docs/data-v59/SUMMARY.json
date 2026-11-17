@@ -1,0 +1,99 @@
+{
+  "version": "0.59.0-rhythm-art",
+  "date": "2026-11-17",
+  "backup": "2ca15935d1f1ac2305d178857e1a01bb3e416fe5",
+  "checks": {
+    "score": 191,
+    "native": 82
+  },
+  "geometry": [
+    {
+      "area_fraction": 0.0802083333333333,
+      "panel": [
+        224.0,
+        330.0
+      ],
+      "runway": 238.0,
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    {
+      "area_fraction": 0.0721693509028795,
+      "panel": [
+        224.0,
+        338.0
+      ],
+      "runway": 246.0,
+      "viewport": [
+        1366,
+        768
+      ]
+    },
+    {
+      "area_fraction": 0.0616,
+      "panel": [
+        224.0,
+        396.0
+      ],
+      "runway": 304.0,
+      "viewport": [
+        1600,
+        900
+      ]
+    },
+    {
+      "area_fraction": 0.0595582561728395,
+      "panel": [
+        260.0,
+        475.0
+      ],
+      "runway": 383.0,
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "area_fraction": 0.041015625,
+      "panel": [
+        280.0,
+        540.0
+      ],
+      "runway": 448.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "area_fraction": 0.0305232558139535,
+      "panel": [
+        280.0,
+        540.0
+      ],
+      "runway": 448.0,
+      "viewport": [
+        3440,
+        1440
+      ]
+    }
+  ],
+  "dock": "fixed bottom-right,18px inset",
+  "notes": "original vector cut-glass taps/gold ribbons/lilac equal-deadline links; held heads pinned to receptor; no score changes",
+  "lookahead": "unchanged2.2s / Echo2.8s; larger spatial runway is not a larger judgement window",
+  "protected_files": 1745,
+  "preserved_songs": 8,
+  "preserved_cues": 3487,
+  "preserved_active_weapons": 24,
+  "environment_notices": {
+    "score": [
+      "ERROR: Failed to read the root certificate store."
+    ],
+    "native": [
+      "ERROR: Failed to read the root certificate store."
+    ]
+  },
+  "verification_scope": "Offline native Forward+ render/input and score checks; root-certificate startup error recorded, no network functionality certified."
+}

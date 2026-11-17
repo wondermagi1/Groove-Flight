@@ -247,6 +247,9 @@ func refresh() -> void:
 		var flight_x: float=22.0 if not _panel_visible("panel_inventory") else sequence_x
 		panel_rects.sequencer = Rect2(flight_x, view.y - flight_height - 18.0, flight_width, flight_height)
 	panel_rects.buffs = Rect2(view.x - right_width - 22.0, top, right_width, minf(630.0, view.y - top - 22.0))
+	if mode=="combat" and game.rhythm_required():
+		var rhythm_rect: Rect2=preload("res://scripts/rhythm_tiles.gd").dock_rect(view)
+		panel_rects.buffs.size.y=minf(panel_rects.buffs.size.y,maxf(120.,rhythm_rect.position.y-12.-top))
 	if mode != "combat":
 		var shade := ColorRect.new()
 		shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
