@@ -9,7 +9,7 @@ const ACTIONS=["rhythm_a","rhythm_b","rhythm_c"]
 const GRADES=SKIN.GRADES
 var game
 var font: SystemFont
-var number_font: SystemFont
+var number_font: Font
 var judge_y=0.
 var frame_style: StyleBoxFlat
 var hit_effects: Array[Dictionary]=[]
@@ -39,7 +39,7 @@ func simultaneous_lanes(note: Dictionary) -> Array:
 			if lane not in lanes:lanes.append(lane)
 	lanes.sort();return lanes
 func _ready() -> void:
-	mouse_filter=Control.MOUSE_FILTER_STOP;focus_mode=Control.FOCUS_NONE;font=UI.font();number_font=UI.font(600);clip_contents=true
+	mouse_filter=Control.MOUSE_FILTER_STOP;focus_mode=Control.FOCUS_NONE;font=UI.font();number_font=UI.role_font("number");clip_contents=true
 	frame_style=UI.surface(Color(SKIN.INK,.94),Color(SKIN.EDGE,.6),5,0)
 func _process(_delta: float) -> void:
 	visible=game.state=="combat" and game.rhythm_required()

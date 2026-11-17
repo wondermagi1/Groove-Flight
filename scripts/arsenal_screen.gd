@@ -190,7 +190,7 @@ func _label(text_value: String, text_size: int = 19, color: Color = UI.TEXT) -> 
 	node.text = text_value
 	node.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	node.add_theme_font_size_override("font_size",roundi(text_size*float(game.settings.get("text_scale",1.))))
-	node.add_theme_color_override("font_color", color)
+	UI.typography(node,text_size);node.add_theme_color_override("font_color", color)
 	return node
 
 func _button(text_value: String, callback: Callable, accent: Color = Color("83dfd7"), height: float = 38.0) -> Button:
@@ -380,6 +380,7 @@ func _build_attributes(rect: Rect2) -> void:
 		for state_name in ["normal", "hover", "pressed"]:
 			entry.add_theme_stylebox_override(state_name, _box(Color(0.08, 0.15, 0.20, 0.35 if state_name == "normal" else 0.85), Color(row[2], 0.18), 4, 3))
 		var number := _label("0", 23, row[2])
+		UI.typography(number,23,"number")
 		number.set_anchors_and_offsets_preset(Control.PRESET_RIGHT_WIDE)
 		number.offset_left = -86; number.offset_right = -8
 		number.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -555,7 +556,7 @@ func _build_buffs(rect: Rect2) -> void:
 		seen[uid] = true
 		var module: Dictionary = game.loadout.find(uid)
 		if not module.is_empty() and DATA.item(str(module.kind)).get("category", "weapon") != "weapon": buffs.append(module)
-	var column := _panel(rect, "已装备增益  %d" % buffs.size(), "只计算装入音序的模块")
+	var column := _panel(rect, "已装备增益  %d" % buffs.size(), "")
 	var boon_text: Array=game.loadout.boon_summary() if game.loadout.has_method("boon_summary") else []
 	if not boon_text.is_empty():
 		var boon_banner=_label("清波强化 · "+" · ".join(boon_text),15,Color("e7c88d"))
@@ -577,7 +578,7 @@ func _build_buffs(rect: Rect2) -> void:
 		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		grid.add_child(card)
 	if buffs.is_empty():
-		var empty := _label("尚无增益\n从补给站购买模块，\n装入音序后生效。", 18, UI.QUIET)
+		var empty := _label("暂无增益", 18, UI.QUIET)
 		grid.add_child(empty)
 
 func _build_shop(rect: Rect2) -> void:

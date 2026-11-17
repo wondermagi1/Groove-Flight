@@ -1,0 +1,131 @@
+{
+  "version": "0.60.0-cyberpunk",
+  "date": "2026-11-17",
+  "backup": "2e5f29d77733f88ebe98661ab4d1024d5c59c36a",
+  "branch": "codex/cyberpunk-interface",
+  "checks": {
+    "score": 457,
+    "base_regression": 3919,
+    "native": 96,
+    "compat": 10,
+    "live": 47
+  },
+  "protected_files": 1733,
+  "unchanged_active_weapon_definitions": 24,
+  "unchanged_songs": 8,
+  "unchanged_cues": 3487,
+  "native_kernel_sha256": "0046a79a8dd2eb63f7c13ea4d3e20720651b851aaa71892902701077c3c2c84e",
+  "rhythm_dock": [
+    {
+      "area_fraction": 0.0802083333333333,
+      "panel": [
+        224.0,
+        330.0
+      ],
+      "runway": 238.0,
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    {
+      "area_fraction": 0.0721693509028795,
+      "panel": [
+        224.0,
+        338.0
+      ],
+      "runway": 246.0,
+      "viewport": [
+        1366,
+        768
+      ]
+    },
+    {
+      "area_fraction": 0.0616,
+      "panel": [
+        224.0,
+        396.0
+      ],
+      "runway": 304.0,
+      "viewport": [
+        1600,
+        900
+      ]
+    },
+    {
+      "area_fraction": 0.0595582561728395,
+      "panel": [
+        260.0,
+        475.0
+      ],
+      "runway": 383.0,
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "area_fraction": 0.041015625,
+      "panel": [
+        280.0,
+        540.0
+      ],
+      "runway": 448.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "area_fraction": 0.0305232558139535,
+      "panel": [
+        280.0,
+        540.0
+      ],
+      "runway": 448.0,
+      "viewport": [
+        3440,
+        1440
+      ]
+    }
+  ],
+  "art": "Original procedural cyber orbital city, cel panels and neon circuits, no photographic samplers; shared near-black/violet minimal chrome; white text; fleet colour facets",
+  "typefaces": [
+    "Oxanium titles with CJK fallback",
+    "JetBrains Mono numbers",
+    "System CJK body"
+  ],
+  "font_license": "Bundled original fonts, OFL1.1, sources and hashes verified; CJK system fonts not redistributed",
+  "overload_removed": [
+    "E action and legacy mapping",
+    "charge/active state",
+    "kill-charge channel",
+    "activation/heal/clear rounds/area damage",
+    "extra2projectiles and1.75damage",
+    "HUD/key binding/tutorial/result captions",
+    "five item charging rules and archived overload perk; charge-only dynamo replaced with0.06HP/sec regeneration"
+  ],
+  "renderers": [
+    "forward_plus",
+    "gl_compatibility"
+  ],
+  "environment_notices": {
+    "score": [
+      "ERROR: Failed to read the root certificate store."
+    ],
+    "base_regression": [
+      "ERROR: Failed to read the root certificate store."
+    ],
+    "native": [
+      "ERROR: Failed to read the root certificate store."
+    ],
+    "compat": [
+      "ERROR: Failed to read the root certificate store."
+    ],
+    "live": [
+      "ERROR: Failed to read the root certificate store."
+    ]
+  },
+  "verification_scope": "Native render/input and offline OGG/clock/score regression; root certificate-store initialization error is recorded, OS certificates not changed. Screenshots are controlled fixtures, not human art acceptance, exact beat transcription or sustained campaign FPS certification.",
+  "preserved_private_artifacts": "Historical Demo/PPT and private course reports excluded."
+}

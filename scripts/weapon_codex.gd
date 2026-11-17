@@ -12,7 +12,7 @@ var class_filter: OptionButton
 var detail: VBoxContainer
 var frame: PanelContainer
 func text(value: String,points: int=17,color: Color=UI.TEXT) -> Label:
-	var label=Label.new();label.text=value;label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;label.add_theme_font_size_override("font_size",points);label.add_theme_color_override("font_color",color);return label
+	var label=Label.new();label.text=value;UI.typography(label,points);label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;label.add_theme_font_size_override("font_size",points);label.add_theme_color_override("font_color",color);return label
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);theme=UI.theme(17);z_index=20
 	var dim=ColorRect.new();dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT);dim.color=Color(0,0,0,.88);add_child(dim)

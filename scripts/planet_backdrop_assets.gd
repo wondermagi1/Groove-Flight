@@ -1,6 +1,5 @@
 extends RefCounted
-## Bind only the active planet. Material references retain shared maps; unused
-## Earth layers are released on departure instead of preloading all eight worlds.
+## Active V60 procedural cyber backdrop; old licensed photographic maps archived.
 const MAPS={
 	"mercury":"8k_mercury.jpg","venus":"4k_venus_atmosphere.jpg",
 	"earth":"8k_earth_daymap.jpg","mars":"8k_mars.jpg",
@@ -18,12 +17,8 @@ static func bind_map(material: ShaderMaterial,parameter: String,filename: String
 	return texture
 
 static func apply(material: ShaderMaterial,id: String,quality: int=2,exposure: float=.9) -> void:
-	bind_map(material,"albedo_map",str(MAPS.get(id,MAPS.mercury)))
-	bind_map(material,"star_map","8k_stars_milky_way.jpg")
-	for parameter in EARTH_LAYERS:
-		if id=="earth": bind_map(material,parameter,EARTH_LAYERS[parameter])
-		else: material.set_shader_parameter(parameter,null)
-	if id=="saturn": bind_map(material,"ring_map","8k_saturn_ring_alpha.png")
-	else: material.set_shader_parameter("ring_map",null)
+	# V60 uses a procedural orbital city. Keep old licensed maps archived, but
+	# do not load photographs into the active background or consume their VRAM.
+	material.set_shader_parameter("planet_style",maxi(0,MAPS.keys().find(id)))
 	material.set_shader_parameter("quality_level",clampi(quality,0,2))
 	material.set_shader_parameter("background_exposure",clampf(exposure,.35,1.25))

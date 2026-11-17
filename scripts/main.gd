@@ -132,8 +132,6 @@ var invulnerable: float=0
 var dash_left: float=0
 var dash_cooldown: float=0
 var dash_dir: Vector2=Vector2.UP
-var charge: float=0
-var overload_until: float=-1
 var wave: int=0
 var wave_spawn_start: int=0
 var wave_picked_start: int=0
@@ -208,7 +206,7 @@ func _ready() -> void:
 	selected_doctrine="";settings.combat_doctrine=""
 	background_layer=CanvasLayer.new(); background_layer.layer=-20; add_child(background_layer)
 	var back=ColorRect.new(); back.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	background=ShaderMaterial.new(); background.shader=load("res://shaders/planet_uhd.gdshader"); back.material=background
+	background=ShaderMaterial.new(); background.shader=load("res://shaders/cyber_battlefield.gdshader"); back.material=background
 	BACKDROP_ASSETS.apply(background,active_planet,int(settings.background_quality),float(settings.background_exposure))
 	back.mouse_filter=Control.MOUSE_FILTER_IGNORE; background_layer.add_child(back)
 	music=load("res://scripts/music.gd").new(); add_child(music); music.step_fired.connect(on_step)
@@ -257,10 +255,11 @@ func _ready() -> void:
 	apply_audio(not is_preview); apply_background_quality(); ui.refresh()
 
 func bind_input() -> void:
-	if InputMap.has_action("rhythm_d"):InputMap.erase_action("rhythm_d")
+	for retired in ["rhythm_d","overload"]:
+		if InputMap.has_action(retired):InputMap.erase_action(retired)
 	for action in ["rhythm_a","rhythm_b","rhythm_c"]:
 		if InputMap.has_action(action):InputMap.action_erase_events(action)
-	for row in [["left",KEY_A,KEY_LEFT],["right",KEY_D,KEY_RIGHT],["up",KEY_W,KEY_UP],["down",KEY_S,KEY_DOWN],["dash",KEY_SPACE],["overload",KEY_E],["editor",KEY_TAB],["pause",KEY_ESCAPE],["fullscreen",KEY_F11],["interact",KEY_F],["rhythm_a",KEY_J],["rhythm_b",KEY_K],["rhythm_c",KEY_L]]:
+	for row in [["left",KEY_A,KEY_LEFT],["right",KEY_D,KEY_RIGHT],["up",KEY_W,KEY_UP],["down",KEY_S,KEY_DOWN],["dash",KEY_SPACE],["editor",KEY_TAB],["pause",KEY_ESCAPE],["fullscreen",KEY_F11],["interact",KEY_F],["rhythm_a",KEY_J],["rhythm_b",KEY_K],["rhythm_c",KEY_L]]:
 		if not InputMap.has_action(row[0]): InputMap.add_action(row[0])
 		for index in range(1,row.size()):
 			var key=InputEventKey.new(); key.physical_keycode=row[index]; InputMap.action_add_event(row[0],key)
@@ -489,7 +488,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	refresh_loadout_stats()
 	move_speed=float(craft.speed); dash_recharge=float(craft.dash_cooldown)
 	fx.particles.clear(); fx.marks.clear(); fire_log.clear(); weapon_damage.clear()
-	health=loadout.max_health; invulnerable=1.; dash_left=0; dash_cooldown=0; charge=0; overload_until=-1
+	health=loadout.max_health; invulnerable=1.; dash_left=0; dash_cooldown=0
 	pilot_amp_until=-1; pilot_heal_progress=0; pending_splits.clear(); boss_down=false; spawn_log.clear(); total_spawned=0
 	flight_trail.clear(); flight_trail_clock=0.
 	shield_points=0; shield_until=-1; player_guard_until=-1; player_guard_started=-10.; shield_renderer.flash_at=-10.; pending_dash_missiles=0; proc_queue.clear(); shop_offers.clear(); shop_reroll_cost=8
@@ -1015,7 +1014,6 @@ func _physics_process(delta: float) -> void:
 	var input=Input.get_vector("left","right","up","down")
 	if input.length_squared()>.01: movement_facing=input.normalized()
 	if Input.is_action_just_pressed("dash"): dash(input)
-	if Input.is_action_just_pressed("overload"): overload()
 	if dash_left>0:
 		dash_left-=delta; player+=dash_dir*1450*delta
 		fx.burst(player,Color("d5f9ff"),2,30)
@@ -1039,16 +1037,6 @@ func dash(direction: Vector2=Vector2.ZERO) -> bool:
 	fx.dash_wake(player,dash_dir,FLEET.ship(selected_ship).color)
 	if shield_points>0: fx.shield(player,Color("ffc45e"),82.); sound("shield",-19.,.9)
 	sound("dash",-12); return true
-func overload() -> bool:
-	if state!="combat" or charge<100 or music.timeline<overload_until: return false
-	charge=0; overload_until=music.timeline+(6. if loadout.perks.has("charge") else 4.)
-	health=minf(health+1,loadout.max_health); enemy_bullets.clear()
-	fx.skill_wave(player,planet_rules.accent,650.)
-	fx.ring(player,Color("ffdc9a"),310,.36)
-	for enemy in enemies:
-		if enemy.at.distance_to(player)<650: hurt_enemy(enemy,60,"overload")
-	sound("reward",-5,.72); return true
-
 func run_elapsed_seconds() -> float:
 	return run_total_seconds if state in ["victory","defeat"] else music.timeline+run_shop_seconds
 
@@ -1303,7 +1291,7 @@ func update_enemies(delta: float) -> void:
 			var next_phase=2 if enemy.hp<enemy.max_hp*.5 else 1
 			if next_phase!=enemy.phase:
 				fx.burst(enemy.at,planet_rules.accent,56,480); fx.ring(enemy.at,planet_rules.accent,float(enemy.radius)*1.6,.7)
-				sound("metal",-12,.66); notice=PLANETS.planet(active_planet).bossname+" · 核心过载"; notice_until=music.timeline+2.
+				sound("metal",-12,.66); notice=PLANETS.planet(active_planet).bossname+" · 核心暴露"; notice_until=music.timeline+2.
 			enemy.phase=next_phase
 		elif SWARM.is_ordinary(enemy):
 			SWARM.update(enemy,music.timeline,player)
@@ -1357,7 +1345,6 @@ func nearest(at: Vector2,exclude: Array=[]) -> Dictionary:
 
 func full_salvo_count(trigger: Dictionary) -> int:
 	var count=int(trigger.get("count",1))
-	if music.timeline<overload_until:count+=2
 	return clampi(count,1,C.GROWTH.count_limit(C.item(str(trigger.kind))))
 func fire_weapon(trigger: Dictionary) -> void:
 	var trigger_family=str(trigger.get("family",trigger.get("kind","pulse")))
@@ -1387,7 +1374,6 @@ func fire_weapon(trigger: Dictionary) -> void:
 	var count=int(trigger.count) if bool(trigger.get("rhythm_count_scaled",false)) else full_salvo_count(trigger)
 	var kind=str(trigger.kind); var family=trigger_family
 	if prism_cross: origin=EMISSION.prism_origin(player,motion)
-	if music.timeline<overload_until: damage*=1.75
 	count=clampi(count,1,C.GROWTH.count_limit(C.item(kind)))
 	var context=trigger.duplicate(true)
 	context.root_uid=int(context.get("root_uid",context.get("uid",-1)))
@@ -1651,7 +1637,6 @@ func hurt_enemy(enemy: Dictionary,damage: float,kind: String,context: Dictionary
 		receipt.count("formation_command_breaks")
 		fx.ring(enemy.at,Color("ffb56f"),92.,.38)
 	var effects: Dictionary=context.get("events",event_snapshot)
-	charge=clampf(charge+5.+float(effects.get("charge_kill",0)),0.,100.)
 	health=minf(float(stats_snapshot.get("max_health",10)),health+float(effects.get("heal_kill",0)))
 	var color=C.color(kind) if not C.item(kind).is_empty() else Color("ffcf88")
 	if allow_procs and float(effects.get("explode_kill",0))>0 and proc_queue.size()<128:
@@ -1870,8 +1855,6 @@ func _draw() -> void:
 	_draw_flight_trail()
 	var opacity=.45 if invulnerable>0 and invulnerable<=.8 and int(invulnerable*20)%2==0 else 1.
 	ART.draw_ship(self,player,16.,facing.angle(),selected_ship,pulse,opacity)
-	if music.timeline<overload_until:
-		draw_arc(player,40+music.pulse()*6,0,TAU,36,Color("ffd68b"),3,true)
 	shield_renderer.update_state(player,music.timeline,player_guard_until-music.timeline,player_guard_started,shield_points>0 and music.timeline<shield_until,bool(settings.reduced_fx))
 	for i in range(loadout.slots.size()):
 		if not loadout.is_head(i): continue
@@ -2043,10 +2026,11 @@ func update_tutorial() -> void:
 	if tutorial_stage>=4:
 		tutorial_active=false; settings.tutorial_done=true; save_settings(); return
 	var movement=" / ".join([binding_name("up"),binding_name("left"),binding_name("down"),binding_name("right")])
-	var tips=[movement+" 移动 · "+binding_name("rhythm_a")+" / "+binding_name("rhythm_b")+" / "+binding_name("rhythm_c")+" 跟随背景音乐谱面","Perfect100／优秀80／一般40／Miss0 · 每6秒总成绩决定下一段弹量",binding_name("editor")+" 打开三轨音序工坊 · 武器保留充能与音乐点自动齐射",binding_name("dash")+" 冲刺穿过缺口 · "+binding_name("overload")+" 满充能后超载"]
+	var tips=[movement+" 移动 · "+binding_name("rhythm_a")+" / "+binding_name("rhythm_b")+" / "+binding_name("rhythm_c")+" 跟随背景音乐谱面","Perfect100／优秀80／一般40／Miss0 · 每6秒总成绩决定下一段弹量",binding_name("editor")+" 打开三轨音序工坊 · 武器保留充能与音乐点自动齐射",binding_name("dash")+" 冲刺穿过缺口"]
 	notice=tips[tutorial_stage]; notice_until=INF
 
 func apply_input_bindings() -> void:
+	settings.input_bindings.erase("overload")
 	if is_preview: return
 	for action in settings.input_bindings:
 		if not InputMap.has_action(str(action)): continue

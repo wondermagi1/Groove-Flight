@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-17",
+  "license": "SIL Open Font License 1.1",
+  "sources": [
+    {
+      "file": "Oxanium.ttf",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/oxanium/Oxanium%5Bwght%5D.ttf",
+      "sha256": "2ce01d946e1e1ffc8d7eecfffbda8623bedd63eaf811a20488c4b69af45babb0",
+      "bytes": 43536
+    },
+    {
+      "file": "Oxanium-OFL.txt",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/oxanium/OFL.txt",
+      "sha256": "fe17c0f2581d71b4e1ea7e636e7f4877c29223e11bb1dd1a871e8c3f2a86336b",
+      "bytes": 4384
+    },
+    {
+      "file": "JetBrainsMono.ttf",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/jetbrainsmono/JetBrainsMono%5Bwght%5D.ttf",
+      "sha256": "48715a42ec242c21e9f02692891e147d022299a52e48d5e413e1a942193ffeda",
+      "bytes": 187208
+    },
+    {
+      "file": "JetBrainsMono-OFL.txt",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/jetbrainsmono/OFL.txt",
+      "sha256": "b2fe5e8987594e9ffd1d2ca52a2f5d73eb8335243893c5d6254b5ad69269591d",
+      "bytes": 4399
+    }
+  ]
+}

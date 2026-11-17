@@ -18,12 +18,10 @@ var health_label: Label
 var score_label: Label
 var notice_label: Label
 var tutorial_skip: Button
-var overload_label: Label
 var boss_bar: ProgressBar
 var boss_title: Label
 var boss_caption: Label
 var boss_panel: Panel
-var overload_bar: ProgressBar
 var slots: Array=[]
 var title_flight: Node2D
 var arsenal: Control
@@ -42,7 +40,7 @@ func box(color: Color,border: Color=Color.TRANSPARENT,radius: int=10) -> StyleBo
 
 func label(text_value: String,size: int=20,color: Color=UI.TEXT) -> Label:
 	var node=Label.new(); node.text=text_value; node.add_theme_font_size_override("font_size",roundi(size*float(game.settings.get("text_scale",1.))))
-	node.add_theme_color_override("font_color",color); node.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	UI.typography(node,size);node.add_theme_color_override("font_color",color); node.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	return node
 func button(text_value: String,callback: Callable,color: Color=Color("71e8dc"),height: float=54) -> Button:
 	var node=Button.new(); node.text=text_value; node.custom_minimum_size=Vector2(180,height); node.focus_mode=Control.FOCUS_NONE
@@ -62,7 +60,7 @@ func refresh() -> void:
 	# Buttons can request a new screen from inside their own pressed signal.
 	# Hide immediately, release after signal dispatch instead of freeing a lock.
 	for child in root_control.get_children(): child.hide(); child.queue_free()
-	slots.clear(); wave_label=null; timer_label=null; health_label=null; score_label=null; notice_label=null; overload_label=null; overload_bar=null; boss_bar=null; boss_title=null; boss_caption=null; boss_panel=null; title_flight=null; arsenal=null; solar=null; composer=null;piano_tiles=null
+	slots.clear(); wave_label=null; timer_label=null; health_label=null; score_label=null; notice_label=null; boss_bar=null; boss_title=null; boss_caption=null; boss_panel=null; title_flight=null; arsenal=null; solar=null; composer=null;piano_tiles=null
 	match game.state:
 		"title": title_screen()
 		"hub": hub_screen()
@@ -156,7 +154,7 @@ func hud(include_arsenal: bool=true) -> void:
 	timer_label=label("",56,Color.WHITE); timer_label.position=Vector2(192,5); root_control.add_child(timer_label)
 	# Keep clock/BOSS text inside its reserved column at larger UI text scales.
 	timer_label.add_theme_font_size_override("font_size",mini(56,timer_label.get_theme_font_size("font_size")))
-	var timer_font=SystemFont.new();timer_font.font_names=font.font_names;timer_font.font_weight=700;timer_label.add_theme_font_override("font",timer_font)
+	UI.typography(timer_label,56,"number")
 	health_label=label("",18); health_label.position=Vector2(370,26); root_control.add_child(health_label)
 	score_label=label("",18); score_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT; score_label.position=Vector2(view.x-630,27); score_label.size=Vector2(275,32); root_control.add_child(score_label)
 	var pause=button("Ⅱ",game.pause_game,Color("8597af"),38); pause.custom_minimum_size=Vector2(44,38); pause.position=Vector2(view.x-75,23); root_control.add_child(pause)
@@ -172,9 +170,7 @@ func hud(include_arsenal: bool=true) -> void:
 	boss_bar=thin_bar(boss_width-20,Color("ee8faf")); boss_bar.position=Vector2(boss_x+10,150); root_control.add_child(boss_bar)
 	boss_title=label("",22,Color("e5eaf0")); boss_title.position=Vector2(boss_x+10,117); boss_title.size=Vector2(boss_width-20,28); boss_title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER; root_control.add_child(boss_title)
 	boss_caption=label("",14,Color("a9b9c8")); boss_caption.position=Vector2(boss_x+10,161); boss_caption.size=Vector2(boss_width-20,22); boss_caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER; root_control.add_child(boss_caption)
-	overload_label=label("",14,UI.GOLD); overload_label.position=Vector2(370,58); root_control.add_child(overload_label)
-	overload_bar=thin_bar(160,Color("f3d091")); overload_bar.position=Vector2(370,82); root_control.add_child(overload_bar)
-	for node in [wave_label,timer_label,health_label,score_label,notice_label,overload_label,boss_title,boss_caption]:
+	for node in [wave_label,timer_label,health_label,score_label,notice_label,boss_title,boss_caption]:
 		node.add_theme_color_override("font_color",Color.WHITE);CLEAR_HUD.readable(node)
 	timer_label.add_theme_constant_override("outline_size",3)
 	if include_arsenal and not game.free_music_run: arsenal_screen("combat")
@@ -198,8 +194,6 @@ func update_hud() -> void:
 	notice_label.size=Vector2(view.x*.60,58) if game.tutorial_active else Vector2(view.x-maxf(680.,view.x*.42)-24.,30.)
 	tutorial_skip.position=Vector2(view.x*.5-90.,notice_label.position.y+62.)
 	notice_label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART if game.tutorial_active else TextServer.AUTOWRAP_OFF
-	overload_label.text=game.binding_name("overload")+("  超载就绪" if game.charge>=100 else "  超载  %d%%"%int(game.charge))
-	overload_bar.value=game.charge
 	var boss: Dictionary={}
 	for enemy in game.enemies:
 		if enemy.kind=="boss" and enemy.hp>0: boss=enemy; break
@@ -247,7 +241,7 @@ func settings_screen() -> void:
 	var offset_label=label("琴块时间偏移  %+.0f ms"%float(game.settings.get("rhythm_offset_ms",0.)),18);content.add_child(offset_label)
 	var offset=HSlider.new();offset.name="RhythmOffset";offset.min_value=-150.;offset.max_value=150.;offset.step=5.;offset.value=float(game.settings.get("rhythm_offset_ms",0.))
 	offset.value_changed.connect(func(value):offset_label.text="琴块时间偏移  %+.0f ms"%value;game.set_rhythm_offset(value));content.add_child(offset)
-	content.add_child(label("正值让琴块与发射稍晚，负值稍早。可按耳机与屏幕的实际听感校准。",15,UI.MUTED))
+	content.add_child(label("正值延后 · 负值提前",15,UI.MUTED))
 	content.add_child(label("画面与操作",22,UI.GOLD))
 	var motion_label=label("背景节奏强度",19); content.add_child(motion_label)
 	var motion=HSlider.new(); motion.min_value=0.; motion.max_value=1.; motion.step=.05; motion.value=float(game.settings.background_motion)
@@ -260,13 +254,13 @@ func settings_screen() -> void:
 	var aiming=OptionButton.new(); aiming.add_item("自动瞄准 最近目标"); aiming.add_item("移动朝向"); aiming.add_item("固定前向")
 	aiming.select(int(game.settings.aim_mode)); aiming.item_selected.connect(func(index): game.settings.aim_mode=index); content.add_child(aiming)
 	content.add_child(label("操作映射 点击后按新按键 Esc取消",18))
-	for action in ["left","right","up","down","dash","overload","rhythm_a","rhythm_b","rhythm_c","editor","pause"]:
-		var caption={"left":"左移","right":"右移","up":"上移","down":"下移","dash":"冲刺","overload":"超载","rhythm_a":"音乐键1（J）","rhythm_b":"音乐键2（K）","rhythm_c":"音乐键3（L）","editor":"音序工坊","pause":"暂停"}[action]
+	for action in ["left","right","up","down","dash","rhythm_a","rhythm_b","rhythm_c","editor","pause"]:
+		var caption={"left":"左移","right":"右移","up":"上移","down":"下移","dash":"冲刺","rhythm_a":"音乐键1（J）","rhythm_b":"音乐键2（K）","rhythm_c":"音乐键3（L）","editor":"音序工坊","pause":"暂停"}[action]
 		content.add_child(button("等待按键…" if game.binding_capture==action else caption+"  "+game.binding_name(action),game.capture_binding.bind(action),Color("9abacf"),36))
 	content.add_child(button("补看操作教学",func():game.replay_tutorial(); game.close_settings(),Color("a9cdd8"),36))
 	content.add_child(label("星球背景画质",19))
 	var quality=OptionButton.new(); quality.name="BackdropQuality"; quality.custom_minimum_size.y=42
-	for entry in ["标准 · 基础光照","高 · 云层与夜景","超清 · 最高8K贴图与完整光照"]: quality.add_item(entry)
+	for entry in ["轻量 · 色块与轨道","标准 · 城市光路","精细 · 光路与信标"]: quality.add_item(entry)
 	quality.select(int(game.settings.get("background_quality",2))); quality.item_selected.connect(game.set_background_quality); content.add_child(quality)
 	var exposure_label=label("背景亮度  %d%%"%int(float(game.settings.get("background_exposure",.9))*100),19); content.add_child(exposure_label)
 	var exposure=HSlider.new(); exposure.name="BackdropExposure"; exposure.min_value=.35; exposure.max_value=1.25; exposure.step=.05; exposure.value=float(game.settings.get("background_exposure",.9))
@@ -277,7 +271,7 @@ func settings_screen() -> void:
 	var fullscreen=button("显示：全屏" if DisplayServer.window_get_mode()==DisplayServer.WINDOW_MODE_FULLSCREEN else "显示：窗口",func():pass,Color("91b3c2"),40)
 	fullscreen.toggle_mode=true; fullscreen.button_pressed=DisplayServer.window_get_mode()==DisplayServer.WINDOW_MODE_FULLSCREEN
 	fullscreen.toggled.connect(func(value):game.settings.fullscreen=value; fullscreen.text="显示：全屏" if value else "显示：窗口"; DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if value else DisplayServer.WINDOW_MODE_WINDOWED)); content.add_child(fullscreen)
-	content.add_child(label("背景素材：Solar System Scope / INOVE · CC BY4.0",14,UI.QUIET))
+	content.add_child(label("字体：Oxanium / JetBrains Mono · SIL OFL 1.1",14,UI.QUIET))
 	var music_credit=RichTextLabel.new(); music_credit.name="MusicAttribution"; music_credit.bbcode_enabled=true; music_credit.fit_content=true; music_credit.custom_minimum_size.y=86.
 	music_credit.text="背景音乐：Filaments / Helios / Reverie / Legionnaire (Original) / Titan / Cassini / Luminance / Omega — Scott Buckley · CC BY 4.0\n[url=https://www.scottbuckley.com.au/library/]www.scottbuckley.com.au[/url] · [url=https://creativecommons.org/licenses/by/4.0/]许可与署名[/url]"
 	music_credit.add_theme_font_size_override("normal_font_size",14)
@@ -301,7 +295,7 @@ func results_screen() -> void:
 		content.add_child(label("第%d波 %.1f秒 / 生成%d / 撤退%d / 拾取%d / 补给%d"%[wave_record.wave,wave_record.seconds,wave_record.spawned,wave_record.retreated,wave_record.dust,int(wave_record.get("supply",0))],16,UI.MUTED))
 	var kinds=game.weapon_damage.keys(); kinds.sort_custom(func(a,b):return game.weapon_damage[a]>game.weapon_damage[b])
 	for kind in kinds.slice(0,4):
-		var name=DATA.item(str(kind)).get("name", "超载爆发" if kind=="overload" else "连锁效果")
+		var name=DATA.item(str(kind)).get("name", "连锁效果")
 		content.add_child(label("%s    %d 伤害"%[name,int(game.weapon_damage[kind])],19,UI.MUTED))
 	if game.state=="victory" and game.next_planet()!=game.active_planet:
 		content.add_child(button("下一航线 · "+PLANETS.planet(game.next_planet()).name,game.open_next_planet))

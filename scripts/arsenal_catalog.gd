@@ -406,7 +406,7 @@ static func _build_rhythm() -> void:
 		["r_flame_shuffle","焰流切分阀",1,21,1,"power",[_rule("weapon","count",3,"all","flame","odd"),_rule("weapon","range_percent",.30,"all","flame","odd")]],
 		["r_drone_chorus","无人机合唱座",2,26,2,"support",[_rule("beat","repeat",1,"neighbor","drone","even"),_rule("weapon","homing",1,"neighbor","drone","even")]],
 		["r_soft_refrain","温柔副歌",1,18,1,"support",[_rule("event","heal_bar",.12),_rule("stat","power",-4)]],
-		["r_drum_fuel","鼓点燃料罐",1,20,1,"power",[_rule("event","charge_kill",.40),_rule("beat","charge_reduce",1,"row","","even")]],
+		["r_drum_fuel","鼓点燃料罐",1,20,1,"power",[_rule("beat","charge_reduce",1,"row","","even")]],
 		["r_break_shield","间奏护盾",1,20,1,"support",[_rule("event","shield_dash",1),_rule("beat","rotate",15,"all")]],
 		["r_roll_salvo","滚奏导引轮",2,25,2,"power",[_rule("event","missiles_dash",2),_rule("stat","power",4)]],
 		["r_collect_beat","拾音漏斗",1,19,1,"support",[_rule("event","heal_pickup",.012),_rule("stat","magnet",.15)]],
@@ -459,7 +459,7 @@ static func _build_defense() -> void:
 		["d_hunter_patch","猎获修补器",1,20,1,"support",[_rule("event","heal_kill",.02),_rule("weapon","damage_percent",-.08)]],
 		["d_rest_cradle","休整摇篮",1,20,1,"support",[_rule("event","heal_bar",.25),_rule("stat","armor",-.3)]],
 		["d_rescue_screen","救援屏障",1,21,1,"energy",[_rule("event","shield_dash",1),_rule("event","heal_bar",.06)]],
-		["d_life_battery","生命蓄电池",0,15,1,"power",[_rule("stat","max_health",1),_rule("event","charge_kill",.35)]],
+		["d_life_battery","生命蓄电池",0,15,1,"power",[_rule("stat","max_health",1)]],
 		["d_blood_relay","血色中继",2,24,2,"power",[_rule("event","heal_kill",.03),_rule("stat","max_health",-2)]],
 		["d_calm_seal","静心封条",0,12,1,"support",[_rule("stat","max_health",3),_rule("stat","crit_chance",-.03)]],
 		["d_service_patch","后勤织补片",0,14,1,"support",[_rule("stat","regen",.06),_rule("stat","support",5)]],
@@ -468,7 +468,7 @@ static func _build_defense() -> void:
 		["d_lucky_pin","幸运别针",1,17,1,"support",[_rule("stat","luck",4),_rule("stat","armor",-.25)]],
 		["d_target_visor","精密护目镜",1,18,1,"ballistic",[_rule("stat","crit_chance",.06)]],
 		["d_predator_sight","掠食瞄具",1,20,1,"ballistic",[_rule("stat","crit_damage",.35),_rule("stat","move_percent",.03)]],
-		["d_recovery_dynamo","再启动发电机",1,20,1,"power",[_rule("event","charge_kill",.75)]],
+		["d_recovery_dynamo","再启动发电机",1,20,1,"power",[_rule("stat","regen",.06)]],
 		["d_escape_rack","脱离反击架",1,23,2,"power",[_rule("event","missiles_dash",2),_rule("stat","move_percent",.04)]],
 		["d_safety_brake","安全制动伞",1,21,1,"support",[_rule("event","shield_dash",2),_rule("weapon","damage_percent",-.10)]],
 		["d_rupture_vent","裂解排压阀",1,22,1,"power",[_rule("event","explode_kill",5),_rule("stat","max_health",-1)]],
@@ -477,7 +477,7 @@ static func _build_defense() -> void:
 		["d_windrunner","逐风翼膜",1,20,1,"support",[_rule("stat","move_percent",.18),_rule("stat","max_health",-1)]],
 		["d_safe_hands","稳运手套",1,19,1,"support",[_rule("stat","armor",.5),_rule("stat","luck",3)]],
 		["d_wind_screen","风障回收翼",2,24,2,"support",[_rule("event","shield_dash",1),_rule("stat","magnet",.35)]],
-		["d_medical_converter","医疗换能器",2,24,1,"support",[_rule("event","heal_pickup",.04),_rule("event","charge_kill",-.25)]],
+		["d_medical_converter","医疗换能器",2,24,1,"support",[_rule("event","heal_pickup",.04)]],
 		["d_aegis_plate","宙盾护板",2,27,2,"energy",[_rule("event","shield_dash",3),_rule("stat","support",-6)]],
 		["d_rampart","磐城舱甲",2,28,2,"power",[_rule("stat","max_health",4),_rule("stat","armor",.7),_rule("stat","move_percent",-.08)]],
 		["d_coral_repair","珊瑚修复丛",2,25,2,"support",[_rule("stat","regen",.14),_rule("stat","power",-5)]],
@@ -499,7 +499,7 @@ static func _build_cores() -> void:
 		["c_solar_orbit","日冕双轨核",3,46,3,"energy",[_rule("weapon","count",4,"all","nova"),_rule("weapon","count",2,"all","orbit"),_rule("weapon","range_percent",.30,"all","orbit")]],
 		["c_tempest","烈雨风暴核",3,46,3,"power",[_rule("weapon","homing",2,"all","missile"),_rule("weapon","pierce",3,"all","flame"),_rule("stat","power",6)]],
 		["c_blade","天刃交汇核",3,46,3,"ballistic",[_rule("weapon","pierce",5,"all","rail"),_rule("weapon","bounces",2,"all","boomerang"),_rule("stat","ballistic",6)]],
-		["c_overload","雷暴跃迁核",3,47,3,"power",[_rule("event","charge_kill",1.2),_rule("event","missiles_dash",4),_rule("stat","power",-4)]],
+		["c_overload","雷暴跃迁核",3,47,3,"power",[_rule("event","missiles_dash",4),_rule("stat","power",-4)]],
 		["c_life","生命回响核",3,48,3,"support",[_rule("event","heal_bar",.30),_rule("event","heal_pickup",.025),_rule("event","shield_dash",1),_rule("weapon","damage_percent",-.15)]],
 		["c_prism","双频棱镜核",3,48,3,"energy",[_rule("stat","energy",8),_rule("stat","ballistic",8),_rule("beat","repeat",1,"neighbor","","first")]],
 		["c_void_coda","虚空首尾核",3,50,3,"power",[_rule("weapon","damage_percent",.70,"all","","first"),_rule("weapon","damage_percent",.70,"all","","final"),_rule("weapon","pierce",2),_rule("beat","charge_reduce",1,"neighbor")]]
@@ -524,7 +524,7 @@ static func describe_rule(rule: Dictionary) -> String:
 		var index=FAMILIES.find(rule.target)
 		target=FAMILY_NAMES[index] if index>=0 else {"ballistic":"弹道武器","energy":"能量武器","power":"动力武器","support":"支援武器"}.get(rule.target,rule.target)
 	var key: String=rule.key; var value=float(rule.value)
-	var names={"ballistic":"弹道","energy":"能量","power":"动力","support":"支援","extra_projectiles":"额外弹丸","bullet_multiplier":"弹丸伤害倍率","crit_chance":"暴击率","crit_damage":"暴击伤害","max_health":"生命上限","regen":"每秒恢复生命","armor":"装甲","move_percent":"移动速度","magnet":"拾取范围","luck":"幸运","damage_percent":"伤害","count":"发射数量","pierce":"穿透次数","speed_percent":"弹速","range_percent":"有效时长/射程","explosion":"爆炸半径","spread_percent":"散射角","chain_count":"连锁次数","homing":"追踪强度","bounces":"反弹次数","charge_reduce":"充能减免","repeat":"同拍复奏","rotate":"发射旋角","streak":"同类连奏增伤","chord":"异类和弦强度","heal_bar":"每小节恢复生命","shield_dash":"冲刺护盾层数","heal_pickup":"每颗星屑恢复生命","explode_kill":"击杀爆破伤害","charge_kill":"每次击杀超载充能","missiles_dash":"冲刺发射导弹","heal_kill":"每次击杀恢复生命"}
+	var names={"ballistic":"弹道","energy":"能量","power":"动力","support":"支援","extra_projectiles":"额外弹丸","bullet_multiplier":"弹丸伤害倍率","crit_chance":"暴击率","crit_damage":"暴击伤害","max_health":"生命上限","regen":"每秒恢复生命","armor":"装甲","move_percent":"移动速度","magnet":"拾取范围","luck":"幸运","damage_percent":"伤害","count":"发射数量","pierce":"穿透次数","speed_percent":"弹速","range_percent":"有效时长/射程","explosion":"爆炸半径","spread_percent":"散射角","chain_count":"连锁次数","homing":"追踪强度","bounces":"反弹次数","charge_reduce":"充能减免","repeat":"同拍复奏","rotate":"发射旋角","streak":"同类连奏增伤","chord":"异类和弦强度","heal_bar":"每小节恢复生命","shield_dash":"冲刺护盾层数","heal_pickup":"每颗星屑恢复生命","explode_kill":"击杀爆破伤害","missiles_dash":"冲刺发射导弹","heal_kill":"每次击杀恢复生命"}
 	var percent=key in ["bullet_multiplier","crit_chance","crit_damage","move_percent","magnet","damage_percent","speed_percent","range_percent","spread_percent","streak","chord"]
 	var amount=("+" if value>=0 else "")+_number(value*100. if percent else value)+("%" if percent else "")
 	if key=="rotate": amount+="°"

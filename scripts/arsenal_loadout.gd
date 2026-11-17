@@ -34,7 +34,7 @@ const FAMILY_CADENCE={
 const WEAPON_KEYS=["damage_percent","count","pierce","speed_percent","range_percent","explosion","spread_percent","chain_count","homing","bounces"]
 const TRAJECTORY_KEYS=["split_count","accel_forward","accel_side","offset_forward","offset_side","turn_after","turn_deg","conduct","count_per_attribute","chain_per_attribute","westwind","kaleidoscope"]
 const BEAT_KEYS=["charge_reduce","repeat","rotate","streak","chord"]
-const EVENT_KEYS=["heal_bar","shield_dash","heal_pickup","explode_kill","charge_kill","missiles_dash","heal_kill"]
+const EVENT_KEYS=["heal_bar","shield_dash","heal_pickup","explode_kill","missiles_dash","heal_kill"]
 const WAVE_BOONS=[
 	{"id":"boon_hull","name":"船体加固","key":"max_health","value":1.,"detail":"生命上限 +1，并立即恢复1生命","tag":"生存","color":Color("8ed7bf")},
 	{"id":"boon_armor","name":"复合装甲","key":"armor","value":.25,"detail":"装甲 +0.25，提高全部承伤减免","tag":"生存","color":Color("9dc9d7")},
@@ -332,9 +332,6 @@ func _events_for(uid: int,serial: int,sources: Array) -> Dictionary:
 		if str(rule.get("type",""))=="event" and result.has(key) and _applies(source,uid,serial): result[key]+=float(rule.get("value",0))*float(source.scale)
 	for key in ["heal_bar","shield_dash","heal_pickup","heal_kill"]: result[key]=clampf(result[key],0.,20.)
 	result.explode_kill=clampf(result.explode_kill,0.,300.)
-	# Negative modifiers reduce the game's baseline kill charge (5), allowing
-	# medical converters to retain their stated healing/energy trade-off.
-	result.charge_kill=clampf(result.charge_kill,-5.,50.)
 	result.missiles_dash=clampf(result.missiles_dash,0.,12.)
 	return result
 func events(uid: int=-1,serial: int=-1) -> Dictionary: return _events_for(uid,serial,_rules())

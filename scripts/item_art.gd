@@ -300,11 +300,6 @@ static func _defense(canvas: CanvasItem,data: Dictionary,accent: Color,alpha: fl
 		_poly(canvas,star,Color(STEEL,alpha))
 		canvas.draw_circle(Vector2.ZERO,11.,accent)
 		canvas.draw_circle(Vector2(-3,-3),4.,accent.lightened(.7))
-	elif key=="charge_kill":
-		_plate(canvas,Vector2(-19,-27),Vector2(38,54),accent)
-		canvas.draw_rect(Rect2(-9,-32,18,6),Color(STEEL,alpha))
-		for index in range(3): canvas.draw_rect(Rect2(-12,-18+index*14,24,10),accent.darkened(index*.12))
-		_poly(canvas,[Vector2(2,-15),Vector2(-6,2),Vector2(1,2),Vector2(-2,17),Vector2(9,-3),Vector2(3,-3)],Color(LIGHT,alpha))
 	elif key=="missiles_dash":
 		_plate(canvas,Vector2(-21,-25),Vector2(42,50),accent)
 		_rocket(canvas,Vector2(-1,-12),accent,.7)

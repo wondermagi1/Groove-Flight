@@ -30,7 +30,7 @@ static func add_plate(vertices: PackedVector3Array,colors: PackedColorArray,uvs:
 			var normal=(b-a).orthogonal().angle()
 			for item in [[a,0.],[b,0.],[a,1.],[a,1.],[b,0.],[b,1.]]:
 				vertices.append(Vector3(item[0].x,item[0].y,0)); colors.append(Color("8796ac")); uvs.append(Vector2(float(item[1]),normal))
-	var emitter=color.is_equal_approx(Color("ed8790")) or color.is_equal_approx(Color("9fe1d7"))
+	var emitter=color.is_equal_approx(Color("f183b8")) or color.is_equal_approx(Color("8bc8f2"))
 	var height=1. if base else (1.16 if emitter else 1.04)
 	for index in triangles:
 		var point=polygon[index]
@@ -45,8 +45,8 @@ static func finish_mesh(v: PackedVector3Array,c: PackedColorArray,u: PackedVecto
 	# Shared construction detail is baked ONCE into each of eight meshes.
 	# Geometry stays inside existing silhouettes;no new entities or per-frame
 	# hull loops,lights,textures,shadow passes or changed collision radii.
-	var dark=Color("243d43");var rim=Color("cbd5c9");var white=Color("eef0df")
-	var red=Color("ed8790");var brass=Color("bfa77c")
+	var dark=Color("302741");var rim=Color("c9c4e0");var white=Color("eee9fa")
+	var red=Color("f183b8");var brass=Color("a279c2")
 	for side in [-1.,1.]:
 		var y=side*(.32 if kind in ["mirror","lance","dart"] else .41)
 		add_plate(v,c,u,[[-.80,y-.13],[-.28,y-.10],[-.16,y+.09],[-.79,y+.10]],dark)
@@ -56,7 +56,7 @@ static func finish_mesh(v: PackedVector3Array,c: PackedColorArray,u: PackedVecto
 			strip(v,c,u,Vector2(x,y-.055),Vector2(x-.025,y+.052),.041,Color("0d2028"))
 		strip(v,c,u,Vector2(-.79,y+.10),Vector2(-.34,y+.10),.029,brass)
 		add_plate(v,c,u,hex(Vector2(-.78,y),.042),white)
-		strip(v,c,u,Vector2(-.95,y-.06),Vector2(-.95,y+.06),.065,Color("9fe1d7"))
+		strip(v,c,u,Vector2(-.95,y-.06),Vector2(-.95,y+.06),.065,Color("8bc8f2"))
 	# Raised sensor pod with dark gasket,coral aperture and offset glass glint.
 	add_plate(v,c,u,hex(Vector2(.15,0),.31),dark)
 	add_plate(v,c,u,hex(Vector2(.15,-.018),.25),brass)
@@ -75,7 +75,7 @@ static func hex(at: Vector2,radius: float) -> Array:
 
 static func make_mesh(kind: String) -> ArrayMesh:
 	var vertices=PackedVector3Array(); var colors=PackedColorArray(); var uvs=PackedVector2Array()
-	var ink=Color("101b2c"); var plate=Color("cbd5c9"); var dark=Color("405c61"); var red=Color("ed8790")
+	var ink=Color("101b2c"); var plate=Color("c9c4e0"); var dark=Color("433758"); var red=Color("f183b8")
 	match kind:
 		"mote","dart":
 			var wing=1.2 if kind=="mote" else .75

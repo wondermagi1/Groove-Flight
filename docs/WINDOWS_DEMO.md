@@ -1,5 +1,7 @@
 # Windows Demo 0.49.0
 
+V60构建配方补充：未来版本会包含`assets/fonts`内的原版OFL字体，并在独立Credits/fonts附许可证/来源；说明书删除E超载。当前没有重导出历史V49包，下文原始操作描述仅适用于历史Demo。
+
 本文主体记录历史V49交付，不代表当前V53工程。V53新增琴块、八首星球歌曲/谱面和任务，本轮没有重打包ZIP或覆盖展示PPT。当前`build_windows_demo.py`从`project.godot`读取版本，生成新的版本目录/暂存树，并携带逐星歌曲许可证；不会以V49名称打包新源码。下方V49两条重建/验证命令仅适用于切回对应历史基线时；`verify_windows_demo.py`仍专门验证历史V49包，后续新Demo需增加相应版本的全新解压/资源/EXE验证，不能复用旧报告冒充。
 
 构建日期：2026-11-10。游戏代码基线：`34019f389dffb32757ec817995d9fa20e9b1d7c5`（V49）。打包前上传备份：`codex/backup-20261110-before-windows-demo` / `070745a89bcc98582d0bee1f840a118cac9ab3a4`，已核验远端SHA。

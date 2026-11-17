@@ -17,7 +17,6 @@ const PERKS=[
 	{"id":"streak","name":"同频连奏","detail":"相邻同类模块触发时，伤害提高35%。","tag":"编排羁绊"},
 	{"id":"chord","name":"异色和弦","detail":"与前一格武器不同的模块，附带穿透与爆破。","tag":"编排羁绊"},
 	{"id":"magnet","name":"引力收集","detail":"拾取范围 +100%，每拾取12颗星屑恢复1生命。","tag":"续航"},
-	{"id":"charge","name":"过载回路","detail":"超载充能加快50%，超载持续时间 +2秒。","tag":"爆发增强"}
 ]
 static func weapon(id: String) -> Dictionary:
 	for row in WEAPONS:

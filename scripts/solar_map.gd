@@ -53,7 +53,7 @@ func _box(color: Color,border: Color=Color("26364d"),margin: int=16) -> StyleBox
 	return UI.surface(color,border,8,margin)
 
 func _label(value: String,font_size: int=20,color: Color=UI.TEXT) -> Label:
-	var node=Label.new(); node.text=value; node.add_theme_font_size_override("font_size",font_size)
+	var node=Label.new(); node.text=value; UI.typography(node,font_size); node.add_theme_font_size_override("font_size",font_size)
 	node.add_theme_color_override("font_color",color); node.mouse_filter=Control.MOUSE_FILTER_IGNORE; return node
 func _button(value: String,callback: Callable,accent: Color=Color("87dbe5")) -> Button:
 	var node=Button.new(); node.text=value; node.focus_mode=Control.FOCUS_NONE
@@ -101,7 +101,7 @@ func _build_world() -> void:
 	var corona_material=ShaderMaterial.new(); corona_material.shader=sun_material.shader; corona_material.set_shader_parameter("corona",true)
 	var corona=_sphere(1.74,corona_material); corona.name="SolarCorona"; corona.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF; world_root.add_child(corona)
 	for row in DATA.rows():
-		var material=ShaderMaterial.new(); material.shader=load("res://shaders/planet_surface.gdshader")
+		var material=ShaderMaterial.new(); material.shader=load("res://shaders/cyber_planet.gdshader")
 		material.set_shader_parameter("body_color",row.color); material.set_shader_parameter("planet_style",int(row.index)); material.set_shader_parameter("seed",float(row.index)*1.71)
 		var body=Node3D.new(); body.name="Planet_"+str(row.id); world_root.add_child(body)
 		var sphere=_sphere(float(row.radius),material); sphere.name="Surface"; sphere.rotation.z=.08+float(row.index)*.035; body.add_child(sphere)
@@ -134,7 +134,7 @@ func _build_saturn_rings(body: Node3D,radius: float) -> void:
 			var angle=i*TAU/segments
 			for r in [inner,outer]:
 				vertices.append(Vector3(cos(angle)*r,0,sin(angle)*r))
-				colors.append(Color("b8a683") if band%3 else Color("635c52"))
+				colors.append(Color("ac80ca") if band%3 else Color("3c294d"))
 		var offset=band*(segments+1)*2
 		for i in range(segments): indices.append_array(PackedInt32Array([offset+i*2,offset+i*2+1,offset+i*2+2,offset+i*2+1,offset+i*2+3,offset+i*2+2]))
 	var arrays=[]; arrays.resize(Mesh.ARRAY_MAX); arrays[Mesh.ARRAY_VERTEX]=vertices; arrays[Mesh.ARRAY_COLOR]=colors; arrays[Mesh.ARRAY_INDEX]=indices

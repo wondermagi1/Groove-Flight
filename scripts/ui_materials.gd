@@ -1,30 +1,45 @@
 extends RefCounted
-## Quiet neutral chrome. Attribute, quality, fleet and projectile colours stay semantic.
-const INK=Color("0b0c0f")
-const PANEL=Color("151619")
-const LIFT=Color("222328")
-const LINE=Color("383a40")
-const TEXT=Color("f3f3ef")
-const MUTED=Color("a6acb5")
-const QUIET=Color("747d89")
+## Minimal cyberpunk chrome. Bright attribute/quality colours remain semantic.
+const INK=Color("090810")
+const PANEL=Color("13101e")
+const LIFT=Color("252035")
+const LINE=Color("41374f")
+const TEXT=Color("f3f1fa")
+const MUTED=Color("b0a9c0")
+const QUIET=Color("827b94")
 const GOLD=Color("ddc28b")
+const ACCENT=Color("ba8af0")
+const CYAN=Color("86d9f2")
+const PINK=Color("ed83c0")
 const ERROR=Color("e3919c")
 static var _themes: Dictionary={}
+static var _fonts: Dictionary={}
 static func font(weight: int=400) -> SystemFont:
 	var result=SystemFont.new();result.font_names=PackedStringArray(["Microsoft YaHei UI","Microsoft YaHei","Noto Sans CJK SC","Arial"]);result.font_weight=weight
 	return result
+static func role_font(role: String="body") -> Font:
+	if _fonts.has(role):return _fonts[role]
+	if role=="body":_fonts[role]=font();return _fonts[role]
+	var result=FontVariation.new()
+	result.base_font=load("res://assets/fonts/JetBrainsMono.ttf" if role=="number" else "res://assets/fonts/Oxanium.ttf")
+	result.variation_opentype={"wght":600. if role=="number" else 650.}
+	var chinese=font(600 if role=="title" else 400)
+	if role=="title":chinese.font_names=PackedStringArray(["DengXian","Microsoft YaHei UI","Noto Sans CJK SC"])
+	result.fallbacks=[chinese];_fonts[role]=result;return result
+static func typography(node: Control,points: int,role: String="") -> void:
+	var selected=role if not role.is_empty() else ("title" if points>=24 else "body")
+	node.add_theme_font_override("font",role_font(selected))
 static func neutral(color: Color) -> Color:
-	# Remove blue/teal tint only from dark structural materials. Bright identity
-	# colours (weapon rarity, attributes, planets, pilots) pass through unchanged.
+	# Keep large surfaces near-black; violet is structural, never a cyan wash.
 	if color.v>.36 or color.a==0.:return color
 	var value=color.r*.2126+color.g*.7152+color.b*.0722
-	return Color(value*.93,value*.96,value,color.a)
+	return Color(value*.88,value*.76,value,color.a)
 static func surface(color: Color=PANEL,border: Color=LINE,radius: int=8,padding: int=12) -> StyleBoxFlat:
 	var style=StyleBoxFlat.new();style.bg_color=neutral(color);style.border_color=neutral(border)
-	style.set_border_width_all(1);style.set_corner_radius_all(mini(radius,7))
+	style.set_border_width_all(1);style.set_corner_radius_all(mini(radius,3))
 	style.content_margin_left=padding;style.content_margin_right=padding;style.content_margin_top=padding;style.content_margin_bottom=padding
 	return style
-static func button(node: Button,accent: Color=GOLD,padding: int=12) -> void:
+static func button(node: Button,accent: Color=ACCENT,padding: int=12) -> void:
 	for state in ["normal","hover","pressed","disabled"]:
 		var fill=Color(PANEL,.9) if state in ["normal","disabled"] else LIFT
 		var edge=Color(LINE,.6) if state in ["normal","disabled"] else Color(accent,.65 if state=="pressed" else .40)

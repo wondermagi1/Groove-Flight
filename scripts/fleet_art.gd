@@ -2,34 +2,34 @@ extends RefCounted
 ## Procedural 2D fleet silhouettes: bevelled plates, engines and readable cores.
 ## Angle zero points along +X. `radius` is the central-core radius, not wingspan.
 const F=preload("res://scripts/fleet_catalog.gd")
-const HULL=Color("f0eee0")
-const SIDE=Color("a6beb9")
-const SHADE=Color("456367")
-const DARK=Color("152e35")
-const INK=Color("09171f")
+const HULL=Color("e5e2f7")
+const SIDE=Color("9295bb")
+const SHADE=Color("494067")
+const DARK=Color("1c1730")
+const INK=Color("070811")
 
 static func draw_enemy_lod(canvas: CanvasItem,at: Vector2,radius: float,angle: float,kind: String,flash: float=0.) -> void:
 	# A bounded five-draw-call hull for dense packs; important ships retain the
 	# detailed drawing. Filled plates keep aircraft readable at small sizes.
 	canvas.draw_set_transform(at,angle,Vector2.ONE*radius)
-	var plate=Color("cbd5c9").lerp(Color.WHITE,clampf(flash*11.,0,1))
+	var plate=Color("c9c4e0").lerp(Color.WHITE,clampf(flash*11.,0,1))
 	var red=Color("ff7d9f")
 	var wing=1.15 if kind in ["mote","dart"] else .85
 	if kind=="lance":
 		_poly(canvas,[[1.72,0],[.42,-.28],[-.78,-.86],[-1.34,-.42],[-.92,0],[-1.34,.42],[-.78,.86],[.42,.28]],INK)
 		_poly(canvas,[[1.58,0],[.34,-.19],[-.68,-.68],[-1.02,-.33],[-.72,0],[-1.02,.33],[-.68,.68],[.34,.19]],plate)
-		_poly(canvas,[[1.58,0],[.34,.19],[-.68,.68],[-1.02,.33],[-.72,0]],Color("435a72"))
+		_poly(canvas,[[1.58,0],[.34,.19],[-.68,.68],[-1.02,.33],[-.72,0]],Color("494264"))
 		canvas.draw_line(Vector2(.85,0),Vector2(-.68,0),Color("ff7d9f"),.09,true)
 	elif kind=="mirror":
 		_poly(canvas,[[.92,0],[.18,-.34],[-.78,-.42],[-1.08,0],[-.78,.42],[.18,.34]],INK)
 		_poly(canvas,[[.87,0],[.16,-.24],[-.64,-.32],[-.86,0],[-.64,.32],[.16,.24]],plate)
 		for side in [-1.,1.]:
-			_poly(canvas,[[.42,side*.18],[-.18,side*.84],[-1.08,side*.73],[-.94,side*.38],[-.38,side*.29]],Color("435a72"))
+			_poly(canvas,[[.42,side*.18],[-.18,side*.84],[-1.08,side*.73],[-.94,side*.38],[-.38,side*.29]],Color("494264"))
 			canvas.draw_line(Vector2(.30,side*.28),Vector2(-.84,side*.58),red,.07,true)
 	else:
 		_poly(canvas,[[1.35,0],[-.65,-wing],[-1.1,-.6],[-.7,0],[-1.1,.6],[-.65,wing]],INK)
 		_poly(canvas,[[1.20,0],[-.60,-wing*.83],[-.88,-.46],[-.52,0],[-.88,.46],[-.60,wing*.83]],plate)
-		_poly(canvas,[[1.20,0],[-.60,wing*.83],[-.88,.46],[-.52,0]],Color("435a72"))
+		_poly(canvas,[[1.20,0],[-.60,wing*.83],[-.88,.46],[-.52,0]],Color("494264"))
 	canvas.draw_circle(Vector2(.05,0),.17,Color("ff7d9f"))
 	canvas.draw_line(Vector2(-.65,-.18),Vector2(-1.0,-.18),Color("99bfd4"),.13,true)
 	canvas.draw_set_transform(Vector2.ZERO,0.,Vector2.ONE)
@@ -51,7 +51,7 @@ static func _plated(canvas: CanvasItem,coordinates: Array,color: Color) -> void:
 	canvas.draw_colored_polygon(outer,Color(color.darkened(.26),color.a))
 	var tones=PackedColorArray()
 	for p in inner:
-		var strength=clampf((p-center).dot(Vector2(-.35,-.9)), -.65,.65)
+		var strength=.55 if (p-center).dot(Vector2(-.35,-.9))>=0. else -.55
 		tones.append(Color(color.lightened(maxf(0.,strength)*.10).darkened(maxf(0.,-strength)*.15),color.a))
 	canvas.draw_polygon(inner,tones)
 	for i in range(outer.size()):
@@ -266,7 +266,7 @@ static func draw_ship(canvas: CanvasItem,at: Vector2,radius: float,angle: float,
 
 static func draw_enemy(canvas: CanvasItem,at: Vector2,radius: float,angle: float,kind: String,flash: float=0.,pulse: float=0.) -> void:
 	canvas.draw_set_transform(at,angle,Vector2.ONE*radius)
-	var plate=Color("cbd5c9").lerp(Color.WHITE,clampf(flash*11.,0,1))
+	var plate=Color("c9c4e0").lerp(Color.WHITE,clampf(flash*11.,0,1))
 	var dark=Color("314e52").lerp(Color("c5d8ed"),clampf(flash*6.,0,1))
 	var red=Color("ff7d9f"); var brass=Color("c3a278")
 	match kind:

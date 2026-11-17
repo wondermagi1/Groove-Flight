@@ -1,5 +1,7 @@
 # Music and asset credits
 
+V60 interface fonts: **Oxanium** (Severin Meyer) and **JetBrains Mono** (JetBrains), SIL Open Font License 1.1. Original unmodified files, full licenses and hashes: [font sources](assets/fonts/SOURCES.json), [Oxanium license](assets/fonts/Oxanium-OFL.txt), [JetBrains Mono license](assets/fonts/JetBrainsMono-OFL.txt). Chinese system fonts are not redistributed. The cyberpunk orbital-city background, rhythm notes and vector interface artwork are original project code; no reference-game art assets are bundled.
+
 Each of the following tracks is by **Scott Buckley**, released under
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 Music by Scott Buckley — www.scottbuckley.com.au.
