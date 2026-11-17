@@ -1,0 +1,22 @@
+{
+  "version": "0.62.0-soft-star-sea",
+  "date": "2026-11-17",
+  "backup": "0d1087fa9cacbc481cd998de15fb65f15611dcb7",
+  "protected_runtime_files": 1756,
+  "change": "One broad softly varying luminous galaxy band; removed multiplicative dark dust mask and intersecting multi-frequency shadows; vignette32percent→14percent. Existing stars and cyber planet retained.",
+  "renderers": [
+    "forward_plus",
+    "gl_compatibility"
+  ],
+  "captures": 22,
+  "review": "Matched1080p before/after inspected.720p/1440p,three quality/exposure pairs and alternate planet positions rendered. Gameplay/input/audio/native files unchanged; no gameplay test reruns needed for this art-only pass.",
+  "environment_notices": {
+    "forward_plus": [
+      "ERROR: Failed to read the root certificate store."
+    ],
+    "gl_compatibility": [
+      "ERROR: Failed to read the root certificate store."
+    ]
+  },
+  "certificate_scope": "Known Windows certificate-store startup error recorded;local render completed,no system certificate changes."
+}

@@ -12,7 +12,6 @@ uniform float background_exposure=.9;
 float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 mat2 turn(float a){return mat2(vec2(cos(a),sin(a)),vec2(-sin(a),cos(a)));}
 float stroke(float d,float width,float aa){return 1.-smoothstep(width,width+aa,abs(d));}
-float nebula_noise(vec2 p){return .5+.22*sin(p.x*1.73+sin(p.y*.83))+.16*sin(p.y*1.29+sin(p.x*.97))+.12*sin((p.x+p.y)*2.1);}
 void fragment(){
  vec2 aspect=vec2(SCREEN_PIXEL_SIZE.y/SCREEN_PIXEL_SIZE.x,1.);
  vec2 p=(UV-.5)*aspect;
@@ -26,12 +25,13 @@ void fragment(){
  if(planet_style==6)accent=mix(ice,violet,.48);
  if(planet_style==7)accent=vec3(.22,.24,.77);
  vec2 sky=turn(-.43)*(p+vec2(.13,-.05))+world_position*.0000015;
- float band=exp(-pow((sky.y+.08*sin(sky.x*3.1))*3.8,2.));
- float cloud=nebula_noise(sky*4.+7.)*.65+nebula_noise(sky*11.-3.)*.35;
- vec3 col=vec3(.028,.036,.080)+mix(vec3(.035,.075,.16),vec3(.16,.055,.21),cloud)*band*(.5+cloud*.95);
+ // One broad luminous cloud. Avoid crossing multi-frequency dark masks:
+ // their valleys read as stacked shadows behind the game, rather than gas.
+ float band=exp(-pow((sky.y+.04*sin(sky.x*2.4))*3.1,2.));
+ float cloud=.5+.08*sin(sky.x*3.3+sky.y*.6)+.04*sin(sky.y*4.1);
+ vec3 col=vec3(.032,.040,.085)+mix(vec3(.035,.075,.16),vec3(.16,.055,.21),cloud)*band*(.72+cloud*.40);
  if(quality_level>0){
-  float dust=nebula_noise(sky*24.+9.);col+=mix(ice,violet,cloud)*pow(cloud,2.)*band*.045;
-  col*=1.-smoothstep(.42,.78,dust)*band*.28;
+  col+=mix(ice,violet,cloud)*band*.010;
  }
  // Analytic star discs remain crisp at720p/4K, with quiet parallax and no blink.
  vec2 stars=(p+world_position*.000002)*vec2(150.,114.);
@@ -97,6 +97,6 @@ void fragment(){
  vec2 bid=floor(beacons),bp=fract(beacons)-.5;
  float dot_value=exp(-dot(bp,bp)*1700.)*step(.975,hash(bid));
  col+=mix(ice,pink,hash(bid+2.))*dot_value*(.17+music_pulse*.025)*(1.-body);
- float vignette=1.-smoothstep(.45,1.22,length(p))*.32;
+ float vignette=1.-smoothstep(.45,1.22,length(p))*.14;
  COLOR=vec4(max(col*vignette*background_exposure,vec3(0.)),1.);
 }

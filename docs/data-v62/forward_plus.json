@@ -1,0 +1,17 @@
+{
+  "captures": [
+    "res://tests/v62-forward_plus-before-1920.png",
+    "res://tests/v62-forward_plus-after-1920.png",
+    "res://tests/v62-forward_plus-after-1280.png",
+    "res://tests/v62-forward_plus-after-2560.png",
+    "res://tests/v62-forward_plus-quality-0.png",
+    "res://tests/v62-forward_plus-quality-1.png",
+    "res://tests/v62-forward_plus-quality-2.png",
+    "res://tests/v62-forward_plus-venus.png",
+    "res://tests/v62-forward_plus-saturn.png",
+    "res://tests/v62-forward_plus-uranus.png",
+    "res://tests/v62-forward_plus-neptune.png"
+  ],
+  "renderer": "forward_plus",
+  "scope": "Matched before/after native render;720p/1440p,three quality/exposure combinations and alternate planet positions. Visual-only change, no new gameplay tests."
+}
