@@ -1,0 +1,107 @@
+{
+  "captures": [
+    "res://tests/v58-three-tracks-1280.png",
+    "res://tests/v58-three-tracks-1920.png",
+    "res://tests/v58-inventory-layout-1280.png",
+    "res://tests/v58-score-feedback-1920.png",
+    "res://tests/v58-grade-perfect.png",
+    "res://tests/v58-grade-excellent.png",
+    "res://tests/v58-grade-general.png",
+    "res://tests/v58-grade-miss.png",
+    "res://tests/v58-weapon-codex.png",
+    "res://tests/v58-weapon-codex-1280.png",
+    "res://tests/v58-perfect-100-reward.png",
+    "res://tests/v58-protected-chain.png",
+    "res://tests/v58-rhythm-pilots-talents-1920.png",
+    "res://tests/v58-rhythm-pilots-talents-1280.png",
+    "res://tests/v58-compact-1280.png",
+    "res://tests/v58-compact-1366.png",
+    "res://tests/v58-compact-1600.png",
+    "res://tests/v58-compact-1920.png",
+    "res://tests/v58-compact-2560.png",
+    "res://tests/v58-compact-3440.png",
+    "res://tests/v58-hidden-sequencer.png",
+    "res://tests/v58-title.png",
+    "res://tests/v58-solar.png",
+    "res://tests/v58-codex-detail.png",
+    "res://tests/v58-settings.png"
+  ],
+  "checks": 60,
+  "failures": [],
+  "geometry": [
+    {
+      "area_fraction": 0.0563888888888889,
+      "panel": [
+        224.0,
+        232.0
+      ],
+      "runway": 140.0,
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    {
+      "area_fraction": 0.0495363591996096,
+      "panel": [
+        224.0,
+        232.0
+      ],
+      "runway": 140.0,
+      "viewport": [
+        1366,
+        768
+      ]
+    },
+    {
+      "area_fraction": 0.0378,
+      "panel": [
+        224.0,
+        243.0
+      ],
+      "runway": 151.0,
+      "viewport": [
+        1600,
+        900
+      ]
+    },
+    {
+      "area_fraction": 0.0366126543209877,
+      "panel": [
+        260.0,
+        292.0
+      ],
+      "runway": 200.0,
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "area_fraction": 0.0232421875,
+      "panel": [
+        280.0,
+        306.0
+      ],
+      "runway": 214.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "area_fraction": 0.017296511627907,
+      "panel": [
+        280.0,
+        306.0
+      ],
+      "runway": 214.0,
+      "viewport": [
+        3440,
+        1440
+      ]
+    }
+  ],
+  "renderer": "forward_plus",
+  "scope": "Actual three-track controls and Forward+ layout; displayed shared60percent is an explicit visual fixture, not a player result."
+}

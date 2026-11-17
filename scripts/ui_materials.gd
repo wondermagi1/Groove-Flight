@@ -1,9 +1,9 @@
 extends RefCounted
 ## Quiet neutral chrome. Attribute, quality, fleet and projectile colours stay semantic.
-const INK=Color("090c11")
-const PANEL=Color("12161d")
-const LIFT=Color("20252e")
-const LINE=Color("3b424d")
+const INK=Color("0b0c0f")
+const PANEL=Color("151619")
+const LIFT=Color("222328")
+const LINE=Color("383a40")
 const TEXT=Color("f3f3ef")
 const MUTED=Color("a6acb5")
 const QUIET=Color("747d89")
@@ -21,13 +21,13 @@ static func neutral(color: Color) -> Color:
 	return Color(value*.93,value*.96,value,color.a)
 static func surface(color: Color=PANEL,border: Color=LINE,radius: int=8,padding: int=12) -> StyleBoxFlat:
 	var style=StyleBoxFlat.new();style.bg_color=neutral(color);style.border_color=neutral(border)
-	style.set_border_width_all(1);style.set_corner_radius_all(radius)
+	style.set_border_width_all(1);style.set_corner_radius_all(mini(radius,7))
 	style.content_margin_left=padding;style.content_margin_right=padding;style.content_margin_top=padding;style.content_margin_bottom=padding
 	return style
 static func button(node: Button,accent: Color=GOLD,padding: int=12) -> void:
 	for state in ["normal","hover","pressed","disabled"]:
-		var fill=PANEL if state in ["normal","disabled"] else LIFT
-		var edge=Color(LINE,.75) if state in ["normal","disabled"] else Color(accent,.65 if state=="pressed" else .40)
+		var fill=Color(PANEL,.9) if state in ["normal","disabled"] else LIFT
+		var edge=Color(LINE,.6) if state in ["normal","disabled"] else Color(accent,.65 if state=="pressed" else .40)
 		node.add_theme_stylebox_override(state,surface(fill,edge,7,padding))
 	node.add_theme_stylebox_override("focus",surface(Color.TRANSPARENT,Color(TEXT,.6),7,0))
 	node.add_theme_color_override("font_color",TEXT);node.add_theme_color_override("font_hover_color",Color.WHITE)

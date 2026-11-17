@@ -88,18 +88,16 @@ func title_screen() -> void:
 	title_flight=TITLE.new(); title_flight.game=game; title_flight.name="InteractiveTitle"; root_control.add_child(title_flight)
 	var content=VBoxContainer.new(); content.position=view*Vector2(.10,.09 if compact else .12)
 	content.custom_minimum_size.x=minf(424,view.x*.35); content.add_theme_constant_override("separation",9 if compact else 13); root_control.add_child(content)
-	content.add_child(label("R H Y T H M   /   S U R V I V E",14 if compact else 17,UI.QUIET))
 	content.add_child(label("GROOVE FLIGHT",55 if compact else 80))
 	content.add_child(label("节拍飞行",25 if compact else 32,UI.MUTED))
-	content.add_child(label("跟随音乐击键，让每一拍化为弹幕。",17 if compact else 21,UI.MUTED))
 	var spacer=Control.new(); spacer.custom_minimum_size.y=15 if compact else 27; content.add_child(spacer)
 	var entries=[
 		["hub","进入霓光港","01",Color("71e8dc")],
 		["solar","星球航图","02",Color("83cafa")],
-		["hangar","机库与驾驶员","04",Color("b1b9fa")],
-		["codex","武器图鉴","05",Color("8edfda")],
-		["settings","设置","06",Color("8fa9c1")],
-		["quit","退出","07",Color("71839a")]]
+		["hangar","机库与驾驶员","03",Color("b1b9fa")],
+		["codex","武器图鉴","04",Color("8edfda")],
+		["settings","设置","05",Color("8fa9c1")],
+		["quit","退出","06",Color("71839a")]]
 	for entry in entries:
 		var id: String=entry[0]
 		var row=Button.new(); row.name="TitleEntry"+id.capitalize(); row.text=entry[1]
@@ -116,7 +114,7 @@ func title_screen() -> void:
 		var arrow=label("↗",22,UI.MUTED); arrow.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 		arrow.offset_left=-31; arrow.offset_top=13 if compact else 19; arrow.offset_right=-12; row.add_child(arrow)
 		row.pressed.connect(title_flight.shoot_target.bind(id)); content.add_child(row); title_flight.register_target(id,row)
-	var footer=label("WASD 驾驶  ·  鼠标瞄准 / 射击菜单  ·  ENTER 进入都市",15 if compact else 18,UI.QUIET)
+	var footer=label("WASD · ENTER 出发",15 if compact else 18,UI.QUIET)
 	footer.position=Vector2(view.x*.10,view.y-62); root_control.add_child(footer)
 	var selected=label(FLEET.ship(game.selected_ship).name+"  /  "+FLEET.pilot(game.selected_pilot).name,15,Color("7fa5b9"))
 	selected.position=Vector2(view.x*.60,view.y*.80); selected.size=Vector2(view.x*.27,30); selected.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER; root_control.add_child(selected)
@@ -223,7 +221,7 @@ func doctrine_screen() -> void:
 func editor_screen() -> void:
 	arsenal_screen("editor")
 func pause_screen() -> void:
-	var content=panel(590,365); section_title(content,"暂停 / 音乐与战斗一起停下")
+	var content=panel(590,365); section_title(content,"暂停")
 	content.add_child(button("继续飞行",game.pause_game)); content.add_child(button("设置",game.show_settings,Color("9badc4")))
 	content.add_child(button("返回作曲工坊" if game.free_music_run else "返回主菜单",game.return_to_composer if game.free_music_run else game.return_title,Color("e1a2a9")))
 func settings_screen() -> void:
@@ -231,7 +229,7 @@ func settings_screen() -> void:
 	var shell=panel(minf(820.,view.x-48.),height)
 	var scroll=ScrollContainer.new(); scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED; scroll.custom_minimum_size.y=height-104.; shell.add_child(scroll)
 	var content=VBoxContainer.new(); content.size_flags_horizontal=Control.SIZE_EXPAND_FILL; content.add_theme_constant_override("separation",12); scroll.add_child(content)
-	section_title(content,"设置","全屏跟随显示器原生分辨率。F11 可切换全屏。")
+	section_title(content,"设置")
 	content.add_child(label("声音",22,UI.GOLD))
 	content.add_child(label("即时生效并自动保存 · 调至0%即可静音",16,UI.MUTED))
 	for item in game.AUDIO.CONTROLS:
@@ -291,7 +289,7 @@ func results_screen() -> void:
 	scroll.custom_minimum_size.y=minf(770.,get_viewport().get_visible_rect().size.y-128.); shell.add_child(scroll)
 	var content=VBoxContainer.new(); content.add_theme_constant_override("separation",14); content.size_flags_horizontal=Control.SIZE_EXPAND_FILL; scroll.add_child(content)
 	var destination=PLANETS.planet(game.active_planet)
-	section_title(content,destination.name+(" · 航线突破" if game.state=="victory" else " · 信号中断"),str(destination.cleartext) if game.state=="victory" else "重新编排后，可以再次挑战这条航线。")
+	section_title(content,destination.name+(" · 航线突破" if game.state=="victory" else " · 信号中断"),str(destination.cleartext) if game.state=="victory" else "")
 	if game.mission.enabled:content.add_child(label("任务：%s  %d/%d · %s"%[str(game.mission.spec().title),game.mission.done,int(game.mission.spec().goal),"完成" if game.mission.complete() else "未完成"],18,UI.GOLD))
 	content.add_child(label("击破 %d   /   得分 %d   /   最佳 %d"%[game.kills,game.score,game.best],24))
 	content.add_child(label("抵达第 %d 波  /  完成 %d 次节拍触发"%[game.wave,game.actual_steps],18,UI.MUTED))

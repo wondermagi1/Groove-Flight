@@ -242,8 +242,8 @@ func refresh() -> void:
 	panel_rects.inventory = Rect2(22.0, view.y - bottom_height - 20.0, left_width, bottom_height)
 	panel_rects.sequencer = Rect2(sequence_x, view.y - bottom_height - 20.0, sequence_width, bottom_height)
 	if mode == "combat":
-		var flight_width: float = minf(780.0, sequence_width)
-		var flight_height: float = minf(128.0, view.y * 0.15)
+		var flight_width: float = minf(620.0, sequence_width)
+		var flight_height: float = clampf(view.y * 0.13,96.0,104.0)
 		var flight_x: float=22.0 if not _panel_visible("panel_inventory") else sequence_x
 		panel_rects.sequencer = Rect2(flight_x, view.y - flight_height - 18.0, flight_width, flight_height)
 	panel_rects.buffs = Rect2(view.x - right_width - 22.0, top, right_width, minf(630.0, view.y - top - 22.0))
@@ -492,7 +492,7 @@ func _build_sequencer(rect: Rect2) -> void:
 		content.add_child(panel)
 		panel.add_child(rows_area)
 	else:
-		var column := _panel(rect, "三轨音序", "每轨8格 · 每格%.4f秒 · 一轮%.1f秒"%[game.LOADOUT.SEQUENCE_STEP_SECONDS,game.LOADOUT.SEQUENCE_LOOP_SECONDS])
+		var column := _panel(rect, "三轨音序", "3 × 8 · %.1fs"%game.LOADOUT.SEQUENCE_LOOP_SECONDS)
 		rows_area.custom_minimum_size.y = 188.0 if rect.size.y > 270.0 else 148.0
 		rows_area.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		column.add_child(rows_area)
@@ -767,7 +767,6 @@ func _update_detail() -> void:
 			_detail_text("单发伤害 %.1f  ·  弹丸 %d\n穿透 %d  ·  速度 %.0f\n爆破半径 %.0f  ·  %d 小节充能" % [float(actual.get("damage", row.get("damage", 0.0))), int(actual.get("count", row.get("count", 1))), int(actual.get("pierce", row.get("pierce", 0))), float(actual.get("speed", row.get("speed", 0.0))), float(actual.get("explosion", row.get("explosion", 0.0))), int(actual.get("charge", row.get("charge", 1)))], 18)
 		if str(row.id) in DATA.VISUALS.MOVING_IDS and str(row.family)!="orbit":
 			_detail_text("有效射程 %.0f\n到达射程后缩小消散"%game.EMISSION.weapon_reach(float(actual.get("speed",row.speed)),float(actual.get("life",row.life))),17,Color("aacdbd"))
-		_detail_text("无武器演奏声 · 背景音乐为主\n六秒琴块总成绩决定下一段全武器弹量\n充能 %d 轮；弹道与射程保持"%int(actual.get("charge",1)),16,Color("e7c78d"))
 		_detail_text(str(row.detail),17,Color("879db6"))
 		if not actual.get("calculation",{}).is_empty():
 			var f: Dictionary=actual.calculation
@@ -781,7 +780,6 @@ func _update_detail() -> void:
 		var damage: float = float(game.weapon_damage.get(str(row.id), 0.0))
 		_detail_text("本局实际伤害  %s" % _short_number(damage), 19, Color("f0ce9c"))
 		_detail_text("属性归属  " + _stat_name(str(row.attr)), 17, Color("879db6"))
-		_detail_text("装备格控制充能与齐射；琴块由歌曲独立驱动，换装不会改变谱面。",16,Color("69819b"))
 	else:
 		_detail_text(str(row.detail),19)
 

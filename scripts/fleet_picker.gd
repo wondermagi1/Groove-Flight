@@ -85,9 +85,9 @@ func _ready() -> void:
 	var shell=VBoxContainer.new();shell.add_theme_constant_override("separation",12);frame.add_child(shell)
 	var scroll=ScrollContainer.new();scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED;scroll.size_flags_vertical=Control.SIZE_EXPAND_FILL;shell.add_child(scroll)
 	content.size_flags_horizontal=Control.SIZE_EXPAND_FILL;scroll.add_child(content)
-	heading = _label("机库  /  FLIGHT DECK", 32, UI.TEXT)
+	heading = _label("机库", 32, UI.TEXT)
 	content.add_child(heading)
-	subtitle = _label("驾驶员：音游辅助与Perfect奖励　／　战机＋天赋：生存、机动与武器数值。", 19, UI.MUTED)
+	subtitle = _label("战机 · 驾驶员 · 舰装", 19, UI.MUTED)
 	content.add_child(subtitle)
 	var groups := HBoxContainer.new()
 	groups.add_theme_constant_override("separation", 26)
@@ -149,14 +149,14 @@ func _ready() -> void:
 	var footer := HBoxContainer.new()
 	footer.add_theme_constant_override("separation", 24)
 	shell.add_child(footer)
-	footer_hint = _label("配置自动保存\n返回都市后，前往漩涡按 F 出发。", 17, Color("768ba4"))
+	footer_hint = _label("自动保存 · 下次出战生效", 17, Color("768ba4"))
 	footer_hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	footer_hint.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	footer.add_child(footer_hint)
 	footer.add_child(reset)
 	confirm_button = Button.new()
-	confirm_button.text = "确认配置 · 返回都市"
-	confirm_button.custom_minimum_size = Vector2(302, 54)
+	confirm_button.text = "完成"
+	confirm_button.custom_minimum_size = Vector2(180, 48)
 	confirm_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	confirm_button.add_theme_stylebox_override("normal", _box(Color("19373d"), Color("5ecac5"), 7))
 	confirm_button.add_theme_stylebox_override("hover", _box(Color("234d53"), Color("85fff1"), 7))
@@ -185,11 +185,11 @@ func _layout() -> void:
 		return
 	var view: Vector2 = size if size.x > 100.0 else get_viewport_rect().size
 	var compact: bool = view.x < 1500.0 or view.y < 850.0
-	var panel_size := Vector2(minf(1640.0, view.x - (44.0 if compact else 100.0)), minf(860.0, view.y - (36.0 if compact else 100.0)))
+	var panel_size := Vector2(minf(1440.0, view.x - (100.0 if compact else 160.0)), minf(760.0, view.y - (80.0 if compact else 160.0)))
 	content.add_theme_constant_override("separation", 11 if compact else 20)
 	heading.add_theme_font_size_override("font_size", 28 if compact else 38)
 	subtitle.add_theme_font_size_override("font_size", 17 if compact else 21)
-	var card_height: float = 155.0 if compact else 230.0
+	var card_height: float = 145.0 if compact else 195.0
 	for card in ship_cards + pilot_cards:
 		card.custom_minimum_size = Vector2(0.0, card_height)
 		card.compact = compact
@@ -220,12 +220,14 @@ func _refresh_selection() -> void:
 	var ship: Dictionary = game.flight_craft()
 	var pilot: Dictionary = FLEET.pilot(pilot_id)
 	ship_stats.text = "生命 %d   /   移速 %d   /   伤害 %d%%\n冲刺冷却 %.2f 秒" % [ship.health, int(ship.speed), roundi(ship.damage_scale * 100.0), ship.dash_cooldown]
-	ship_description.text = ship.detail
+	ship_description.text="";ship_description.visible=false
 	pilot_name.text = "%s  ·  %s" % [pilot.name, pilot.tag]
 	pilot_name.add_theme_color_override("font_color", pilot.color)
-	pilot_description.text = pilot.detail
+	pilot_description.text={"echo":"预读 2.8s","volt":"Perfect 8 / 20 / 40 / 80","mender":"每6秒保护一次Perfect链","nova":"长按 45 / 85ms · 尾端180ms","rime":"断链余韵 +10% / 4s"}.get(pilot_id,"")
+	pilot_description.tooltip_text=str(pilot.detail)
 	var selected=game.TALENTS.clean(game.talent_selection,game.talent_points())
-	talent_caption.text="03  舰装天赋 · 剩余 %d / %d点 · 初始2点，每颗星球首次通关+1，最多6点"%[game.talent_points()-selected.size(),game.talent_points()]
+	talent_caption.tooltip_text="初始2点，每颗星球首次通关+1，最多6点；免费重置，下次出战生效"
+	talent_caption.text="舰装  ·  剩余 %d / %d点"%[game.talent_points()-selected.size(),game.talent_points()]
 	for row in game.TALENTS.ROWS:
 		var button: Button=talent_buttons[str(row.id)];var learned=str(row.id) in selected
 		var prerequisite=str(row.requires).is_empty() or str(row.requires) in selected

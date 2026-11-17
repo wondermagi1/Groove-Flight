@@ -1,0 +1,179 @@
+{
+  "version": "0.58.0-compact-ui",
+  "date": "2026-11-17",
+  "backup": "71f77be7c9f2a3bde08f01694f45a1730ef00555",
+  "branch": "codex/compact-rhythm-ui",
+  "checks": {
+    "score": 191,
+    "native": 60,
+    "live": 47
+  },
+  "piano_geometry": [
+    {
+      "area_fraction": 0.0563888888888889,
+      "panel": [
+        224.0,
+        232.0
+      ],
+      "runway": 140.0,
+      "viewport": [
+        1280,
+        720
+      ],
+      "previous_panel": [
+        330.0,
+        368.0
+      ],
+      "panel_area_reduction": 0.572068511198946
+    },
+    {
+      "area_fraction": 0.0495363591996096,
+      "panel": [
+        224.0,
+        232.0
+      ],
+      "runway": 140.0,
+      "viewport": [
+        1366,
+        768
+      ],
+      "previous_panel": [
+        330.0,
+        368.0
+      ],
+      "panel_area_reduction": 0.572068511198946
+    },
+    {
+      "area_fraction": 0.0378,
+      "panel": [
+        224.0,
+        243.0
+      ],
+      "runway": 151.0,
+      "viewport": [
+        1600,
+        900
+      ],
+      "previous_panel": [
+        384.0,
+        387.0
+      ],
+      "panel_area_reduction": 0.6337209302325582
+    },
+    {
+      "area_fraction": 0.0366126543209877,
+      "panel": [
+        260.0,
+        292.0
+      ],
+      "runway": 200.0,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "previous_panel": [
+        460.0,
+        464.4
+      ],
+      "panel_area_reduction": 0.6446092199378347
+    },
+    {
+      "area_fraction": 0.0232421875,
+      "panel": [
+        280.0,
+        306.0
+      ],
+      "runway": 214.0,
+      "viewport": [
+        2560,
+        1440
+      ],
+      "previous_panel": [
+        460.0,
+        468.0
+      ],
+      "panel_area_reduction": 0.6020066889632107
+    },
+    {
+      "area_fraction": 0.017296511627907,
+      "panel": [
+        280.0,
+        306.0
+      ],
+      "runway": 214.0,
+      "viewport": [
+        3440,
+        1440
+      ],
+      "previous_panel": [
+        460.0,
+        468.0
+      ],
+      "panel_area_reduction": 0.6020066889632107
+    }
+  ],
+  "head_height": 12,
+  "bottom_key_height": 32,
+  "pointer_tolerance_y": 5,
+  "permanent_labels": "J/K/L,combo and ammo percent only; grade/reward transient; no explanatory tooltip/footer",
+  "combat_sequencer_max": [
+    620,
+    104
+  ],
+  "mission_card": [
+    276,
+    48
+  ],
+  "gameplay_inputs_unchanged": 1739,
+  "preserved_active_weapons": 24,
+  "preserved_full_songs": 8,
+  "preserved_chart_cues": 3487,
+  "preserved_archived_wavs": 616,
+  "native_kernel_sha256": "0046a79a8dd2eb63f7c13ea4d3e20720651b851aaa71892902701077c3c2c84e",
+  "native_renderer": "forward_plus",
+  "captures": [
+    "res://tests/v58-three-tracks-1280.png",
+    "res://tests/v58-three-tracks-1920.png",
+    "res://tests/v58-inventory-layout-1280.png",
+    "res://tests/v58-score-feedback-1920.png",
+    "res://tests/v58-grade-perfect.png",
+    "res://tests/v58-grade-excellent.png",
+    "res://tests/v58-grade-general.png",
+    "res://tests/v58-grade-miss.png",
+    "res://tests/v58-weapon-codex.png",
+    "res://tests/v58-weapon-codex-1280.png",
+    "res://tests/v58-perfect-100-reward.png",
+    "res://tests/v58-protected-chain.png",
+    "res://tests/v58-rhythm-pilots-talents-1920.png",
+    "res://tests/v58-rhythm-pilots-talents-1280.png",
+    "res://tests/v58-compact-1280.png",
+    "res://tests/v58-compact-1366.png",
+    "res://tests/v58-compact-1600.png",
+    "res://tests/v58-compact-1920.png",
+    "res://tests/v58-compact-2560.png",
+    "res://tests/v58-compact-3440.png",
+    "res://tests/v58-hidden-sequencer.png",
+    "res://tests/v58-title.png",
+    "res://tests/v58-solar.png",
+    "res://tests/v58-codex-detail.png",
+    "res://tests/v58-settings.png"
+  ],
+  "environment_notices": {
+    "score": [
+      "ERROR: Failed to read the root certificate store."
+    ],
+    "native": [
+      "ERROR: Failed to read the root certificate store."
+    ],
+    "live": [
+      "ERROR: Failed to read the root certificate store."
+    ]
+  },
+  "notice_scope": "Windows engine reports root certificate-store initialization error. Offline local asset/input/render/OGG checks completed; no HTTPS or certificate functionality certified and no system certificate changes made.",
+  "visual_review": "Compact battle1280/1920, note/hold/grades/rewards, hidden sequence/inventory fallback, neutral title/hangar/codex/solar/settings inspected. Controlled test fixtures, not human difficulty or long-run FPS acceptance.",
+  "next_development_order": [
+    "Mercury gameplay",
+    "Boss combat"
+  ],
+  "next_development_status": "Queued only; no gameplay/Boss balance implemented in UI pass. Historical Demo/PPT/private reports excluded."
+}

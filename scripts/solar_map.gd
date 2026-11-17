@@ -156,8 +156,8 @@ func _build_stars() -> void:
 	var stars=MultiMeshInstance3D.new(); stars.name="DistantStarField"; stars.multimesh=multimesh; stars.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF; world_root.add_child(stars)
 
 func _build_interface() -> void:
-	title_label=_label("航图 / SOLAR ROUTES",31); title_label.position=Vector2(30,26); add_child(title_label)
-	subtitle_label=_label("选择一颗星球与难度协议，把下一场远征排进你的节拍。",18,Color("7f96b2")); subtitle_label.position=Vector2(32,73); add_child(subtitle_label)
+	title_label=_label("航图",31); title_label.position=Vector2(30,26); add_child(title_label)
+	subtitle_label=_label("选择航线",18,Color("7f96b2")); subtitle_label.position=Vector2(32,73); add_child(subtitle_label)
 	var return_state=game.get("solar_return_state")
 	back_button=_button("返回标题" if return_state=="title" else "返回霓光港",_back,Color("a0b0c9")); back_button.name="SolarBack"; add_child(back_button)
 	reset_button=_button("复位视角",reset_camera,Color("7f9cb9")); reset_button.name="ResetSolarCamera"; add_child(reset_button)
@@ -171,7 +171,7 @@ func _build_interface() -> void:
 		var button=_button("%02d  %s\n威胁 %d"%[int(row.index)+1,row.name,int(row.threat)],choose_planet.bind(str(row.id)),row.color)
 		button.name="PlanetButton_"+str(row.id); button.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 		planet_buttons[str(row.id)]=button; navigation.add_child(button)
-	hint_label=_label("点击星球选择 · 右键拖动环绕 · 滚轮缩放 · ← → 切换 · ENTER 出击",16,Color("627b98")); add_child(hint_label)
+	hint_label=_label("← → 选择 · ENTER 出击",16,Color("627b98")); add_child(hint_label)
 	hover_label=_label("太阳 · 恒星导航锚点",15,Color("e3bd7f")); hover_label.mouse_filter=Control.MOUSE_FILTER_IGNORE; add_child(hover_label)
 
 func _layout() -> void:
@@ -211,15 +211,14 @@ func _refresh_selection() -> void:
 	for child in detail_content.get_children():
 		detail_content.remove_child(child)
 		child.queue_free()
-	_detail("%02d  /  PLANET"%(int(row.index)+1),14,row.color)
 	_detail(str(row.name),38,Color("f1f7ff")); _detail(str(row.subtitle),18,row.color)
-	_detail("●".repeat(int(row.threat))+"  威胁 %d / 8"%int(row.threat),18,row.color)
 	_detail("本关任务  /  "+str(row.objective.title),21,row.color)
-	_detail(str(row.description),19)
+	_detail(str(row.objective.get("hint",row.description)),17,UI.MUTED)
 	_detail("主题曲  /  "+str(row.song),17,UI.MUTED)
-	var rule=_label("航线强度",17,Color("6b819c")); detail_content.add_child(rule)
 	_detail("%d 波  ·  %d 次补给"%[route.size(),route.size()-1],21,Color("e2edf9"))
-	_detail("末波上限 逐波递增\n敌机耐久 ×%.2f\n敌弹速度 ×%.2f\n接触 / 弹幕伤害 %.1f\n最终旗舰耐久 %s"%[combat.hp_scale,combat.bullet_speed,combat.damage,_number(float(combat.boss_hp))],18)
+	var expand=Button.new();expand.name="RouteParameters";expand.text="航线参数";UI.button(expand,UI.MUTED,6);detail_content.add_child(expand)
+	var numbers=_detail("末波上限 逐波递增\n敌机耐久 ×%.2f\n敌弹速度 ×%.2f\n接触 / 弹幕伤害 %.1f\n最终旗舰耐久 %s"%[combat.hp_scale,combat.bullet_speed,combat.damage,_number(float(combat.boss_hp))],18)
+	numbers.visible=false;expand.pressed.connect(func():numbers.visible=not numbers.visible;expand.text="收起参数" if numbers.visible else "航线参数")
 	_detail("难度协议",17,Color("8fb7c5"))
 	var difficulty_box=OptionButton.new(); difficulty_box.name="DifficultyProtocol"; difficulty_box.custom_minimum_size.y=40
 	difficulty_box.add_item("标准航线")
@@ -229,12 +228,8 @@ func _refresh_selection() -> void:
 	detail_content.add_child(difficulty_box)
 	if difficulty>0:
 		_detail("敌机耐久 ×1.18 · Boss耐久 ×1.30 · 伤害 ×1.14\n编队预算 ×1.18 · 额外精英 · 环形/双螺旋入场",16,Color("ff9f91"))
-	else:
-		_detail("标准数值曲线；外圈仍逐步增加耐久、弹速与编队压力。",16,Color("89a9c0"))
+
 	_detail("最终旗舰  /  "+str(row.bossname),18,row.color)
-	_detail(str(row.hint),18,Color("b9cfdf"))
-	_detail("战前选择：实弹流 / 激光流 / 闪电链流",17,Color("8fb7c5"))
-	_detail("选择星球与歌曲后直接出击。跟随三键谱面，成绩统一驱动所有武器弹量。",16,Color("89a9c0"))
 	var clears=int(record.get("clears",0)); var attempts=int(record.get("attempts",0))
 	if clears>0:
 		_detail("✓ 航线已突破  %d 次"%clears,19,Color("9de3b7"))
@@ -243,7 +238,7 @@ func _refresh_selection() -> void:
 	if int(record.get("hard_clears",0))>0:
 		_detail("棱镜灾变突破 %d 次 · 最高 %d" % [int(record.get("hard_clears",0)),int(record.get("hard_best_score",0))],16,Color("ffab92"))
 	summary_label.text=FLEET.ship(str(game.selected_ship)).name+" / "+FLEET.pilot(str(game.selected_pilot)).name
-	launch_button.text=("高压 · %s · 开始演奏 →" if difficulty>0 else "%s · 开始演奏 →")%str(row.name)
+	launch_button.text=("高压 · %s · 出击 →" if difficulty>0 else "%s · 出击 →")%str(row.name)
 	for key in planet_buttons:
 		var selected=key==id; var accent: Color=DATA.planet(key).color
 		planet_buttons[key].add_theme_stylebox_override("normal",_box(Color(accent,.15) if selected else Color("0b1320"),Color(accent,.85 if selected else .20),9))

@@ -19,9 +19,8 @@ func _ready() -> void:
 	frame=PanelContainer.new();frame.name="WeaponCodexFrame";frame.add_theme_stylebox_override("panel",UI.surface(UI.INK,UI.LINE,12,20));add_child(frame)
 	var column=VBoxContainer.new();column.add_theme_constant_override("separation",12);frame.add_child(column)
 	var header=HBoxContainer.new();column.add_child(header)
-	var title=text("武器图鉴  /  ARSENAL",28);title.size_flags_horizontal=Control.SIZE_EXPAND_FILL;header.add_child(title)
+	var title=text("武器图鉴",28);title.size_flags_horizontal=Control.SIZE_EXPAND_FILL;header.add_child(title)
 	var close=Button.new();close.name="WeaponCodexClose";close.text="关闭 / ESC";UI.button(close,UI.GOLD);close.pressed.connect(queue_free);header.add_child(close)
-	column.add_child(text("24种武器共享音乐成绩。武器不再演奏音色，激光、实弹与电链可以自由混装。",16,UI.MUTED))
 	var body=HBoxContainer.new();body.size_flags_vertical=Control.SIZE_EXPAND_FILL;body.add_theme_constant_override("separation",20);column.add_child(body)
 	var left=VBoxContainer.new();left.size_flags_horizontal=Control.SIZE_EXPAND_FILL;body.add_child(left)
 	var filters=HBoxContainer.new();left.add_child(filters)
@@ -50,11 +49,13 @@ func select_weapon(id: String) -> void:
 	selected_id=id
 	for child in detail.get_children():detail.remove_child(child);child.queue_free()
 	var row=DATA.item(id);detail.add_child(text(str(row.name),29,Color(row.color)))
-	var art=WeaponArt.new();art.item_id=id;art.custom_minimum_size=Vector2(0,150);detail.add_child(art)
+	var art=WeaponArt.new();art.item_id=id;art.custom_minimum_size=Vector2(0,100);detail.add_child(art)
 	detail.add_child(text("%s · 占%d格 · 每%d轮充能"%[CLASSES.get(str(row.visual_class),"弹幕"),row.width,row.charge],19,UI.GOLD))
-	detail.add_child(text(DATA.weapon_description(row),17))
-	detail.add_child(text("音乐 → 琴块 → 六秒总成绩 → 下一段全武器弹量",20,UI.TEXT))
-	detail.add_child(text("Perfect 100 · 优秀 80 · 一般 40 · Miss 0\n开局六秒100%弹量。换装不改变歌曲谱面，武器不播放独立配音。",17,UI.MUTED))
+	var summary="伤害 %.1f · 基础 %d 发"%[float(row.damage),int(row.count)]
+	detail.add_child(text(summary,18))
+	var more=Button.new();more.name="WeaponMechanics";more.text="机制详情";UI.button(more,UI.MUTED);detail.add_child(more)
+	var description=text(DATA.weapon_description(row),16);description.visible=false;description.name="WeaponMechanicsDetail";detail.add_child(description)
+	more.pressed.connect(func():description.visible=not description.visible;more.text="收起" if description.visible else "机制详情")
 class WeaponArt:
 	extends Control
 	var item_id="pulse"
