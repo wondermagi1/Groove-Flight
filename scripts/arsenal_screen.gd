@@ -718,7 +718,10 @@ func _update_detail() -> void:
 		detail_panel.visible = true
 		_detail_text(_stat_name(preview_stat) + " · 来源", 25, Color("e6f3ff"))
 		var stats: Dictionary = game.loadout.stats()
-		_detail_text("当前值  " + _format_stat(preview_stat, float(stats.get(preview_stat, 0.0))), 24, Color("99e6d8"))
+		var current_value=float(stats.get(preview_stat,0.))
+		if preview_stat=="bullet_multiplier":current_value=preload("res://scripts/run_balance.gd").bonus_damage(current_value-1.)
+		_detail_text("当前值  " + _format_stat(preview_stat,current_value), 24, Color("99e6d8"))
+		if preview_stat=="bullet_multiplier":_detail_text("超过×2的叠加部分收益递减",15,UI.MUTED)
 		for source in game.loadout.stat_sources(preview_stat):
 			_detail_text("%s  %s" % [str(source.get("name", "基础")), _format_stat(preview_stat, float(source.get("value", 0.0)))], 18)
 			var tags: PackedStringArray = []
@@ -774,7 +777,7 @@ func _update_detail() -> void:
 		_detail_text(str(row.detail),17,Color("879db6"))
 		if not actual.get("calculation",{}).is_empty():
 			var f: Dictionary=actual.calculation
-			_detail_text("计算明细\n基础 %.1f × 舰体 %.2f × 等级 %.2f\n× 属性 %.2f × 单发倍率 %.2f × 改装 %.2f"%[f.base_damage,f.ship_multiplier,f.level_multiplier,f.attribute_multiplier,f.damage_multiplier,f.mod_multiplier],16)
+			_detail_text("计算明细\n基础 %.1f × 舰体 %.2f × 等级 %.2f\n× 属性 %.2f × 单发倍率 %.2f × 改装 %.2f\n× 弹幕密度 %.2f"%[f.base_damage,f.ship_multiplier,f.level_multiplier,f.attribute_multiplier,f.damage_multiplier,f.mod_multiplier,float(f.get("volume_multiplier",1.))],16)
 			_detail_text("弹数 %d + %d → %d  上限 %d\n充能 %d → %d 小节  每轮%.1f秒"%[f.base_count,f.extra_count,actual.count,f.count_cap,actual.charge_base,actual.charge,game.LOADOUT.SEQUENCE_LOOP_SECONDS],16,Color("9dcdd8"))
 			_detail_text("其中属性换算弹数 %d"%int(f.get("attribute_count",0)),15,Color("829eb5"))
 			for rule_text in game.loadout.rule_explanation(preview_uid,serial): _detail_text(rule_text,14,Color("7e9caf"))
@@ -913,7 +916,10 @@ func _update_live() -> void:
 	if not stat_labels.is_empty():
 		var stats: Dictionary = game.loadout.stats()
 		for key in stat_labels:
-			if is_instance_valid(stat_labels[key]): stat_labels[key].text = _format_stat(str(key), float(stats.get(key, 0.0)))
+			if is_instance_valid(stat_labels[key]):
+				var value=float(stats.get(key,0.))
+				if str(key)=="bullet_multiplier":value=preload("res://scripts/run_balance.gd").bonus_damage(value-1.)
+				stat_labels[key].text=_format_stat(str(key),value)
 	var step: int = int(game.music.timeline / game.LOADOUT.SEQUENCE_STEP_SECONDS) % 8 if game.music != null else -1
 	for card in step_cards:
 		if is_instance_valid(card):

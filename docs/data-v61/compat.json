@@ -1,0 +1,17 @@
+{
+  "captures": [
+    "res://tests/v61-compat-mercury.png",
+    "res://tests/v61-compat-venus.png",
+    "res://tests/v61-compat-earth.png",
+    "res://tests/v61-compat-mars.png",
+    "res://tests/v61-compat-jupiter.png",
+    "res://tests/v61-compat-saturn.png",
+    "res://tests/v61-compat-uranus.png",
+    "res://tests/v61-compat-neptune.png",
+    "res://tests/v61-compat-solar.png",
+    "res://tests/v61-compat-title.png"
+  ],
+  "checks": 10,
+  "failures": [],
+  "renderer": "gl_compatibility"
+}

@@ -1,7 +1,7 @@
 extends RefCounted
 ## Objectives persist through unlimited shops. All progress uses combat time.
 const SPECS={
-	"mercury":{"title":"航标采样","type":"collect","goal":3,"verb":"靠近航标采样","hint":"进入光圈并停留0.8秒"},
+	"mercury":{"title":"航标采样","type":"collect","goal":3,"verb":"靠近航标采样","hint":"光圈内采样0.8秒，可边移动边完成"},
 	"venus":{"title":"护送勘测艇","type":"escort","goal":7,"verb":"护送至下个航点","hint":"靠近护送；敌人接触会损伤勘测艇"},
 	"earth":{"title":"守住通讯站","type":"defend","goal":7,"verb":"保护通讯站","hint":"拦截袭击站体的敌群；波间自动修复"},
 	"mars":{"title":"拔除攻城据点","type":"destroy","goal":3,"verb":"摧毁标记据点","hint":"用正常武器命中；待机与漏按不造成伤害"},
@@ -10,6 +10,7 @@ const SPECS={
 	"uranus":{"title":"冰轴共振","type":"resonance","goal":3,"verb":"为晶体奏响4次","hint":"在晶体光圈内完成琴块；漏按不充能"},
 	"neptune":{"title":"终潮远征","type":"finale","goal":4,"verb":"完成四阶段任务","hint":"采样 → 护送 → 破核 → 共振"}
 }
+const BEACON_ART=preload("res://scripts/navigation_beacon.gd")
 var enabled: bool=false
 var planet: String="mercury"
 var done: int=0
@@ -46,6 +47,7 @@ func unlock_wave() -> int:
 	return [1,3,5,7][mini(done,3)]
 func available(game) -> bool:return game.wave>=unlock_wave() or game.boss_down
 func _inside(game,point: Vector2,radius: float) -> bool:return game.player.distance_to(point)<=radius
+func sample_radius() -> float:return 160. if planet=="mercury" else 110.
 func _safe_point(game,preferred: Vector2,radius: float=65.) -> Vector2:
 	for i in range(65):
 		var point=preferred if i==0 else preferred+Vector2.from_angle(float(i)*2.39996)*(70.+i*11.)
@@ -60,7 +62,13 @@ func _set_focus(game) -> void:
 	if focus_set or complete() or not available(game):return
 	focus_set=true
 	var direction=Vector2.UP.rotated([0.,-.65,.65,0.][mini(done,3)])
-	if role() in ["collect","resonance","gates"]:beacon=(game.player+direction*560.).clamp(game.field().position+Vector2.ONE*260.,game.field().end-Vector2.ONE*260.)
+	if role() in ["collect","resonance","gates"]:
+		var desired=(game.player+direction*(360. if planet=="mercury" and done==0 else 560.)).clamp(game.field().position+Vector2.ONE*260.,game.field().end-Vector2.ONE*260.)
+		if planet=="mercury":
+			var safe=_safe_point(game,desired,160.)
+			if safe==Vector2.INF:focus_set=false;return
+			beacon=safe
+		else:beacon=desired
 	elif role()=="escort":
 		if str(spec().type)=="finale":beacon=game.player+Vector2(0,-120)
 	elif role() in ["destroy","hunt"]:
@@ -80,6 +88,8 @@ func wave_cleared(game) -> void:
 func _advance(game) -> void:
 	done+=1;capture=0.;resonance=0;focus_set=false;target_uid=-1;pending.clear()
 	message="任务完成，击破旗舰后撤离" if complete() else "阶段完成 · 下一目标随航线开放"
+	if planet=="mercury":
+		game.notice="航标采样完成 %d/3"%done;game.notice_until=game.music.timeline+1.6
 	if complete():
 		for e in game.enemies:e.erase("mission_target")
 	game.fx.ring(beacon,game.planet_rules.accent,115.,.5)
@@ -108,7 +118,7 @@ func step(game) -> void:
 	if not available(game):last_player=game.player;return
 	match role():
 		"collect":
-			capture=capture+dt if _inside(game,beacon,110.) else maxf(0.,capture-dt*.5)
+			capture=capture+dt if _inside(game,beacon,sample_radius()) else maxf(0.,capture-dt*.5)
 			if capture>=.8:_advance(game)
 		"resonance":
 			if _inside(game,beacon,230.):resonance+=gained
@@ -166,6 +176,15 @@ func caption(game) -> String:
 func draw_world(game) -> void:
 	if not enabled or complete() or not available(game):return
 	var color: Color=game.planet_rules.accent;var now=float(game.music.timeline)
+	if planet=="mercury":
+		BEACON_ART.draw(game,beacon,now,clampf(capture/.8,0.,1.),_inside(game,beacon,sample_radius()),done+1,bool(game.settings.reduced_fx),sample_radius())
+		var distance=game.player.distance_to(beacon)
+		if distance>sample_radius()+90.:
+			var axis=(beacon-game.player).normalized();var side=axis.orthogonal()
+			for i in range(3):
+				var point=game.player+axis*(95.+i*27.)
+				game.draw_polyline(PackedVector2Array([point-axis*7.-side*8.,point,point-axis*7.+side*8.]),Color(BEACON_ART.LIGHT,.55),2.,true)
+		return
 	if not pending.is_empty():
 		var rect=Rect2(Vector2(pending.at)-Vector2.ONE*75.,Vector2.ONE*150.)
 		game.draw_rect(rect,Color("f18a94",.08));game.draw_rect(rect,Color("f18a94",.8),false,2.)

@@ -1,16 +1,33 @@
 extends RefCounted
-## V40: one source for encounter duration, durability and purchasing power.
+## Shared encounter and growth policy. V61 gives accuracy a meaningful output gap.
 ## Shops remain unlimited; these windows are planning assumptions, not timers.
 const ORDINARY_SECONDS=[20.,20.,20.,27.,27.,33.,40.]
 const SHOP_SECONDS=[12.,18.]
 const BOSS_SECONDS=[35.,50.]
 const ENEMY_HP={"mote":16.,"armor":86.,"shooter":40.,"dart":14.,"splitter":60.,"sentinel":112.,"lance":122.,"mirror":92.}
-const BOSS_HP=[90000.,90000.,85000.,92000.,100000.,108000.,115000.,120000.]
+const BOSS_HP=[30000.,32000.,34000.,36000.,39000.,42000.,45000.,48000.]
 const LOOT_MULTIPLIER=1.5
+const WAVE_HP=[1.,1.08,1.20,1.36,1.55,1.78,2.04]
+const LEVEL_DAMAGE=.30
+
+static func accuracy_ammo(accuracy: float) -> float:
+	return pow(clampf(accuracy,0.,1.),2.)
+static func attribute_damage(primary: float,power: float) -> float:
+	# Attribute already grows projectile count linearly. Avoid quadratic DPS
+	# from multiplying that count by another unbounded attribute multiplier.
+	var positive=.5*maxf(0.,primary)/(100.+maxf(0.,primary))+.25*maxf(0.,power)/(100.+maxf(0.,power))
+	return maxf(.1,1.+positive+minf(0.,primary)/100.+minf(0.,power)/200.)
+static func bonus_damage(bonus: float) -> float:
+	# First100% bonus keeps its value; further stacking has diminishing returns.
+	return maxf(.1,1.+bonus) if bonus<=1. else 2.+sqrt(bonus-1.)*.35
+static func volume_damage(base_count: int,full_count: int) -> float:
+	# Extra visible particles grow total raw salvo damage by sqrt(count/base).
+	# Applied to full entitlement BEFORE accuracy; low accuracy never refunds it.
+	return sqrt(float(maxi(1,base_count))/float(maxi(maxi(1,base_count),full_count)))
 
 static func base_hp(kind: String,wave: int) -> float:
 	if kind=="elite": return 450.+wave*38.
-	return float(ENEMY_HP.get(kind,6800.))
+	return float(ENEMY_HP.get(kind,6800.))*float(WAVE_HP[clampi(wave-1,0,6)])
 
 static func wave_budget(curve: Array,wave: int,hard: bool=false) -> int:
 	var progress=clampf(float(wave)/6.,0.,1.)

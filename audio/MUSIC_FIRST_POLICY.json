@@ -1,6 +1,6 @@
 {
-  "version": "0.57.0-perfect-pilots",
-  "date": "2026-11-14",
+  "version": "0.61.0-mercury-rhythm",
+  "date": "2026-11-17",
   "lead": "eight licensed full background songs",
   "weapon_voices": "removed from combat, shop preview and codex; legacy sources archived only",
   "composer": "retired from game entry points",
@@ -31,7 +31,7 @@
       "points": 0
     }
   ],
-  "ammo": "sum(all3keys earned)/sum(all3keys possible) sets next6second base; multiply current earnedPerfect bonus, max120percent; opening base100percent",
+  "ammo": "square(sum(all3keys earned)/sum(all3keys possible)) sets next6second base ammo; multiply current earnedPerfect bonus,max120percent;opening100percent;zero/recovery and fraction carry retained",
   "tail_grace_ms": 140,
   "feedback": "kill, pickup, shield, impacts and UI remain on separate buses; dedicated rhythm hitsounds are future work",
   "perfect_rewards": {
@@ -47,7 +47,8 @@
       0.15,
       0.2
     ],
-    "scope": "immediate multiplier on existing base ratio, not score/damage; class count limits remain"
+    "scope": "immediate multiplier on accuracy-squared ammo, not points or damage; count caps remain"
   },
-  "pilot_modifiers": "readability/thresholds/protection/holds/linger only; see scripts/rhythm_pilots.gd"
+  "pilot_modifiers": "readability/thresholds/protection/holds/linger only; see scripts/rhythm_pilots.gd",
+  "damage_growth": "Central bounded attribute/level/modifier growth and full-count density sharing before score scaling. Accuracy itself only scales count. Utility dash missiles follow count ratio."
 }

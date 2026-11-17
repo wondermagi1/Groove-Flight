@@ -1,0 +1,7 @@
+{
+  "checks": 2629,
+  "facts": {
+    "outpost_minimum_swept_margin": -3.814697265625e-05
+  },
+  "failures": []
+}

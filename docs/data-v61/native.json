@@ -1,0 +1,129 @@
+{
+  "captures": [
+    "res://tests/v61-three-tracks-1280.png",
+    "res://tests/v61-three-tracks-1920.png",
+    "res://tests/v61-inventory-layout-1280.png",
+    "res://tests/v61-score-feedback-1920.png",
+    "res://tests/v61-grade-perfect.png",
+    "res://tests/v61-grade-excellent.png",
+    "res://tests/v61-grade-general.png",
+    "res://tests/v61-grade-miss.png",
+    "res://tests/v61-weapon-codex.png",
+    "res://tests/v61-weapon-codex-1280.png",
+    "res://tests/v61-perfect-100-reward.png",
+    "res://tests/v61-protected-chain.png",
+    "res://tests/v61-rhythm-pilots-talents-1920.png",
+    "res://tests/v61-rhythm-pilots-talents-1280.png",
+    "res://tests/v61-compact-1280.png",
+    "res://tests/v61-compact-1366.png",
+    "res://tests/v61-compact-1600.png",
+    "res://tests/v61-compact-1920.png",
+    "res://tests/v61-compact-2560.png",
+    "res://tests/v61-compact-3440.png",
+    "res://tests/v61-hidden-sequencer.png",
+    "res://tests/v61-title.png",
+    "res://tests/v61-solar.png",
+    "res://tests/v61-codex-detail.png",
+    "res://tests/v61-settings.png",
+    "res://tests/v61-sustain-chord-1920.png",
+    "res://tests/v61-sustain-complete-1920.png",
+    "res://tests/v61-art-1280.png",
+    "res://tests/v61-art-1920.png",
+    "res://tests/v61-reduced-fx-1920.png",
+    "res://tests/v61-buffs-dock-1280.png",
+    "res://tests/v61-buffs-dock-1920.png",
+    "res://tests/v61-cyber-crowd-1920.png",
+    "res://tests/v61-background-mercury.png",
+    "res://tests/v61-background-venus.png",
+    "res://tests/v61-background-earth.png",
+    "res://tests/v61-background-mars.png",
+    "res://tests/v61-background-jupiter.png",
+    "res://tests/v61-background-saturn.png",
+    "res://tests/v61-background-uranus.png",
+    "res://tests/v61-background-neptune.png",
+    "res://tests/v61-background-low.png",
+    "res://tests/v61-cyber-settings.png",
+    "res://tests/v61-mercury-navigation-1920.png",
+    "res://tests/v61-mercury-sampling-1920.png",
+    "res://tests/v61-mercury-sampling-1280.png",
+    "res://tests/v61-mercury-offscreen-1280.png"
+  ],
+  "checks": 99,
+  "failures": [],
+  "geometry": [
+    {
+      "area_fraction": 0.0802083333333333,
+      "panel": [
+        224.0,
+        330.0
+      ],
+      "runway": 238.0,
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    {
+      "area_fraction": 0.0721693509028795,
+      "panel": [
+        224.0,
+        338.0
+      ],
+      "runway": 246.0,
+      "viewport": [
+        1366,
+        768
+      ]
+    },
+    {
+      "area_fraction": 0.0616,
+      "panel": [
+        224.0,
+        396.0
+      ],
+      "runway": 304.0,
+      "viewport": [
+        1600,
+        900
+      ]
+    },
+    {
+      "area_fraction": 0.0595582561728395,
+      "panel": [
+        260.0,
+        475.0
+      ],
+      "runway": 383.0,
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "area_fraction": 0.041015625,
+      "panel": [
+        280.0,
+        540.0
+      ],
+      "runway": 448.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "area_fraction": 0.0305232558139535,
+      "panel": [
+        280.0,
+        540.0
+      ],
+      "runway": 448.0,
+      "viewport": [
+        3440,
+        1440
+      ]
+    }
+  ],
+  "renderer": "forward_plus",
+  "scope": "Native input/render fixtures; scores are scripted test state, not human play results. Crowd picture verifies readability, not sustained campaign FPS."
+}

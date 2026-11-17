@@ -5,12 +5,14 @@ const PERFECT_POINTS=100
 const EXCELLENT_POINTS=80
 const GENERAL_POINTS=40
 const TRACKS=3
+const BALANCE=preload("res://scripts/run_balance.gd")
 var window: int=0
 var base_ratio: float=1.
 var reward_bonus: float=0.
 var ratio: float:
-	get:return clampf(base_ratio*(1.+reward_bonus),0.,1.2)
-	set(value):base_ratio=clampf(value/(1.+reward_bonus),0.,1.)
+	get:return clampf(BALANCE.accuracy_ammo(base_ratio)*(1.+reward_bonus),0.,1.2)
+	# Compatibility setter assigns ACTUAL ammo, while base_ratio stores accuracy.
+	set(value):base_ratio=sqrt(clampf(value/(1.+reward_bonus),0.,1.))
 var previous: Dictionary={}
 var ledger: Dictionary={}
 var remainders: Dictionary={}
@@ -32,7 +34,7 @@ func advance(now: float) -> void:
 		var row=total()
 		row.carried=int(row.possible)==0
 		if not row.carried:base_ratio=clampf(float(row.earned)/float(row.possible),0.,1.)
-		row.ratio=ratio;previous=row
+		row.accuracy=base_ratio;row.ratio=ratio;previous=row
 		ledger.erase(window);window+=1
 func current(track: int) -> Dictionary:
 	return ledger[window][track] if ledger.has(window) else {"earned":0,"possible":0,"notes":0}

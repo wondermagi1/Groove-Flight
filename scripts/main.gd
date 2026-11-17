@@ -1150,10 +1150,12 @@ func on_step(index: int,serial: int,deadline: float) -> void:
 			else: pending_triggers.append(trigger)
 
 	if pending_dash_missiles>0:
-		var missiles=mini(12,pending_dash_missiles); pending_dash_missiles=0
-		var event=C.item("missile").duplicate(true); event.kind="missile"; event.extra=0; event.count=missiles; event.angle=0.; event.chord=false; event.events=event_snapshot; event.uid=-1
-		event.crit_chance=stats_snapshot.crit_chance; event.crit_damage=stats_snapshot.crit_damage; fire_weapon(event)
-		play_note("missile",index,-18.)
+		var full=mini(12,pending_dash_missiles);pending_dash_missiles=0
+		var missiles=rhythm.score.projectile_count(-2,0,full,12) if rhythm_required() else full
+		if missiles>0:
+			var event=C.item("missile").duplicate(true); event.kind="missile"; event.extra=0; event.count=missiles; event.angle=0.; event.chord=false; event.events=event_snapshot; event.uid=-1;event.rhythm_count_scaled=true
+			event.damage*=BALANCE.volume_damage(1,full)
+			event.crit_chance=stats_snapshot.crit_chance; event.crit_damage=stats_snapshot.crit_damage; fire_weapon(event)
 
 func play_note(_voice_id: String,_pitch: int,_volume: float=-18.) -> void:
 	pass
