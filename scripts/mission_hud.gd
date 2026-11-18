@@ -33,7 +33,11 @@ func _draw() -> void:
 		line_y=56.
 		var hint=str(m.spec().hint)
 		if m.planet=="mercury" and not m.complete():
-			hint="圈内采样 %d%%"%roundi(m.capture/.8*100.) if game.player.distance_to(m.beacon)<=m.sample_radius() else "沿箭头接近航标 · %dm"%roundi(game.player.distance_to(m.beacon))
+			var gap=game.player.distance_to(m.beacon)
+			match m.guard_phase:
+				0:hint="圈内接通 %d%%"%clampi(roundi(m.capture/.8*100.),0,100) if gap<=m.sample_radius() else "沿箭头接近信标 · %dm"%roundi(gap)
+				1:hint="在防区内拦截敌机" if gap<=game.BALANCE.BEACON_GUARD_RADIUS else "返回防区以继续计时"
+				2:hint="进入内环领取星屑和强化"
 		if m.complete():
 			caption="旗舰交战" if game.wave==game.wave_count() else "目标完成 · 前往旗舰坐标"
 			hint="击破旗舰后撤离"

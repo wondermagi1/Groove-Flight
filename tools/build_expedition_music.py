@@ -121,13 +121,26 @@ def make_chart(path, row):
             "beat": beat, "measure": beat // 4, "phrase": beat // 8, "accent": beat % 4 == 0,
             "origin": "nearby_audio_onset" if anchored else "fitted_beat",
         })
+    for index in range(1, len(events) - 1):
+        event, prior, following = events[index], events[index - 1], events[index + 1]
+        if event["kind"] != "tap" or event["beat"] < 16 or event["t"] - prior["t"] - prior["hold"] < .34:
+            continue
+        if event["beat"] % 16 == 4:
+            event["technique"] = "chord"
+        elif event["beat"] % 16 in {5, 6, 9, 10, 12, 13} and following["t"] - event["t"] >= .58:
+            subdivision = event["t"] + beat_period * .5
+            nearest = int(np.argmin(abs(times - subdivision)))
+            if abs(float(times[nearest]) - subdivision) < .038:
+                subdivision = float(times[nearest])
+            event["technique"] = "roll"
+            event["roll"] = round(np.clip(subdivision - event["t"], .22, .38), 4)
     assert events and all(b["t"] - a["t"] > .28 for a, b in zip(events, events[1:]))
     return {
         "schema": 3, "planet": row["planet"], "id": row["id"], "title": row["title"],
         "artist": row["artist"], "source": row["runtime"], "source_sha256": row["sha256"],
         "duration": row["duration"], "estimated_bpm": round(60. / beat_period, 3),
         "meter": "4-pulse game arrangement", "keys": ["J", "K", "L"],
-        "method": "Source BPM with onset-phase fitting and sparse beat-anchored three-key arrangement.",
+        "method": "Beat-anchored sparse three-key arrangement with later chord and onset-snapped roll variants.",
         "events": events,
     }
 
@@ -141,7 +154,7 @@ def main():
         (ROOT / folder).mkdir(parents=True, exist_ok=True)
     with ThreadPoolExecutor(max_workers=4) as pool:
         rows = list(pool.map(import_track, TRACKS))
-    save(ROOT / "audio/PLANET_MUSIC.json", {"schema": 1, "revision": "v65", "tracks": rows})
+    save(ROOT / "audio/PLANET_MUSIC.json", {"schema": 1, "revision": "v66", "tracks": rows})
     credits = ["# Expedition soundtrack", "", "Music by Kevin MacLeod (incompetech.com), CC BY 4.0.", ""]
     credits += [f"- {row['title']} ([official track page]({row['source_page']}))" for row in rows]
     credits += ["", f"[CC BY 4.0 license]({LICENSE})", "", "Converted to Ogg Vorbis. Original tempo, pitch and duration."]

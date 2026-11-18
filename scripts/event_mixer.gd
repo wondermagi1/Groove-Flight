@@ -2,7 +2,7 @@ extends Node
 const AUDIO=preload("res://scripts/audio_controls.gd")
 const SEQUENCE=preload("res://scripts/arsenal_loadout.gd")
 const RHYTHM_SFX=preload("res://scripts/rhythm_sfx.gd")
-const RHYTHM_DB={"perfect":-3.5,"excellent":-5.,"general":-7.,"miss":-12.,"hold_head":-7.,"hold_tail":-4.,"combo":-3.,"perfect_reward":-2.5}
+const RHYTHM_DB={"perfect":-3.5,"excellent":-5.,"general":-7.,"miss":-12.,"hold_head":-7.,"hold_tail":-4.,"combo":-3.,"perfect_reward":-2.5,"accent_hit":-3.,"chord":-3.,"roll_head":-5.5,"roll_tail":-3.5}
 ## Recorded low-drum kill feedback; bounded rolls and reserved shield/pickup voices.
 const RATE=22050
 var groups={"hit":[],"kill":[],"ui":[],"alert":[],"pickup":[],"shield":[],"rhythm":[]}
@@ -72,11 +72,23 @@ func set_combat_state(state: String) -> void:
 		for player in groups.kill: player.stop()
 
 func rhythm_feedback(event: Dictionary) -> void:
-	if not feedback_active or event.gesture=="early_contact":return
+	if not feedback_active:return
 	var cue=str(event.grade)
-	if event.gesture=="hold_head":cue="hold_head"
-	elif event.milestone in ["perfect","combo"]:cue="perfect_reward" if event.milestone=="perfect" else "combo"
-	elif event.gesture=="hold_tail" and event.grade=="perfect":cue="hold_tail"
+	var gesture=str(event.gesture)
+	if event.milestone in ["perfect","combo"]:
+		cue="perfect_reward" if event.milestone=="perfect" else "combo"
+	elif bool(event.get("contact_played",false)):
+		return
+	elif gesture in ["hold_head","roll_head"]:
+		cue=gesture
+	else:
+		if gesture=="early_contact":
+			cue=str(event.cue_grade)
+			gesture=str(event.contact_kind)
+		if cue!="miss" and gesture=="chord":cue="chord"
+		elif cue!="miss" and gesture in ["roll","roll_tail"]:cue="roll_tail"
+		elif cue=="perfect" and gesture=="hold_tail":cue="hold_tail"
+		elif cue=="perfect" and bool(event.get("accent",false)):cue="accent_hit"
 	var stream: AudioStreamWAV=RHYTHM_SFX.bank().get(cue)
 	var output=AudioServer.get_bus_index(AUDIO.RHYTHM)
 	if stream==null or AudioServer.is_bus_mute(output):return

@@ -3,7 +3,7 @@ extends RefCounted
 const DOCK_RADIUS=185.
 const BOSS_APPROACH=580.
 const ROUTES={
-	"mercury":{"size":Vector2(14400,13600),"points":[Vector2(0,-360),Vector2(-1150,-1400),Vector2(850,-2670)],"pressure":31,"spacing":3.2},
+	"mercury":{"size":Vector2(15200,14800),"points":[Vector2(0,-440),Vector2(-1670,-1790),Vector2(1490,-3510)],"pressure":31,"spacing":3.2},
 	"venus":{"size":Vector2(14800,15000),"points":[Vector2(-420,-690),Vector2(820,-1800),Vector2(80,-3270)],"pressure":34,"spacing":3.1},
 	"earth":{"size":Vector2(15200,13800),"points":[Vector2(0,-520),Vector2(-1000,-1370),Vector2(870,-2300)],"pressure":37,"spacing":2.8},
 	"mars":{"size":Vector2(15800,14400),"points":[Vector2(0,-660),Vector2(1160,-1610),Vector2(-1180,-2860)],"pressure":42,"spacing":2.7},
@@ -48,7 +48,7 @@ func dock_at(at: Vector2) -> int:
 
 func clear_sector(game,at: Vector2) -> void:
 	var completed=int(game.mission.done)
-	var site=(at+Vector2(145.*mirror,145.)).clamp(bounds().position+Vector2.ONE*300.,bounds().end-Vector2.ONE*300.)
+	var site=at if game.active_planet=="mercury" else (at+Vector2(145.*mirror,145.)).clamp(bounds().position+Vector2.ONE*300.,bounds().end-Vector2.ONE*300.)
 	docks.append({"at":site,"used":false,"sector":completed,"supply":0})
 	game.close_expedition_sector(completed)
 	if game.mission.complete():
@@ -58,7 +58,9 @@ func advance_incursion(game) -> void:
 	var now=float(game.music.timeline)
 	if now<next_incursion:return
 	var stage=int(game.mission.done)
-	next_incursion=now+maxf(1.5,float(route.spacing)-stage*.23)
+	var defending=game.mission.is_beacon_defense()
+	var pressure=clampf(float(game.mission.guard_elapsed)/game.BALANCE.BEACON_SECONDS,0.,1.) if defending else 0.
+	next_incursion=now+maxf(1.5,float(route.spacing)-stage*.23-pressure*.7)
 	var distance_limit=game.visible_world().grow(680.)
 	var nearby=0
 	for enemy in game.enemies:
@@ -66,7 +68,7 @@ func advance_incursion(game) -> void:
 	var reserved=0
 	for plan in game.spawn_telegraphs:reserved+=int(plan.count)
 	nearby+=reserved
-	var cap=int(route.pressure)+stage*19+(14 if game.difficulty>0 else 0)
+	var cap=int(route.pressure)+stage*19+roundi(pressure*13.)+(14 if game.difficulty>0 else 0)
 	var amount=mini(maxi(0,cap-nearby),16+stage*6)
 	amount=mini(amount,game.MAX_ENEMIES-64-game.enemies.size()-reserved)
 	if amount>=5:

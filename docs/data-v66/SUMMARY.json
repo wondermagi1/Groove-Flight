@@ -1,0 +1,113 @@
+{
+  "version": "0.66.0-beacon-defense",
+  "backup": "955a4144999f016f3a295c94b14cb93bca95742f",
+  "renderers": {
+    "forward_plus": {
+      "checks": 194,
+      "captures": 10
+    },
+    "gl_compatibility": {
+      "checks": 194,
+      "captures": 10
+    }
+  },
+  "feedback_checks": 76,
+  "gesture_checks": 62,
+  "transport_checks": 55,
+  "source_seconds_per_combat_second_after_first_beacon": 1.046,
+  "guard_seconds_per_beacon": 60,
+  "fixed_mercury_supply": [
+    110,
+    145,
+    180
+  ],
+  "beacon_separation": [
+    2147,
+    3598
+  ],
+  "arrangements": {
+    "earth": {
+      "chords": 33,
+      "rolls": 132
+    },
+    "jupiter": {
+      "chords": 31,
+      "rolls": 31
+    },
+    "mars": {
+      "chords": 27,
+      "rolls": 26
+    },
+    "mercury": {
+      "chords": 31,
+      "rolls": 108
+    },
+    "neptune": {
+      "chords": 23,
+      "rolls": 46
+    },
+    "saturn": {
+      "chords": 15,
+      "rolls": 30
+    },
+    "uranus": {
+      "chords": 28,
+      "rolls": 29
+    },
+    "venus": {
+      "chords": 39,
+      "rolls": 155
+    }
+  },
+  "cues": {
+    "accent_hit": {
+      "milliseconds": 85.0,
+      "pcm_peak": 22408
+    },
+    "chord": {
+      "milliseconds": 90.0,
+      "pcm_peak": 22198
+    },
+    "combo": {
+      "milliseconds": 111.0,
+      "pcm_peak": 20251
+    },
+    "excellent": {
+      "milliseconds": 53.0,
+      "pcm_peak": 18989
+    },
+    "general": {
+      "milliseconds": 47.0,
+      "pcm_peak": 14369
+    },
+    "hold_head": {
+      "milliseconds": 52.0,
+      "pcm_peak": 16136
+    },
+    "hold_tail": {
+      "milliseconds": 83.0,
+      "pcm_peak": 19847
+    },
+    "miss": {
+      "milliseconds": 35.0,
+      "pcm_peak": 15796
+    },
+    "perfect": {
+      "milliseconds": 72.0,
+      "pcm_peak": 21521
+    },
+    "perfect_reward": {
+      "milliseconds": 146.0,
+      "pcm_peak": 21812
+    },
+    "roll_head": {
+      "milliseconds": 42.0,
+      "pcm_peak": 20519
+    },
+    "roll_tail": {
+      "milliseconds": 73.0,
+      "pcm_peak": 21255
+    }
+  },
+  "scope": "Controlled task progression, current native OGG/combat clocks and rendering; no human playthrough or acoustic mixing assessment."
+}

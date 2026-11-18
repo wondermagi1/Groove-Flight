@@ -37,13 +37,13 @@ const TRAJECTORY_KEYS=["split_count","accel_forward","accel_side","offset_forwar
 const BEAT_KEYS=["charge_reduce","repeat","rotate","streak","chord"]
 const EVENT_KEYS=["heal_bar","shield_dash","heal_pickup","explode_kill","missiles_dash","heal_kill"]
 const WAVE_BOONS=[
-	{"id":"boon_hull","name":"船体加固","key":"max_health","value":1.,"detail":"生命上限 +1，并立即恢复1生命","tag":"生存","color":Color("8ed7bf")},
-	{"id":"boon_armor","name":"复合装甲","key":"armor","value":.25,"detail":"装甲 +0.25，提高全部承伤减免","tag":"生存","color":Color("9dc9d7")},
+	{"id":"boon_hull","name":"船体加固","key":"max_health","value":2.,"detail":"生命上限 +2，并立即恢复2生命","tag":"生存","color":Color("8ed7bf")},
+	{"id":"boon_armor","name":"复合装甲","key":"armor","value":.55,"detail":"装甲 +0.55，提高全部承伤减免","tag":"生存","color":Color("9dc9d7")},
 	{"id":"boon_thruster","name":"矢量推进","key":"move_percent","value":.035,"detail":"移动速度 +3.5%","tag":"机动","color":Color("83cafa")},
-	{"id":"boon_caliber","name":"口径校准","key":"bullet_multiplier","value":.04,"detail":"全部武器单发伤害 +4%","tag":"火力","color":Color("e7c88d")},
-	{"id":"boon_crit","name":"精密瞄具","key":"crit_chance","value":.015,"detail":"暴击率 +1.5%","tag":"火力","color":Color("ff9ab2")},
-	{"id":"boon_regen","name":"纳米修复","key":"regen","value":.012,"detail":"每秒再生 +0.012 生命","tag":"生存","color":Color("91edbe")},
-	{"id":"boon_magnet","name":"回收磁场","key":"magnet","value":.15,"detail":"拾取范围 +15%","tag":"经济","color":Color("b7d88e")},
+	{"id":"boon_caliber","name":"口径校准","key":"bullet_multiplier","value":.065,"detail":"全部武器单发伤害 +6.5%","tag":"火力","color":Color("e7c88d")},
+	{"id":"boon_crit","name":"精密瞄具","key":"crit_chance","value":.0225,"detail":"暴击率 +2.25%","tag":"火力","color":Color("ff9ab2")},
+	{"id":"boon_regen","name":"纳米修复","key":"regen","value":.021,"detail":"每秒再生 +0.021 生命","tag":"生存","color":Color("91edbe")},
+	{"id":"boon_magnet","name":"回收磁场","key":"magnet","value":.20,"detail":"拾取范围 +20%","tag":"经济","color":Color("b7d88e")},
 	{"id":"boon_luck","name":"航路直觉","key":"luck","value":1.5,"detail":"幸运 +1.5，改善补给品质","tag":"经济","color":Color("f2cd8a")},
 	{"id":"boon_ballistic","name":"实弹标定","key":"ballistic","value":5.,"detail":"实弹属性 +5","tag":"主属性","color":Color("63e7df"),"weight":3.},
 	{"id":"boon_ballistic_3","name":"实弹校准 +3","key":"ballistic","value":3.,"detail":"实弹属性 +3","tag":"主属性","color":Color("63e7df"),"doctrine":"ballistic","weight":3.},
@@ -476,9 +476,9 @@ static func weapon_shop_rarity(wave: int) -> int:
 	# Weapon variety opens earlier;nonweapon rarity keeps its existing curve.
 	return clampi(wave,1,3)
 
-func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[],weapon_count: int=3,item_count: int=3,price_scale: float=1.,featured_item: String="") -> Array[Dictionary]:
+func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[],weapon_count: int=3,item_count: int=3,price_scale: float=1.,featured_item: String="",expedition_planet: int=-1) -> Array[Dictionary]:
 	var pool: Array=[]; var result: Array[Dictionary]=[]
-	var max_rarity=clampi(1+floori(float(maxi(wave,1)-1)/3.),1,3)
+	var max_rarity=clampi(wave,1,3) if expedition_planet>=0 else clampi(1+floori(float(maxi(wave,1)-1)/3.),1,3)
 	var weapon_rarity=weapon_shop_rarity(wave)
 	if not doctrine_id.is_empty():
 		# Small dedicated pools still expose three distinct weapons;only weapon
@@ -525,7 +525,8 @@ func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[],weapon_co
 			roll-=(1.+float(pool[candidate].rarity)*luck*.04)*PATHS.affinity(str(pool[candidate].id),owned)
 			if roll<=0.: index=candidate; break
 		var row: Dictionary=pool[index]; pool.remove_at(index)
-		result.append({"id":str(row.id),"price":maxi(1,roundi(float(row.cost)*(1.+.025*maxi(0,wave-1))*maxf(.01,price_scale))),"sold":false,"locked":false})
+		var price=BALANCE.expedition_price(row,wave,expedition_planet) if expedition_planet>=0 else maxi(1,roundi(float(row.cost)*(1.+.025*maxi(0,wave-1))*maxf(.01,price_scale)))
+		result.append({"id":str(row.id),"price":price,"sold":false,"locked":false})
 	return result
 func buy(offer: Dictionary,dust: int) -> Dictionary:
 	var denied={"ok":false,"cost":0,"uid":-1}
@@ -552,10 +553,19 @@ func _draw_wave_boon(pool: Array,rng: RandomNumberGenerator) -> Dictionary:
 		if roll<=0.: picked=index;break
 	return pool.pop_at(picked)
 
-func wave_boon_choices(rng: RandomNumberGenerator) -> Array[Dictionary]:
+func wave_boon_choices(rng: RandomNumberGenerator,expedition: bool=false) -> Array[Dictionary]:
 	var pool: Array=WAVE_BOONS.filter(func(boon):return DOCTRINES.boon_allowed(boon,doctrine_id)).duplicate(true)
 	var selected: Array=[]
-	if doctrine_id=="ballistic":
+	if expedition:
+		var used: Array=[]
+		for at in heads():
+			var row=_row(str(find(slots[at]).get("kind","")))
+			if str(row.get("category",""))=="weapon":used.append(str(row.get("attr","ballistic")))
+		var offense=pool.filter(func(boon):return boon.key in ["bullet_multiplier","crit_chance"] or (boon.key in used and not boon.has("operation")))
+		var survival=pool.filter(func(boon):return boon.key in ["max_health","armor","regen"])
+		var utility=pool.filter(func(boon):return boon.key in ["move_percent","magnet","luck"])
+		for group in [offense,survival,utility]:selected.append(_draw_wave_boon(group,rng))
+	elif doctrine_id=="ballistic":
 		var primary=pool.filter(func(boon):return str(boon.key)=="ballistic")
 		var general=pool.filter(func(boon):return str(boon.key)!="ballistic")
 		for index in range(2): selected.append(_draw_wave_boon(primary,rng))

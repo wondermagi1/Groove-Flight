@@ -16,6 +16,7 @@ func run() -> void:
 	game=load("res://scenes/Main.tscn").instantiate();game.is_preview=true;game.simulation_only=true;game.bind_input();root.add_child(game);current_scene=game;await frames(3)
 	game.settings.master=0.;game.apply_audio();game.is_preview=false;game.selected_doctrine="ballistic";game.set_physics_process(false)
 	var rows=[]
+	var measured_rate=0.
 	for planet in game.PLANETS.IDS:
 		game.start_run(53,planet);game.invulnerable=10000.;game.standard_music.begin(game.loadout);pending_releases.clear()
 		var timeout=Time.get_ticks_msec()+15000
@@ -29,8 +30,8 @@ func run() -> void:
 			game.pause_game();await freeze_check("V57 pause");game.pause_game();game.show_settings();await freeze_check("V57 settings");game.close_settings();game.open_weapon_codex();await freeze_check("V57 codex");game.weapon_codex_overlay.queue_free();await frames(4)
 			var old_raw=game.planet_music.get_playback_position();game.set_audio_volume("music",.31);await frames(3)
 			check(game.planet_music.get_playback_position()>=old_raw-.03,"Volume and timing controls do not restart the per-planet song")
-			game.player=game.mission.beacon;game.mission.capture=.82
-			game.mission.step(game)
+			game.player=game.mission.beacon;game.mission.guard_phase=1;game.mission.guard_elapsed=60.
+			game.mission.step(game);game.mission.step(game)
 			check(game.expedition.docks.size()==1,"A played mission creates a supply dock")
 			game.player=game.expedition.docks[0].at
 			check(game.open_expedition_dock(),"Live dock opens")
@@ -39,6 +40,12 @@ func run() -> void:
 			check(game.choose_boon(0) and game.continue_wave(),"Live dock resumes after applying the choice")
 			await frames(6)
 			check(game.state=="combat" and game.planet_music.get_playback_position()>=dock_raw-.03 and not game.planet_music.stream_paused,"Dock resumes the same song without rewind")
+			check(is_equal_approx(game.planet_music.pitch_scale,1.045),"Native OGG plays the next section at the faster rate")
+			var before_song=game.planet_music.get_playback_position()
+			var before_clock=game.standard_music.get_playback_position()
+			await exercise(1.6)
+			measured_rate=(game.planet_music.get_playback_position()-before_song)/(game.standard_music.get_playback_position()-before_clock)
+			check(absf(measured_rate-1.045)<.025,"Actual source position advances faster than the independent combat clock")
 		game.planet_music.seek(float(row.duration)-.45);game.rhythm_song_loops=0;game.rhythm_song_raw=float(row.duration)-.45;game.rhythm_song_absolute=game.rhythm_song_raw
 		game.wave_start=155.4;game.standard_music.seek(155.4);game.standard_music._previous_raw=155.4;game.standard_music.timeline=155.4;game.standard_music.loop_count=0;game.standard_music.last_step=floori(155.4/.1875);game.rhythm.reset(155.4);pending_releases.clear()
 		var before=game.rhythm.hits;await exercise(maxf(2.8,first_beat+1.7))
@@ -46,7 +53,7 @@ func run() -> void:
 		check(game.standard_music.loop_count>=1 and game.music.timeline>156.,"Native charge clock wraps independently / "+planet)
 		check(game.rhythm.hits>before and game.rhythm_voices.play_log.is_empty() and game.fire_log.size()>0,"Scored ammunition survives both independent loops without weapon voices / "+planet)
 		rows.append({"planet":planet,"title":row.title,"actual_length":game.planet_music.stream.get_length(),"hits":game.rhythm.hits,"misses":game.rhythm.misses,"ratio":game.rhythm.score.ratio,"score_window":game.rhythm.score.window,"voices":game.rhythm_voices.play_log.size(),"song_loops":game.rhythm_song_loops,"clock_loops":game.standard_music.loop_count})
-	var result={"checks":checks,"failures":failures,"planets":rows,"gestures":gestures,"scope":"Actual native clock/OGG transport, BGM chart scoring and silent weapon salvos, with dummy headless audio; not human listening approval or physical-device latency measurement."}
+	var result={"checks":checks,"failures":failures,"planets":rows,"gestures":gestures,"measured_rate":measured_rate,"scope":"Actual native clock/OGG transport, BGM chart scoring and silent weapon salvos, with dummy headless audio; not human listening approval or physical-device latency measurement."}
 	print("V57_LIVE ",JSON.stringify(result));FileAccess.open("res://tests/results-v57-live.json",FileAccess.WRITE).store_string(JSON.stringify(result,"\t"))
 	game.set_process(false);game.rhythm_voices.reset();game.standard_music.stop();game.planet_music.stop();game.mixer.reset_feedback()
 	game.standard_music._running=false;current_scene=null;game.queue_free();await frames(6);quit(0 if failures.is_empty() else 1)

@@ -43,7 +43,7 @@ static func player_safe(game,plan: Dictionary) -> bool:
 	var closest=Vector2(game.player).clamp(swept.position,swept.end)
 	if closest.distance_to(game.player)<PLAYER_CLEARANCE-.01: return false
 	var mission=game.get("mission")
-	if mission!=null and mission.enabled and not mission.complete() and mission.role() in ["escort","defend"]:
+	if mission!=null and mission.enabled and not mission.complete() and mission.protected_objective():
 		if Rect2(plan.rect).grow(105.).has_point(mission.beacon) or swept.grow(70.).has_point(mission.beacon):return false
 	return Rect2(plan.rect).end.y<=game.player.y-PLAYER_CLEARANCE
 

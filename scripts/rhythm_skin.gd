@@ -7,6 +7,7 @@ const WHITE=Color("eef5ff")
 const TAP=Color("93e3f5")
 const HOLD=Color("edca84")
 const CHORD=Color("c9b6ed")
+const ROLL=Color("ffae82")
 const MISS=Color("e78999")
 const GRADES={"perfect":HOLD,"excellent":TAP,"general":CHORD,"miss":MISS}
 const IMPACT_LIFE=.32
@@ -92,6 +93,7 @@ static func impact(canvas: CanvasItem,center: Vector2,lane: float,age: float,eve
 	var t=clampf(age/IMPACT_LIFE,0.,1.)
 	var alpha=1.-smoothstep(.04,1.,t)
 	var color: Color=GRADES.get(grade,HOLD)
+	if gesture=="roll_head":color=ROLL
 	var spread=lane*(.20+.21*sqrt(t))
 	canvas.draw_line(center-Vector2(spread,0),center+Vector2(spread,0),Color(color,alpha),2.5)
 	var rim=Rect2(center+Vector2(-lane*.5+5.,6.),Vector2(lane-10.,32.))

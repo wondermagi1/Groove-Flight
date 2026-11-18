@@ -1,11 +1,12 @@
 {
-  "version": "0.65.0-planet-expeditions",
+  "version": "0.66.0-beacon-defense",
   "date": "2026-11-18",
   "lead": "eight licensed Kevin MacLeod expedition songs via PLANET_MUSIC.json",
   "weapon_voices": "removed from combat, shop preview and codex; legacy sources archived only",
   "composer": "retired from game entry points",
   "instrumental_pcm": "silent gameplay clock; no weapons/support/backing/groove",
-  "chart": "tempo and onset-phase matched beat cues and holds, every other beat in opening four bars, base lookahead 2.9 s",
+  "chart": "beat-matched three-key taps and holds; chords following sector one and cross-lane rolls following sector two; base lookahead 2.9 s divided by the live song rate",
+  "song_rate": "1.00 plus 0.045 per finished objective, up to 1.18; OGG playback and score mapping advance together",
   "judgements": [
     {
       "id": "perfect",
@@ -39,8 +40,8 @@
     "bus": "GrooveFlight_rhythm",
     "default_gain": 0.48,
     "duration_ms": [35, 146],
-    "early_contact": "visual confirmation only; cue follows the scheduled judgement",
-    "voices": ["perfect", "excellent", "general", "miss", "hold_head", "hold_tail", "combo", "perfect_reward"]
+    "early_contact": "immediate strike, followed by deferred judgement with no second ordinary strike",
+    "voices": ["perfect", "excellent", "general", "miss", "hold_head", "hold_tail", "combo", "perfect_reward", "accent_hit", "chord", "roll_head", "roll_tail"]
   },
   "perfect_rewards": {
     "thresholds": [

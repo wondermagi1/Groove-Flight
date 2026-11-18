@@ -57,6 +57,7 @@ var active_planet: String="mercury"
 var planet_rules: Dictionary=PLANETS.combat("mercury")
 var planet_records: Dictionary={}
 var drop_fraction: float=0.
+var expedition_shop_tier: int=1
 var wave_supply: int=0
 var run_shop_seconds: float=0.
 var run_total_seconds: float=0.
@@ -444,8 +445,9 @@ func _load_audio(path: String) -> AudioStream:
 
 func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=false) -> void:
 	run_shop_seconds=0.; run_total_seconds=0.; wave_supply=0
+	expedition_shop_tier=1
 	rhythm.reset(0.,true);rhythm_key_down=[false,false,false];rhythm_voices.reset()
-	planet_music.stop();planet_music.stream=null;rhythm_song_loops=0;rhythm_song_raw=0.;rhythm_song_absolute=0.
+	planet_music.stop();planet_music.stream=null;planet_music.pitch_scale=1.;rhythm_song_loops=0;rhythm_song_raw=0.;rhythm_song_absolute=0.
 	composer_holds.clear(); composer_player.stop_song(); standard_music.stop(); standard_music._running=false
 	for recorded_player in recorded_weapon_players.values():
 		if is_instance_valid(recorded_player):
@@ -851,7 +853,9 @@ func shop_reroll() -> bool:
 	var locked_weapons=0
 	for offer in locked:
 		if str(C.item(str(offer.id)).category)=="weapon": locked_weapons+=1
-	var pool=loadout.make_shop(rng,wave,excluded,maxi(0,3-locked_weapons),maxi(0,3-(locked.size()-locked_weapons)),BALANCE.price_scale(int(PLANETS.planet(active_planet).index)))
+	var planet_index=int(PLANETS.planet(active_planet).index)
+	var tier=expedition_shop_tier if expedition.enabled else wave
+	var pool=loadout.make_shop(rng,tier,excluded,maxi(0,3-locked_weapons),maxi(0,3-(locked.size()-locked_weapons)),BALANCE.price_scale(planet_index),"",planet_index if expedition.enabled else -1)
 	var replacement: Array=[]
 	for i in range(6):
 		var offer: Dictionary=shop_offers[i] if i<shop_offers.size() else {}
@@ -862,7 +866,7 @@ func shop_reroll() -> bool:
 				if (str(C.item(str(pool[candidate].id)).category)=="weapon")== (i<3): next=candidate; break
 			if next<0: return false
 			replacement.append(pool[next]); pool.remove_at(next)
-	dust-=shop_reroll_cost; shop_reroll_cost+=BALANCE.reroll_increment(int(PLANETS.planet(active_planet).index)); shop_offers=replacement
+	dust-=shop_reroll_cost; shop_reroll_cost+=BALANCE.expedition_reroll(planet_index) if expedition.enabled else BALANCE.reroll_increment(planet_index); shop_offers=replacement
 	sound("pickup",-15); ui.refresh(); return true
 
 func can_salvage(uid: int) -> bool:
@@ -962,7 +966,7 @@ func rhythm_song_time(now: float) -> float:
 	var raw=planet_music.get_playback_position()
 	if raw+.5<rhythm_song_raw:rhythm_song_loops+=1
 	rhythm_song_raw=raw
-	var correction=AudioServer.get_time_since_last_mix()-AudioServer.get_output_latency() if raw>0. else 0.
+	var correction=(AudioServer.get_time_since_last_mix()-AudioServer.get_output_latency())*rhythm.song_rate if raw>0. else 0.
 	rhythm_song_absolute=maxf(rhythm_song_absolute,rhythm_song_loops*float(PLANET_MUSIC.track(active_planet).duration)+maxf(0.,raw+correction))
 	return rhythm_song_absolute
 func rhythm_tick(now: float=-1.) -> void:
@@ -1144,6 +1148,7 @@ func _sync_screen_music() -> void:
 	var codex_in_run=candidate=="weapon_codex" and weapon_codex_return_state in ["combat","reward","paused","editor"]
 	var planet_wants=(candidate in ["combat","reward","paused","editor"] or codex_in_run) and not is_preview and not free_music_run
 	if planet_wants:
+		planet_music.pitch_scale=rhythm.song_rate
 		if planet_music.stream==null:
 			var planet_stream=_load_audio(str(PLANET_MUSIC.track(active_planet).runtime))
 			if planet_stream is AudioStreamOggVorbis: planet_stream.loop=true
@@ -1687,11 +1692,12 @@ func hurt_enemy(enemy: Dictionary,damage: float,kind: String,context: Dictionary
 	if enemy.kind=="splitter": pending_splits.append({"at":enemy.at,"count":3,"maneuver":enemy.get("maneuver",{}).duplicate(true)})
 	# Preserve the small early-planet bonuses:1.08x yields an occasional extra
 	# star rather than rounding every normal enemy back down to1 forever.
-	drop_fraction+=(12 if enemy.kind=="boss" else (5 if enemy.kind=="elite" else 1))*float(planet_rules.drop_scale)*BALANCE.LOOT_MULTIPLIER
+	var loot_scale=BALANCE.expedition_loot(mission.done,mission.is_beacon_defense()) if expedition.enabled else BALANCE.LOOT_MULTIPLIER
+	drop_fraction+=(12 if enemy.kind=="boss" else (5 if enemy.kind=="elite" else 1))*float(planet_rules.drop_scale)*loot_scale
 	# Binary float sums such as100*1.18 may land just below118. The tiny
 	# tolerance prevents losing a whole earned star at an integer boundary.
 	var amount=maxi(1,floori(drop_fraction+.00000001)); drop_fraction=maxf(0.,drop_fraction-float(amount))
-	var item={"at":enemy.at,"amount":amount,"heal":rng.randf()<minf(.3,.055+float(stats_snapshot.get("luck",0))*.001),"life":36.}
+	var item={"at":enemy.at,"amount":amount,"heal":rng.randf()<minf(.3,.055+float(stats_snapshot.get("luck",0))*.001),"life":75. if mission.is_beacon_defense() else 36.}
 	if pickups.size()<300: pickups.append(item)
 	else:
 		# Bounded visuals, preserved earned currency. The pile nearest the kill
@@ -1700,7 +1706,7 @@ func hurt_enemy(enemy: Dictionary,damage: float,kind: String,context: Dictionary
 		for i in range(pickups.size()):
 			var d=pickups[i].at.distance_squared_to(enemy.at)
 			if d<distance: closest=i; distance=d
-		pickups[closest].amount+=item.amount; pickups[closest].heal=pickups[closest].heal or item.heal; pickups[closest].life=36.
+			pickups[closest].amount+=item.amount; pickups[closest].heal=pickups[closest].heal or item.heal; pickups[closest].life=item.life
 func update_enemy_bullets(delta: float) -> void:
 	var bounds=visible_world().grow(350)
 	var boss_bounds=visible_world().grow(BOSS_SCORE.SHOT_CULL_MARGIN)
@@ -1760,18 +1766,21 @@ func hurt_player(amount: float) -> void:
 	fx.burst(player,Color("ff779d"),16,220)
 	if health<=0: sound("hit",-6); finish_run(false)
 func featured_shop_item() -> String:
-	return "westwind" if loadout.doctrine_id in ["","ballistic"] and wave in [3,4] and not loadout.modules.any(func(module): return str(module.kind)=="westwind") else ""
+	var tier=expedition_shop_tier if expedition.enabled else wave
+	return "westwind" if loadout.doctrine_id in ["","ballistic"] and tier in [3,4] and not loadout.modules.any(func(module): return str(module.kind)=="westwind") else ""
 
 func close_expedition_sector(completed: int) -> void:
-	wave_supply=BALANCE.clear_supply(wave,int(PLANETS.planet(active_planet).index))*3
+	wave_supply=BALANCE.expedition_supply(int(PLANETS.planet(active_planet).index),completed)
 	dust+=wave_supply
 	expedition.docks[-1].supply=wave_supply
 	receipt.end_wave(wave,music.timeline-wave_start,picked-wave_picked_start,total_spawned-wave_spawn_start,0,wave_supply)
 	wave=mini(wave_count()-1,1+floori(float(completed)*(wave_count()-2)/float(mission.spec().goal)))
 	wave_start=music.timeline;wave_spawn_start=total_spawned;wave_picked_start=picked;spawned=0;elite_spawned=false
 	planet_rules=PLANETS.wave_rules(active_planet,wave,difficulty)
+	rhythm.set_stage(completed)
+	planet_music.pitch_scale=rhythm.song_rate
 	for plan in spawn_telegraphs:plan.wave=wave
-	notice="区域完成 · 获得 %d 补给"%wave_supply;notice_until=music.timeline+2.
+	notice="区域完成 · 补给 +%d · 曲速 ×%.2f"%[wave_supply,rhythm.song_rate];notice_until=music.timeline+2.
 
 func open_expedition_dock() -> bool:
 	if state!="combat" or not expedition.enabled:return false
@@ -1781,9 +1790,10 @@ func open_expedition_dock() -> bool:
 	depot.used=true
 	var planet_index=int(PLANETS.planet(active_planet).index)
 	wave_supply=int(depot.supply)
-	shop_offers=loadout.make_shop(rng,wave,[],3,3,BALANCE.price_scale(planet_index),featured_shop_item())
-	shop_reroll_cost=BALANCE.reroll_cost(planet_index);selected_uid=-1;editing_changed=false
-	rewards=loadout.wave_boon_choices(rng);reward_taken=false
+	expedition_shop_tier=int(depot.sector)
+	shop_offers=loadout.make_shop(rng,expedition_shop_tier,[],3,3,1.,featured_shop_item(),planet_index)
+	shop_reroll_cost=BALANCE.expedition_reroll(planet_index);selected_uid=-1;editing_changed=false
+	rewards=loadout.wave_boon_choices(rng,true);reward_taken=false
 	state="reward";music.hold(true);sound("reward",-9);ui.refresh()
 	return true
 

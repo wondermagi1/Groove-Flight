@@ -8,7 +8,27 @@ const ENEMY_HP={"mote":16.,"armor":86.,"shooter":40.,"dart":14.,"splitter":60.,"
 const BOSS_HP=[30000.,32000.,34000.,36000.,39000.,42000.,45000.,48000.]
 const LOOT_MULTIPLIER=1.5
 const WAVE_HP=[1.,1.08,1.20,1.36,1.55,1.78,2.04]
-const LEVEL_DAMAGE=.30
+const LEVEL_DAMAGE=.26
+const BEACON_SECONDS=60.
+const BEACON_GUARD_RADIUS=640.
+const MERCURY_SUPPLY=[110,145,180]
+
+static func expedition_supply(planet_index: int,sector: int) -> int:
+	if planet_index==0:return MERCURY_SUPPLY[clampi(sector-1,0,2)]
+	return 65+sector*25+planet_index*13
+
+static func expedition_loot(sector: int,guarding: bool) -> float:
+	return (2.50 if guarding else 1.85)+.18*clampi(sector,0,4)
+
+static func expedition_price(row: Dictionary,wave: int,planet_index: int) -> int:
+	var category=str(row.category)
+	var scale=2.42+.17*planet_index+.04*maxi(0,wave-1)
+	if category=="defense":scale*=.84
+	if category=="core":scale*=1.09
+	return maxi(1,roundi(float(row.cost)*scale))
+
+static func expedition_reroll(planet_index: int) -> int:
+	return 15+3*planet_index
 
 static func accuracy_ammo(accuracy: float) -> float:
 	return pow(clampf(accuracy,0.,1.),2.)

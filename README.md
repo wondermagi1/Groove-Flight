@@ -2,7 +2,7 @@
 
 长期维护的[武器特效与音频对应表](docs/WEAPON_VFX_AUDIO_REFERENCE.md)：24种现役武器的发射形式、运动、光色、乐器音色与原声试听。以后武器迭代与本表同步提交更新。
 
-当前版本 **0.65.0-planet-expeditions** 以任务推进八星连续远征，配有八套赛博战斗背景、写实 3D 航图、新曲和增强音游反馈。[八星航线、试听与预览](docs/V65_PLANET_EXPEDITIONS.md) · [验证](docs/data-v65/SUMMARY.json)
+当前版本 **0.66.0-beacon-defense** 为水星加入三座 60 秒信标防守，调整补给和商店。八星音游谱面增加双押与连打，歌曲随航段提速。[现行玩法与试听](docs/V66_BEACON_DEFENSE_RHYTHM.md) · [验证](docs/data-v66/SUMMARY.json)
 
 实战使用 WASD 移动，J/K/L 跟随各星球歌曲。三轨得分比例的平方决定下一段六秒的基础弹量。完成目标即获得补给，靠近补给站可按 F 进入。完成航线后，前往旗舰坐标并击破旗舰通关。
 

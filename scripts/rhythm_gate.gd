@@ -7,6 +7,8 @@ const WINDOW=.170
 const EXCELLENT=.095
 const PERFECT=.042
 const LOOKAHEAD=2.9
+const CHORD_SPREAD=.125
+const ROLL_MIN_GAP=.095
 const LANES=3
 const REWARDS=preload("res://scripts/rhythm_rewards.gd")
 var score=SCORE.new()
@@ -17,6 +19,9 @@ var last_grade: String=""
 var last_points: int=0
 var grade_counts={"perfect":0,"excellent":0,"general":0,"miss":0}
 var music_chart: bool=false
+var stage: int=0
+var song_rate: float=1.
+var retime_salvos: bool=false
 var chart_id: String="mercury"
 var offset_seconds: float=0.
 var notes: Array[Dictionary]=[]
@@ -40,14 +45,29 @@ func reset(now: float=0.,new_run: bool=false) -> void:
 	notes.clear();salvos.clear();song_cursor=-1.;down.clear();cutoff=now-.00001 if new_run else now+.00001
 	last_serial=maxi(-1,floori(now/STEP)-1)
 	if new_run:rewards.reset();grade_counts={"perfect":0,"excellent":0,"general":0,"miss":0};combo=0;best_combo=0;hits=0;misses=0;wrong=0;perfects=0;judge_serial=0;judged_lanes.clear();score.reset()
+	if new_run:set_stage(0)
+	retime_salvos=false
 	last_result="三键合计 · 下一段弹量";result_at=-10.;result_track=-1
 	last_delta=0.;last_success=false;last_grade="";last_points=0
 func forecast(loadout,now: float,song_time: float=-1.) -> void:
-	var offset=now-(song_time if song_time>=0. else now)+(offset_seconds if music_chart else 0.)
+	var rate=song_rate if music_chart else 1.
+	var raw=song_time if song_time>=0. else now
+	var offset=now-raw/rate+(offset_seconds if music_chart else 0.)
 	if music_chart:
+		if retime_salvos:
+			var pending=salvos.duplicate()
+			salvos.clear()
+			for salvo in pending:
+				if bool(salvo.emitted):continue
+				for event in salvo.events:
+					_queue_song_event(event,int(salvo.track),offset,rate,maxf(now,float(event.deadline)))
+			retime_salvos=false
 		for note in notes+salvos:
-			if note.has("song_due") and str(note.status) in ["pending","holding","armed"]:
-				note.due=float(note.song_due)+offset;note.end=float(note.due)+float(note.hold)
+			if note.has("song_due") and str(note.status) in ["pending","holding","armed","rolling"]:
+				note.due=float(note.song_due)/rate+offset
+				var duration=float(note.get("song_duration",note.hold))/rate
+				note.end=float(note.due)+duration
+				if float(note.hold)>0.:note.hold=duration
 	var end_serial=floori((now+lookahead())/STEP)
 	last_serial=maxi(last_serial,floori((now-WINDOW)/STEP)-1)
 	while last_serial<end_serial:
@@ -57,39 +77,59 @@ func forecast(loadout,now: float,song_time: float=-1.) -> void:
 			var charged=float(event.deadline)
 			if charged<cutoff:continue
 			var track=clampi(int(event.get("source_slot",event.slot))/8,0,2)
-			var id="%d:%d"%[track,roundi(charged*1000000.)]
-			var due=charged;var required: Array=[track];var kind="tap";var hold=0.;var cue: Dictionary={}
 			if music_chart:
-				cue=CHART.next_cue(maxf(0.,charged-offset),chart_id);id="%d:%s"%[track,str(cue.id)]
-				due=float(cue.song_due)+offset;hold=float(cue.hold);kind="hold" if hold>0. else "tap"
+				_queue_song_event(event,track,offset,rate,charged)
+				continue
+			var id="%d:%d"%[track,roundi(charged*1000000.)]
 			var found=false
-			for note in (salvos if music_chart else notes):
+			for note in notes:
 				if str(note.id)==id:
 					if str(note.status) in ["pending","holding","armed"]:note.events.append(event)
 					found=true;break
 			if not found:
-				var note={"id":id,"track":track,"required":required.duplicate(),"due":due,"end":due+hold,"hold":hold,"kind":kind,"events":[event],"status":"pending","delta":0.,"pressed":{},"emitted":false,"scored":false}
-				if music_chart:
-					note.song_due=float(cue.song_due);note.accent=bool(cue.get("accent",false));note.measure=int(cue.get("measure",0));note.phrase=int(cue.get("phrase",0))
-				if music_chart:salvos.append(note)
-				else:notes.append(note)
+				notes.append({"id":id,"track":track,"required":[track],"due":charged,"end":charged,"hold":0.,"kind":"tap","events":[event],"status":"pending","delta":0.,"pressed":{},"emitted":false,"scored":false})
 	if music_chart:
-		var song_now=now-offset
-		if song_cursor<0.:song_cursor=maxf(0.,song_now-WINDOW)
+		var song_now=(now-offset)*rate
+		if song_cursor<0.:song_cursor=maxf(0.,song_now-WINDOW*rate)
 		while true:
-			var cue=CHART.next_cue(song_cursor,chart_id);var due=float(cue.song_due)+offset
+			var cue=CHART.next_cue(song_cursor,chart_id);var due=float(cue.song_due)/rate+offset
 			if due>now+lookahead():break
 			song_cursor=float(cue.song_due)+.0001
 			if due<cutoff:continue
-			var lane=int(cue.lane);var hold=float(cue.hold)
-			notes.append({"id":"song:"+str(cue.id),"track":lane,"required":[lane],"due":due,"song_due":float(cue.song_due),"end":due+hold,"hold":hold,"kind":"hold" if hold>0. else "tap","events":[],"status":"pending","delta":0.,"pressed":{},"emitted":true,"scored":false,"accent":bool(cue.get("accent",false))})
+			var lane=int(cue.lane);var hold=float(cue.hold)/rate
+			var kind="hold" if hold>0. else "tap"
+			var required=[lane]
+			var duration=float(cue.hold)
+			var technique=str(cue.get("technique",""))
+			if (stage>=1 and technique=="chord") or (stage>=2 and technique=="roll"):
+				kind=technique
+				var destination=lane+1 if lane<2 else 1
+				if lane==1 and int(cue.measure)%2==1:destination=0
+				required.append(destination)
+				duration=float(cue.get("roll",0.)) if kind=="roll" else 0.
+			notes.append({"id":"song:"+str(cue.id),"track":lane,"required":required,"due":due,"song_due":float(cue.song_due),"song_duration":duration,"end":due+duration/rate,"hold":hold,"kind":kind,"events":[],"status":"pending","delta":0.,"pressed":{},"emitted":true,"scored":false,"accent":bool(cue.get("accent",false))})
 		salvos=salvos.filter(func(n):return now-float(n.end)<2.)
 	for note in notes:
-		if now-float(note.end)>=2. and str(note.status) in ["pending","holding","armed"]:_fail(note,"超时",now)
+		if now-float(note.end)>=2. and str(note.status) in ["pending","holding","armed","rolling"]:_fail(note,"超时",now)
 	notes=notes.filter(func(n):return now-float(n.end)<2.)
 	notes.sort_custom(func(a,b):return float(a.due)<float(b.due))
+func _queue_song_event(event: Dictionary,track: int,offset: float,rate: float,earliest: float) -> void:
+	var cue=CHART.next_cue(maxf(0.,(earliest-offset)*rate),chart_id)
+	var id="%d:%s"%[track,str(cue.id)]
+	for salvo in salvos:
+		if str(salvo.id)==id:
+			if not bool(salvo.emitted):salvo.events.append(event)
+			return
+	var due=float(cue.song_due)/rate+offset
+	var hold=float(cue.hold)/rate
+	salvos.append({"id":id,"track":track,"required":[track],"due":due,"song_due":float(cue.song_due),"song_duration":float(cue.hold),"end":due+hold,"hold":hold,"kind":"hold" if hold>0. else "tap","events":[event],"status":"pending","emitted":false})
 func configure_pilot(id: String) -> void:rewards.pilot_id=id
-func lookahead() -> float:return float(rewards.profile().get("lookahead",LOOKAHEAD))
+func set_stage(value: int) -> void:
+	var next=clampi(value,0,4)
+	if stage!=next:retime_salvos=true
+	stage=next
+	song_rate=1.+.045*stage
+func lookahead() -> float:return float(rewards.profile().get("lookahead",LOOKAHEAD))/song_rate
 func tail_window(note: Dictionary) -> float:return float(rewards.profile().get("tail_window",WINDOW)) if float(note.hold)>0. else WINDOW
 func sync_reward(now: float) -> void:score.reward_bonus=rewards.bonus(now)
 func held(lane: int) -> bool:
@@ -107,12 +147,21 @@ func _fail(note: Dictionary,label: String,now: float) -> void:
 
 func _emit_feedback(note: Dictionary,grade: String,now: float,previous_notice: int) -> void:
 	var notice_kind=rewards.notice_kind if rewards.notice_serial!=previous_notice else ""
+	var gesture=str(note.kind)
+	if gesture=="hold":gesture="hold_tail"
+	if gesture=="roll":gesture="roll_tail"
 	feedback.emit({
 		"at":now, "lanes":note.required.duplicate(), "grade":grade,
-		"gesture":"tap" if float(note.hold)<=0. else "hold_tail",
+		"gesture":gesture,
 		"milestone":notice_kind,
 		"offset_ms":roundi(float(note.delta)*1000.),
+		"accent":bool(note.get("accent",false)), "contact_played":bool(note.get("contact_played",false)),
 	})
+func _grade(note: Dictionary) -> String:
+	var error=absf(float(note.delta))
+	var perfect_window=float(rewards.profile().get("hold_perfect",PERFECT)) if float(note.hold)>0. else PERFECT
+	var excellent_window=float(rewards.profile().get("hold_excellent",EXCELLENT)) if float(note.hold)>0. else EXCELLENT
+	return "perfect" if error<=perfect_window+.000001 else ("excellent" if error<=excellent_window+.000001 else "general")
 func _record_score(note: Dictionary,points: int) -> void:
 	if bool(note.get("scored",false)):return
 	note.scored=true
@@ -127,10 +176,7 @@ func advance(now: float) -> Array[Dictionary]:
 			else:_fail(note,"长按中断",now)
 		if str(note.status)=="armed" and now+.000001>=float(note.end):
 			note.status="fired";hits+=1;combo+=1;best_combo=maxi(best_combo,combo)
-			var error=absf(float(note.delta))
-			var perfect_window=float(rewards.profile().get("hold_perfect",PERFECT)) if float(note.hold)>0. else PERFECT
-			var excellent_window=float(rewards.profile().get("hold_excellent",EXCELLENT)) if float(note.hold)>0. else EXCELLENT
-			last_grade="perfect" if error<=perfect_window+.000001 else ("excellent" if error<=excellent_window+.000001 else "general")
+			last_grade=_grade(note)
 			last_points={"perfect":SCORE.PERFECT_POINTS,"excellent":SCORE.EXCELLENT_POINTS,"general":SCORE.GENERAL_POINTS}[last_grade]
 			last_result={"perfect":"PERFECT 完美","excellent":"EXCELLENT 优秀","general":"GOOD 一般"}[last_grade]+" +"+str(last_points)
 			grade_counts[last_grade]+=1
@@ -142,6 +188,7 @@ func advance(now: float) -> Array[Dictionary]:
 			result_at=now;result_track=int(note.track)
 			_emit_feedback(note,last_grade,now,previous_notice)
 		elif str(note.status)=="pending" and now>float(note.due)+WINDOW+.000001:_fail(note,"漏按",now)
+		elif str(note.status)=="rolling" and now>float(note.end)+WINDOW+.000001:_fail(note,"连打未完成",now)
 	sync_reward(now);score.advance(now)
 	for note in (salvos if music_chart else notes):
 		if bool(note.get("emitted",false)) or now+.000001<float(note.end):continue
@@ -151,6 +198,15 @@ func advance(now: float) -> Array[Dictionary]:
 			event.charged_deadline=event.deadline;event.deadline=note.end;event.rhythm_authorized=true;event.rhythm_scored_auto=true
 			event.rhythm_track=int(note.track);event.performed_at=now;event.rhythm_kind=note.kind;ready.append(event)
 	return ready
+func accepts_lane(note: Dictionary,lane: int) -> bool:
+	var status=str(note.status)
+	if str(note.kind)=="roll":
+		return (status=="pending" and lane==int(note.required[0])) or (status=="rolling" and lane==int(note.required[1]))
+	return status=="pending" and lane in note.required and not note.pressed.has(lane)
+
+func input_due(note: Dictionary) -> float:
+	return float(note.end) if str(note.status)=="rolling" else float(note.due)
+
 func press(lane: int,now: float,source: String="") -> bool:
 	if lane<0 or lane>=LANES:wrong+=1;combo=0;rewards.judge("wrong",0,now);sync_reward(now);return false
 	if not source.is_empty():
@@ -158,22 +214,32 @@ func press(lane: int,now: float,source: String="") -> bool:
 		down[source]=lane
 	var target: Dictionary={};var distance=INF
 	for note in notes:
-		if str(note.status)!="pending" or lane not in note.required or note.pressed.has(lane):continue
-		var delta=absf(now-float(note.due))
+		if not accepts_lane(note,lane):continue
+		var delta=absf(now-input_due(note))
 		if delta<=WINDOW+.000001 and delta<distance:target=note;distance=delta
 	if not target.is_empty():
+		var delta=now-input_due(target)
+		var kind=str(target.kind)
+		if kind=="chord" and not target.pressed.is_empty():
+			var first=int(target.pressed.keys()[0])
+			if (not source.is_empty() and not held(first)) or now-float(target.pressed[first])>CHORD_SPREAD+.000001:
+				_fail(target,"双押间隔过长",now);return false
+		if str(target.status)=="rolling" and now-float(target.pressed[int(target.required[0])])<ROLL_MIN_GAP:
+			_fail(target,"连打第二键太早",now);return false
 		last_grade="";last_points=0
 		target.pressed[lane]=now
-		if absf(now-float(target.due))>absf(float(target.delta)):target.delta=now-float(target.due)
+		if absf(delta)>absf(float(target.delta)):target.delta=delta
 		if target.pressed.size()==target.required.size():target.status="holding" if float(target.hold)>0. else "armed"
+		elif kind=="roll":target.status="rolling"
 		last_result="持续按住到尾端" if str(target.status)=="holding" else "已击键"
 		result_at=now;result_track=lane
 		if str(target.status)=="holding":
 			feedback.emit({"at":now,"lanes":target.required.duplicate(),"grade":"","gesture":"hold_head","milestone":""})
+		elif str(target.status)=="rolling":
+			feedback.emit({"at":now,"lanes":[lane],"grade":"","gesture":"roll_head","milestone":""})
 		elif str(target.status)=="armed" and now+.000001<float(target.end):
-			# Confirm early contact immediately. The scheduled judgement still
-			# owns the score, sound and any earned milestone.
-			feedback.emit({"at":now,"lanes":target.required.duplicate(),"grade":"","gesture":"early_contact","milestone":""})
+			target.contact_played=true
+			feedback.emit({"at":now,"lanes":target.required.duplicate(),"grade":"","gesture":"early_contact","milestone":"","cue_grade":_grade(target),"contact_kind":kind,"accent":bool(target.get("accent",false))})
 		return true
 	for note in notes:
 		if lane not in note.required:continue

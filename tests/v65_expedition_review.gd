@@ -26,6 +26,26 @@ func solve_sector() -> void:
 	match mission.role():
 		"collect":
 			game.player=mission.beacon;ticks(.9)
+			if game.active_planet=="mercury":
+				check(mission.guard_phase==1 and game.expedition.docks.size()==mission.done,"Connecting a beacon begins defense without paying")
+				var attacker=game.spawn_enemy("mote",mission.beacon)
+				attacker.mission_target=mission.beacon;attacker.armed_after=0.
+				var prior_hp=float(mission.beacon_hp)
+				mission.enemy_contact(game,attacker,attacker.at+Vector2(70.,0.))
+				check(float(mission.beacon_hp)<prior_hp and attacker.hp==0.,"Contact drains the active beacon")
+				var killed=game.spawn_enemy("mote",mission.beacon+Vector2(305.,0.))
+				game.hurt_enemy(killed,float(killed.hp)+1.,"pulse")
+				check(int(game.pickups[-1].amount)>=2 and float(game.pickups[-1].life)>=75.,"Guard kill generates the increased recoverable dust")
+				var started=mission.guard_elapsed
+				game.player=mission.beacon+Vector2(680.,0.);ticks(2.)
+				check(is_equal_approx(float(mission.guard_elapsed),float(started)),"Leaving the guard radius pauses this defense only")
+				game.player=mission.beacon+Vector2(300.,0.)
+				ticks(59.3)
+				check(mission.guard_phase==1 and mission.guard_elapsed<60.,"Supply stays locked until a full minute")
+				ticks(1.)
+				check(mission.guard_phase==2 and game.expedition.docks.size()==mission.done,"Completed guard waits for the inner ring")
+				game.player=mission.beacon;ticks(.05)
+				check(game.pickups.is_empty(),"Returning to the beacon recovers nearby earned currency")
 		"escort":
 			var prior=int(mission.done)
 			for i in range(760):
@@ -93,6 +113,11 @@ func run() -> void:
 			game.background.set_shader_parameter("world_position",game.player)
 			game.ui.root_control.show();game.ui.refresh()
 			await capture(id)
+			if id=="mercury":
+				m.guard_phase=1;m.guard_elapsed=17.
+				game.ui.update_hud()
+				await capture("mercury-defense")
+				m.guard_phase=0;m.guard_elapsed=0.
 			game.simulation_only=true
 			game.player=Vector2.ZERO
 		game.music.timeline=120.
@@ -114,9 +139,20 @@ func run() -> void:
 				var press=InputEventKey.new();press.physical_keycode=KEY_F;press.pressed=true
 				game._unhandled_input(press)
 				check(game.state=="reward" and game.shop_offers.size()==6 and game.rewards.size()==3,"F opens local dock with six offers and three boons")
+				var boon_keys=game.rewards.map(func(reward):return reward.key)
+				check(boon_keys.any(func(key):return key in ["armor","max_health","regen"]) and boon_keys.any(func(key):return key in ["magnet","move_percent","luck"]),"Shop offers a survival and a utility choice")
+				var cheapest=9999
+				for offer in game.shop_offers.slice(0,3):
+					var entry=game.C.item(offer.id)
+					cheapest=mini(cheapest,int(offer.price))
+					check(int(entry.rarity)<=1 and int(offer.price)==game.BALANCE.expedition_price(entry,1,0),"First shop has fair stage-one weapon prices and rarity")
+				check(cheapest*2<game.dust,"Base first-beacon supply covers more than one entry-level weapon")
 				check(game.choose_boon(0) and game.continue_wave() and not game.open_expedition_dock(),"Dock grants one choice and supports one visit")
 				check(game.state=="combat" and game.wave==next_sector and m.done==1 and is_equal_approx(game.music.timeline,at) and game.by_id.has(survivor.uid),"Returning from supply preserves stage, enemies and transport time")
 		check(m.complete() and route.boss_site!=Vector2.INF and game.wave<game.wave_count(),"Completion exposes a distant flagship waypoint / "+id)
+		check(is_equal_approx(float(game.rhythm.song_rate),1.+.045*int(m.done)) and is_equal_approx(game.planet_music.pitch_scale,float(game.rhythm.song_rate)),"Chart speed and native song playback progress together / "+id)
+		if id=="mercury":
+			check(route.docks[0].supply+route.docks[1].supply+route.docks[2].supply==435,"Mercury has 435 fixed rewards before enemy drops")
 		game.player=route.boss_site+Vector2(0,900.)
 		game.check_wave()
 		check(game.wave<game.wave_count(),"Outside approach radius keeps flagship dormant / "+id)
@@ -139,6 +175,7 @@ func run() -> void:
 	check(game.mission.failed and game.state=="defeat","Destroyed station still fails the run")
 	start("mercury")
 	check(game.expedition.docks.is_empty() and game.expedition.boss_site==Vector2.INF and game.mission.done==0,"Restart resets expedition state")
+	check(is_equal_approx(game.planet_music.pitch_scale,1.) and is_equal_approx(game.rhythm.song_rate,1.),"New run restores original tempo")
 	game.rhythm.configure_pilot("")
 	check(is_equal_approx(game.rhythm.lookahead(),2.9) and GATE.PERFECT==.042 and GATE.EXCELLENT==.095 and GATE.WINDOW==.17,"Softer timing windows and fall speed")
 	game.rhythm.configure_pilot("echo")

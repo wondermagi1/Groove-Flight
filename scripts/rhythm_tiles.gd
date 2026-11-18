@@ -71,8 +71,8 @@ func click_at(point: Vector2,source: String="mouse") -> void:
 	if not clip_rect().has_point(point):return
 	var now=game.standard_music.input_time()
 	for note in game.rhythm.notes:
-		if lane not in note.required or str(note.status)!="pending":continue
-		var rect=head_rect(lane,float(note.due),now)
+		if not game.rhythm.accepts_lane(note,lane):continue
+		var rect=head_rect(lane,game.rhythm.input_due(note),now)
 		if rect.has_area() and rect.grow_individual(0.,5.,0.,5.).intersection(clip_rect()).has_point(point):game.rhythm_press(lane,source);return
 	game.rhythm_press(-1,source)
 func _draw() -> void:
@@ -145,6 +145,9 @@ func _draw_header(now: float,scale_value: float,reduced: bool) -> void:
 func _draw_note(note: Dictionary,now: float,clip: Rect2,reduced: bool) -> void:
 	var delta=float(note.due)-now;var tail=float(note.end)-now;var status=str(note.status)
 	if delta>game.rhythm.lookahead() or tail<-.20 or status=="fired":return
+	if str(note.kind)=="roll":
+		_draw_roll(note,now,clip,reduced)
+		return
 	var y=note_y(float(note.due),now);var tail_y=note_y(float(note.end),now)
 	var held=status in ["holding","armed"] and float(note.hold)>0.
 	var simultaneous=simultaneous_lanes(note)
@@ -160,6 +163,20 @@ func _draw_note(note: Dictionary,now: float,clip: Rect2,reduced: bool) -> void:
 		if float(note.hold)>0.:SKIN.ribbon(self,center,tail_y,minf(y,judge_y) if held else y,clip,color,held,now,reduced)
 		SKIN.head(self,head,color,clip,reduced,held,bool(note.get("accent",false)))
 		if simultaneous.size()>1 and head.size.y>=10.:SKIN.diamond(self,head.get_center(),2.5,SKIN.WHITE)
+func _draw_roll(note: Dictionary,now: float,clip: Rect2,reduced: bool) -> void:
+	var first=int(note.required[0])
+	var last=int(note.required[1])
+	var start=head_rect(first,float(note.due),now)
+	var finish=head_rect(last,float(note.end),now)
+	var active=str(note.status)=="rolling"
+	var color=SKIN.MISS if str(note.status)=="miss" else SKIN.ROLL
+	if not active and start.has_area() and finish.has_area():
+		var a=start.get_center()
+		var b=finish.get_center()
+		draw_line(a,b,Color(color,.76),2.,true)
+		SKIN.diamond(self,a.lerp(b,.5),3.5,color)
+	if not active:SKIN.head(self,start,color,clip,reduced,false,true)
+	SKIN.head(self,finish,color,clip,reduced,active,false)
 func _draw_feedback(now: float,scale_value: float,reduced: bool) -> void:
 	var reward=game.rhythm.rewards
 	var age=now-float(recent_grade.get("at",-10.))

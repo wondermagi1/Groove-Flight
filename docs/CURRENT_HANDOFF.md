@@ -1,6 +1,8 @@
 # Groove Flight 当前接手说明
 
-当前V65 / 2026-11-18，`codex/planet-expeditions`，修改前远程备份 `84028d4`。八星各自赛博背景、任务推进和可选补给站，航图恢复写实 3D。战斗更换八首授权节奏曲，适当降低下落速度和开场谱面密度，强化判定、时差提示和打击音。后续优先逐星调校音游难度、贴拍感与混音。[V65 航线和试听](V65_PLANET_EXPEDITIONS.md) · [验证](data-v65/SUMMARY.json)
+当前V66 / 2026-11-18，`codex/beacon-defense-rhythm`，修改前远程备份 `955a414`。水星接通、守护、回收三阶段，三座各 60 秒，435 固定星屑另加击落收入。商店按补给站次序开放品质，三选一按火力、生存和机动／回收分布。八星双押、连打与每航段 +4.5 个百分点曲速，落键即时声和独立重拍音型。[V66 航线和试听](V66_BEACON_DEFENSE_RHYTHM.md) · [验证](data-v66/SUMMARY.json)
+
+历史V65 / 2026-11-18，八星独立赛博背景和任务远征，航图恢复写实 3D，导入八首授权节奏曲。[V65](V65_PLANET_EXPEDITIONS.md) · [验证](data-v65/SUMMARY.json)
 
 历史V64 / 2026-11-18，判定线随重音亮起，长按显示进度，提前触键即时闪光。[V64说明与试听](V64_RHYTHM_JUDGEMENT.md) · [验证](data-v64/SUMMARY.json)
 

@@ -11,6 +11,10 @@ const VOICES={
 	"hold_tail":[.083,990.,.23,.35,.56],
 	"combo":[.111,830.,.20,.38,.63],
 	"perfect_reward":[.146,1130.,.28,.47,.78],
+	"accent_hit":[.085,1470.,.34,.51,.68],
+	"chord":[.090,980.,.33,.58,.74],
+	"roll_head":[.042,1430.,.23,.39,.36],
+	"roll_tail":[.073,1320.,.32,.47,.58],
 }
 static var _bank: Dictionary={}
 
@@ -39,6 +43,12 @@ static func _synth(id: String,spec: Array) -> AudioStreamWAV:
 		voice+=sin(phase)*.39*exp(-t/.009)
 		voice+=sin(phase*2.14)*brightness*exp(-t/.0046)
 		voice+=(noise-body_noise)*contact*exp(-t/.0036)
+		if id in ["accent_hit","chord"]:
+			var snap=maxf(0.,t-.0022)
+			voice+=(noise-body_noise)*.49*smoothstep(0.,.001,snap)*exp(-snap/.012)
+			voice+=sin(phase*1.498)*.24*exp(-t/.009)
+		if id in ["roll_head","roll_tail"]:
+			voice+=sin(phase*1.80)*.26*exp(-t/.0045)
 		if id in ["combo","perfect_reward","hold_tail"]:
 			var tail=maxf(0.,t-.034)
 			voice+=sin(TAU*frequency*1.48*tail)*smoothstep(0.,.0013,tail)*exp(-tail/.016)*.40
