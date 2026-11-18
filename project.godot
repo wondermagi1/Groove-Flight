@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Groove Flight"
-config/version="0.62.0-soft-star-sea"
+config/version="0.63.0-cyber-feedback"
 run/main_scene="res://scenes/Main.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="BeatDriftPrototype"

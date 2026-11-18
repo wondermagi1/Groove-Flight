@@ -1,15 +1,15 @@
 extends RefCounted
 ## Original resolution-independent rhythm artwork. No third-party game assets.
 ## Visual grammar: graphite highway, cut-glass taps, gold sustain, lilac chords.
-const INK=Color("090b10")
-const EDGE=Color("45505e")
+const INK=Color("0d0916")
+const EDGE=Color("55506b")
 const WHITE=Color("eef5ff")
 const TAP=Color("b9d9ee")
 const HOLD=Color("edca84")
 const CHORD=Color("c9b6ed")
 const MISS=Color("e78999")
 const GRADES={"perfect":HOLD,"excellent":TAP,"general":CHORD,"miss":MISS}
-const IMPACT_LIFE=.32
+const IMPACT_LIFE=.34
 const MAX_IMPACTS=12
 
 static func cut(rect: Rect2,corner: float=3.) -> PackedVector2Array:
@@ -60,16 +60,37 @@ static func receptor(canvas: CanvasItem,rect: Rect2,held: bool,energy: float,red
 	var a=Vector2(rect.position.x+7,rect.end.y-4);var b=Vector2(rect.end.x-7,rect.end.y-4)
 	canvas.draw_line(a,b,Color(HOLD if held else WHITE,1. if held else .4),2.)
 	if held and not reduced:canvas.draw_line(a-Vector2(0,2),b-Vector2(0,2),Color(HOLD,.12+.08*energy),6.)
-static func impact(canvas: CanvasItem,center: Vector2,lane: float,age: float,grade: String,reduced: bool) -> void:
-	var t=clampf(age/IMPACT_LIFE,0.,1.);var alpha=pow(1.-t,2.);var color=GRADES.get(grade,HOLD)
-	var spread=lane*(.20+.24*t)
-	canvas.draw_line(center-Vector2(spread,0),center+Vector2(spread,0),Color(color,alpha),2.)
-	if reduced:return
+static func impact(canvas: CanvasItem,center: Vector2,lane: float,age: float,event: Dictionary,reduced: bool) -> void:
+	var grade=str(event.grade)
+	var perfect=grade=="perfect"
+	var tail=event.gesture=="hold_tail"
+	var t=clampf(age/IMPACT_LIFE,0.,1.)
+	var alpha=pow(1.-t,2.)
+	var color: Color=GRADES.get(grade,HOLD)
+	var spread=lane*(.24+.16*t)
+	canvas.draw_line(center-Vector2(spread,0),center+Vector2(spread,0),Color(color,alpha),2.5)
+	var rim=Rect2(center+Vector2(-lane*.5+5.,6.),Vector2(lane-10.,32.))
+	outline(canvas,rim,Color(color,alpha*.85),4.)
 	if grade=="miss":
-		for side in [-1.,1.]:canvas.draw_line(center+Vector2(side*(3.+t*10.),-3),center+Vector2(side*(9.+t*10.),3),Color(MISS,alpha),1.5,true)
+		for shift in [-4.,4.]:
+			var at=center+Vector2(shift,-9.)
+			canvas.draw_line(at-Vector2(3,3),at+Vector2(3,3),Color(MISS,alpha),1.8,true)
+			canvas.draw_line(at-Vector2(-3,3),at+Vector2(-3,3),Color(MISS,alpha),1.8,true)
 		return
-	canvas.draw_arc(center,4.+t*16.,PI,TAU,16,Color(color,alpha*.75),1.,true)
-	canvas.draw_line(center-Vector2(0,9.+t*8.),center+Vector2(0,4),Color(WHITE,alpha*.9),1.)
-	for i in range(5):
-		var v=Vector2((i-2)*6.,-13.-float(i%2)*12.)
-		diamond(canvas,center+v*t,1.+(1.-t),Color(color,alpha))
+	diamond(canvas,center-Vector2(0,5.),3.5,Color(color,alpha))
+	if reduced:return
+	var height=(49. if perfect else 28.)*(1.+t*.45)
+	gradient(canvas,Rect2(center.x-spread,center.y-height,spread*2.,height),Color(color,0.),Color(color,alpha*.28))
+	for side in [-1.,1.]:
+		var x=side*spread
+		var mark=PackedVector2Array([center+Vector2(x,-2.),center+Vector2(x,-8.-13.*t),center+Vector2(x*.70,-17.-16.*t)])
+		canvas.draw_polyline(mark,Color(color,alpha*.9),1.5,true)
+	var rise=9.+t*21.
+	canvas.draw_arc(center,rise,PI,TAU,16,Color(color,alpha*.75),1.5,true)
+	if perfect or tail:
+		canvas.draw_arc(center,rise*.72,PI+.25,TAU-.25,14,Color(WHITE,alpha*.85),1.5,true)
+	var count=7 if perfect else (4 if grade=="excellent" or tail else 2)
+	for i in range(count):
+		var direction=Vector2.from_angle(PI+float(i+1)*PI/float(count+1))
+		var spark=center+direction*(8.+t*(33.+float(i%3)*9.))
+		diamond(canvas,spark,1.+2.2*alpha,Color(color,alpha))

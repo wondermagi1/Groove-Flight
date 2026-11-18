@@ -1,6 +1,6 @@
 {
-  "version": "0.61.0-mercury-rhythm",
-  "date": "2026-11-17",
+  "version": "0.63.0-cyber-feedback",
+  "date": "2026-11-18",
   "lead": "eight licensed full background songs",
   "weapon_voices": "removed from combat, shop preview and codex; legacy sources archived only",
   "composer": "retired from game entry points",
@@ -33,7 +33,13 @@
   ],
   "ammo": "square(sum(all3keys earned)/sum(all3keys possible)) sets next6second base ammo; multiply current earnedPerfect bonus,max120percent;opening100percent;zero/recovery and fraction carry retained",
   "tail_grace_ms": 140,
-  "feedback": "kill, pickup, shield, impacts and UI remain on separate buses; dedicated rhythm hitsounds are future work",
+  "feedback": "independent kill, pickup, shield, impact, UI, alert and rhythm buses; short synthesized rhythm cues follow judged notes, accepted hold heads and earned milestones",
+  "rhythm_feedback": {
+    "source": "scripts/rhythm_sfx.gd",
+    "bus": "GrooveFlight_rhythm",
+    "default_gain": 0.48,
+    "voices": ["perfect", "excellent", "general", "miss", "hold_head", "hold_tail", "combo", "perfect_reward"]
+  },
   "perfect_rewards": {
     "thresholds": [
       10,

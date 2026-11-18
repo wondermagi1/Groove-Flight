@@ -1,9 +1,10 @@
 extends Node
 const AUDIO=preload("res://scripts/audio_controls.gd")
 const SEQUENCE=preload("res://scripts/arsenal_loadout.gd")
+const RHYTHM_SFX=preload("res://scripts/rhythm_sfx.gd")
 ## Recorded low-drum kill feedback; bounded rolls and reserved shield/pickup voices.
 const RATE=22050
-var groups={"hit":[],"kill":[],"ui":[],"alert":[],"pickup":[],"shield":[]}
+var groups={"hit":[],"kill":[],"ui":[],"alert":[],"pickup":[],"shield":[],"rhythm":[]}
 var samples: Dictionary={}
 var counters={"played":0,"aggregated":0,"limited":0,"stolen":0,"kill_hits":0}
 var pending: Dictionary={}
@@ -22,6 +23,7 @@ var feedback_log: Array=[]
 var feedback_active: bool=true
 func _ready() -> void:
 	AUDIO.ensure_buses()
+	RHYTHM_SFX.bank()
 	for group in groups:
 		var bus_name="GrooveFlight_"+str(group)
 		if AudioServer.get_bus_index(bus_name)<0:
@@ -56,13 +58,29 @@ func reset_feedback() -> void:
 	pending.clear(); pending_combo.clear(); drum_queue.clear()
 	clock=0.; elapsed=0.; next_kill_at=-1.; drum_index=0; feedback_log.clear()
 	for player in groups.kill: player.stop(); player.stream_paused=false
+	for player in groups.rhythm:player.stop()
 func set_combat_state(state: String) -> void:
 	feedback_active=state=="combat"
+	if not feedback_active:
+		for player in groups.rhythm:
+			if player.playing:player.stop()
 	var paused=state in ["paused","editor","settings"]
 	for player in groups.kill: player.stream_paused=paused
 	if not feedback_active and not paused:
 		pending.clear(); pending_combo.clear(); drum_queue.clear(); next_kill_at=clock
 		for player in groups.kill: player.stop()
+
+func rhythm_feedback(event: Dictionary) -> void:
+	if not feedback_active:return
+	var cue=str(event.grade)
+	if event.gesture=="hold_head":cue="hold_head"
+	elif event.milestone in ["perfect","combo"]:cue="perfect_reward" if event.milestone=="perfect" else "combo"
+	elif event.gesture=="hold_tail" and event.grade=="perfect":cue="hold_tail"
+	var stream: AudioStreamWAV=RHYTHM_SFX.bank().get(cue)
+	var output=AudioServer.get_bus_index(AUDIO.RHYTHM)
+	if stream==null or AudioServer.is_bus_mute(output):return
+	var volume=-12. if cue in ["perfect_reward","combo"] else (-19. if cue in ["miss","hold_head"] else -15.)
+	play(stream,"rhythm",volume-(3. if low_dynamic else 0.))
 func _emit_drum(amount: int,combo: int,tail: bool=false) -> void:
 	var pattern=["kill_low_strong","kill_low_soft","kill_low_round","kill_low_soft"]
 	var sample_id=str(pattern[drum_index%pattern.size()]); drum_index+=1

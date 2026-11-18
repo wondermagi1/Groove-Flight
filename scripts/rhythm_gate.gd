@@ -1,4 +1,5 @@
 extends RefCounted
+signal feedback(event: Dictionary)
 const CHART=preload("res://scripts/rhythm_chart.gd")
 const SCORE=preload("res://scripts/rhythm_score.gd")
 const STEP=preload("res://scripts/arsenal_loadout.gd").SEQUENCE_STEP_SECONDS
@@ -100,7 +101,17 @@ func _fail(note: Dictionary,label: String,now: float) -> void:
 	note.status="miss";misses+=1;grade_counts.miss+=1;last_grade="miss";last_points=0;combo=0;last_result="MISS · "+label+" · 0";result_at=now;result_track=int(note.track)
 	judge_serial+=1;judged_lanes=note.required.duplicate()
 	last_success=false;last_delta=0.
+	var previous_notice=rewards.notice_serial
 	_record_score(note,0);rewards.judge("miss",0,now);sync_reward(now)
+	_emit_feedback(note,"miss",now,previous_notice)
+
+func _emit_feedback(note: Dictionary,grade: String,now: float,previous_notice: int) -> void:
+	var notice_kind=rewards.notice_kind if rewards.notice_serial!=previous_notice else ""
+	feedback.emit({
+		"at":now, "lanes":note.required.duplicate(), "grade":grade,
+		"gesture":"tap" if float(note.hold)<=0. else "hold_tail",
+		"milestone":notice_kind,
+	})
 func _record_score(note: Dictionary,points: int) -> void:
 	if bool(note.get("scored",false)):return
 	note.scored=true
@@ -123,10 +134,12 @@ func advance(now: float) -> Array[Dictionary]:
 			last_result={"perfect":"PERFECT 完美","excellent":"EXCELLENT 优秀","general":"GOOD 一般"}[last_grade]+" +"+str(last_points)
 			grade_counts[last_grade]+=1
 			if last_grade=="perfect":perfects+=1
+			var previous_notice=rewards.notice_serial
 			_record_score(note,last_points);rewards.judge(last_grade,combo,now)
 			judge_serial+=1;judged_lanes=note.required.duplicate()
 			last_success=true;last_delta=float(note.delta)
 			result_at=now;result_track=int(note.track)
+			_emit_feedback(note,last_grade,now,previous_notice)
 		elif str(note.status)=="pending" and now>float(note.due)+WINDOW+.000001:_fail(note,"漏按",now)
 	sync_reward(now);score.advance(now)
 	for note in (salvos if music_chart else notes):
@@ -153,7 +166,10 @@ func press(lane: int,now: float,source: String="") -> bool:
 		if absf(now-float(target.due))>absf(float(target.delta)):target.delta=now-float(target.due)
 		if target.pressed.size()==target.required.size():target.status="holding" if float(target.hold)>0. else "armed"
 		last_result="持续按住到尾端" if str(target.status)=="holding" else "已击键"
-		result_at=now;result_track=lane;return true
+		result_at=now;result_track=lane
+		if str(target.status)=="holding":
+			feedback.emit({"at":now,"lanes":target.required.duplicate(),"grade":"","gesture":"hold_head","milestone":""})
+		return true
 	for note in notes:
 		if lane not in note.required:continue
 		if str(note.status)=="holding" and now<=float(note.end)+WINDOW:

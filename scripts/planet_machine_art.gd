@@ -15,10 +15,12 @@ static func plate(canvas: CanvasItem,at: Vector2,dimensions: Vector2,angle: floa
 	var shape=PackedVector2Array([at-axis*dimensions.x-side*dimensions.y,at+axis*dimensions.x-side*dimensions.y*.68,at+axis*(dimensions.x+.09),at+axis*dimensions.x+side*dimensions.y*.68,at-axis*dimensions.x+side*dimensions.y])
 	var coordinates: Array=[]
 	for point in shape:coordinates.append([point.x,point.y])
-	ART._plated(canvas,coordinates,Color("536d6e"))
-	ART._edge(canvas,shape,Color("687b8d"),.035)
-	canvas.draw_line(at-axis*dimensions.x*.8-side*dimensions.y*.6,at+axis*dimensions.x*.7-side*dimensions.y*.5,Color("b4c4ce"),.028,true)
-	canvas.draw_line(at-axis*dimensions.x*.6+side*dimensions.y*.45,at+axis*dimensions.x*.4+side*dimensions.y*.4,Color(accent,.75),.035,true)
+	ART._plated(canvas,coordinates,Color("585078"))
+	ART._edge(canvas,shape,Color("897da6"),.035)
+	canvas.draw_line(at-axis*dimensions.x*.8-side*dimensions.y*.6,at+axis*dimensions.x*.7-side*dimensions.y*.5,Color("d4cee7"),.028,true)
+	var channel=PackedVector2Array([at-axis*dimensions.x*.64+side*dimensions.y*.52, at+axis*dimensions.x*.22+side*dimensions.y*.52, at+axis*dimensions.x*.61+side*dimensions.y*.18])
+	canvas.draw_polyline(channel,Color("241a38"),.082,true)
+	canvas.draw_polyline(channel,Color(accent,.84),.034,true)
 	for j in range(3):
 		var vent=at+axis*(j-1)*dimensions.x*.35
 		canvas.draw_line(vent-side*dimensions.y*.30,vent+side*dimensions.y*.30,Color("030a12"),.06,true)
@@ -32,10 +34,10 @@ static func draw(canvas: CanvasItem,enemy: Dictionary,style: int,time: float,pul
 	var radius=float(enemy.radius); var at: Vector2=enemy.at
 	var age=maxf(0.,time-float(enemy.born)); var phase=int(enemy.phase)
 	var accent: Color=PLANETS.COLORS[style].lerp(Color("ff6b79"),.42 if phase==2 else .08)
-	var white=Color("bdcbd5").lerp(Color.WHITE,clampf(float(enemy.flash)*8.,0.,1.))
+	var white=Color("d6cde7").lerp(Color.WHITE,clampf(float(enemy.flash)*8.,0.,1.))
 	var angle=sin(time*.13)*.025
 	canvas.draw_set_transform(at+Vector2(12,18),angle,Vector2.ONE*radius)
-	canvas.draw_circle(Vector2.ZERO,1.15,Color(0,0,0,.32))
+	canvas.draw_circle(Vector2.ZERO,1.15,Color("0c071f",.22))
 	canvas.draw_set_transform(at,angle,Vector2.ONE*radius)
 	# Low-opacity energy stays behind the solid silhouette, never a smoke veil.
 	canvas.draw_circle(Vector2.ZERO,1.06,Color(accent,.045+pulse*.025))
@@ -75,8 +77,8 @@ static func draw(canvas: CanvasItem,enemy: Dictionary,style: int,time: float,pul
 	for i in range(12):
 		var a=i*TAU/12.+.015
 		sector(canvas,.67,1.0,a,a+TAU/12.-.035,white.darkened(.43+.11*sin(i*.9)))
-		sector(canvas,.86,.96,a+.015,a+.21,Color("91a2ae").darkened(.25))
-		sector(canvas,.72,.77,a+.05,a+.36,Color("111e2a"))
+		sector(canvas,.86,.96,a+.015,a+.21,Color("837598").darkened(.18))
+		sector(canvas,.72,.77,a+.05,a+.36,Color("211831"))
 		var bolt=Vector2.from_angle(a+.24)*.91
 		canvas.draw_circle(bolt,.021,Color("d6e2e8"))
 		canvas.draw_circle(Vector2.from_angle(a+.25)*.82,.018,Color(accent,.9))
@@ -87,7 +89,7 @@ static func draw(canvas: CanvasItem,enemy: Dictionary,style: int,time: float,pul
 		var a=i*TAU/8.-time*(.06 if phase==1 else .12)
 		sector(canvas,.52,.65,a,a+.65,Color("788b9c"))
 		sector(canvas,.55,.58,a+.06,a+.47,Color(accent,.85))
-	canvas.draw_circle(Vector2.ZERO,.49,Color("182b3b"))
+	canvas.draw_circle(Vector2.ZERO,.49,Color("281f3e"))
 	for i in range(7):
 		var a=i*TAU/7.+time*.04
 		var start=Vector2.from_angle(a)*.45

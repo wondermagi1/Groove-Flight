@@ -10,10 +10,11 @@ const GRADES=SKIN.GRADES
 var game
 var font: SystemFont
 var number_font: Font
+var display_font: Font
 var judge_y=0.
 var frame_style: StyleBoxFlat
 var hit_effects: Array[Dictionary]=[]
-var last_judge_serial=0
+var recent_grade: Dictionary={}
 static func compact_size(view: Vector2) -> Vector2:
 	return Vector2(roundf(clampf(view.x*.135,224.,280.)),roundf(clampf(view.y*.44,330.,540.)))
 static func dock_rect(view: Vector2) -> Rect2:
@@ -40,18 +41,23 @@ func simultaneous_lanes(note: Dictionary) -> Array:
 	lanes.sort();return lanes
 func _ready() -> void:
 	mouse_filter=Control.MOUSE_FILTER_STOP;focus_mode=Control.FOCUS_NONE;font=UI.font();number_font=UI.role_font("number");clip_contents=true
+	display_font=UI.role_font("title")
 	frame_style=UI.surface(Color(SKIN.INK,.94),Color(SKIN.EDGE,.6),5,0)
+	if not game.rhythm.last_grade.is_empty():
+		recent_grade={"at":game.rhythm.result_at,"grade":game.rhythm.last_grade}
+	game.rhythm.feedback.connect(_receive_feedback)
+func _receive_feedback(event: Dictionary) -> void:
+	if game.state!="combat":return
+	hit_effects.append(event)
+	if hit_effects.size()>SKIN.MAX_IMPACTS:hit_effects.pop_front()
+	if not str(event.grade).is_empty():recent_grade=event
 func _process(_delta: float) -> void:
 	visible=game.state=="combat" and game.rhythm_required()
 	if not visible:return
 	var dock=dock_rect(get_viewport_rect().size);size=dock.size;position=dock.position
 	judge_y=key_y()-6.
 	var now=game.standard_music.input_time()
-	if game.rhythm.judge_serial!=last_judge_serial:
-		last_judge_serial=game.rhythm.judge_serial
-		if not str(game.rhythm.last_grade).is_empty():hit_effects.append({"at":game.rhythm.result_at,"lanes":game.rhythm.judged_lanes.duplicate(),"ok":game.rhythm.last_success,"grade":game.rhythm.last_grade})
-	hit_effects=hit_effects.filter(func(fx):return now-float(fx.at)>=0. and now-float(fx.at)<SKIN.IMPACT_LIFE)
-	if hit_effects.size()>SKIN.MAX_IMPACTS:hit_effects=hit_effects.slice(hit_effects.size()-SKIN.MAX_IMPACTS)
+	hit_effects=hit_effects.filter(func(fx):return now-float(fx.at)<SKIN.IMPACT_LIFE)
 	tooltip_text=""
 	queue_redraw()
 func _gui_input(event: InputEvent) -> void:
@@ -80,7 +86,7 @@ func _draw() -> void:
 	for x in [4.,size.x-4.]:
 		draw_line(Vector2(x,TOP),Vector2(x,TOP+12.),Color(SKIN.WHITE,.45),1.)
 		draw_line(Vector2(x,key_y()-13.),Vector2(x,key_y()-2.),Color(SKIN.WHITE,.45),1.)
-	_draw_header(scale_value)
+	_draw_header(now,scale_value,reduced)
 	for track in range(3):
 		var x=track*lane;var held=game.rhythm.held(track);var rect=key_rect(track)
 		SKIN.gradient(self,Rect2(x+5.,TOP,lane-10.,key_y()-TOP),Color(SKIN.WHITE,.012),Color(SKIN.WHITE,.04 if track!=1 else .065))
@@ -99,18 +105,28 @@ func _draw() -> void:
 	for fx in hit_effects:
 		var age=now-float(fx.at)
 		if age<0. or age>=SKIN.IMPACT_LIFE:continue
-		for track in fx.lanes:SKIN.impact(self,Vector2((float(track)+.5)*lane,judge_y),lane,age,str(fx.grade),reduced)
-	_draw_feedback(now,scale_value)
+		for track in fx.lanes:SKIN.impact(self,Vector2((float(track)+.5)*lane,judge_y),lane,age,fx,reduced)
+	_draw_feedback(now,scale_value,reduced)
 func _center_text(value: String,at: Vector2,width: float,font_size: int,color: Color) -> void:
 	var text_width=font.get_string_size(value,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x
 	draw_string(font,at+Vector2(maxf(0.,(width-text_width)*.5),0),value,HORIZONTAL_ALIGNMENT_LEFT,width,font_size,color)
-func _draw_header(scale_value: float) -> void:
+func _draw_header(now: float,scale_value: float,reduced: bool) -> void:
 	var ratio=float(game.rhythm.score.ratio)
+	var reward=game.rhythm.rewards
+	var glow=0. if reduced else clampf(1.-(now-float(recent_grade.get("at",-10.)))/.27,0.,1.)
+	var combo_color=SKIN.HOLD if reward.perfect_chain>0 else SKIN.WHITE
+	SKIN.gradient(self,Rect2(5,2,size.x-10.,25.),Color(combo_color,glow*.11),Color.TRANSPARENT)
 	var combo=str(game.rhythm.combo);var font_size=roundi(19.*scale_value)
 	while font_size>12 and number_font.get_string_size(combo,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x>size.x*.34:font_size-=1
 	var combo_width=number_font.get_string_size(combo,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x
-	draw_string(number_font,Vector2(10,23),combo,HORIZONTAL_ALIGNMENT_LEFT,size.x*.34,font_size,SKIN.WHITE)
-	draw_string(font,Vector2(15+combo_width,22),"COMBO",HORIZONTAL_ALIGNMENT_LEFT,47,9,Color(SKIN.WHITE,.6))
+	draw_string(number_font,Vector2(10,23),combo,HORIZONTAL_ALIGNMENT_LEFT,size.x*.34,font_size,combo_color)
+	draw_string(display_font,Vector2(15+combo_width,22),"COMBO",HORIZONTAL_ALIGNMENT_LEFT,47,10,Color(combo_color,.75))
+	var tier_pulse=0. if reduced or reward.notice_kind!="perfect" else clampf(1.-(now-reward.notice_at)/.30,0.,1.)
+	for index in range(4):
+		var center=Vector2(size.x*.55+index*8.,17)
+		var earned=index<int(reward.tier)
+		if earned and tier_pulse>0.:SKIN.diamond(self,center,4.4,Color(SKIN.HOLD,tier_pulse*.45))
+		SKIN.diamond(self,center,2.6,SKIN.HOLD if earned else Color(SKIN.CHORD,.20))
 	var ammo="%d%%"%roundi(ratio*100.);var ammo_size=roundi(16.*scale_value);var ammo_width=number_font.get_string_size(ammo,HORIZONTAL_ALIGNMENT_LEFT,-1,ammo_size).x
 	draw_string(number_font,Vector2(size.x-10.-ammo_width,23),ammo,HORIZONTAL_ALIGNMENT_LEFT,ammo_width,ammo_size,SKIN.HOLD if ratio>1. else SKIN.WHITE)
 	draw_rect(Rect2(8,29,size.x-16.,2.),Color(SKIN.WHITE,.12))
@@ -134,12 +150,41 @@ func _draw_note(note: Dictionary,now: float,clip: Rect2,reduced: bool) -> void:
 		if float(note.hold)>0.:SKIN.ribbon(self,center,tail_y,minf(y,judge_y) if held else y,clip,color,held,now,reduced)
 		SKIN.head(self,head,color,clip,reduced,held)
 		if simultaneous.size()>1 and head.size.y>=10.:SKIN.diamond(self,head.get_center(),2.5,SKIN.WHITE)
-func _draw_feedback(now: float,scale_value: float) -> void:
-	var reward=game.rhythm.rewards;var grade=str(game.rhythm.last_grade);var fresh=now>=game.rhythm.result_at and now-game.rhythm.result_at<.55
-	var feedback="";var accent=UI.MUTED
-	if fresh and not grade.is_empty():feedback={"perfect":"PERFECT","excellent":"EXCELLENT","general":"GOOD","miss":"MISS"}[grade];accent=GRADES[grade]
-	if now>=reward.notice_at and now-reward.notice_at<1.6:
-		if reward.notice_kind=="perfect":feedback="PERFECT +%d%%"%roundi(reward.bonus(now)*100.);accent=UI.GOLD
-		elif reward.notice_kind=="guard":feedback=(feedback+" · 保护").strip_edges();accent=UI.GOLD
-		elif reward.notice_kind=="linger" and fresh:feedback+=" +%d%%"%roundi(reward.bonus(now)*100.)
-	if not feedback.is_empty():_center_text(feedback,Vector2(8,size.y-5.),size.x-16.,roundi(11.*scale_value),accent)
+func _draw_feedback(now: float,scale_value: float,reduced: bool) -> void:
+	var reward=game.rhythm.rewards
+	var age=now-float(recent_grade.get("at",-10.))
+	var grade=str(recent_grade.get("grade",""))
+	var notice_age=now-reward.notice_at
+	var notice=""
+	if notice_age>=0. and notice_age<1.42:
+		match reward.notice_kind:
+			"perfect":notice="%s  +%d%%"%[reward.notice.get_slice(" · ",0),roundi(reward.bonus(now)*100.)]
+			"combo":notice=reward.notice.get_slice(" · ",0)
+			"guard":notice="保护"
+			"linger":notice="余韵 +%d%%"%roundi(reward.bonus(now)*100.)
+			"break":notice="断连"
+	var rect=Rect2(4,size.y-19.,size.x-8.,17.)
+	if not notice.is_empty():
+		var color=SKIN.HOLD if reward.notice_kind=="perfect" else SKIN.CHORD
+		var accent=Color(color,.28 if reduced else .35+.30*exp(-notice_age*6.))
+		draw_colored_polygon(SKIN.cut(rect,4.),Color(SKIN.INK,.97))
+		SKIN.gradient(self,rect.grow(-2.),Color(color,.08),Color(color,0.))
+		SKIN.outline(self,rect,accent,4.)
+		SKIN.diamond(self,rect.position+Vector2(8.,8.5),2.5,color)
+		var show_miss=age>=0. and age<.55 and grade=="miss"
+		if show_miss:
+			draw_string(display_font,Vector2(18,size.y-6.),"MISS",HORIZONTAL_ALIGNMENT_LEFT,-1,12,SKIN.MISS)
+		var face=display_font if reward.notice_kind in ["combo","perfect"] else font
+		var points=mini(15,roundi(14.*scale_value))
+		var width=face.get_string_size(notice,HORIZONTAL_ALIGNMENT_LEFT,-1,points).x
+		var left=size.x-15.-width if show_miss else (size.x-width)*.5
+		draw_string(face,Vector2(left,size.y-5.),notice,HORIZONTAL_ALIGNMENT_LEFT,-1,points,color.lerp(SKIN.WHITE,.16))
+	elif not grade.is_empty() and age>=0. and age<.55:
+		var label={"perfect":"PERFECT","excellent":"EXCELLENT","general":"GOOD","miss":"MISS"}[grade]
+		var accent: Color=GRADES[grade]
+		var points=roundi(13.*scale_value)
+		var width=display_font.get_string_size(label,HORIZONTAL_ALIGNMENT_LEFT,-1,points).x
+		var center=Vector2(size.x*.5,size.y-10.)
+		SKIN.diamond(self,center-Vector2(width*.5+12.,0),2.7,accent)
+		SKIN.diamond(self,center+Vector2(width*.5+12.,0),2.7,accent)
+		draw_string(display_font,Vector2(center.x-width*.5,size.y-5.),label,HORIZONTAL_ALIGNMENT_LEFT,-1,points,accent)

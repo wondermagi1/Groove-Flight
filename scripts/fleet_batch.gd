@@ -3,6 +3,10 @@ extends Node2D
 ## thousands of per-aircraft canvas commands while retaining role silhouettes.
 const TYPES=["mote","armor","shooter","dart","splitter","sentinel","lance","mirror"]
 const CAPACITY=1024
+const CHASSIS=Color("101b2c")
+const ALLOY=Color("cbc6e5")
+const ENEMY_LIGHT=Color("ff7ea5")
+const NOZZLE_LIGHT=Color("9ddaff")
 var fleets: Dictionary={}
 var counts: Dictionary={}
 var active_count: int=0
@@ -21,7 +25,7 @@ static func add_plate(vertices: PackedVector3Array,colors: PackedColorArray,uvs:
 	var polygon=PackedVector2Array()
 	for p in points: polygon.append(Vector2(p[0],p[1]))
 	var triangles=Geometry2D.triangulate_polygon(polygon)
-	var base=color.is_equal_approx(Color("101b2c"))
+	var base=color==CHASSIS
 	if base:
 		for index in triangles:
 			vertices.append(Vector3(polygon[index].x,polygon[index].y,0)); colors.append(Color.WHITE); uvs.append(Vector2(-1.,5.))
@@ -29,8 +33,8 @@ static func add_plate(vertices: PackedVector3Array,colors: PackedColorArray,uvs:
 			var a=polygon[i]; var b=polygon[(i+1)%polygon.size()]
 			var normal=(b-a).orthogonal().angle()
 			for item in [[a,0.],[b,0.],[a,1.],[a,1.],[b,0.],[b,1.]]:
-				vertices.append(Vector3(item[0].x,item[0].y,0)); colors.append(Color("8796ac")); uvs.append(Vector2(float(item[1]),normal))
-	var emitter=color.is_equal_approx(Color("f183b8")) or color.is_equal_approx(Color("8bc8f2"))
+				vertices.append(Vector3(item[0].x,item[0].y,0)); colors.append(Color("81789e")); uvs.append(Vector2(float(item[1]),normal))
+	var emitter=color==ENEMY_LIGHT or color==NOZZLE_LIGHT
 	var height=1. if base else (1.16 if emitter else 1.04)
 	for index in triangles:
 		var point=polygon[index]
@@ -45,27 +49,28 @@ static func finish_mesh(v: PackedVector3Array,c: PackedColorArray,u: PackedVecto
 	# Shared construction detail is baked ONCE into each of eight meshes.
 	# Geometry stays inside existing silhouettes;no new entities or per-frame
 	# hull loops,lights,textures,shadow passes or changed collision radii.
-	var dark=Color("302741");var rim=Color("c9c4e0");var white=Color("eee9fa")
-	var red=Color("f183b8");var brass=Color("a279c2")
+	var dark=Color("342740")
+	var rim=Color("a896c2")
+	var ceramic=Color("ece9fa")
+	var glass=Color("172641")
 	for side in [-1.,1.]:
-		var y=side*(.32 if kind in ["mirror","lance","dart"] else .41)
-		add_plate(v,c,u,[[-.80,y-.13],[-.28,y-.10],[-.16,y+.09],[-.79,y+.10]],dark)
-		strip(v,c,u,Vector2(-.76,y-.11),Vector2(-.29,y-.08),.032,rim)
+		var y=side*(.36 if kind in ["mirror","lance","dart"] else .43)
+		add_plate(v,c,u,[[-.84,y-.10],[-.68,y-.17],[-.32,y-.14],[-.18,y+.06],[-.32,y+.14],[-.81,y+.12]],rim)
+		add_plate(v,c,u,[[-.78,y-.065],[-.63,y-.102],[-.35,y-.085],[-.25,y+.060],[-.77,y+.073]],dark)
 		for vent in range(3):
-			var x=-.66+vent*.115
-			strip(v,c,u,Vector2(x,y-.055),Vector2(x-.025,y+.052),.041,Color("0d2028"))
-		strip(v,c,u,Vector2(-.79,y+.10),Vector2(-.34,y+.10),.029,brass)
-		add_plate(v,c,u,hex(Vector2(-.78,y),.042),white)
-		strip(v,c,u,Vector2(-.95,y-.06),Vector2(-.95,y+.06),.065,Color("8bc8f2"))
-	# Raised sensor pod with dark gasket,coral aperture and offset glass glint.
-	add_plate(v,c,u,hex(Vector2(.15,0),.31),dark)
-	add_plate(v,c,u,hex(Vector2(.15,-.018),.25),brass)
-	add_plate(v,c,u,hex(Vector2(.15,-.024),.20),Color("12252f"))
-	add_plate(v,c,u,hex(Vector2(.16,-.034),.14),red)
-	strip(v,c,u,Vector2(.04,-.14),Vector2(.17,-.17),.025,white)
-	add_plate(v,c,u,[[.25,-.06],[.30,-.02],[.21,.08],[.18,.03]],Color("f6c0b2"))
-	strip(v,c,u,Vector2(.42,-.15),Vector2(.76,-.07),.028,rim)
-	strip(v,c,u,Vector2(-.22,.22),Vector2(.26,.21),.036,dark)
+			var x=-.65+vent*.115
+			strip(v,c,u,Vector2(x,y-.044),Vector2(x-.040,y+.053),.053,Color("140e23"))
+		strip(v,c,u,Vector2(-.82,y-.070),Vector2(-.82,y+.064),.069,NOZZLE_LIGHT)
+		strip(v,c,u,Vector2(-.17,side*.26),Vector2(.39,side*.21),.086,dark)
+		strip(v,c,u,Vector2(-.10,side*.252),Vector2(.22,side*.225),.043,ENEMY_LIGHT)
+		strip(v,c,u,Vector2(.44,side*.176),Vector2(.74,side*.095),.037,rim)
+	# Recessed glass and an offset highlight read as a sensor at crowd scale.
+	add_plate(v,c,u,hex(Vector2(.15,0),.34),dark)
+	add_plate(v,c,u,hex(Vector2(.15,-.018),.28),rim)
+	add_plate(v,c,u,hex(Vector2(.15,-.028),.226),glass)
+	add_plate(v,c,u,[[.30,-.054],[.24,-.151],[.069,-.140],[.01,-.047],[.078,.057],[.24,.065]],ENEMY_LIGHT)
+	strip(v,c,u,Vector2(.083,-.110),Vector2(.20,-.117),.033,ceramic)
+	strip(v,c,u,Vector2(.16,.016),Vector2(.26,-.006),.027,Color("923358"))
 
 static func hex(at: Vector2,radius: float) -> Array:
 	var points=[]
@@ -75,7 +80,7 @@ static func hex(at: Vector2,radius: float) -> Array:
 
 static func make_mesh(kind: String) -> ArrayMesh:
 	var vertices=PackedVector3Array(); var colors=PackedColorArray(); var uvs=PackedVector2Array()
-	var ink=Color("101b2c"); var plate=Color("c9c4e0"); var dark=Color("433758"); var red=Color("f183b8")
+	var ink=CHASSIS; var plate=ALLOY; var dark=Color("4c3d68"); var red=ENEMY_LIGHT
 	match kind:
 		"mote","dart":
 			var wing=1.2 if kind=="mote" else .75
@@ -84,7 +89,7 @@ static func make_mesh(kind: String) -> ArrayMesh:
 			add_plate(vertices,colors,uvs,[[1.32,0],[-.58,wing*.84],[-.78,.5],[-.45,0]],dark)
 		"armor":
 			add_plate(vertices,colors,uvs,hex(Vector2.ZERO,1.1),ink)
-			add_plate(vertices,colors,uvs,[[.85,-.5],[1.,0],[.85,.5],[-.6,.8],[-.9,.4],[-.9,-.4],[-.6,-.8]],Color("bca17b"))
+			add_plate(vertices,colors,uvs,[[.85,-.5],[1.,0],[.85,.5],[-.6,.8],[-.9,.4],[-.9,-.4],[-.6,-.8]],Color("9f81b8"))
 			add_plate(vertices,colors,uvs,[[.77,-.4],[.9,0],[.77,.4],[-.53,.63],[-.72,.32],[-.72,-.32],[-.53,-.63]],plate)
 			add_plate(vertices,colors,uvs,hex(Vector2.ZERO,.55),dark)
 		"shooter":
@@ -116,10 +121,8 @@ static func make_mesh(kind: String) -> ArrayMesh:
 				add_plate(vertices,colors,uvs,[[.54,side*.18],[-.06,side*.64],[-.8,side*.58],[-.74,side*.42],[-.3,side*.43]],plate)
 				add_plate(vertices,colors,uvs,hex(Vector2(-.22,side*.48),.14),red)
 			add_plate(vertices,colors,uvs,[[.96,0],[.34,-.18],[-.6,-.18],[-.92,0],[-.6,.18],[.34,.18]],plate)
-	add_plate(vertices,colors,uvs,hex(Vector2(.06,0),.18),red)
-	add_plate(vertices,colors,uvs,[[-.70,-.17],[-1.14,-.10],[-1.14,.10],[-.70,.17]],Color("7baec4"))
-	add_plate(vertices,colors,uvs,[[-.38,-.34],[-.08,-.43],[.08,-.20],[-.22,-.13]],Color("e6f3ff"))
-	add_plate(vertices,colors,uvs,[[-.50,.48],[.42,.42],[.22,.57],[-.34,.62]],Color("101b2b"))
+	add_plate(vertices,colors,uvs,[[-.60,-.14],[-1.02,-.102],[-1.02,.102],[-.60,.14]],Color("655579"))
+	strip(vertices,colors,uvs,Vector2(-.99,-.068),Vector2(-.99,.068),.055,NOZZLE_LIGHT)
 	finish_mesh(vertices,colors,uvs,kind)
 	var arrays=[]; arrays.resize(Mesh.ARRAY_MAX)
 	arrays[Mesh.ARRAY_VERTEX]=vertices; arrays[Mesh.ARRAY_COLOR]=colors; arrays[Mesh.ARRAY_TEX_UV]=uvs

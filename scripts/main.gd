@@ -166,7 +166,7 @@ var shop_reroll_cost: int=8
 var editor_return: String="combat"
 var notice: String=""
 var notice_until: float=0
-var settings={"backing":0.,"weapons":.255,"audio_schema":3,"kill":.55,"pickup":.55,"shield":.55,"combat":.55,"ui":.55,"alerts":.55,"music_duck":false,"audio_mix_backup":{},"groove":0.,"background_motion":.55,"text_scale":1.,"low_dynamic":false,"starting_path":0,"combat_doctrine":"","difficulty":0,"aim_mode":0,"input_bindings":{},"rhythm_offset_ms":0.,"tutorial_done":false,"tutorial_skipped":false,"master":.75,"music":.75,"sfx":.55,"reduced_fx":false,"fullscreen":true,"background_quality":2,"background_exposure":.9,"panel_attributes":true,"panel_status":true,"panel_buffs":true,"panel_inventory":true,"panel_sequencer":true,"combat_panel_attributes":false,"combat_panel_status":false,"combat_panel_buffs":false,"combat_panel_inventory":false,"combat_panel_sequencer":true}
+var settings={"backing":0.,"weapons":.255,"audio_schema":AUDIO.SCHEMA,"rhythm":AUDIO.DEFAULTS.rhythm,"kill":.55,"pickup":.55,"shield":.55,"combat":.55,"ui":.55,"alerts":.55,"music_duck":false,"audio_mix_backup":{},"groove":0.,"background_motion":.55,"text_scale":1.,"low_dynamic":false,"starting_path":0,"combat_doctrine":"","difficulty":0,"aim_mode":0,"input_bindings":{},"rhythm_offset_ms":0.,"tutorial_done":false,"tutorial_skipped":false,"master":.75,"music":.75,"sfx":.55,"reduced_fx":false,"fullscreen":true,"background_quality":2,"background_exposure":.9,"panel_attributes":true,"panel_status":true,"panel_buffs":true,"panel_inventory":true,"panel_sequencer":true,"combat_panel_attributes":false,"combat_panel_status":false,"combat_panel_buffs":false,"combat_panel_inventory":false,"combat_panel_sequencer":true}
 var voices: Array[AudioStreamPlayer]=[]
 var voice_index: int=0
 var sound_times: Dictionary={}
@@ -237,6 +237,7 @@ func _ready() -> void:
 	fx=load("res://scripts/fx.gd").new(); fx.z_index=8; add_child(fx)
 	fleet_batch=load("res://scripts/fleet_batch.gd").new(); fleet_batch.z_index=-1; add_child(fleet_batch)
 	mixer=load("res://scripts/event_mixer.gd").new(); add_child(mixer)
+	rhythm.feedback.connect(_play_rhythm_feedback)
 	for i in range(16):
 		var voice=AudioStreamPlayer.new(); add_child(voice); voices.append(voice)
 	weapon_renderer=load("res://scripts/weapon_render.gd").new(); weapon_renderer.z_index=2; add_child(weapon_renderer)
@@ -953,6 +954,9 @@ func rhythm_tick(now: float=-1.) -> void:
 	if now<0.:now=music.timeline
 	rhythm.forecast(loadout,now,rhythm_song_time(now))
 	for event in rhythm.advance(now):dispatch_trigger(event)
+func _play_rhythm_feedback(event: Dictionary) -> void:
+	if state=="combat" and rhythm_required() and not standard_music.stream_paused and not standard_music._begin_pending:
+		mixer.rhythm_feedback(event)
 func set_rhythm_offset(value: float) -> void:
 	settings.rhythm_offset_ms=clampf(value,-150.,150.);rhythm.offset_seconds=float(settings.rhythm_offset_ms)*.001
 	if rhythm_required():resync_pending()

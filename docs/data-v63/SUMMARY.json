@@ -1,0 +1,72 @@
+{
+  "version": "0.63.0-cyber-feedback",
+  "date": "2026-11-18",
+  "backup": "15d2a6f8381db80530f81046222abe927391b5b6",
+  "renders": {
+    "forward_plus": {
+      "checks": 58,
+      "captures": 4
+    },
+    "gl_compatibility": {
+      "checks": 58,
+      "captures": 4
+    }
+  },
+  "scoring_balance_regression": 459,
+  "cues": {
+    "combo": {
+      "milliseconds": 128.0,
+      "pcm_peak": 13796
+    },
+    "excellent": {
+      "milliseconds": 61.0,
+      "pcm_peak": 13538
+    },
+    "general": {
+      "milliseconds": 50.0,
+      "pcm_peak": 11955
+    },
+    "hold_head": {
+      "milliseconds": 49.0,
+      "pcm_peak": 12476
+    },
+    "hold_tail": {
+      "milliseconds": 91.0,
+      "pcm_peak": 14773
+    },
+    "miss": {
+      "milliseconds": 66.0,
+      "pcm_peak": 11942
+    },
+    "perfect": {
+      "milliseconds": 83.0,
+      "pcm_peak": 14636
+    },
+    "perfect_reward": {
+      "milliseconds": 179.0,
+      "pcm_peak": 15390
+    }
+  },
+  "shared_enemy_mesh_vertices": {
+    "armor": 300,
+    "dart": 276,
+    "lance": 324,
+    "mirror": 372,
+    "mote": 276,
+    "sentinel": 294,
+    "shooter": 294,
+    "splitter": 375
+  },
+  "dense_instance_capacity_checked": 1024,
+  "audition": "../audio-v63/rhythm-feedback-audition.wav",
+  "protected_paths_match_backup": [
+    "audio/charts",
+    "audio/authorized",
+    "native",
+    "scripts/rhythm_score.gd",
+    "scripts/rhythm_rewards.gd",
+    "scripts/run_balance.gd",
+    "scripts/arsenal_loadout.gd",
+    "shaders/cyber_battlefield.gdshader"
+  ]
+}

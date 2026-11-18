@@ -9,13 +9,13 @@ void vertex(){
  vec2 p=rotation*VERTEX;
  p.y*=.88;
  if(UV.x<-.5){
-  p+=vec2(.20,.35); lit_color=vec4(.015,.025,.045,COLOR.a*.22);
+  p+=vec2(.17,.31); lit_color=vec4(.018,.013,.041,COLOR.a*.18);
  }else{
-  p+=vec2(-.035,-.32)*UV.x;
+  p+=vec2(-.035,-.27)*UV.x;
   float shade=1.;
   if(UV.y<4.){
    vec2 normal=rotation*vec2(cos(UV.y),sin(UV.y));
-   shade=.48+.38*max(0.,dot(normal,normalize(vec2(-.6,-.8))));
+   shade=.48+.42*max(0.,dot(normal,normalize(vec2(-.6,-.8))));
   }else{
    // Constant world-space key light on the machined top face. Emitters keep
    // their colour;there is no synchronized fleet-wide brightness animation.

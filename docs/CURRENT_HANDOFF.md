@@ -1,6 +1,8 @@
 # Groove Flight 当前接手说明
 
-当前V62 / 2026-11-17，`codex/soft-galaxy-background`，备份`0d1087f`。只软化银河叠影/暗角，玩法继续V61。[V62对照](V62_SOFT_STAR_SEA.md) · [验证](data-v62/SUMMARY.json)。
+当前V63 / 2026-11-18，`codex/cyber-rhythm-feedback`，修改前远程备份`15d2a6f`。三键每次判定分别反馈，Perfect奖励和普通连击用不同徽标与电子提示音。五种玩家舰体、八种普通敌机、精英和Boss统一赛博装甲风格。音游反馈可独立静音。[V63说明](V63_CYBER_RHYTHM_FEEDBACK.md) · [验证](data-v63/SUMMARY.json)
+
+历史V62 / 2026-11-17，`codex/soft-galaxy-background`，备份`0d1087f`。软化银河叠影与暗角。[V62对照](V62_SOFT_STAR_SEA.md) · [验证](data-v62/SUMMARY.json)
 
 历史V61：2026-11-17 / `0.61.0-mercury-rhythm`，`codex/mercury-rhythm-balance`，备份`21c8f31`已上传。准确率平方弹量、统一属性/精炼/改件递减与密度分摊，普通耐久逐波成长、Boss耐久新初标，冲刺导弹受成绩影响；水星大航标/160采样圈/360首目标/导航和亮星海完成首轮。24武器基础/线性弹数/独立运动、判定/角色/歌曲与原生DLL保留。[V61](V61_MERCURY_RHYTHM_BALANCE.md) · [数据](data-v61/SUMMARY.json)。后续水星完整流程/水星Boss，再金星。
 
