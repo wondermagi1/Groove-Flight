@@ -15,6 +15,7 @@ const SEQUENCE_STEP_SECONDS=SEQUENCE_LOOP_SECONDS/STEPS
 const SEQUENCE_BPM=60./(SEQUENCE_STEP_SECONDS*2.)
 const STARTER_WEAPON_LIMIT=2
 const LIVE_STARTER_LAYOUT=[{"kind":"pulse","slot":2},{"kind":"rail","slot":11}]
+const MERCURY_STARTER_LAYOUT=[{"kind":"pulse","slot":2},{"kind":"scatter","slot":8}]
 var doctrine_id: String=""
 const INVENTORY_LIMIT=64
 const STAT_KEYS=["ballistic","energy","power","support","extra_projectiles","bullet_multiplier","crit_chance","crit_damage","max_health","regen","armor","move_percent","magnet","luck"]
@@ -114,12 +115,12 @@ func set_fleet(craft: Dictionary,_pilot: Dictionary) -> void:
 		if craft.has(key): _fleet_stats[key]=float(craft[key])
 	_base_extra=maxi(0,int(craft.get("extra_projectiles",0)))
 
-func set_starters(kinds: Array) -> void:
+func set_starters(kinds: Array,live_layout: Array=LIVE_STARTER_LAYOUT) -> void:
 	phrase_offsets.clear()
 	modules.clear(); slots.fill(-1); next_uid=1
 	if audio_guard_enabled:
-		# Reserve the universal weapon spans before placing ship/path utilities.
-		for placement in (LIVE_STARTER_LAYOUT if doctrine_id.is_empty() else DOCTRINES.starters(doctrine_id)):
+		# Reserve the weapon spans before placing ship/path utilities.
+		for placement in (live_layout if doctrine_id.is_empty() else DOCTRINES.starters(doctrine_id)):
 			add_module(str(placement.kind),int(placement.slot))
 		for kind in kinds:
 			var row=C.item(str(kind))

@@ -57,6 +57,7 @@ var active_planet: String="mercury"
 var planet_rules: Dictionary=PLANETS.combat("mercury")
 var planet_records: Dictionary={}
 var drop_fraction: float=0.
+var mercury_drop_remainder: float=0.
 var expedition_shop_tier: int=1
 var wave_supply: int=0
 var run_shop_seconds: float=0.
@@ -489,7 +490,9 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	rhythm.configure_pilot(selected_pilot)
 	var planet_number=int(PLANETS.planet(active_planet).index)
 	loadout.recorded_starter_quality=0 if planet_number<3 else (1 if planet_number<6 else 2)
-	loadout.set_fleet(craft,FLEET.pilot(selected_pilot)); loadout.set_starters(craft.start_modules)
+	loadout.set_fleet(craft,FLEET.pilot(selected_pilot))
+	var starter_layout=loadout.MERCURY_STARTER_LAYOUT if expedition.enabled and active_planet=="mercury" else loadout.LIVE_STARTER_LAYOUT
+	loadout.set_starters(craft.start_modules,starter_layout)
 	if rhythm_required():rhythm_voices.warm(loadout)
 	refresh_loadout_stats()
 	move_speed=float(craft.speed); dash_recharge=float(craft.dash_cooldown)
@@ -498,7 +501,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	pilot_amp_until=-1; pilot_heal_progress=0; pending_splits.clear(); boss_down=false; spawn_log.clear(); total_spawned=0
 	flight_trail.clear(); flight_trail_clock=0.
 	shield_points=0; shield_until=-1; player_guard_until=-1; player_guard_started=-10.; shield_renderer.flash_at=-10.; pending_dash_missiles=0; proc_queue.clear(); shop_offers.clear(); shop_reroll_cost=8
-	wave=0; kills=0; score=0; dust=0; picked=0; next_enemy=1; actual_steps=0; selected_uid=-1; drop_fraction=0.
+	wave=0; kills=0; score=0; dust=0; picked=0; next_enemy=1; actual_steps=0; selected_uid=-1; drop_fraction=0.;mercury_drop_remainder=0.
 	kill_combo=0; kill_combo_until=0.
 	player=Vector2.ZERO; facing=Vector2.UP; movement_facing=facing; camera.enabled=true; camera.position=player; camera.reset_smoothing()
 	mission.reset(self,rhythm_required())
@@ -1698,6 +1701,12 @@ func hurt_enemy(enemy: Dictionary,damage: float,kind: String,context: Dictionary
 	# tolerance prevents losing a whole earned star at an integer boundary.
 	var amount=maxi(1,floori(drop_fraction+.00000001)); drop_fraction=maxf(0.,drop_fraction-float(amount))
 	var item={"at":enemy.at,"amount":amount,"heal":rng.randf()<minf(.3,.055+float(stats_snapshot.get("luck",0))*.001),"life":75. if mission.is_beacon_defense() else 36.}
+	if expedition.enabled and active_planet=="mercury":
+		mercury_drop_remainder+=amount*BALANCE.MERCURY_KILL_LOOT_BONUS
+		var bonus=floori(mercury_drop_remainder+.00000001)
+		mercury_drop_remainder=maxf(0.,mercury_drop_remainder-bonus)
+		item.heal_units=amount
+		item.amount+=bonus
 	if pickups.size()<300: pickups.append(item)
 	else:
 		# Bounded visuals, preserved earned currency. The pile nearest the kill
@@ -1706,6 +1715,8 @@ func hurt_enemy(enemy: Dictionary,damage: float,kind: String,context: Dictionary
 		for i in range(pickups.size()):
 			var d=pickups[i].at.distance_squared_to(enemy.at)
 			if d<distance: closest=i; distance=d
+		if item.has("heal_units"):
+			pickups[closest].heal_units=int(pickups[closest].get("heal_units",pickups[closest].amount))+amount
 			pickups[closest].amount+=item.amount; pickups[closest].heal=pickups[closest].heal or item.heal; pickups[closest].life=item.life
 func update_enemy_bullets(delta: float) -> void:
 	var bounds=visible_world().grow(350)
@@ -1742,7 +1753,7 @@ func collect_pickup(item: Dictionary,with_sound: bool=true) -> void:
 	var amount=int(item.get("amount",1)); dust+=amount
 	picked+=amount
 	if item.get("heal",false): health=minf(health+1,loadout.max_health)
-	health=minf(float(stats_snapshot.get("max_health",10)),health+float(event_snapshot.get("heal_pickup",0))*amount)
+	health=minf(float(stats_snapshot.get("max_health",10)),health+float(event_snapshot.get("heal_pickup",0))*int(item.get("heal_units",amount)))
 	if with_sound: sound("pickup",-15,1.+(picked%3)*.025)
 func _grant_player_guard(duration: float) -> void:
 	var was_active=music.timeline<player_guard_until
@@ -2063,6 +2074,7 @@ func dispatch_trigger(trigger: Dictionary) -> void:
 		var full=full_salvo_count(trigger)
 		var scaled=rhythm.score.projectile_count(int(trigger.uid),track,full,C.GROWTH.count_limit(C.item(str(trigger.kind))))
 		if scaled<=0:return
+		if rhythm.uses_mercury_cues():rhythm.last_volley_at=float(trigger.get("performed_at",music.timeline))
 		trigger=trigger.duplicate(true);trigger.count=scaled;trigger.rhythm_count_scaled=true
 		trigger.rhythm_full_count=full;trigger.rhythm_ratio=rhythm.score.ratio
 	fire_log.append({"step":posmod(int(trigger.serial),8),"track":trigger.get("track",0),"uid":trigger.uid,"serial":trigger.serial,"deadline":trigger.deadline,"actual":music.timeline,"kind":trigger.kind,"voice":trigger.voice,"pitch":trigger.get("pitch",0),"cadence_step":trigger.get("cadence_step",0),"cadence_scale":trigger.get("cadence_scale",1.),"pilot":trigger.get("pilot",""),"repeat_index":trigger.get("repeat_index",0),"event_id":trigger.event_id})

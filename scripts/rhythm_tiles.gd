@@ -112,6 +112,7 @@ func _draw() -> void:
 		_center_text(key,Vector2(rect.position.x,key_y()+21.),rect.size.x,key_size,SKIN.HOLD if progress>=0. else SKIN.WHITE)
 		SKIN.timing_rail(self,Vector2((track+.5)*lane,judge_y),lane,emphasis)
 	for note in game.rhythm.notes:_draw_note(note,now,clip,reduced)
+	if game.rhythm.uses_mercury_cues():_draw_mercury_volley_ticks(now)
 	for fx in hit_effects:
 		var age=now-float(fx.at)
 		if age<0. or age>=SKIN.IMPACT_LIFE:continue
@@ -120,6 +121,12 @@ func _draw() -> void:
 func _center_text(value: String,at: Vector2,width: float,font_size: int,color: Color) -> void:
 	var text_width=font.get_string_size(value,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x
 	draw_string(font,at+Vector2(maxf(0.,(width-text_width)*.5),0),value,HORIZONTAL_ALIGNMENT_LEFT,width,font_size,color)
+func _draw_mercury_volley_ticks(now: float) -> void:
+	for salvo in game.rhythm.salvos:
+		if bool(salvo.emitted):continue
+		var y=note_y(float(salvo.end),now)
+		if y<TOP+2. or y>judge_y+1.:continue
+		draw_line(Vector2(size.x-8.,y),Vector2(size.x-4.,y),Color(SKIN.HOLD,.75),2.)
 func _draw_header(now: float,scale_value: float,reduced: bool) -> void:
 	var ratio=float(game.rhythm.score.ratio)
 	var reward=game.rhythm.rewards
@@ -138,7 +145,16 @@ func _draw_header(now: float,scale_value: float,reduced: bool) -> void:
 		if earned and tier_pulse>0.:SKIN.diamond(self,center,4.4,Color(SKIN.HOLD,tier_pulse*.45))
 		SKIN.diamond(self,center,2.6,SKIN.HOLD if earned else Color(SKIN.CHORD,.20))
 	var ammo="%d%%"%roundi(ratio*100.);var ammo_size=roundi(16.*scale_value);var ammo_width=number_font.get_string_size(ammo,HORIZONTAL_ALIGNMENT_LEFT,-1,ammo_size).x
-	draw_string(number_font,Vector2(size.x-10.-ammo_width,23),ammo,HORIZONTAL_ALIGNMENT_LEFT,ammo_width,ammo_size,SKIN.HOLD if ratio>1. else SKIN.WHITE)
+	var ammo_color=SKIN.HOLD if ratio>1. else SKIN.WHITE
+	if game.rhythm.uses_mercury_cues():
+		var elapsed=1.-clampf(game.rhythm.score.remaining(now)/game.rhythm.SCORE.SECONDS,0.,1.)
+		draw_rect(Rect2(8,33,(size.x-16.)*elapsed,1.),Color(SKIN.WHITE,.29))
+		var age=now-float(game.rhythm.last_volley_at)
+		if age>=0. and age<.18:
+			var flash=(1.-age/.18)*(.48 if reduced else 1.)
+			ammo_color=ammo_color.lerp(SKIN.HOLD,flash)
+			SKIN.diamond(self,Vector2(size.x-17.-ammo_width,17.),3.,Color(SKIN.HOLD,flash))
+	draw_string(number_font,Vector2(size.x-10.-ammo_width,23),ammo,HORIZONTAL_ALIGNMENT_LEFT,ammo_width,ammo_size,ammo_color)
 	draw_rect(Rect2(8,29,size.x-16.,2.),Color(SKIN.WHITE,.12))
 	draw_rect(Rect2(8,29,(size.x-16.)*clampf(ratio/1.2,0.,1.),2.),SKIN.HOLD if ratio>1. else SKIN.TAP)
 	var full=8.+(size.x-16.)/1.2;draw_line(Vector2(full,28),Vector2(full,32),Color(SKIN.WHITE,.55),1.)

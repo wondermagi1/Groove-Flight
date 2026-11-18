@@ -24,6 +24,7 @@ var song_rate: float=1.
 var retime_salvos: bool=false
 var chart_id: String="mercury"
 var offset_seconds: float=0.
+var last_volley_at: float=-INF
 var notes: Array[Dictionary]=[]
 var down: Dictionary={}
 var last_serial: int=-1
@@ -49,6 +50,7 @@ func reset(now: float=0.,new_run: bool=false) -> void:
 	retime_salvos=false
 	last_result="三键合计 · 下一段弹量";result_at=-10.;result_track=-1
 	last_delta=0.;last_success=false;last_grade="";last_points=0
+	last_volley_at=-INF
 func forecast(loadout,now: float,song_time: float=-1.) -> void:
 	var rate=song_rate if music_chart else 1.
 	var raw=song_time if song_time>=0. else now
@@ -97,32 +99,65 @@ func forecast(loadout,now: float,song_time: float=-1.) -> void:
 			song_cursor=float(cue.song_due)+.0001
 			if due<cutoff:continue
 			var lane=int(cue.lane);var hold=float(cue.hold)/rate
-			var kind="hold" if hold>0. else "tap"
+			var kind=_cue_kind(cue)
 			var required=[lane]
-			var duration=float(cue.hold)
-			var technique=str(cue.get("technique",""))
-			if (stage>=1 and technique=="chord") or (stage>=2 and technique=="roll"):
-				kind=technique
+			var duration=_cue_duration(cue,kind)
+			if kind in ["chord","roll"]:
 				var destination=lane+1 if lane<2 else 1
 				if lane==1 and int(cue.measure)%2==1:destination=0
 				required.append(destination)
-				duration=float(cue.get("roll",0.)) if kind=="roll" else 0.
 			notes.append({"id":"song:"+str(cue.id),"track":lane,"required":required,"due":due,"song_due":float(cue.song_due),"song_duration":duration,"end":due+duration/rate,"hold":hold,"kind":kind,"events":[],"status":"pending","delta":0.,"pressed":{},"emitted":true,"scored":false,"accent":bool(cue.get("accent",false))})
 		salvos=salvos.filter(func(n):return now-float(n.end)<2.)
 	for note in notes:
 		if now-float(note.end)>=2. and str(note.status) in ["pending","holding","armed","rolling"]:_fail(note,"超时",now)
 	notes=notes.filter(func(n):return now-float(n.end)<2.)
 	notes.sort_custom(func(a,b):return float(a.due)<float(b.due))
+func uses_mercury_cues() -> bool:
+	return music_chart and chart_id=="mercury"
+func _cue_kind(cue: Dictionary) -> String:
+	var technique=str(cue.get("technique",""))
+	if (stage>=1 and technique=="chord") or (stage>=2 and technique=="roll"):return technique
+	return "hold" if float(cue.hold)>0. else "tap"
+func _cue_duration(cue: Dictionary,kind: String) -> float:
+	if kind=="roll":return float(cue.roll)
+	return float(cue.hold) if kind=="hold" else 0.
+func _mercury_fire_cue(song_from: float) -> Dictionary:
+	# A charge can catch the end of an ongoing hold or roll. Pick the first
+	# playable completion, including a tap that falls before another note's tail.
+	var lookback=float(CHART.data(chart_id).max_gesture_duration)
+	var cue=CHART.next_cue(maxf(0.,song_from-lookback),chart_id)
+	var selected: Dictionary={}
+	var best=INF
+	while float(cue.song_due)<=best:
+		var kind=_cue_kind(cue)
+		var duration=_cue_duration(cue,kind)
+		var note_id="song:"+str(cue.id)
+		for note in notes:
+			if str(note.id)!=note_id:continue
+			# A gesture already on screen keeps its shape when a sector changes.
+			kind=str(note.kind)
+			duration=float(note.song_duration)
+			break
+		var ending=float(cue.song_due)+duration
+		if ending+.000001>=song_from and ending<best:
+			best=ending
+			selected={"cue":cue,"kind":kind,"duration":duration}
+		cue=CHART.next_cue(float(cue.song_due)+.0001,chart_id)
+	return selected
 func _queue_song_event(event: Dictionary,track: int,offset: float,rate: float,earliest: float) -> void:
-	var cue=CHART.next_cue(maxf(0.,(earliest-offset)*rate),chart_id)
+	var song_from=maxf(0.,(earliest-offset)*rate)
+	var choice=_mercury_fire_cue(song_from) if uses_mercury_cues() else {}
+	var cue: Dictionary=choice.get("cue",{})
+	if cue.is_empty():cue=CHART.next_cue(song_from,chart_id)
 	var id="%d:%s"%[track,str(cue.id)]
 	for salvo in salvos:
 		if str(salvo.id)==id:
 			if not bool(salvo.emitted):salvo.events.append(event)
 			return
 	var due=float(cue.song_due)/rate+offset
-	var hold=float(cue.hold)/rate
-	salvos.append({"id":id,"track":track,"required":[track],"due":due,"song_due":float(cue.song_due),"song_duration":float(cue.hold),"end":due+hold,"hold":hold,"kind":"hold" if hold>0. else "tap","events":[event],"status":"pending","emitted":false})
+	var duration=float(choice.get("duration",cue.hold))
+	var kind=str(choice.get("kind","hold" if duration>0. else "tap"))
+	salvos.append({"id":id,"track":track,"due":due,"song_due":float(cue.song_due),"song_duration":duration,"end":due+duration/rate,"hold":duration/rate if kind=="hold" else 0.,"kind":kind,"events":[event],"status":"pending","emitted":false})
 func configure_pilot(id: String) -> void:rewards.pilot_id=id
 func set_stage(value: int) -> void:
 	var next=clampi(value,0,4)
@@ -197,6 +232,7 @@ func advance(now: float) -> Array[Dictionary]:
 			var event: Dictionary=source.duplicate(true)
 			event.charged_deadline=event.deadline;event.deadline=note.end;event.rhythm_authorized=true;event.rhythm_scored_auto=true
 			event.rhythm_track=int(note.track);event.performed_at=now;event.rhythm_kind=note.kind;ready.append(event)
+	if uses_mercury_cues():ready.sort_custom(func(a,b):return float(a.deadline)<float(b.deadline) or (float(a.deadline)==float(b.deadline) and int(a.serial)<int(b.serial)))
 	return ready
 func accepts_lane(note: Dictionary,lane: int) -> bool:
 	var status=str(note.status)

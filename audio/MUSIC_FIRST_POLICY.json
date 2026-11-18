@@ -1,5 +1,5 @@
 {
-  "version": "0.66.0-beacon-defense",
+  "version": "0.67.0-mercury-combat",
   "date": "2026-11-18",
   "lead": "eight licensed Kevin MacLeod expedition songs via PLANET_MUSIC.json",
   "weapon_voices": "removed from combat, shop preview and codex; legacy sources archived only",
@@ -33,6 +33,7 @@
     }
   ],
   "ammo": "square(sum(all3keys earned)/sum(all3keys possible)) sets next6second base ammo; multiply current earnedPerfect bonus,max120percent;opening100percent;zero/recovery and fraction carry retained",
+  "mercury_volley": "the first playable musical completion at or after charge; taps and chords use the landing, holds and ordered rolls use the tail; existing on-screen gestures keep their shape through rate changes",
   "tail_grace_ms": 170,
   "feedback": "independent kill, pickup, shield, impact, UI, alert and rhythm buses; short synthesized rhythm cues follow judged notes, accepted hold heads and earned milestones",
   "rhythm_feedback": {

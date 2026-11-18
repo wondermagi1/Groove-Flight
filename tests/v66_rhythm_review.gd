@@ -56,7 +56,7 @@ func run() -> void:
 				check(absf(float(note_at.end)-target-float(cue.roll)/gate.song_rate)<.001,"Roll tail uses the same song transport rate")
 			for salvo in gate.salvos:
 				for event in salvo.events:
-					check(float(salvo.due)+.000002>=float(event.deadline),"Weapon entitlement stays on or before its mapped musical cue")
+					check(float(salvo.end)+.000002>=float(event.deadline),"Weapon entitlement stays on or before its mapped musical completion")
 	gate=GATE.new();gate.music_chart=true
 	gate.forecast(loadout,40.,71.)
 	var before=0
@@ -66,7 +66,7 @@ func run() -> void:
 	for salvo in gate.salvos:
 		for event in salvo.events:
 			after+=1
-			check(salvo.due>=39.99999 and float(salvo.due)+.000002>=float(event.deadline),"Accelerating re-quantizes future salvos after their charge")
+			check(salvo.end>=39.99999 and float(salvo.end)+.000002>=float(event.deadline),"Accelerating re-quantizes future salvos after their charge")
 	check(before>0 and before==after,"Changing rate preserves every queued entitlement once")
 	facts.chart=chart_summary
 	var data={"checks":checks,"failures":failures,"facts":facts}
