@@ -6,7 +6,8 @@ static func data(planet: String="mercury") -> Dictionary:
 	var row=MUSIC.track(planet);var id=str(row.planet)
 	if not _data.has(id):
 		var chart=JSON.parse_string(FileAccess.get_file_as_string(str(row.chart)))
-		var available=[-1.,-1.,-1.];var motif=[0,1,2,1,0,2,0,1]
+		var available=[-1.,-1.,-1.]
+		var motif: Array=chart.get("finger_pattern",[0,1,2,1,0,2,0,1])
 		chart.max_gesture_duration=0.
 		for index in range(chart.events.size()):
 			var event: Dictionary=chart.events[index];var lane=int(motif[index%motif.size()])

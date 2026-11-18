@@ -3,15 +3,12 @@ signal feedback(event: Dictionary)
 const CHART=preload("res://scripts/rhythm_chart.gd")
 const SCORE=preload("res://scripts/rhythm_score.gd")
 const STEP=preload("res://scripts/arsenal_loadout.gd").SEQUENCE_STEP_SECONDS
-const WINDOW=.170
-const EXCELLENT=.095
-const PERFECT=.042
+const WINDOW=.250
+const EXCELLENT=.200
+const PERFECT=.150
 const LOOKAHEAD=2.9
-const CHORD_SPREAD=.125
+const CHORD_SPREAD=EXCELLENT*2.
 const ROLL_MIN_GAP=.095
-const MERCURY_WINDOW=.240
-const MERCURY_PERFECT=.065
-const MERCURY_EXCELLENT=.145
 const MERCURY_ROLL_MIN_GAP=.055
 const MERCURY_PREVIEW_BONUS=.65
 const MERCURY_AMMO_FLOOR=.50
@@ -181,7 +178,7 @@ func set_stage(value: int) -> void:
 func lookahead() -> float:
 	var bonus=MERCURY_PREVIEW_BONUS if uses_mercury_cues() else 0.
 	return (float(rewards.profile().get("lookahead",LOOKAHEAD))+bonus)/song_rate
-func hit_window() -> float:return MERCURY_WINDOW if uses_mercury_cues() else WINDOW
+func hit_window() -> float:return WINDOW
 func tail_window(note: Dictionary) -> float:
 	var hold_bonus=float(rewards.profile().get("tail_window",WINDOW))-WINDOW if float(note.hold)>0. else 0.
 	return hit_window()+hold_bonus
@@ -213,8 +210,8 @@ func _emit_feedback(note: Dictionary,grade: String,now: float,previous_notice: i
 	})
 func _grade(note: Dictionary) -> String:
 	var error=absf(float(note.delta))
-	var perfect_window=MERCURY_PERFECT if uses_mercury_cues() else PERFECT
-	var excellent_window=MERCURY_EXCELLENT if uses_mercury_cues() else EXCELLENT
+	var perfect_window=PERFECT
+	var excellent_window=EXCELLENT
 	if float(note.hold)>0.:
 		perfect_window+=float(rewards.profile().get("hold_perfect",PERFECT))-PERFECT
 		excellent_window+=float(rewards.profile().get("hold_excellent",EXCELLENT))-EXCELLENT
@@ -282,8 +279,7 @@ func press(lane: int,now: float,source: String="") -> bool:
 		var kind=str(target.kind)
 		if kind=="chord" and not target.pressed.is_empty():
 			var first=int(target.pressed.keys()[0])
-			var spread=MERCURY_WINDOW if uses_mercury_cues() else CHORD_SPREAD
-			if (not source.is_empty() and not held(first)) or now-float(target.pressed[first])>spread+.000001:
+			if (not source.is_empty() and not held(first)) or now-float(target.pressed[first])>CHORD_SPREAD+.000001:
 				_fail(target,"双押间隔过长",now);return false
 		if str(target.status)=="rolling":
 			var gap=MERCURY_ROLL_MIN_GAP if uses_mercury_cues() else ROLL_MIN_GAP
@@ -300,9 +296,11 @@ func press(lane: int,now: float,source: String="") -> bool:
 			feedback.emit({"at":now,"lanes":target.required.duplicate(),"grade":"","gesture":"hold_head","milestone":""})
 		elif str(target.status)=="rolling":
 			feedback.emit({"at":now,"lanes":[lane],"grade":"","gesture":"roll_head","milestone":""})
+		elif kind=="chord" and str(target.status)=="pending":
+			feedback.emit({"at":now,"lanes":[lane],"grade":"","gesture":"chord_head","milestone":""})
 		elif str(target.status)=="armed" and now+.000001<float(target.end):
 			target.contact_played=true
-			feedback.emit({"at":now,"lanes":target.required.duplicate(),"grade":"","gesture":"early_contact","milestone":"","cue_grade":_grade(target),"contact_kind":kind,"accent":bool(target.get("accent",false))})
+			feedback.emit({"at":now,"lanes":target.required.duplicate(),"grade":"","gesture":"early_contact","milestone":"","cue_grade":_grade(target),"offset_ms":roundi(float(target.delta)*1000.),"contact_kind":kind,"accent":bool(target.get("accent",false))})
 		return true
 	for note in notes:
 		if lane not in note.required:continue

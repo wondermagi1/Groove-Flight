@@ -15,15 +15,28 @@ ROOT = Path(__file__).resolve().parents[1]
 OFFICIAL = "https://incompetech.com/music/royalty-free/"
 LICENSE = "https://creativecommons.org/licenses/by/4.0/"
 TRACKS = [
-    ("mercury", "limit_70", "Limit 70", "USUAN1900042", 102.65, "电子巡航"),
-    ("venus", "vibing_over_venus", "Vibing Over Venus", "USUAN2300005", 94., "律动爵士"),
-    ("earth", "space_jazz", "Space Jazz", "USUAN2100030", 89., "太空爵士"),
+    ("mercury", "go_cart", "Go Cart", "USUAN1300006", 115., "低音推进"),
+    ("venus", "vibing_over_venus", "Vibing Over Venus", "USUAN2300005", 94., "切分律动爵士"),
+    ("earth", "digital_lemonade", "Digital Lemonade", "USUAN1700010", 120., "明亮模拟合成器"),
     ("mars", "brain_dance", "Brain Dance", "USUAN2300006", 124., "赛博合成器"),
-    ("jupiter", "shiny_tech", "Shiny Tech", "USUAN1100078", 138., "电子舞曲"),
+    ("jupiter", "edm_detection_mode", "EDM Detection Mode", "USUAN1500026", 128., "低音重拍舞曲"),
     ("saturn", "voxel_revolution", "Voxel Revolution", "USUAN2000025", 122., "芯片舞曲"),
     ("uranus", "tech_live", "Tech Live", "USUAN1700030", 124., "电子切分"),
-    ("neptune", "laser_groove", "Laser Groove", "USUAN1700017", 140., "合成器陷阱节拍"),
+    ("neptune", "furious_freak", "Furious Freak", "USUAN1600021", 160., "高速合成器高潮"),
 ]
+ARCHIVE = [("Limit 70", "USUAN1900042"), ("Space Jazz", "USUAN2100030"),
+           ("Shiny Tech", "USUAN1100078"), ("Laser Groove", "USUAN1700017")]
+# Opening quarter beats, later rest slots across alternating bars, lane phrase.
+ARRANGEMENTS = {
+    "mercury": (16, (None, None), (0, 1, 2, 1, 0, 2, 0, 1)),
+    "venus": (16, (None, 3), (1, 0, 1, 2, 1, 2, 1, 0)),
+    "earth": (16, (3, 2), (0, 1, 2, 0, 2, 1, 0, 2)),
+    "mars": (16, (3, 3), (2, 0, 2, 1, 0, 1, 2, 1)),
+    "jupiter": (16, (2, 3), (0, 2, 1, 2, 1, 0, 1, 2)),
+    "saturn": (16, (2, 3), (2, 1, 0, 1, 2, 0, 2, 1)),
+    "uranus": (16, (3, 2), (1, 0, 2, 1, 2, 1, 0, 2)),
+    "neptune": (24, (3, 2), (0, 2, 0, 1, 2, 1, 2, 0)),
+}
 
 
 def digest(path):
@@ -94,24 +107,32 @@ def make_chart(path, row):
     times = (peaks * hop + width * .5) / rate - .024
     weights = np.minimum(flux[peaks], np.percentile(flux[peaks], 85))
     bpm = row["published_bpm"]
-    offsets = np.linspace(bpm - 1.2, bpm + 1.2, 181)
+    offsets = np.linspace(bpm - 2., bpm + 2., 201)
     phasors = np.exp(2j * np.pi * offsets[:, None] * times[None, :] / 60.) @ weights
     best = int(np.argmax(np.abs(phasors)))
     beat_period = 60. / float(offsets[best])
     phase = float(np.angle(phasors[best]) / (2. * np.pi) % 1.) * beat_period
     events = []
+    opening, rests, motif = ARRANGEMENTS[row["planet"]]
     limit = float(row["duration"]) - .31
     grid = np.arange(phase, limit, beat_period)
     for beat, point in enumerate(grid):
-        # The first four bars leave a clear pulse for pilots learning to steer
-        # and play at the same time. Faster songs keep one breath per bar.
-        if point < .28 or (beat < 16 and beat % 2 == 1):
+        # Leave a readable half-time pulse before introducing the full phrase.
+        if point < .34 or (beat < opening and beat % 2 == 1):
             continue
-        if beat >= 16 and beat_period < .515 and beat % 4 == (2 if row["planet"] in {"saturn", "neptune"} else 3):
+        if beat >= opening and beat % 4 == rests[(beat // 4) % 2]:
             continue
-        near = int(np.argmin(abs(times - point)))
-        anchored = abs(float(times[near]) - point) < .055
-        t = float(times[near]) if anchored else float(point)
+        low, high = np.searchsorted(times, [point - .05, point + .05])
+        anchored = low < high
+        t = float(point)
+        if anchored:
+            # Prefer a distinct attack close to the grid over a weak nearby peak.
+            candidates = weights[low:high] * (1. - .5 * abs(times[low:high] - point) / .05)
+            t = float(times[low + np.argmax(candidates)])
+        if events and t - events[-1]["t"] <= .285:
+            if point - events[-1]["t"] <= .285:
+                continue
+            t, anchored = float(point), False
         window = audio[max(0, round((t - .04) * rate)):round((t + .10) * rate)]
         if not len(window) or np.max(np.abs(window)) < .009:
             continue
@@ -121,13 +142,14 @@ def make_chart(path, row):
             "beat": beat, "measure": beat // 4, "phrase": beat // 8, "accent": beat % 4 == 0,
             "origin": "nearby_audio_onset" if anchored else "fitted_beat",
         })
+    minimum_roll_space = beat_period * .94 if row["planet"] == "mercury" else .58
     for index in range(1, len(events) - 1):
         event, prior, following = events[index], events[index - 1], events[index + 1]
-        if event["kind"] != "tap" or event["beat"] < 16 or event["t"] - prior["t"] - prior["hold"] < .34:
+        if event["kind"] != "tap" or event["beat"] < opening or event["t"] - prior["t"] - prior["hold"] < .34:
             continue
         if event["beat"] % 16 == 4:
             event["technique"] = "chord"
-        elif event["beat"] % 16 in {5, 6, 9, 10, 12, 13} and following["t"] - event["t"] >= .58:
+        elif event["beat"] % 16 in {5, 6, 9, 10, 12, 13} and following["t"] - event["t"] >= minimum_roll_space:
             subdivision = event["t"] + beat_period * .5
             nearest = int(np.argmin(abs(times - subdivision)))
             if abs(float(times[nearest]) - subdivision) < .038:
@@ -140,7 +162,8 @@ def make_chart(path, row):
         "artist": row["artist"], "source": row["runtime"], "source_sha256": row["sha256"],
         "duration": row["duration"], "estimated_bpm": round(60. / beat_period, 3),
         "meter": "4-pulse game arrangement", "keys": ["J", "K", "L"],
-        "method": "Beat-anchored sparse three-key arrangement with later chord and onset-snapped roll variants.",
+        "finger_pattern": motif,
+        "method": "An individual lane phrase and bar rests over the fitted beat grid. Attacks are aligned to nearby strong onsets where available.",
         "events": events,
     }
 
@@ -154,9 +177,11 @@ def main():
         (ROOT / folder).mkdir(parents=True, exist_ok=True)
     with ThreadPoolExecutor(max_workers=4) as pool:
         rows = list(pool.map(import_track, TRACKS))
-    save(ROOT / "audio/PLANET_MUSIC.json", {"schema": 1, "revision": "v66", "tracks": rows})
-    credits = ["# Expedition soundtrack", "", "Music by Kevin MacLeod (incompetech.com), CC BY 4.0.", ""]
+    save(ROOT / "audio/PLANET_MUSIC.json", {"schema": 1, "revision": "v69", "tracks": rows})
+    credits = ["# Expedition soundtrack", "", "Music by Kevin MacLeod (incompetech.com), CC BY 4.0.", "", "## Active tracks", ""]
     credits += [f"- {row['title']} ([official track page]({row['source_page']}))" for row in rows]
+    credits += ["", "## Archived expedition tracks", ""]
+    credits += [f"- {title} ([official track page]({OFFICIAL}index.html?isrc={isrc}))" for title, isrc in ARCHIVE]
     credits += ["", f"[CC BY 4.0 license]({LICENSE})", "", "Converted to Ogg Vorbis. Original tempo, pitch and duration."]
     (ROOT / "audio/authorized/incompetech/LICENSE.md").write_text("\n".join(credits) + "\n", encoding="utf-8")
 

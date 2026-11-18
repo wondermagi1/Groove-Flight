@@ -48,12 +48,12 @@ func run() -> void:
 	check(is_equal_approx(gate.last_volley_at,first) and game.rhythm_voices.play_log.is_empty(),"Actual fire sets feedback with no weapon voice")
 	for cue in GATE.CHART.data("mercury").events:
 		var due=float(cue.t)
-		if due>=6.:break
-		advance_to(due+.070)
+		if due+GATE.WINDOW>=6.:break
+		advance_to(due+.160)
 		var lane=int(cue.lane)
-		check(gate.press(lane,due+.070,"test"),"Accepted Excellent within the first six seconds")
-		gate.release(lane,due+.071,"test")
-		game.resolve_rhythm(due+.071)
+		check(gate.press(lane,due+.160,"test"),"Accepted Excellent within the first six seconds")
+		gate.release(lane,due+.161,"test")
+		game.resolve_rhythm(due+.161)
 	advance_to(6.)
 	check(is_equal_approx(gate.score.base_ratio,.80) and is_equal_approx(gate.score.ratio,.70),"Mercury limits the first decrease even when accuracy squared is below 70 percent")
 	advance_to(8.8)
@@ -72,25 +72,25 @@ func run() -> void:
 		var due=1.+index
 		var lane=index
 		gate.notes.append(note("tap",[lane],due))
-		var late=[.100,.200,.240][index]
+		var late=[.150,.200,.250][index]
 		gate.advance(due+late)
 		check(gate.press(lane,due+late,"late"),"A late tap remains eligible during its full Mercury window")
 		gate.advance(due+late)
 		gate.release(lane,due+late+.001,"late")
-	check(gate.combo==3 and gate.misses==0 and gate.grade_counts.excellent==1 and gate.grade_counts.general==2,"100–240 ms late still scores and continues ordinary Combo")
+	check(gate.combo==3 and gate.misses==0 and gate.grade_counts.perfect==1 and gate.grade_counts.excellent==1 and gate.grade_counts.general==1,"150–250 ms late still scores and continues ordinary Combo")
 	gate.notes.append(note("tap",[0],5.))
-	gate.advance(5.242)
+	gate.advance(5.252)
 	check(gate.combo==0 and gate.misses==1,"An actual miss beyond the widened window ends ordinary Combo")
 	gate.notes.append(note("chord",[0,2],7.))
 	check(gate.press(0,7.,"chord-a") and gate.press(2,7.2,"chord-b"),"A second overlapping chord key can arrive 200 ms late")
 	gate.advance(7.2)
-	check(gate.combo==1 and gate.last_points==40,"A late chord scores once and continues the combo")
+	check(gate.combo==1 and gate.last_points==80,"A late chord scores once and continues the combo")
 	var roll=note("roll",[0,1],8.)
 	roll.end=8.26
 	gate.notes.append(roll)
 	check(gate.press(0,8.2,"roll-a") and gate.press(1,8.26,"roll-b"),"A roll can be recovered when its head is 200 ms late")
 	gate.advance(8.26)
-	check(gate.combo==2 and gate.last_points==40,"A recovered roll scores one continued combo")
+	check(gate.combo==2 and gate.last_points==80,"A recovered roll scores one continued combo")
 
 	var score=GATE.SCORE.new()
 	score.reset(.50,.30)
@@ -167,7 +167,7 @@ func run() -> void:
 	check(game.BALANCE.expedition_supply(0,1)+game.BALANCE.expedition_supply(0,2)+game.BALANCE.expedition_supply(0,3)==435,"Fixed supply remains separate at 435")
 	start("venus")
 	game.rhythm.configure_pilot("")
-	check(is_equal_approx(game.rhythm.lookahead(),2.9) and is_equal_approx(game.rhythm.hit_window(),.170),"Venus keeps its previous judgement and preview")
+	check(is_equal_approx(game.rhythm.lookahead(),2.9) and is_equal_approx(game.rhythm.hit_window(),.250),"Venus uses the expanded campaign judgement and standard preview")
 	game.rhythm.score.record(0,1.,0)
 	game.rhythm.score.advance(6.)
 	check(is_zero_approx(game.rhythm.score.ratio),"Venus keeps its previous ammo policy")

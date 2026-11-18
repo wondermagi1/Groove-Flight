@@ -1,6 +1,8 @@
 # Groove Flight 当前接手说明
 
-当前 V68 / 2026-11-18，`codex/mercury-difficulty`，修改前远程备份 `8eb06f5`。水星弹量最低 50%，六秒结算每次最多降低 30 个百分点。判定放宽到 ±240 毫秒，后续航段琴块更稀疏，敌机批次和旗舰耐久降低。[V68](V68_MERCURY_DIFFICULTY.md)
+当前 V69 / 2026-11-18，`codex/eight-planet-rhythm-audio`，修改前远程备份 `e59eed5`。四首新曲、八星谱面、标准判定 ±150／200／250 毫秒和 Kenney CC0 Click。水星 50% 基础弹量下限继续生效。[V69](V69_EXPEDITION_RHYTHM.md)
+
+历史 V68 / 2026-11-18，水星弹量最低 50%，六秒结算每次最多降低 30 个百分点。后续航段琴块更稀疏，敌机批次和旗舰耐久降低。[V68](V68_MERCURY_DIFFICULTY.md)
 
 历史 V67 / 2026-11-18，水星开局脉冲机炮 A3、星砂霰弹 B1。按六秒成绩结算弹量，水星齐射对齐手势落点或尾拍。水星击落掉落增加 35%。[V67](V67_MERCURY_COMBAT.md)
 

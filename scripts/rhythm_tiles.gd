@@ -28,7 +28,7 @@ func note_y(due: float,now: float) -> float:return judge_y-(due-now)/game.rhythm
 func head_rect(lane: int,due: float,now: float) -> Rect2:
 	return Rect2(lane*lane_width()+8.,note_y(due,now)-HEAD_HEIGHT*.5,lane_width()-16.,HEAD_HEIGHT).intersection(clip_rect())
 func input_head_rect(lane: int,due: float,now: float) -> Rect2:
-	if game.rhythm.uses_mercury_cues() and now>due and now<=due+game.rhythm.hit_window():
+	if now>due and now<=due+game.rhythm.hit_window():
 		due=now
 	return head_rect(lane,due,now)
 func visual_head_rect(note: Dictionary,lane: int,now: float) -> Rect2:
@@ -55,9 +55,13 @@ func _ready() -> void:
 	game.rhythm.feedback.connect(_receive_feedback)
 func _receive_feedback(event: Dictionary) -> void:
 	if game.state!="combat":return
-	hit_effects.append(event)
-	if hit_effects.size()>SKIN.MAX_IMPACTS:hit_effects.pop_front()
-	if not str(event.grade).is_empty():recent_grade=event
+	if not bool(event.get("contact_played",false)) or event.milestone in ["perfect","combo"]:
+		hit_effects.append(event)
+		if hit_effects.size()>SKIN.MAX_IMPACTS:hit_effects.pop_front()
+	if event.gesture=="early_contact":
+		recent_grade=event.duplicate()
+		recent_grade.grade=event.cue_grade
+	elif not str(event.grade).is_empty():recent_grade=event
 func _process(_delta: float) -> void:
 	visible=game.state=="combat" and game.rhythm_required()
 	if not visible:return

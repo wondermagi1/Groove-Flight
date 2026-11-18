@@ -177,7 +177,7 @@ func run() -> void:
 	check(game.expedition.docks.is_empty() and game.expedition.boss_site==Vector2.INF and game.mission.done==0,"Restart resets expedition state")
 	check(is_equal_approx(game.planet_music.pitch_scale,1.) and is_equal_approx(game.rhythm.song_rate,1.),"New run restores original tempo")
 	game.rhythm.configure_pilot("")
-	check(is_equal_approx(game.rhythm.lookahead(),3.55) and is_equal_approx(game.rhythm.hit_window(),.240) and GATE.PERFECT==.042 and GATE.EXCELLENT==.095 and GATE.WINDOW==.17,"Mercury has a softer timing window and fall speed")
+	check(is_equal_approx(game.rhythm.lookahead(),3.55) and is_equal_approx(game.rhythm.hit_window(),.250) and GATE.PERFECT==.150 and GATE.EXCELLENT==.200 and GATE.WINDOW==.25,"Mercury uses the expanded timing window and introductory fall speed")
 	game.rhythm.configure_pilot("echo")
 	check(is_equal_approx(game.rhythm.lookahead(),4.10),"Echo keeps an additional preview advantage")
 	game.simulation_only=false

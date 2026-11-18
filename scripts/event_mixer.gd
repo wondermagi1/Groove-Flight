@@ -2,7 +2,7 @@ extends Node
 const AUDIO=preload("res://scripts/audio_controls.gd")
 const SEQUENCE=preload("res://scripts/arsenal_loadout.gd")
 const RHYTHM_SFX=preload("res://scripts/rhythm_sfx.gd")
-const RHYTHM_DB={"perfect":-3.5,"excellent":-5.,"general":-7.,"miss":-12.,"hold_head":-7.,"hold_tail":-4.,"combo":-3.,"perfect_reward":-2.5,"accent_hit":-3.,"chord":-3.,"roll_head":-5.5,"roll_tail":-3.5}
+const RHYTHM_DB={"perfect":-1.5,"excellent":-2.8,"general":-4.5,"miss":-12.,"hold_head":-5.,"hold_tail":-2.5,"combo":-1.8,"perfect_reward":-1.,"accent_hit":-1.5,"chord":-1.5,"roll_head":-3.5,"roll_tail":-2.}
 ## Recorded low-drum kill feedback; bounded rolls and reserved shield/pickup voices.
 const RATE=22050
 var groups={"hit":[],"kill":[],"ui":[],"alert":[],"pickup":[],"shield":[],"rhythm":[]}
@@ -81,6 +81,8 @@ func rhythm_feedback(event: Dictionary) -> void:
 		return
 	elif gesture in ["hold_head","roll_head"]:
 		cue=gesture
+	elif gesture=="chord_head":
+		cue="hold_head"
 	else:
 		if gesture=="early_contact":
 			cue=str(event.cue_grade)

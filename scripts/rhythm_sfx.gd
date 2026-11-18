@@ -1,5 +1,5 @@
 extends RefCounted
-## Original short electronic feedback, synthesized once as PCM on startup.
+## Short licensed click transients mixed with original electronic accents at startup.
 const RATE=22050
 # Duration, resonator pitch, brightness, contact level, low impact level.
 const VOICES={
@@ -16,14 +16,30 @@ const VOICES={
 	"roll_head":[.042,1430.,.23,.39,.36],
 	"roll_tail":[.073,1320.,.32,.47,.58],
 }
+const CONTACTS={
+	"perfect":["accent",.98], "excellent":["tap",.92], "general":["tap",.70],
+	"hold_head":["tap",.68], "hold_tail":["soft",.84], "combo":["accent",.89],
+	"perfect_reward":["accent",1.08], "accent_hit":["accent",1.05], "chord":["accent",1.05],
+	"roll_head":["tap",.72], "roll_tail":["soft",.88],
+}
 static var _bank: Dictionary={}
 
 static func bank() -> Dictionary:
 	if _bank.is_empty():
-		for id in VOICES:_bank[id]=_synth(id,VOICES[id])
+		var clicks={}
+		for role in ["tap","accent","soft"]:
+			var path=ProjectSettings.globalize_path("res://audio/authorized/feedback/rhythm_click_%s.wav"%role)
+			var clip=AudioStreamWAV.load_from_file(path)
+			if clip==null or clip.mix_rate!=RATE or clip.stereo or clip.format!=AudioStreamWAV.FORMAT_16_BITS:
+				push_error("Invalid rhythm click PCM: "+path)
+				continue
+			clicks[role]=clip.data
+		for id in VOICES:
+			var contact: Array=CONTACTS.get(id,["",0.])
+			_bank[id]=_synth(id,VOICES[id],clicks.get(contact[0],PackedByteArray()),float(contact[1]))
 	return _bank
 
-static func _synth(id: String,spec: Array) -> AudioStreamWAV:
+static func _synth(id: String,spec: Array,click: PackedByteArray=PackedByteArray(),click_gain: float=0.) -> AudioStreamWAV:
 	var duration: float=spec[0]
 	var frequency: float=spec[1]
 	var brightness: float=spec[2]
@@ -55,6 +71,7 @@ static func _synth(id: String,spec: Array) -> AudioStreamWAV:
 		if id=="perfect_reward":
 			var spark=maxf(0.,t-.072)
 			voice+=sin(TAU*frequency*1.86*spark)*smoothstep(0.,.0016,spark)*exp(-spark/.022)*.37
+		if i*2<click.size():voice+=float(click.decode_s16(i*2))/32768.*click_gain
 		var envelope=smoothstep(0.,.0007,t)*(1.-smoothstep(duration-.008,duration-.0005,t))
 		bytes.encode_s16(i*2,roundi(tanh(voice*1.34)*envelope*.72*32767.))
 	var stream=AudioStreamWAV.new();stream.mix_rate=RATE;stream.format=AudioStreamWAV.FORMAT_16_BITS;stream.data=bytes

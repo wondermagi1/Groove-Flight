@@ -1,12 +1,13 @@
 # Audio provenance
 
-## Current V65: expedition soundtrack
+## Current V69 expedition soundtrack
 
-Eight pieces by Kevin MacLeod, CC BY 4.0, including Limit 70 and Brain Dance.
+Eight pieces by Kevin MacLeod, CC BY 4.0, including Go Cart and Furious Freak.
 See [track sources and credits](authorized/incompetech/LICENSE.md),
 [runtime manifest](PLANET_MUSIC.json) and [playback policy](MUSIC_FIRST_POLICY.json).
 The source tempo and pitch are preserved in the Ogg conversions. Charts place
-three-key gestures on the estimated beat phase and nearby audio onsets.
+three-key gestures on the estimated beat phase and nearby audio onsets. The rhythm
+contact layer includes three CC0 Kenney clicks. [Sample provenance](authorized/feedback/RHYTHM_CLICKS_SOURCE.json)
 
 Filaments by Scott Buckley continues as the menu theme. The former campaign scores are Filaments, Helios,
 Reverie, Legionnaire (Original), Titan, Cassini, Luminance and Omega.
