@@ -1,6 +1,8 @@
 # Groove Flight 当前接手说明
 
-当前V63 / 2026-11-18，`codex/cyber-rhythm-feedback`，修改前远程备份`15d2a6f`。三键每次判定分别反馈，Perfect奖励和普通连击用不同徽标与电子提示音。五种玩家舰体、八种普通敌机、精英和Boss统一赛博装甲风格。音游反馈可独立静音。[V63说明](V63_CYBER_RHYTHM_FEEDBACK.md) · [验证](data-v63/SUMMARY.json)
+当前V64 / 2026-11-18，`codex/rhythm-judgement-polish`，修改前远程备份 `8b81f21`。判定线随已有音乐重音亮起，长按显示进度，提前触键即时闪光。八类原创打击音缩为 24–112 毫秒，八星曲目和谱面统计见本轮说明。[V64说明与试听](V64_RHYTHM_JUDGEMENT.md) · [验证](data-v64/SUMMARY.json)
+
+历史V63 / 2026-11-18，五种玩家舰体、八种普通敌机、精英和Boss统一赛博装甲风格。加入普通连击与Perfect徽标，音游反馈可独立静音。[V63说明](V63_CYBER_RHYTHM_FEEDBACK.md) · [验证](data-v63/SUMMARY.json)
 
 历史V62 / 2026-11-17，`codex/soft-galaxy-background`，备份`0d1087f`。软化银河叠影与暗角。[V62对照](V62_SOFT_STAR_SEA.md) · [验证](data-v62/SUMMARY.json)
 

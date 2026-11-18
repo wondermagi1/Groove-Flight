@@ -1,5 +1,5 @@
 {
-  "version": "0.63.0-cyber-feedback",
+  "version": "0.64.0-rhythm-judgement",
   "date": "2026-11-18",
   "lead": "eight licensed full background songs",
   "weapon_voices": "removed from combat, shop preview and codex; legacy sources archived only",
@@ -38,6 +38,8 @@
     "source": "scripts/rhythm_sfx.gd",
     "bus": "GrooveFlight_rhythm",
     "default_gain": 0.48,
+    "duration_ms": [24, 112],
+    "early_contact": "visual confirmation only; cue follows the scheduled judgement",
     "voices": ["perfect", "excellent", "general", "miss", "hold_head", "hold_tail", "combo", "perfect_reward"]
   },
   "perfect_rewards": {

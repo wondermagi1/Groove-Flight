@@ -87,20 +87,30 @@ func _draw() -> void:
 		draw_line(Vector2(x,TOP),Vector2(x,TOP+12.),Color(SKIN.WHITE,.45),1.)
 		draw_line(Vector2(x,key_y()-13.),Vector2(x,key_y()-2.),Color(SKIN.WHITE,.45),1.)
 	_draw_header(now,scale_value,reduced)
+	var hold_progress=[-1.,-1.,-1.]
+	var emphasis=0.
+	for note in game.rhythm.notes:
+		var due=float(note.due)
+		if not reduced and bool(note.get("accent",false)):
+			# Use the local song cue, including calibration, for the rail accent.
+			var distance=(due-now)/.09 if now<due else (now-due)/.17
+			emphasis=maxf(emphasis,1.-smoothstep(0.,1.,distance))
+		if str(note.status) in ["holding","armed"] and float(note.hold)>0.:
+			hold_progress[int(note.track)]=clampf((now-due)/float(note.hold),0.,1.)
 	for track in range(3):
-		var x=track*lane;var held=game.rhythm.held(track);var rect=key_rect(track)
-		SKIN.gradient(self,Rect2(x+5.,TOP,lane-10.,key_y()-TOP),Color(SKIN.WHITE,.012),Color(SKIN.WHITE,.04 if track!=1 else .065))
+		var x=track*lane
+		var pressed=game.rhythm.held(track)
+		var progress=float(hold_progress[track])
+		var rect=key_rect(track)
+		SKIN.gradient(self,Rect2(x+5.,TOP,lane-10.,key_y()-TOP),Color(SKIN.TAP,.015),Color(SKIN.TAP,.055+emphasis*.016))
 		if track>0:draw_line(Vector2(x,TOP+4.),Vector2(x,key_y()-4.),Color(SKIN.EDGE,.5),1.)
-		if held:
-			SKIN.gradient(self,Rect2(x+6.,judge_y-56.,lane-12.,56.),Color(SKIN.HOLD,0.),Color(SKIN.HOLD,.19 if not reduced else .10))
-		SKIN.receptor(self,rect,held,.5+.5*sin(now*9.),reduced)
+		if progress>=0.:
+			SKIN.gradient(self,Rect2(x+6.,judge_y-49.,lane-12.,49.),Color(SKIN.HOLD,0.),Color(SKIN.HOLD,.11+progress*.10))
+		SKIN.receptor(self,rect,pressed,progress)
 		var key=game.binding_name(ACTIONS[track]);var key_size=roundi(15.*scale_value)
 		while key_size>9 and font.get_string_size(key,HORIZONTAL_ALIGNMENT_LEFT,-1,key_size).x>rect.size.x-10.:key_size-=1
-		_center_text(key,Vector2(rect.position.x,key_y()+21.),rect.size.x,key_size,SKIN.HOLD if held else SKIN.WHITE)
-	# Each lane has a distinct receptor; a continuous thin line gives one timing plane.
-	draw_line(Vector2(8,judge_y),Vector2(size.x-8.,judge_y),Color(SKIN.TAP,.13),5.)
-	draw_line(Vector2(8,judge_y),Vector2(size.x-8.,judge_y),Color(SKIN.WHITE,.9),1.)
-	for track in range(3):SKIN.diamond(self,Vector2((track+.5)*lane,judge_y),2.5,SKIN.WHITE)
+		_center_text(key,Vector2(rect.position.x,key_y()+21.),rect.size.x,key_size,SKIN.HOLD if progress>=0. else SKIN.WHITE)
+		SKIN.timing_rail(self,Vector2((track+.5)*lane,judge_y),lane,emphasis)
 	for note in game.rhythm.notes:_draw_note(note,now,clip,reduced)
 	for fx in hit_effects:
 		var age=now-float(fx.at)
@@ -148,7 +158,7 @@ func _draw_note(note: Dictionary,now: float,clip: Rect2,reduced: bool) -> void:
 	for track in note.required:
 		var center=(float(track)+.5)*lane_width();var head=visual_head_rect(note,int(track),now)
 		if float(note.hold)>0.:SKIN.ribbon(self,center,tail_y,minf(y,judge_y) if held else y,clip,color,held,now,reduced)
-		SKIN.head(self,head,color,clip,reduced,held)
+		SKIN.head(self,head,color,clip,reduced,held,bool(note.get("accent",false)))
 		if simultaneous.size()>1 and head.size.y>=10.:SKIN.diamond(self,head.get_center(),2.5,SKIN.WHITE)
 func _draw_feedback(now: float,scale_value: float,reduced: bool) -> void:
 	var reward=game.rhythm.rewards

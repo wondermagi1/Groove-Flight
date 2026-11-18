@@ -58,7 +58,8 @@ func check_banks() -> void:
 		var peak=0
 		for index in range(0,data.size(),2):peak=maxi(peak,absi(data.decode_s16(index)))
 		var duration_ms=1000.*cue.get_length()
-		check(duration_ms>=48. and duration_ms<=180. and peak>3500 and peak<=18351,"Short bounded PCM / "+id)
+		var expected_ms=float(CUES.VOICES[id][0])*1000.
+		check(absf(duration_ms-expected_ms)<.03 and duration_ms<=113. and peak>3500 and peak<=18351,"Short bounded PCM / "+id)
 		check(data.decode_s16(0)==0 and data.decode_s16(data.size()-2)==0,"Clean endpoints / "+id)
 		check(hash(data) not in hashes,"Distinct cue / "+id)
 		hashes.append(hash(data))
@@ -100,7 +101,7 @@ func run() -> void:
 	var bank=CUES.bank()
 	var tiles=game.ui.piano_tiles
 	var played=int(game.mixer.counters.played)
-	add_note(0,1.);add_note(2,1.)
+	add_note(0,1.).accent=true;add_note(2,1.).accent=true
 	game.rhythm.rewards.perfect_chain=98;game.rhythm.rewards.tier=3;game.rhythm.combo=98
 	check(tap(0,1.) and tap(2,1.),"Two physical lanes accept equal deadlines")
 	check(events.size()==2 and events[0].lanes==[0] and events[1].lanes==[2] and tiles.hit_effects.size()==2,"Two lanes retain separate judgement events")
@@ -130,6 +131,8 @@ func run() -> void:
 	played=int(game.mixer.counters.played)
 	check(game.rhythm_press(1,"key:1") and hold.status=="holding" and game.rhythm.hits==0,"Hold head gives feedback without scoring")
 	check(events[-1].gesture=="hold_head" and game.mixer.last_player.stream==bank.hold_head,"Hold head uses distinct cue")
+	game.music.timeline=3.28
+	await capture("hold-1280")
 	game.music.timeline=3.50;game.rhythm_tick();game.rhythm_release("key:1")
 	check(game.rhythm.hits==1 and events[-1].gesture=="hold_tail" and game.mixer.last_player.stream==bank.hold_tail,"Hold tail publishes one successful judgement")
 	check(game.mixer.counters.played==played+2,"Hold head and tail are the only two cues")
@@ -146,7 +149,15 @@ func run() -> void:
 	game.settings.rhythm=0.;game.apply_audio();played=int(game.mixer.counters.played)
 	add_note(2,4.40);check(tap(2,4.40) and events[-1].grade=="perfect" and game.mixer.counters.played==played,"Feedback mute keeps judgement and prevents cue playback")
 	check(AudioServer.get_bus_volume_db(music_index)==music_db and game.planet_music.stream==music,"Rhythm gain is independent of music and transport")
+	game.music.timeline=4.65;game.rhythm_tick()
 	game.settings.rhythm=.48;game.apply_audio()
+	var early=add_note(0,5.10)
+	played=int(game.mixer.counters.played)
+	check(tap(0,5.01) and early.status=="armed" and events[-1].gesture=="early_contact","Early tap shows contact while waiting for judgement")
+	check(events[-1].grade=="" and game.mixer.counters.played==played,"Early contact adds no score cue")
+	game.music.timeline=5.10;game.rhythm_tick()
+	check(early.status=="fired" and events[-1].grade=="general" and game.mixer.counters.played==played+1,"Deadline settles early tap once with its actual grade")
+	played=int(game.mixer.counters.played)
 	game.state="paused";game.mixer.set_combat_state(game.state)
 	game.mixer.rhythm_feedback(events[-1])
 	check(not game.rhythm_press(0,"key:0") and game.mixer.counters.played==played and game.mixer.groups.rhythm.all(func(p):return not p.playing),"Pause rejects new feedback and stops active tails")

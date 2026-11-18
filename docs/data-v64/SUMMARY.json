@@ -1,0 +1,155 @@
+{
+  "version": "0.64.0-rhythm-judgement",
+  "date": "2026-11-18",
+  "backup": "8b81f21795a30cbf20c64be81abca0916c8d3afe",
+  "renders": {
+    "forward_plus": {
+      "checks": 62,
+      "captures": 5
+    },
+    "gl_compatibility": {
+      "checks": 62,
+      "captures": 5
+    }
+  },
+  "scoring_balance_regression": 459,
+  "tracks": {
+    "mercury": {
+      "title": "Filaments",
+      "artist": "Scott Buckley",
+      "license": "CC BY 4.0",
+      "estimated_bpm": 95.703,
+      "chart_events": 582,
+      "holds": 108,
+      "events_first_20_seconds": 43,
+      "tracked_beat_events": 371,
+      "runtime_sha256_verified": true
+    },
+    "venus": {
+      "title": "Helios",
+      "artist": "Scott Buckley",
+      "license": "CC BY 4.0",
+      "estimated_bpm": 73.828,
+      "chart_events": 437,
+      "holds": 102,
+      "events_first_20_seconds": 25,
+      "tracked_beat_events": 411,
+      "runtime_sha256_verified": true
+    },
+    "earth": {
+      "title": "Reverie",
+      "artist": "Scott Buckley",
+      "license": "CC BY 4.0",
+      "estimated_bpm": 123.047,
+      "chart_events": 453,
+      "holds": 54,
+      "events_first_20_seconds": 40,
+      "tracked_beat_events": 254,
+      "runtime_sha256_verified": true
+    },
+    "mars": {
+      "title": "Legionnaire (Original)",
+      "artist": "Scott Buckley",
+      "license": "CC BY 4.0",
+      "estimated_bpm": 86.133,
+      "chart_events": 343,
+      "holds": 42,
+      "events_first_20_seconds": 46,
+      "tracked_beat_events": 77,
+      "runtime_sha256_verified": true
+    },
+    "jupiter": {
+      "title": "Titan",
+      "artist": "Scott Buckley",
+      "license": "CC BY 4.0",
+      "estimated_bpm": 80.75,
+      "chart_events": 239,
+      "holds": 50,
+      "events_first_20_seconds": 27,
+      "tracked_beat_events": 202,
+      "runtime_sha256_verified": true
+    },
+    "saturn": {
+      "title": "Cassini",
+      "artist": "Scott Buckley",
+      "license": "CC BY 4.0",
+      "estimated_bpm": 151.999,
+      "chart_events": 617,
+      "holds": 118,
+      "events_first_20_seconds": 43,
+      "tracked_beat_events": 600,
+      "runtime_sha256_verified": true
+    },
+    "uranus": {
+      "title": "Luminance",
+      "artist": "Scott Buckley",
+      "license": "CC BY 4.0",
+      "estimated_bpm": 107.666,
+      "chart_events": 521,
+      "holds": 65,
+      "events_first_20_seconds": 36,
+      "tracked_beat_events": 494,
+      "runtime_sha256_verified": true
+    },
+    "neptune": {
+      "title": "Omega",
+      "artist": "Scott Buckley",
+      "license": "CC BY 4.0",
+      "estimated_bpm": 71.777,
+      "chart_events": 295,
+      "holds": 73,
+      "events_first_20_seconds": 24,
+      "tracked_beat_events": 278,
+      "runtime_sha256_verified": true
+    }
+  },
+  "cues": {
+    "combo": {
+      "milliseconds": 82.0,
+      "pcm_peak": 14100
+    },
+    "excellent": {
+      "milliseconds": 36.0,
+      "pcm_peak": 14688
+    },
+    "general": {
+      "milliseconds": 30.0,
+      "pcm_peak": 12964
+    },
+    "hold_head": {
+      "milliseconds": 35.0,
+      "pcm_peak": 13476
+    },
+    "hold_tail": {
+      "milliseconds": 52.0,
+      "pcm_peak": 14274
+    },
+    "miss": {
+      "milliseconds": 24.0,
+      "pcm_peak": 11318
+    },
+    "perfect": {
+      "milliseconds": 43.0,
+      "pcm_peak": 14444
+    },
+    "perfect_reward": {
+      "milliseconds": 112.0,
+      "pcm_peak": 14036
+    }
+  },
+  "audition": "../audio-v64/rhythm-feedback-audition.wav",
+  "protected_paths_match_backup": [
+    "audio/PLANET_MUSIC.json",
+    "audio/authorized",
+    "audio/charts",
+    "scripts/rhythm_chart.gd",
+    "scripts/rhythm_score.gd",
+    "scripts/rhythm_rewards.gd",
+    "scripts/run_balance.gd",
+    "scripts/main.gd",
+    "scripts/audio_controls.gd",
+    "scripts/fleet_art.gd",
+    "scripts/fleet_batch.gd",
+    "native"
+  ]
+}

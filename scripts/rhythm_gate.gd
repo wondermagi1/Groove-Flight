@@ -169,6 +169,10 @@ func press(lane: int,now: float,source: String="") -> bool:
 		result_at=now;result_track=lane
 		if str(target.status)=="holding":
 			feedback.emit({"at":now,"lanes":target.required.duplicate(),"grade":"","gesture":"hold_head","milestone":""})
+		elif str(target.status)=="armed" and now+.000001<float(target.end):
+			# Confirm early contact immediately. The scheduled judgement still
+			# owns the score, sound and any earned milestone.
+			feedback.emit({"at":now,"lanes":target.required.duplicate(),"grade":"","gesture":"early_contact","milestone":""})
 		return true
 	for note in notes:
 		if lane not in note.required:continue

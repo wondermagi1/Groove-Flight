@@ -71,7 +71,7 @@ func set_combat_state(state: String) -> void:
 		for player in groups.kill: player.stop()
 
 func rhythm_feedback(event: Dictionary) -> void:
-	if not feedback_active:return
+	if not feedback_active or event.gesture=="early_contact":return
 	var cue=str(event.grade)
 	if event.gesture=="hold_head":cue="hold_head"
 	elif event.milestone in ["perfect","combo"]:cue="perfect_reward" if event.milestone=="perfect" else "combo"
@@ -79,7 +79,11 @@ func rhythm_feedback(event: Dictionary) -> void:
 	var stream: AudioStreamWAV=RHYTHM_SFX.bank().get(cue)
 	var output=AudioServer.get_bus_index(AUDIO.RHYTHM)
 	if stream==null or AudioServer.is_bus_mute(output):return
-	var volume=-12. if cue in ["perfect_reward","combo"] else (-19. if cue in ["miss","hold_head"] else -15.)
+	var volume=-14.
+	match cue:
+		"perfect_reward","combo":volume=-12.
+		"miss":volume=-21.
+		"hold_head":volume=-18.
 	play(stream,"rhythm",volume-(3. if low_dynamic else 0.))
 func _emit_drum(amount: int,combo: int,tail: bool=false) -> void:
 	var pattern=["kill_low_strong","kill_low_soft","kill_low_round","kill_low_soft"]
