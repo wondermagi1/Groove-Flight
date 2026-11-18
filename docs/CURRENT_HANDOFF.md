@@ -1,6 +1,8 @@
 # Groove Flight 当前接手说明
 
-当前V64 / 2026-11-18，`codex/rhythm-judgement-polish`，修改前远程备份 `8b81f21`。判定线随已有音乐重音亮起，长按显示进度，提前触键即时闪光。八类原创打击音缩为 24–112 毫秒，八星曲目和谱面统计见本轮说明。[V64说明与试听](V64_RHYTHM_JUDGEMENT.md) · [验证](data-v64/SUMMARY.json)
+当前V65 / 2026-11-18，`codex/planet-expeditions`，修改前远程备份 `84028d4`。八星各自赛博背景、任务推进和可选补给站，航图恢复写实 3D。战斗更换八首授权节奏曲，适当降低下落速度和开场谱面密度，强化判定、时差提示和打击音。后续优先逐星调校音游难度、贴拍感与混音。[V65 航线和试听](V65_PLANET_EXPEDITIONS.md) · [验证](data-v65/SUMMARY.json)
+
+历史V64 / 2026-11-18，判定线随重音亮起，长按显示进度，提前触键即时闪光。[V64说明与试听](V64_RHYTHM_JUDGEMENT.md) · [验证](data-v64/SUMMARY.json)
 
 历史V63 / 2026-11-18，五种玩家舰体、八种普通敌机、精英和Boss统一赛博装甲风格。加入普通连击与Perfect徽标，音游反馈可独立静音。[V63说明](V63_CYBER_RHYTHM_FEEDBACK.md) · [验证](data-v63/SUMMARY.json)
 

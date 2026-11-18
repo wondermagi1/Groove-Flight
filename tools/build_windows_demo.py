@@ -92,6 +92,7 @@ def build():
  assert (helper/'BeatDriftTranscribe.exe').is_file()
  shutil.copytree(helper,out/'tools/audio_recognizer/BeatDriftTranscribe',dirs_exist_ok=True)
  credits=out/'Credits';credits.mkdir(exist_ok=True)
+ shutil.copy2(ROOT/'audio/authorized/incompetech/LICENSE.md',credits/'EXPEDITION_MUSIC_LICENSE.md')
  for source,name in [(ROOT/'CREDITS.md','MUSIC_AND_ASSETS.md'),(ROOT/'audio/CREDITS.md','AUDIO_PROVENANCE.md'),(ROOT/'assets/planets/CREDITS.md','PLANET_TEXTURES.md'),(ROOT/'audio/authorized/scott_buckley/LICENSE.md','FILAMENTS_LICENSE.md'),(ROOT/'audio/authorized/scott_buckley/planets/LICENSE.md','PLANET_MUSIC_LICENSE.md'),(ROOT/'audio/instruments/GeneralUser-LICENSE.txt','GENERALUSER_LICENSE.txt'),(ROOT/'audio/instruments/TinySoundFont-LICENSE.txt','TINYSOUNDFONT_LICENSE.txt')]:shutil.copy2(source,credits/name)
  for folder in ['third_party/audio-recognizer','third_party/basic-pitch','third_party/godot']:
   if (ROOT/folder).is_dir():shutil.copytree(ROOT/folder,credits/Path(folder).name,dirs_exist_ok=True)

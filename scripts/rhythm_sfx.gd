@@ -1,16 +1,16 @@
 extends RefCounted
 ## Original short electronic feedback, synthesized once as PCM on startup.
 const RATE=22050
-# Duration, resonator pitch, brightness, contact level.
+# Duration, resonator pitch, brightness, contact level, low impact level.
 const VOICES={
-	"perfect":[.043,1260.,.29,.27],
-	"excellent":[.036,940.,.21,.31],
-	"general":[.030,670.,.12,.26],
-	"miss":[.024,270.,.02,.22],
-	"hold_head":[.035,830.,.16,.24],
-	"hold_tail":[.052,1090.,.24,.24],
-	"combo":[.082,930.,.19,.25],
-	"perfect_reward":[.112,1210.,.28,.28],
+	"perfect":[.072,1080.,.27,.41,.66],
+	"excellent":[.053,810.,.21,.35,.48],
+	"general":[.047,520.,.14,.31,.35],
+	"miss":[.035,232.,.02,.22,.18],
+	"hold_head":[.052,660.,.16,.30,.33],
+	"hold_tail":[.083,990.,.23,.35,.56],
+	"combo":[.111,830.,.20,.38,.63],
+	"perfect_reward":[.146,1130.,.28,.47,.78],
 }
 static var _bank: Dictionary={}
 
@@ -24,6 +24,7 @@ static func _synth(id: String,spec: Array) -> AudioStreamWAV:
 	var frequency: float=spec[1]
 	var brightness: float=spec[2]
 	var contact: float=spec[3]
+	var impact: float=spec[4]
 	var frames=roundi(duration*RATE)
 	var bytes=PackedByteArray();bytes.resize(frames*2)
 	var random=RandomNumberGenerator.new();random.seed=absi(hash(id))
@@ -33,16 +34,18 @@ static func _synth(id: String,spec: Array) -> AudioStreamWAV:
 		var noise=random.randf_range(-1.,1.)
 		body_noise=lerpf(body_noise,noise,.32)
 		var phase=TAU*frequency*t
-		var voice=sin(phase)*.51*exp(-t/(minf(duration,.043)*.21))
+		var thump=TAU*(57.*t+128.*.012*(1.-exp(-t/.012)))
+		var voice=sin(thump)*impact*exp(-t/.020)
+		voice+=sin(phase)*.39*exp(-t/.009)
 		voice+=sin(phase*2.14)*brightness*exp(-t/.0046)
-		voice+=(noise-body_noise)*contact*exp(-t/.0020)
+		voice+=(noise-body_noise)*contact*exp(-t/.0036)
 		if id in ["combo","perfect_reward","hold_tail"]:
-			var tail=maxf(0.,t-.018)
-			voice+=sin(TAU*frequency*1.48*tail)*smoothstep(0.,.0013,tail)*exp(-tail/.013)*.34
+			var tail=maxf(0.,t-.034)
+			voice+=sin(TAU*frequency*1.48*tail)*smoothstep(0.,.0013,tail)*exp(-tail/.016)*.40
 		if id=="perfect_reward":
-			var spark=maxf(0.,t-.040)
-			voice+=sin(TAU*frequency*1.86*spark)*smoothstep(0.,.0016,spark)*exp(-spark/.018)*.27
+			var spark=maxf(0.,t-.072)
+			voice+=sin(TAU*frequency*1.86*spark)*smoothstep(0.,.0016,spark)*exp(-spark/.022)*.37
 		var envelope=smoothstep(0.,.0007,t)*(1.-smoothstep(duration-.008,duration-.0005,t))
-		bytes.encode_s16(i*2,roundi(tanh(voice*1.45)*envelope*.56*32767.))
+		bytes.encode_s16(i*2,roundi(tanh(voice*1.34)*envelope*.72*32767.))
 	var stream=AudioStreamWAV.new();stream.mix_rate=RATE;stream.format=AudioStreamWAV.FORMAT_16_BITS;stream.data=bytes
 	return stream

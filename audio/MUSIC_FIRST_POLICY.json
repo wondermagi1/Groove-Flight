@@ -1,29 +1,29 @@
 {
-  "version": "0.64.0-rhythm-judgement",
+  "version": "0.65.0-planet-expeditions",
   "date": "2026-11-18",
-  "lead": "eight licensed full background songs",
+  "lead": "eight licensed Kevin MacLeod expedition songs via PLANET_MUSIC.json",
   "weapon_voices": "removed from combat, shop preview and codex; legacy sources archived only",
   "composer": "retired from game entry points",
   "instrumental_pcm": "silent gameplay clock; no weapons/support/backing/groove",
-  "chart": "song cue timing/holds with deterministic three-key arrangement, independent of equipment",
+  "chart": "tempo and onset-phase matched beat cues and holds, every other beat in opening four bars, base lookahead 2.9 s",
   "judgements": [
     {
       "id": "perfect",
       "label": "完美 / Perfect",
       "points": 100,
-      "window_ms": 35
+      "window_ms": 42
     },
     {
       "id": "excellent",
       "label": "优秀 / Excellent",
       "points": 80,
-      "window_ms": 75
+      "window_ms": 95
     },
     {
       "id": "general",
       "label": "一般 / Good",
       "points": 40,
-      "window_ms": 140
+      "window_ms": 170
     },
     {
       "id": "miss",
@@ -32,13 +32,13 @@
     }
   ],
   "ammo": "square(sum(all3keys earned)/sum(all3keys possible)) sets next6second base ammo; multiply current earnedPerfect bonus,max120percent;opening100percent;zero/recovery and fraction carry retained",
-  "tail_grace_ms": 140,
+  "tail_grace_ms": 170,
   "feedback": "independent kill, pickup, shield, impact, UI, alert and rhythm buses; short synthesized rhythm cues follow judged notes, accepted hold heads and earned milestones",
   "rhythm_feedback": {
     "source": "scripts/rhythm_sfx.gd",
     "bus": "GrooveFlight_rhythm",
     "default_gain": 0.48,
-    "duration_ms": [24, 112],
+    "duration_ms": [35, 146],
     "early_contact": "visual confirmation only; cue follows the scheduled judgement",
     "voices": ["perfect", "excellent", "general", "miss", "hold_head", "hold_tail", "combo", "perfect_reward"]
   },

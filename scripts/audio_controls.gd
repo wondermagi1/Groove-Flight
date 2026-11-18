@@ -50,6 +50,12 @@ static func ensure_buses() -> void:
 		if index<0:
 			AudioServer.add_bus(); index=AudioServer.bus_count-1; AudioServer.set_bus_name(index,pair[0])
 		if AudioServer.get_bus_send(index)!=pair[1]: AudioServer.set_bus_send(index,pair[1])
+	var rhythm_index=AudioServer.get_bus_index(RHYTHM)
+	if AudioServer.get_bus_effect_count(rhythm_index)==0:
+		var limiter=AudioEffectHardLimiter.new()
+		limiter.ceiling_db=-4.5
+		limiter.release=.06
+		AudioServer.add_bus_effect(rhythm_index,limiter)
 static func apply(settings: Dictionary) -> void:
 	ensure_buses(); normalize(settings)
 	for key in DEFAULTS:

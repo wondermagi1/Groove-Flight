@@ -184,6 +184,10 @@ func update_hud() -> void:
 	var remaining=maxf(0,float(game.wave_profile().seconds)-(game.music.timeline-game.wave_start))
 	wave_label.tooltip_text="背景音乐驱动谱面 · 六秒成绩控制全武器弹量"
 	timer_label.text=("%02d:%02d"%[int(game.music.timeline)/60,int(game.music.timeline)%60]) if game.free_music_run else ("BOSS" if game.wave==game.wave_count() else ("清场" if remaining<=0 else str(int(ceil(remaining)))))
+	if game.expedition.enabled:
+		wave_label.text="%s · 远征"%PLANETS.planet(game.active_planet).name
+		var total=int(game.mission.spec().goal)
+		timer_label.text="BOSS" if game.wave==game.wave_count() else "%d/%d"%[mini(game.mission.done+1,total),total]
 	if not game.free_music_run and game.boss_down and game.mission.enabled and not game.mission.complete():timer_label.text="撤离"
 	health_label.text="无敌练习 · 不计战绩" if game.free_music_run else "生命  %.1f / %d"%[game.health,game.loadout.max_health]
 	score_label.text="✦ %d   /   击破 %d"%[game.dust,game.kills]
@@ -254,8 +258,8 @@ func settings_screen() -> void:
 	var aiming=OptionButton.new(); aiming.add_item("自动瞄准 最近目标"); aiming.add_item("移动朝向"); aiming.add_item("固定前向")
 	aiming.select(int(game.settings.aim_mode)); aiming.item_selected.connect(func(index): game.settings.aim_mode=index); content.add_child(aiming)
 	content.add_child(label("操作映射 点击后按新按键 Esc取消",18))
-	for action in ["left","right","up","down","dash","rhythm_a","rhythm_b","rhythm_c","editor","pause"]:
-		var caption={"left":"左移","right":"右移","up":"上移","down":"下移","dash":"冲刺","rhythm_a":"音乐键1（J）","rhythm_b":"音乐键2（K）","rhythm_c":"音乐键3（L）","editor":"音序工坊","pause":"暂停"}[action]
+	for action in ["left","right","up","down","dash","rhythm_a","rhythm_b","rhythm_c","interact","editor","pause"]:
+		var caption={"left":"左移","right":"右移","up":"上移","down":"下移","dash":"冲刺","rhythm_a":"音乐键1（J）","rhythm_b":"音乐键2（K）","rhythm_c":"音乐键3（L）","interact":"进入补给站","editor":"音序工坊","pause":"暂停"}[action]
 		content.add_child(button("等待按键…" if game.binding_capture==action else caption+"  "+game.binding_name(action),game.capture_binding.bind(action),Color("9abacf"),36))
 	content.add_child(button("补看操作教学",func():game.replay_tutorial(); game.close_settings(),Color("a9cdd8"),36))
 	content.add_child(label("星球背景画质",19))
@@ -273,7 +277,7 @@ func settings_screen() -> void:
 	fullscreen.toggled.connect(func(value):game.settings.fullscreen=value; fullscreen.text="显示：全屏" if value else "显示：窗口"; DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if value else DisplayServer.WINDOW_MODE_WINDOWED)); content.add_child(fullscreen)
 	content.add_child(label("字体：Oxanium / JetBrains Mono · SIL OFL 1.1",14,UI.QUIET))
 	var music_credit=RichTextLabel.new(); music_credit.name="MusicAttribution"; music_credit.bbcode_enabled=true; music_credit.fit_content=true; music_credit.custom_minimum_size.y=86.
-	music_credit.text="背景音乐：Filaments / Helios / Reverie / Legionnaire (Original) / Titan / Cassini / Luminance / Omega — Scott Buckley · CC BY 4.0\n[url=https://www.scottbuckley.com.au/library/]www.scottbuckley.com.au[/url] · [url=https://creativecommons.org/licenses/by/4.0/]许可与署名[/url]"
+	music_credit.text=game.PLANET_MUSIC.credits()+"\n[url=https://incompetech.com/music/royalty-free/music.html]Incompetech 曲目[/url] · [url=https://creativecommons.org/licenses/by/4.0/]CC BY 4.0[/url]\n菜单音乐：Filaments — Scott Buckley · CC BY 4.0"
 	music_credit.add_theme_font_size_override("normal_font_size",14)
 	music_credit.meta_clicked.connect(func(url): OS.shell_open(str(url))); content.add_child(music_credit)
 	shell.add_child(button("保存并返回",game.close_settings))
@@ -286,13 +290,16 @@ func results_screen() -> void:
 	section_title(content,destination.name+(" · 航线突破" if game.state=="victory" else " · 信号中断"),str(destination.cleartext) if game.state=="victory" else "")
 	if game.mission.enabled:content.add_child(label("任务：%s  %d/%d · %s"%[str(game.mission.spec().title),game.mission.done,int(game.mission.spec().goal),"完成" if game.mission.complete() else "未完成"],18,UI.GOLD))
 	content.add_child(label("击破 %d   /   得分 %d   /   最佳 %d"%[game.kills,game.score,game.best],24))
-	content.add_child(label("抵达第 %d 波  /  完成 %d 次节拍触发"%[game.wave,game.actual_steps],18,UI.MUTED))
+	var progress="完成 %d/%d 项航线目标"%[game.mission.done,int(game.mission.spec().goal)] if game.expedition.enabled else "抵达第 %d 波"%game.wave
+	content.add_child(label("%s  /  完成 %d 次节拍触发"%[progress,game.actual_steps],18,UI.MUTED))
 	content.add_child(label("本局用时 %d分%02d秒（含购物 %.0f秒）"%[int(game.run_total_seconds)/60,int(game.run_total_seconds)%60,game.run_shop_seconds],18,UI.MUTED))
 	content.add_child(label("种子 %d / 承伤 %.1f / %s"%[game.run_seed,game.receipt.received,game.receipt.death_reason if game.state=="defeat" else "奖励已确认 音乐正在收尾"],17,UI.MUTED))
 	var boons: Array=game.loadout.boon_summary()
 	if not boons.is_empty(): content.add_child(label("清波强化  "+" · ".join(boons),17,Color("e7c88d")))
-	for wave_record in game.receipt.waves:
-		content.add_child(label("第%d波 %.1f秒 / 生成%d / 撤退%d / 拾取%d / 补给%d"%[wave_record.wave,wave_record.seconds,wave_record.spawned,wave_record.retreated,wave_record.dust,int(wave_record.get("supply",0))],16,UI.MUTED))
+	for index in range(game.receipt.waves.size()):
+		var record=game.receipt.waves[index]
+		var segment=("旗舰交战" if int(record.wave)==game.wave_count() else "航段 %d"%(index+1)) if game.expedition.enabled else "第%d波"%record.wave
+		content.add_child(label("%s %.1f秒 / 生成%d / 拾取%d / 补给%d"%[segment,record.seconds,record.spawned,record.dust,int(record.get("supply",0))],16,UI.MUTED))
 	var kinds=game.weapon_damage.keys(); kinds.sort_custom(func(a,b):return game.weapon_damage[a]>game.weapon_damage[b])
 	for kind in kinds.slice(0,4):
 		var name=DATA.item(str(kind)).get("name", "连锁效果")

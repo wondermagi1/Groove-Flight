@@ -1,10 +1,10 @@
 # 武器特效与音频对应表（持续维护）
 
-最后更新 2026-11-18。核对版本 `0.64.0-rhythm-judgement`。独立音游反馈重制为 24–112 毫秒的原创敲击音，随琴键判定、长按与连击触发。武器齐射、商店预览和图鉴继续无武器配音。武器计数与弹道沿用V61。修改前备份 `8b81f21` 已上传核验。[V64](V64_RHYTHM_JUDGEMENT.md) · [试听](audio-v64/rhythm-feedback-audition.wav) · [验证](data-v64/SUMMARY.json) · [V61数值](V61_MERCURY_RHYTHM_BALANCE.md)
+最后更新 2026-11-18。核对版本 `0.65.0-planet-expeditions`。八首新曲的音乐点驱动实际齐射时刻，武器的 1.5 秒充能资格和静音配音政策沿用。音游反馈采用更强的撞击瞬态与独立限幅。修改前备份 `84028d4` 已上传核验。[V65](V65_PLANET_EXPEDITIONS.md) · [试听](audio-v65/rhythm-feedback-audition.wav) · [验证](data-v65/SUMMARY.json) · [V61数值](V61_MERCURY_RHYTHM_BALANCE.md)
 
 **音频列现为历史来源档案**：以下原音色/WAV链接保留追溯，已经退出实战、商店与图鉴试听，不是现行武器配音。现行图鉴按弹道/充能筛选。武器实体、颜色、运动、数量/成长/射程仍以本表为准。既有录音来源许可仍保留，未来构建排除旧武器WAV，不修改历史演示包。
 
-V53以来的背景与音乐点：水星Filaments、金星Helios、地球Reverie、火星Legionnaire (Original)、木星Titan、土星Cassini、天王星Luminance、海王星Omega，均为Scott Buckley CC BY4.0完整原曲转Vorbis。来源/哈希/署名/试听文件在[现行歌曲目录](../audio/PLANET_MUSIC.json)、[授权说明](../audio/authorized/scott_buckley/planets/LICENSE.md)及[V53逐曲试听表](V53_PLANET_SCORES_MISSIONS.md)。`rhythm_chart.gd`按当前星球读取`audio/charts/planets/*.json`；局部节拍路径、可闻起音、当前schema3保留原音乐点/长按，不再指定四键列，不宣称精确扒谱。背景各自按完整时长循环，原生PCM仍12+144秒且不预混武器声。设置校准默认0，每5ms一步，正值使琴块/发射稍晚，负值稍早；不改音高/音源长度、充能相位、判定宽度、BGM进度或混音总线。
+现行背景与音乐点来自 Kevin MacLeod 的八首 CC BY 4.0 原曲。每个星球按目录读取 `audio/charts/expeditions/*.json`。版面采用较疏的三键谱，按原曲节拍与起音拟合。武器按音乐点自动齐射，六秒准确率平方仍控制基础弹量，默认判定窗为 42/95/170 毫秒。背景独立循环，12+144 秒原生 PCM 用作无声时钟。校准正值使琴块与音乐点发射稍晚，负值使其提前。[现行歌曲目录](../audio/PLANET_MUSIC.json) · [逐曲来源与署名](../audio/authorized/incompetech/LICENSE.md) · [历史 Scott Buckley 歌曲](V53_PLANET_SCORES_MISSIONS.md)
 
 历史V51声音与输入约定（V54已替换单块发射门控）：普通战役24武器使用H/J/K/L四列音乐琴块，包含短按、长按、双键同时按。有效窗口±75毫秒、完美±35毫秒，双键间隔≤60毫秒且重叠；长按0.30–0.65秒，到尾端才发射。错键/漏按/中断不产生新齐射或起音，不推进力度乐句。原1.5秒音序充能资格、伤害/弹数/材质、288WAV与敌人机制保留。修改前备份`bcf7955`已上传核验。[本轮说明](V51_MUSIC_CHART_PIANO.md)与[当前核对](data-v51/SUMMARY.json)。
 
@@ -276,3 +276,5 @@ V62记录（2026-11-17）：仅软化银河背景的重叠暗影与暗角，星�
 V63记录（2026-11-18）增加八种原创合成琴键反馈，时长49–179毫秒，普通Combo和Perfect里程碑用各自短音替代当次判定音。主旋律由背景歌曲继续承担，实际武器齐射无配音。更新敌我舰体装甲、灯带与喷口的视觉设计。[反馈与舰体预览](V63_CYBER_RHYTHM_FEEDBACK.md)
 
 V64记录（2026-11-18）缩短八种音游提示音，增强琴键起音。重音标记驱动判定线亮度，提前有效按键只增加即时视觉确认，记分和提示音走原有判定时间。[曲目与反馈](V64_RHYTHM_JUDGEMENT.md)
+
+V65记录（2026-11-18）八星远征替换固定波次补给节奏，更换节奏曲和三键谱。可选补给站恢复同一音乐进度，按键使用同一时标判定，增强打击音并独立限制重叠峰值。[航线与反馈](V65_PLANET_EXPEDITIONS.md)

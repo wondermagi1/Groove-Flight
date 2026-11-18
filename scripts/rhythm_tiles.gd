@@ -195,6 +195,12 @@ func _draw_feedback(now: float,scale_value: float,reduced: bool) -> void:
 		var points=roundi(13.*scale_value)
 		var width=display_font.get_string_size(label,HORIZONTAL_ALIGNMENT_LEFT,-1,points).x
 		var center=Vector2(size.x*.5,size.y-10.)
-		SKIN.diamond(self,center-Vector2(width*.5+12.,0),2.7,accent)
-		SKIN.diamond(self,center+Vector2(width*.5+12.,0),2.7,accent)
-		draw_string(display_font,Vector2(center.x-width*.5,size.y-5.),label,HORIZONTAL_ALIGNMENT_LEFT,-1,points,accent)
+		var timing=""
+		if grade!="miss" and recent_grade.has("offset_ms"):
+			timing="%+d ms"%int(recent_grade.offset_ms)
+		var timing_width=number_font.get_string_size(timing,HORIZONTAL_ALIGNMENT_LEFT,-1,11).x
+		var left=(size.x-width-timing_width-(12. if not timing.is_empty() else 0.))*.5
+		SKIN.diamond(self,Vector2(left-10.,center.y),2.7,accent)
+		draw_string(display_font,Vector2(left,size.y-5.),label,HORIZONTAL_ALIGNMENT_LEFT,-1,points,accent)
+		if not timing.is_empty():
+			draw_string(number_font,Vector2(left+width+12.,size.y-5.),timing,HORIZONTAL_ALIGNMENT_LEFT,-1,11,Color(SKIN.WHITE,.68))

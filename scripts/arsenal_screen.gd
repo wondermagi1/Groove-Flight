@@ -304,7 +304,7 @@ func _combat_toolbar_y() -> float:
 
 func _build_top(view: Vector2) -> void:
 	if mode != "combat":
-		var title_value: String = "波间补给" if mode == "shop" else "音序工坊"
+		var title_value: String = "航段补给" if mode == "shop" else "音序工坊"
 		var title_label := _label(title_value, 30, UI.TEXT)
 		title_label.position = Vector2(24, 18)
 		content.add_child(title_label)
@@ -337,7 +337,7 @@ func _build_top(view: Vector2) -> void:
 		codex_button.tooltip_text="查看全部%d件现役武器的弹道、射程、充能与弹量规则"%DATA.playable_weapons().size()
 		toggles.add_child(codex_button)
 	if mode != "combat":
-		var resume := _button("继续下一波 →" if mode == "shop" else "应用并返回  /  TAB", _resume, Color("94f0d6"), 47)
+		var resume := _button("返回航线 →" if mode == "shop" else "应用并返回  /  TAB", _resume, Color("94f0d6"), 47)
 		resume.name = "ArsenalContinue"
 		resume.position = Vector2(view.x - 247.0, 24)
 		resume.size.x = 222.0
@@ -559,7 +559,7 @@ func _build_buffs(rect: Rect2) -> void:
 	var column := _panel(rect, "已装备增益  %d" % buffs.size(), "")
 	var boon_text: Array=game.loadout.boon_summary() if game.loadout.has_method("boon_summary") else []
 	if not boon_text.is_empty():
-		var boon_banner=_label("清波强化 · "+" · ".join(boon_text),15,Color("e7c88d"))
+		var boon_banner=_label("航段强化 · "+" · ".join(boon_text),15,Color("e7c88d"))
 		boon_banner.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 		column.add_child(boon_banner)
 	var scroll := ScrollContainer.new()
@@ -617,7 +617,7 @@ func _build_shop(rect: Rect2) -> void:
 	scroll.add_child(area)
 	width = (rect.size.x - reserved - gap - 16.0) / float(columns)
 	if not boons.is_empty():
-		var boon_title=_label("清波强化 · 三选一" if not bool(already_chosen) else "清波强化 · 已选择",20,Color("e7c88d"))
+		var boon_title=_label("航段强化 · 三选一" if not bool(already_chosen) else "航段强化 · 已选择",20,Color("e7c88d"))
 		boon_title.position=Vector2(2,0); area.add_child(boon_title)
 		var boon_width=(area.custom_minimum_size.x-gap*2.)/3.
 		for index in range(mini(3,boons.size())):
@@ -913,6 +913,9 @@ func _update_live() -> void:
 	if game == null or not is_instance_valid(content): return
 	if is_instance_valid(currency_label): currency_label.text = "✦ %d   /   WAVE %02d" % [int(game.dust), int(game.wave)]
 	if is_instance_valid(currency_label) and mode=="shop": currency_label.tooltip_text="本波拾取 %d · 通关补给 +%d · 商店不限时"%[game.picked-game.wave_picked_start,game.wave_supply]
+	if is_instance_valid(currency_label) and game.expedition.enabled:
+		currency_label.text="✦ %d   /   补给站"%int(game.dust)
+		currency_label.tooltip_text="航段补给 +%d"%game.wave_supply
 	if not stat_labels.is_empty():
 		var stats: Dictionary = game.loadout.stats()
 		for key in stat_labels:

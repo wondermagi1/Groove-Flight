@@ -1,10 +1,10 @@
 extends RefCounted
-## Objectives persist through unlimited shops. All progress uses combat time.
+## Objectives persist through optional docks. All progress uses combat time.
 const SPECS={
 	"mercury":{"title":"航标采样","type":"collect","goal":3,"verb":"靠近航标采样","hint":"光圈内采样0.8秒，可边移动边完成"},
 	"venus":{"title":"护送勘测艇","type":"escort","goal":7,"verb":"护送至下个航点","hint":"靠近护送；敌人接触会损伤勘测艇"},
 	"earth":{"title":"守住通讯站","type":"defend","goal":7,"verb":"保护通讯站","hint":"拦截袭击站体的敌群；波间自动修复"},
-	"mars":{"title":"拔除攻城据点","type":"destroy","goal":3,"verb":"摧毁标记据点","hint":"用正常武器命中；待机与漏按不造成伤害"},
+	"mars":{"title":"拔除攻城据点","type":"destroy","goal":3,"verb":"摧毁标记据点","hint":"靠近据点，用武器击破核心"},
 	"jupiter":{"title":"风暴追猎","type":"hunt","goal":3,"verb":"追猎标记舰","hint":"标记舰会绕行逃逸；击破后出现下个目标"},
 	"saturn":{"title":"星环航门","type":"gates","goal":4,"verb":"沿箭头穿过环门","hint":"从入口一侧穿过中央缺口"},
 	"uranus":{"title":"冰轴共振","type":"resonance","goal":3,"verb":"为晶体奏响4次","hint":"在晶体光圈内完成琴块；漏按不充能"},
@@ -12,6 +12,7 @@ const SPECS={
 }
 const BEACON_ART=preload("res://scripts/navigation_beacon.gd")
 var enabled: bool=false
+var expedition: bool=false
 var planet: String="mercury"
 var done: int=0
 var capture: float=0.
@@ -31,12 +32,21 @@ var reward_waves: Dictionary={}
 var focus_set: bool=false
 var start_anchor: Vector2=Vector2.ZERO
 var message: String=""
-func spec() -> Dictionary:return SPECS.get(planet,SPECS.mercury)
+var objective: Dictionary=SPECS.mercury
+static func expedition_spec(id: String) -> Dictionary:
+	var data: Dictionary=SPECS.get(id,SPECS.mercury)
+	if id not in ["venus","earth"]:return data
+	var route_spec=data.duplicate()
+	route_spec.goal=3
+	route_spec.hint="在通信站周围拦截敌机" if id=="earth" else "跟随勘测艇穿过三段航线"
+	return route_spec
+func spec() -> Dictionary:return objective
 func role() -> String:
 	if str(spec().type)!="finale":return str(spec().type)
 	return ["collect","escort","destroy","resonance"][mini(done,3)]
 func reset(game,active: bool) -> void:
-	enabled=active;planet=game.active_planet;done=0;capture=0.;resonance=0;beacon_hp=180.;defended=0;failed=false
+	enabled=active;expedition=game.expedition.enabled;planet=game.active_planet;done=0;capture=0.;resonance=0;beacon_hp=180.;defended=0;failed=false
+	objective=expedition_spec(planet) if expedition else SPECS.get(planet,SPECS.mercury)
 	hostiles.clear();pending.clear();target_uid=-1;reward_waves.clear();focus_set=false;message="";last_target_beat=-1
 	start_anchor=game.player;beacon=game.player+Vector2(0,-390);last_player=game.player;last_time=0.;last_hits=0
 	if role()=="defend":beacon=game.player+Vector2(0,-210)
@@ -45,7 +55,7 @@ func unlock_wave() -> int:
 	if str(spec().type)=="defend":return 1
 	if str(spec().type)=="escort":return done+1
 	return [1,3,5,7][mini(done,3)]
-func available(game) -> bool:return game.wave>=unlock_wave() or game.boss_down
+func available(game) -> bool:return expedition or game.wave>=unlock_wave() or game.boss_down
 func _inside(game,point: Vector2,radius: float) -> bool:return game.player.distance_to(point)<=radius
 func sample_radius() -> float:return 160. if planet=="mercury" else 110.
 func _safe_point(game,preferred: Vector2,radius: float=65.) -> Vector2:
@@ -62,8 +72,10 @@ func _set_focus(game) -> void:
 	if focus_set or complete() or not available(game):return
 	focus_set=true
 	var direction=Vector2.UP.rotated([0.,-.65,.65,0.][mini(done,3)])
+	var route_point: Vector2=game.expedition.point(done) if expedition else Vector2.INF
 	if role() in ["collect","resonance","gates"]:
 		var desired=(game.player+direction*(360. if planet=="mercury" and done==0 else 560.)).clamp(game.field().position+Vector2.ONE*260.,game.field().end-Vector2.ONE*260.)
+		if expedition:desired=route_point
 		if planet=="mercury":
 			var safe=_safe_point(game,desired,160.)
 			if safe==Vector2.INF:focus_set=false;return
@@ -71,8 +83,10 @@ func _set_focus(game) -> void:
 		else:beacon=desired
 	elif role()=="escort":
 		if str(spec().type)=="finale":beacon=game.player+Vector2(0,-120)
+	elif role()=="defend" and expedition:
+		beacon=route_point
 	elif role() in ["destroy","hunt"]:
-		var point=_safe_point(game,game.player+direction*620.)
+		var point=_safe_point(game,route_point if expedition else game.player+direction*620.)
 		if point==Vector2.INF:focus_set=false;return
 		pending={"at":point,"due":game.music.timeline+1.2,"role":role()};beacon=point
 func on_wave(game) -> void:
@@ -86,13 +100,18 @@ func wave_cleared(game) -> void:
 	if str(spec().type)=="defend":defended=mini(7,defended+1);done=defended
 	if role() in ["escort","defend"]:beacon_hp=minf(180.,beacon_hp+12.)
 func _advance(game) -> void:
+	var at=beacon
+	var completed_role=role()
 	done+=1;capture=0.;resonance=0;focus_set=false;target_uid=-1;pending.clear()
 	message="任务完成，击破旗舰后撤离" if complete() else "阶段完成 · 下一目标随航线开放"
 	if planet=="mercury":
 		game.notice="航标采样完成 %d/3"%done;game.notice_until=game.music.timeline+1.6
 	if complete():
 		for e in game.enemies:e.erase("mission_target")
-	game.fx.ring(beacon,game.planet_rules.accent,115.,.5)
+	game.fx.ring(at,game.planet_rules.accent,115.,.5)
+	if expedition:
+		if completed_role in ["escort","defend"]:beacon_hp=minf(180.,beacon_hp+24.)
+		game.expedition.clear_sector(game,at)
 	_set_focus(game)
 func _spawn_pending(game) -> void:
 	if pending.is_empty() or game.music.timeline<float(pending.due):return
@@ -101,21 +120,36 @@ func _spawn_pending(game) -> void:
 	if safe.distance_to(point)>1.:pending.at=safe;pending.due=game.music.timeline+1.2;beacon=safe;return
 	var hunted=str(pending.role)=="hunt"
 	var e: Dictionary=game.spawn_enemy("dart" if hunted else "sentinel",point)
+	if e.is_empty():return
 	e.mission_target_unit=true;e.mission_node=not hunted;e.warned_entry=true;e.damage=0.8 if hunted else 0.
 	e.hp=(650. if hunted else 500.)*(1.+.20*done)*(1.18 if game.difficulty>0 else 1.);e.max_hp=e.hp
 	e.speed=210. if hunted else 0.;e.radius=game.ARRIVAL.hull_radius("dart") if hunted else 52.
 	e.armed_after=game.music.timeline+1.2
 	hostiles.append(e);target_uid=int(e.uid);pending.clear()
-func escort_goal() -> Vector2:
+func escort_goal(game=null) -> Vector2:
+	if expedition and game!=null:return game.expedition.point(done)
 	if str(spec().type)=="finale":return start_anchor+Vector2(750.,-1600.)
 	var index=done if str(spec().type)=="escort" else 0
 	return start_anchor+Vector2([0.,-400.,380.,-340.,420.,-280.,0.][mini(index,6)],-650.-index*330.)
+
+func gate_axis(game) -> Vector2:
+	if not expedition:return Vector2.UP
+	var prior: Vector2=Vector2.ZERO if done==0 else game.expedition.point(done-1)
+	return (beacon-prior).normalized()
+
+func defense_quota() -> int:
+	return [12,19,28][mini(done,2)]
+
+func enemy_defeated(game,enemy: Dictionary) -> void:
+	if not enabled or not expedition or role()!="defend" or complete() or failed:return
+	if not game.SWARM.is_ordinary(enemy) or beacon.distance_to(enemy.at)>520.:return
+	defended+=1
 func step(game) -> void:
 	if not enabled or game.state!="combat" or complete() or failed:return
 	var now=float(game.music.timeline);var dt=clampf(now-last_time,0.,.1);last_time=now
 	_set_focus(game);_spawn_pending(game)
 	var gained=maxi(0,game.rhythm.hits-last_hits);last_hits=game.rhythm.hits
-	if not available(game):last_player=game.player;return
+	if not available(game) or not focus_set:last_player=game.player;return
 	match role():
 		"collect":
 			capture=capture+dt if _inside(game,beacon,sample_radius()) else maxf(0.,capture-dt*.5)
@@ -124,9 +158,12 @@ func step(game) -> void:
 			if _inside(game,beacon,230.):resonance+=gained
 			if resonance>=4:_advance(game)
 		"escort":
-			var goal=escort_goal()
-			if _inside(game,beacon,290.):beacon=beacon.move_toward(goal,85.*dt)
+			var goal=escort_goal(game)
+			if _inside(game,beacon,290.):beacon=beacon.move_toward(goal,(131. if expedition else 85.)*dt)
 			if beacon.distance_to(goal)<18.:_advance(game)
+		"defend":
+			if expedition and defended>=defense_quota():
+				defended=0;_advance(game)
 		"destroy","hunt":
 			if target_uid>=0:
 				var enemy: Dictionary={}
@@ -136,10 +173,10 @@ func step(game) -> void:
 					beacon=enemy.at
 					if float(enemy.hp)<=0.:_advance(game)
 		"gates":
-			var axis=Vector2.UP;var a=(last_player-beacon).dot(axis);var b=(game.player-beacon).dot(axis)
+			var axis=gate_axis(game);var a=(last_player-beacon).dot(axis);var b=(game.player-beacon).dot(axis)
 			if a<0. and b>=0.:
 				var crossing=last_player.lerp(game.player,clampf(-a/maxf(.001,b-a),0.,1.))
-				if absf((crossing-beacon).x)<=145.:_advance(game)
+				if absf((crossing-beacon).dot(axis.orthogonal()))<=145.:_advance(game)
 	last_player=game.player
 	if beacon_hp<=0.:
 		failed=true;game.last_damage_reason="任务目标被摧毁";game.receipt.death_reason=game.last_damage_reason;game.finish_run(false)
@@ -166,10 +203,12 @@ func progress() -> float:
 	var fraction=0.
 	if role()=="collect":fraction=capture/.8
 	elif role()=="resonance":fraction=float(resonance)/4.
+	elif expedition and role()=="defend":fraction=float(defended)/defense_quota()
 	return clampf((done+fraction)/float(spec().goal),0.,1.)
 func caption(game) -> String:
 	if complete():return "任务完成 · 旗舰已击破，可撤离" if game.boss_down else "任务完成 · 击破旗舰后撤离"
 	if not available(game):return "阶段 %d/%d · 第%d波开放下个目标"%[done,int(spec().goal),unlock_wave()]
+	if expedition and role()=="defend":return "拦截 %d/%d · 站体 %d%%"%[defended,defense_quota(),roundi(beacon_hp/180.*100.)]
 	if role() in ["escort","defend"]:return "%d/%d · 目标耐久 %d%%"%[done,int(spec().goal),roundi(beacon_hp/180.*100.)]
 	if role()=="resonance":return "%d/%d · 共振 %d/4"%[done,int(spec().goal),resonance]
 	return "%s · %d/%d"%[str(spec().verb),done,int(spec().goal)]
@@ -198,19 +237,22 @@ func draw_world(game) -> void:
 				game.draw_line(e.at+Vector2(-18,-50),e.at+Vector2(18,-50),Color("f0e6c8"),2.,true)
 		return
 	match role():
-		"defend":_draw_station(game,beacon,44.,color,beacon_hp/180.,true)
+		"defend":
+			if expedition:game.draw_arc(beacon,520.,0.,TAU,72,Color(color,.17),1.5,true)
+			_draw_station(game,beacon,44.,color,beacon_hp/180.,true)
 		"escort":
-			var goal=escort_goal();game.draw_dashed_line(beacon,goal,Color(color,.28),2.,22.,true)
+			var goal=escort_goal(game);game.draw_dashed_line(beacon,goal,Color(color,.28),2.,22.,true)
 			game.draw_arc(beacon,290.,0.,TAU,64,Color(color,.20),1.,true)
 			game.ART.draw_ship(game,beacon,26.,(goal-beacon).angle(),"manta",game.music.pulse(),1.)
 			game.draw_line(beacon+Vector2(-36,-47),beacon+Vector2(36,-47),Color("28323e"),4.)
 			game.draw_line(beacon+Vector2(-36,-47),beacon+Vector2(lerpf(-36.,36.,beacon_hp/180.),-47),color,3.)
 			game.draw_arc(goal,58.,0,TAU,40,Color(color,.6),2.,true)
 		"gates":
-			game.draw_arc(beacon,145.,PI,TAU,44,Color(color,.2),2.,true)
-			for side in [-1.,1.]:_draw_station(game,beacon+Vector2(side*155.,0),18.,color,1.,true)
+			var axis=gate_axis(game);var tangent=axis.orthogonal()
+			game.draw_arc(beacon,145.,axis.angle()-PI*.5,axis.angle()+PI*.5,44,Color(color,.2),2.,true)
+			for side in [-1.,1.]:_draw_station(game,beacon+tangent*side*155.,18.,color,1.,true)
 			for i in range(3):
-				var p=beacon+Vector2(0,70.-i*45.);game.draw_polyline(PackedVector2Array([p+Vector2(-17,12),p,p+Vector2(17,12)]),Color(color,.7),2.,true)
+				var p=beacon-axis*(70.-i*45.);game.draw_polyline(PackedVector2Array([p-axis*12.-tangent*17.,p,p-axis*12.+tangent*17.]),Color(color,.7),2.,true)
 		_:
 			var reach=230. if role()=="resonance" else 110.
 			game.draw_arc(beacon,reach,0.,TAU,64,Color(color,.3),1.5,true)

@@ -1,0 +1,94 @@
+{
+  "version": "0.65.0-planet-expeditions",
+  "backup": "84028d41d838487a992fb899c61f1847c868ba1d",
+  "renderers": {
+    "forward_plus": {
+      "checks": 157,
+      "captures": 9
+    },
+    "gl_compatibility": {
+      "checks": 157,
+      "captures": 9
+    }
+  },
+  "feedback_checks": 64,
+  "audio_transport_checks": 53,
+  "routes": {
+    "earth": {
+      "goals": 3,
+      "music": "Space Jazz",
+      "notes": 537,
+      "world": "(15200.0, 13800.0)",
+      "first_20_seconds": 21,
+      "runtime_hash_verified": true,
+      "source": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN2100030"
+    },
+    "jupiter": {
+      "goals": 3,
+      "music": "Shiny Tech",
+      "notes": 380,
+      "world": "(17600.0, 15200.0)",
+      "first_20_seconds": 31,
+      "runtime_hash_verified": true,
+      "source": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1100078"
+    },
+    "mars": {
+      "goals": 3,
+      "music": "Brain Dance",
+      "notes": 325,
+      "world": "(15800.0, 14400.0)",
+      "first_20_seconds": 27,
+      "runtime_hash_verified": true,
+      "source": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN2300006"
+    },
+    "mercury": {
+      "goals": 3,
+      "music": "Limit 70",
+      "notes": 504,
+      "world": "(14400.0, 13600.0)",
+      "first_20_seconds": 26,
+      "runtime_hash_verified": true,
+      "source": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1900042"
+    },
+    "neptune": {
+      "goals": 4,
+      "music": "Laser Groove",
+      "notes": 285,
+      "world": "(18000.0, 17400.0)",
+      "first_20_seconds": 30,
+      "runtime_hash_verified": true,
+      "source": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1700017"
+    },
+    "saturn": {
+      "goals": 4,
+      "music": "Voxel Revolution",
+      "notes": 188,
+      "world": "(17800.0, 15400.0)",
+      "first_20_seconds": 26,
+      "runtime_hash_verified": true,
+      "source": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN2000025"
+    },
+    "uranus": {
+      "goals": 3,
+      "music": "Tech Live",
+      "notes": 345,
+      "world": "(16200.0, 16600.0)",
+      "first_20_seconds": 27,
+      "runtime_hash_verified": true,
+      "source": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN1700030"
+    },
+    "venus": {
+      "goals": 3,
+      "music": "Vibing Over Venus",
+      "notes": 632,
+      "world": "(14800.0, 15000.0)",
+      "first_20_seconds": 23,
+      "runtime_hash_verified": true,
+      "source": "https://incompetech.com/music/royalty-free/index.html?Search=Search&isrc=USUAN2300005"
+    }
+  },
+  "measured_default_perfect_gain_db": 14.0,
+  "perfect_peak_v64": 0.03166,
+  "perfect_peak_v65": 0.15802,
+  "scope": "Controlled mission scenarios; hardware renders; real transports exercised with dummy audio. Peak comparison used both versions' default master and rhythm gains."
+}

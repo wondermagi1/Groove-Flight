@@ -29,6 +29,7 @@ const RHYTHM=preload("res://scripts/rhythm_gate.gd")
 const ARRIVAL=preload("res://scripts/enemy_arrival.gd")
 const PATHS=preload("res://scripts/build_paths.gd")
 const MISSION=preload("res://scripts/planet_mission.gd")
+const EXPEDITION=preload("res://scripts/planet_expedition.gd")
 const PLANET_MUSIC=preload("res://scripts/planet_music_catalog.gd")
 const LEVEL_MUSIC_PATH="res://audio/authorized/scott_buckley/filaments.ogg"
 const URANUS_MUSIC_PATH=LEVEL_MUSIC_PATH
@@ -67,6 +68,7 @@ var music
 var standard_music
 var rhythm=RHYTHM.new()
 var mission=MISSION.new()
+var expedition=EXPEDITION.new()
 var rhythm_voices
 var rhythm_key_down=[false,false,false]
 var rhythm_song_loops: int=0
@@ -265,7 +267,7 @@ func bind_input() -> void:
 		for index in range(1,row.size()):
 			var key=InputEventKey.new(); key.physical_keycode=row[index]; InputMap.action_add_event(row[0],key)
 func field() -> Rect2:
-	return WORLD
+	return expedition.bounds() if expedition.enabled else WORLD
 func visible_world() -> Rect2:
 	var size_value=get_viewport_rect().size/camera.zoom
 	return Rect2(camera.get_screen_center_position()-size_value*.5,size_value)
@@ -470,6 +472,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	if seed_value==0: rng.randomize()
 	else: rng.seed=seed_value
 	run_seed=rng.seed
+	expedition.reset(active_planet,run_seed,not free_music_run and not is_preview)
 	weapon_beat_state.clear()
 	mixer.reset_feedback()
 	active_doctrine=""
@@ -886,6 +889,15 @@ func continue_wave() -> bool:
 	if state!="reward" or loadout.equipped_weapons()==0: return false
 	if not reward_taken and not rewards.is_empty(): return false
 	if is_instance_valid(lab): lab.deactivate()
+	if expedition.enabled:
+		if editing_changed and not (test_mode and simulation_only) and not standard_music.has_prepared(loadout):
+			pending_resume="wave";standard_music.prepare(loadout);return true
+		refresh_loadout_stats()
+		if editing_changed:
+			if not (test_mode and simulation_only):music.rebuild(loadout)
+			resync_pending()
+		editing_changed=false;selected_uid=-1;state="combat";music.hold(false);ui.refresh()
+		return true
 	if test_mode and simulation_only:
 		refresh_loadout_stats(); editing_changed=false; selected_uid=-1; state="combat"; begin_wave(); return true
 	if not standard_music.has_prepared(loadout): pending_resume="wave"; standard_music.prepare(loadout); return true
@@ -900,6 +912,9 @@ func choose_reward(index: int) -> bool:
 	var reward=rewards[index]
 	if not loadout.take(reward): return false
 	reward_taken=true
+	if expedition.enabled:
+		refresh_loadout_stats();prepare_loadout();editing_changed=true
+		sound("reward",-7);ui.refresh();return true
 	if reward.type=="power": health=minf(loadout.max_health,health+2)
 	music.rebuild(loadout); sound("reward",-7)
 	state="combat"; music.hold(false); begin_wave(); ui.refresh(); return true
@@ -911,6 +926,7 @@ func choose_boon(index: int) -> bool:
 	reward_taken=true
 	refresh_loadout_stats()
 	if str(boon.get("key",""))=="max_health": health=minf(float(stats_snapshot.max_health),health+float(boon.get("value",1.)))
+	if expedition.enabled:editing_changed=true
 	prepare_loadout(); notice="基础强化 · "+str(boon.get("title",boon.get("name",""))); notice_until=music.timeline+2.5
 	sound("reward",-7); ui.refresh(); return true
 func reroll() -> bool:
@@ -953,6 +969,8 @@ func rhythm_tick(now: float=-1.) -> void:
 	if state!="combat" or not rhythm_required():return
 	if now<0.:now=music.timeline
 	rhythm.forecast(loadout,now,rhythm_song_time(now))
+	resolve_rhythm(now)
+func resolve_rhythm(now: float) -> void:
 	for event in rhythm.advance(now):dispatch_trigger(event)
 func _play_rhythm_feedback(event: Dictionary) -> void:
 	if state=="combat" and rhythm_required() and not standard_music.stream_paused and not standard_music._begin_pending:
@@ -965,7 +983,9 @@ func rhythm_press(track: int,source: String="") -> bool:
 	if state!="combat" or not rhythm_required() or standard_music._begin_pending or standard_music.stream_paused:return false
 	var now=standard_music.input_time()
 	rhythm_tick(now)
-	var accepted=rhythm.press(track,now,source);rhythm_tick(now);return accepted
+	var accepted=rhythm.press(track,now,source)
+	resolve_rhythm(now)
+	return accepted
 func rhythm_release(source: String) -> void:
 	if not rhythm.down.has(source):return
 	var now=standard_music.input_time()
@@ -998,6 +1018,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("fullscreen"):
 		settings.fullscreen=DisplayServer.window_get_mode()!=DisplayServer.WINDOW_MODE_FULLSCREEN
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if settings.fullscreen else DisplayServer.WINDOW_MODE_WINDOWED); save_settings()
+	elif event.is_action_pressed("interact") and state=="combat":
+		open_expedition_dock()
 	elif event.is_action_pressed("editor"):
 		if state=="editor": close_editor()
 		elif state in ["combat","reward"]: open_editor()
@@ -1176,6 +1198,9 @@ func spawn_for_step(serial: int) -> void:
 	if wave==wave_count():
 		if not boss_down and floori(serial*LOADOUT.SEQUENCE_STEP_SECONDS/2.)!=floori((serial-1)*LOADOUT.SEQUENCE_STEP_SECONDS/2.):
 			spawn_wave_group(9,"battalion_grid",true)
+		return
+	if expedition.enabled:
+		expedition.advance_incursion(self)
 		return
 	var config=wave_profile(); var elapsed=music.timeline-wave_start
 	receipt.count("spawn_checks")
@@ -1637,6 +1662,7 @@ func hurt_enemy(enemy: Dictionary,damage: float,kind: String,context: Dictionary
 	weapon_damage[kind]=float(weapon_damage.get(kind,0))+actual
 	if enemy.hp>0: sound("metal",-28); return
 	kills+=1; score+=100 if enemy.kind=="boss" else (12 if enemy.kind=="elite" else 1)
+	mission.enemy_defeated(self,enemy)
 	kill_combo=(kill_combo+1 if music.timeline<=kill_combo_until else 1)
 	kill_combo_until=music.timeline+.55
 	if FORMATION.break_rank(enemy,music.timeline):
@@ -1736,11 +1762,49 @@ func hurt_player(amount: float) -> void:
 func featured_shop_item() -> String:
 	return "westwind" if loadout.doctrine_id in ["","ballistic"] and wave in [3,4] and not loadout.modules.any(func(module): return str(module.kind)=="westwind") else ""
 
+func close_expedition_sector(completed: int) -> void:
+	wave_supply=BALANCE.clear_supply(wave,int(PLANETS.planet(active_planet).index))*3
+	dust+=wave_supply
+	expedition.docks[-1].supply=wave_supply
+	receipt.end_wave(wave,music.timeline-wave_start,picked-wave_picked_start,total_spawned-wave_spawn_start,0,wave_supply)
+	wave=mini(wave_count()-1,1+floori(float(completed)*(wave_count()-2)/float(mission.spec().goal)))
+	wave_start=music.timeline;wave_spawn_start=total_spawned;wave_picked_start=picked;spawned=0;elite_spawned=false
+	planet_rules=PLANETS.wave_rules(active_planet,wave,difficulty)
+	for plan in spawn_telegraphs:plan.wave=wave
+	notice="区域完成 · 获得 %d 补给"%wave_supply;notice_until=music.timeline+2.
+
+func open_expedition_dock() -> bool:
+	if state!="combat" or not expedition.enabled:return false
+	var index=expedition.dock_at(player)
+	if index<0:return false
+	var depot=expedition.docks[index]
+	depot.used=true
+	var planet_index=int(PLANETS.planet(active_planet).index)
+	wave_supply=int(depot.supply)
+	shop_offers=loadout.make_shop(rng,wave,[],3,3,BALANCE.price_scale(planet_index),featured_shop_item())
+	shop_reroll_cost=BALANCE.reroll_cost(planet_index);selected_uid=-1;editing_changed=false
+	rewards=loadout.wave_boon_choices(rng);reward_taken=false
+	state="reward";music.hold(true);sound("reward",-9);ui.refresh()
+	return true
+
 func check_wave() -> void:
 	if free_music_run or is_preview: return
 	if state!="combat": return
 	if wave==wave_count():
 		if boss_down and (not mission.enabled or mission.complete()): finish_run(true)
+		return
+	if expedition.enabled:
+		if expedition.boss_site==Vector2.INF or player.distance_to(expedition.boss_site)>EXPEDITION.BOSS_APPROACH:return
+		var target: Vector2=expedition.boss_site
+		if player.distance_to(target)<440.:
+			target=(player+Vector2(0,-440.)).clamp(field().position+Vector2.ONE*340.,field().end-Vector2.ONE*340.)
+		if enemies.size()>=MAX_ENEMIES:return
+		wave=wave_count();wave_start=music.timeline;wave_spawn_start=total_spawned;wave_picked_start=picked
+		planet_rules=PLANETS.wave_rules(active_planet,wave,difficulty)
+		for plan in spawn_telegraphs:plan.wave=wave
+		boss_anchor=target
+		spawn_enemy("boss",boss_anchor);sound("metal",-13,.55)
+		notice=str(PLANETS.planet(active_planet).bossname);notice_until=music.timeline+2.
 		return
 	var config=wave_profile()
 	if music.timeline-wave_start<float(config.seconds): return
@@ -1804,6 +1868,7 @@ func _draw() -> void:
 	if batch: fleet_batch.update_fleet(enemies,visible_rect)
 	draw_rect(field(),Color(.10,.29,.49,.40),false,5.)
 	mission.draw_world(self)
+	expedition.draw_world(self)
 	for plan in spawn_telegraphs: ARRIVAL.draw_warning(self,plan,music.timeline,visible_world())
 	if is_preview and preview_show_ranges: draw_preview_ranges()
 	for item in pickups:

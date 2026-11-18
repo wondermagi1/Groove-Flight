@@ -2,6 +2,7 @@ extends Node
 const AUDIO=preload("res://scripts/audio_controls.gd")
 const SEQUENCE=preload("res://scripts/arsenal_loadout.gd")
 const RHYTHM_SFX=preload("res://scripts/rhythm_sfx.gd")
+const RHYTHM_DB={"perfect":-3.5,"excellent":-5.,"general":-7.,"miss":-12.,"hold_head":-7.,"hold_tail":-4.,"combo":-3.,"perfect_reward":-2.5}
 ## Recorded low-drum kill feedback; bounded rolls and reserved shield/pickup voices.
 const RATE=22050
 var groups={"hit":[],"kill":[],"ui":[],"alert":[],"pickup":[],"shield":[],"rhythm":[]}
@@ -79,11 +80,7 @@ func rhythm_feedback(event: Dictionary) -> void:
 	var stream: AudioStreamWAV=RHYTHM_SFX.bank().get(cue)
 	var output=AudioServer.get_bus_index(AUDIO.RHYTHM)
 	if stream==null or AudioServer.is_bus_mute(output):return
-	var volume=-14.
-	match cue:
-		"perfect_reward","combo":volume=-12.
-		"miss":volume=-21.
-		"hold_head":volume=-18.
+	var volume=float(RHYTHM_DB[cue])
 	play(stream,"rhythm",volume-(3. if low_dynamic else 0.))
 func _emit_drum(amount: int,combo: int,tail: bool=false) -> void:
 	var pattern=["kill_low_strong","kill_low_soft","kill_low_round","kill_low_soft"]

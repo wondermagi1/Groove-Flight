@@ -4,6 +4,8 @@ const UI=preload("res://scripts/ui_materials.gd")
 ## orbit animation is decorative and never drives campaign progress.
 const DATA=preload("res://scripts/planet_catalog.gd")
 const FLEET=preload("res://scripts/fleet_catalog.gd")
+const MISSION=preload("res://scripts/planet_mission.gd")
+const EXPEDITION=preload("res://scripts/planet_expedition.gd")
 var game
 var viewport: SubViewport
 var stage: SubViewportContainer
@@ -101,7 +103,7 @@ func _build_world() -> void:
 	var corona_material=ShaderMaterial.new(); corona_material.shader=sun_material.shader; corona_material.set_shader_parameter("corona",true)
 	var corona=_sphere(1.74,corona_material); corona.name="SolarCorona"; corona.cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF; world_root.add_child(corona)
 	for row in DATA.rows():
-		var material=ShaderMaterial.new(); material.shader=load("res://shaders/cyber_planet.gdshader")
+		var material=ShaderMaterial.new(); material.shader=load("res://shaders/planet_surface.gdshader")
 		material.set_shader_parameter("body_color",row.color); material.set_shader_parameter("planet_style",int(row.index)); material.set_shader_parameter("seed",float(row.index)*1.71)
 		var body=Node3D.new(); body.name="Planet_"+str(row.id); world_root.add_child(body)
 		var sphere=_sphere(float(row.radius),material); sphere.name="Surface"; sphere.rotation.z=.08+float(row.index)*.035; body.add_child(sphere)
@@ -134,7 +136,7 @@ func _build_saturn_rings(body: Node3D,radius: float) -> void:
 			var angle=i*TAU/segments
 			for r in [inner,outer]:
 				vertices.append(Vector3(cos(angle)*r,0,sin(angle)*r))
-				colors.append(Color("ac80ca") if band%3 else Color("3c294d"))
+				colors.append(Color("b8a683") if band%3 else Color("635c52"))
 		var offset=band*(segments+1)*2
 		for i in range(segments): indices.append_array(PackedInt32Array([offset+i*2,offset+i*2+1,offset+i*2+2,offset+i*2+1,offset+i*2+3,offset+i*2+2]))
 	var arrays=[]; arrays.resize(Mesh.ARRAY_MAX); arrays[Mesh.ARRAY_VERTEX]=vertices; arrays[Mesh.ARRAY_COLOR]=colors; arrays[Mesh.ARRAY_INDEX]=indices
@@ -204,7 +206,8 @@ func _refresh_selection() -> void:
 	if not is_instance_valid(detail_content): return
 	var id=_selected_id(); var row=DATA.planet(id)
 	var difficulty=clampi(int(game.settings.get("difficulty",0)),0,1)
-	var combat=DATA.combat(id,difficulty); var route=DATA.route(id,difficulty); var record=_record(id)
+	var combat=DATA.combat(id,difficulty); var record=_record(id)
+	var objective=MISSION.expedition_spec(id)
 	# Detach immediately before adding the new panel contents. Queueing alone
 	# leaves renamed duplicates alive for the frame, so controls such as the
 	# difficulty selector lose their stable node names.
@@ -212,12 +215,13 @@ func _refresh_selection() -> void:
 		detail_content.remove_child(child)
 		child.queue_free()
 	_detail(str(row.name),38,Color("f1f7ff")); _detail(str(row.subtitle),18,row.color)
-	_detail("本关任务  /  "+str(row.objective.title),21,row.color)
-	_detail(str(row.objective.get("hint",row.description)),17,UI.MUTED)
+	_detail("航线任务  /  "+str(objective.title),21,row.color)
+	_detail(str(objective.hint),17,UI.MUTED)
 	_detail("主题曲  /  "+str(row.song),17,UI.MUTED)
-	_detail("%d 波  ·  %d 次补给"%[route.size(),route.size()-1],21,Color("e2edf9"))
+	_detail("%d 个目标  ·  旗舰交战"%int(objective.goal),21,Color("e2edf9"))
 	var expand=Button.new();expand.name="RouteParameters";expand.text="航线参数";UI.button(expand,UI.MUTED,6);detail_content.add_child(expand)
-	var numbers=_detail("末波上限 逐波递增\n敌机耐久 ×%.2f\n敌弹速度 ×%.2f\n接触 / 弹幕伤害 %.1f\n最终旗舰耐久 %s"%[combat.hp_scale,combat.bullet_speed,combat.damage,_number(float(combat.boss_hp))],18)
+	var extent: Vector2=EXPEDITION.ROUTES[id].size
+	var numbers=_detail("航区 %d × %d\n敌机耐久 ×%.2f\n敌弹速度 ×%.2f\n接触 / 弹幕伤害 %.1f\n最终旗舰耐久 %s"%[extent.x,extent.y,combat.hp_scale,combat.bullet_speed,combat.damage,_number(float(combat.boss_hp))],18)
 	numbers.visible=false;expand.pressed.connect(func():numbers.visible=not numbers.visible;expand.text="收起参数" if numbers.visible else "航线参数")
 	_detail("难度协议",17,Color("8fb7c5"))
 	var difficulty_box=OptionButton.new(); difficulty_box.name="DifficultyProtocol"; difficulty_box.custom_minimum_size.y=40

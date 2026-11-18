@@ -1,14 +1,16 @@
 # Audio provenance
 
-## Current V57: background music leads
+## Current V65: expedition soundtrack
 
-Eight full Scott Buckley CC BY4.0 tracks remain unchanged: Filaments, Helios,
+Eight pieces by Kevin MacLeod, CC BY 4.0, including Limit 70 and Brain Dance.
+See [track sources and credits](authorized/incompetech/LICENSE.md),
+[runtime manifest](PLANET_MUSIC.json) and [playback policy](MUSIC_FIRST_POLICY.json).
+The source tempo and pitch are preserved in the Ogg conversions. Charts place
+three-key gestures on the estimated beat phase and nearby audio onsets.
+
+Filaments by Scott Buckley continues as the menu theme. The former campaign scores are Filaments, Helios,
 Reverie, Legionnaire (Original), Titan, Cassini, Luminance and Omega.
-Music by Scott Buckley — www.scottbuckley.com.au.
-See [catalogue](PLANET_MUSIC.json), [license](authorized/scott_buckley/planets/LICENSE.md)
-and [current playback policy](MUSIC_FIRST_POLICY.json).
-Waveform-derived three-key gameplay arrangements are not the artist's original
-score or a human-approved exact transcription. Source time and pitch are unchanged.
+Music by Scott Buckley — www.scottbuckley.com.au. [License and credits](authorized/scott_buckley/planets/LICENSE.md)
 
 ALL weapon performances and their codex/shop auditions have been retired.
 The native PCM is a silent gameplay clock, including no support or backing instruments.

@@ -9,7 +9,7 @@ const HOLD=Color("edca84")
 const CHORD=Color("c9b6ed")
 const MISS=Color("e78999")
 const GRADES={"perfect":HOLD,"excellent":TAP,"general":CHORD,"miss":MISS}
-const IMPACT_LIFE=.28
+const IMPACT_LIFE=.32
 const MAX_IMPACTS=12
 
 static func cut(rect: Rect2,corner: float=3.) -> PackedVector2Array:
@@ -104,9 +104,9 @@ static func impact(canvas: CanvasItem,center: Vector2,lane: float,age: float,eve
 		return
 	diamond(canvas,center,3.6,Color(color.lerp(WHITE,.55),alpha))
 	if reduced:return
-	var height=(44. if perfect else 25.)*(1.+t*.30)
+	var height=(55. if perfect else 29.)*(1.+t*.30)
 	gradient(canvas,Rect2(center.x-spread,center.y-height,spread*2.,height),Color(color,0.),Color(color,alpha*.19))
-	var lift=6.+sqrt(t)*(18. if perfect or tail else 11.)
+	var lift=7.+sqrt(t)*(24. if perfect or tail else 12.)
 	for side in [-1.,1.]:
 		var x=side*spread
 		var mark=PackedVector2Array([center+Vector2(x,-2.),center+Vector2(x,-lift*.60),center+Vector2(x*.64,-lift)])
@@ -116,7 +116,7 @@ static func impact(canvas: CanvasItem,center: Vector2,lane: float,age: float,eve
 		var aperture=Rect2(center-Vector2(spread*.64,lift*.88),Vector2(spread*1.28,lift*1.42))
 		outline(canvas,aperture,Color(color,alpha*.7),5.)
 		var glint=1.-smoothstep(0.,.34,t)
-		canvas.draw_line(center-Vector2(spread*.72,0),center+Vector2(spread*.72,0),Color(WHITE,glint),3.,true)
+		canvas.draw_line(center-Vector2(spread*.80,0),center+Vector2(spread*.80,0),Color(WHITE,glint),4.,true)
 	var count=7 if perfect else (4 if grade=="excellent" or tail else 2)
 	for i in range(count):
 		var offset=float(i+1)/float(count+1)-.5

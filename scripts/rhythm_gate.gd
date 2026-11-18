@@ -3,10 +3,10 @@ signal feedback(event: Dictionary)
 const CHART=preload("res://scripts/rhythm_chart.gd")
 const SCORE=preload("res://scripts/rhythm_score.gd")
 const STEP=preload("res://scripts/arsenal_loadout.gd").SEQUENCE_STEP_SECONDS
-const WINDOW=.140
-const EXCELLENT=.075
-const PERFECT=.035
-const LOOKAHEAD=2.2
+const WINDOW=.170
+const EXCELLENT=.095
+const PERFECT=.042
+const LOOKAHEAD=2.9
 const LANES=3
 const REWARDS=preload("res://scripts/rhythm_rewards.gd")
 var score=SCORE.new()
@@ -111,12 +111,13 @@ func _emit_feedback(note: Dictionary,grade: String,now: float,previous_notice: i
 		"at":now, "lanes":note.required.duplicate(), "grade":grade,
 		"gesture":"tap" if float(note.hold)<=0. else "hold_tail",
 		"milestone":notice_kind,
+		"offset_ms":roundi(float(note.delta)*1000.),
 	})
 func _record_score(note: Dictionary,points: int) -> void:
 	if bool(note.get("scored",false)):return
 	note.scored=true
 	# Assign boundary notes by the END of their valid judgement, preserving the
-	# full140ms late/tail grace without changing an already active fire ratio.
+	# full late/tail grace without changing an already active fire ratio.
 	score.record(int(note.track),float(note.end)+tail_window(note),points)
 func advance(now: float) -> Array[Dictionary]:
 	var ready: Array[Dictionary]=[]
