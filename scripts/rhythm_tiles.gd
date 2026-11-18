@@ -27,10 +27,17 @@ func clip_rect() -> Rect2:return Rect2(4,TOP,size.x-8.,key_y()-TOP)
 func note_y(due: float,now: float) -> float:return judge_y-(due-now)/game.rhythm.lookahead()*(judge_y-TOP)
 func head_rect(lane: int,due: float,now: float) -> Rect2:
 	return Rect2(lane*lane_width()+8.,note_y(due,now)-HEAD_HEIGHT*.5,lane_width()-16.,HEAD_HEIGHT).intersection(clip_rect())
+func input_head_rect(lane: int,due: float,now: float) -> Rect2:
+	if game.rhythm.uses_mercury_cues() and now>due and now<=due+game.rhythm.hit_window():
+		due=now
+	return head_rect(lane,due,now)
 func visual_head_rect(note: Dictionary,lane: int,now: float) -> Rect2:
 	# A held head stays attached to the receptor while its remaining tail arrives.
 	# Pending notes retain the exact shared render/pointer geometry.
-	return head_rect(lane,now,now) if str(note.status) in ["holding","armed"] and float(note.hold)>0. and now>=float(note.due) else head_rect(lane,float(note.due),now)
+	var status=str(note.status)
+	if status in ["holding","armed"] and float(note.hold)>0. and now>=float(note.due):
+		return head_rect(lane,now,now)
+	return input_head_rect(lane,float(note.due),now) if status=="pending" else head_rect(lane,float(note.due),now)
 func simultaneous_lanes(note: Dictionary) -> Array:
 	var lanes: Array=note.required.duplicate()
 	for other in game.rhythm.notes:
@@ -72,7 +79,7 @@ func click_at(point: Vector2,source: String="mouse") -> void:
 	var now=game.standard_music.input_time()
 	for note in game.rhythm.notes:
 		if not game.rhythm.accepts_lane(note,lane):continue
-		var rect=head_rect(lane,game.rhythm.input_due(note),now)
+		var rect=input_head_rect(lane,game.rhythm.input_due(note),now)
 		if rect.has_area() and rect.grow_individual(0.,5.,0.,5.).intersection(clip_rect()).has_point(point):game.rhythm_press(lane,source);return
 	game.rhythm_press(-1,source)
 func _draw() -> void:
@@ -93,7 +100,7 @@ func _draw() -> void:
 		var due=float(note.due)
 		if not reduced and bool(note.get("accent",false)):
 			# Use the local song cue, including calibration, for the rail accent.
-			var distance=(due-now)/.09 if now<due else (now-due)/.17
+			var distance=(due-now)/.09 if now<due else (now-due)/game.rhythm.hit_window()
 			emphasis=maxf(emphasis,1.-smoothstep(0.,1.,distance))
 		if str(note.status) in ["holding","armed"] and float(note.hold)>0.:
 			hold_progress[int(note.track)]=clampf((now-due)/float(note.hold),0.,1.)
@@ -160,7 +167,7 @@ func _draw_header(now: float,scale_value: float,reduced: bool) -> void:
 	var full=8.+(size.x-16.)/1.2;draw_line(Vector2(full,28),Vector2(full,32),Color(SKIN.WHITE,.55),1.)
 func _draw_note(note: Dictionary,now: float,clip: Rect2,reduced: bool) -> void:
 	var delta=float(note.due)-now;var tail=float(note.end)-now;var status=str(note.status)
-	if delta>game.rhythm.lookahead() or tail<-.20 or status=="fired":return
+	if delta>game.rhythm.lookahead() or tail<-maxf(.20,game.rhythm.hit_window()) or status=="fired":return
 	if str(note.kind)=="roll":
 		_draw_roll(note,now,clip,reduced)
 		return
@@ -182,8 +189,8 @@ func _draw_note(note: Dictionary,now: float,clip: Rect2,reduced: bool) -> void:
 func _draw_roll(note: Dictionary,now: float,clip: Rect2,reduced: bool) -> void:
 	var first=int(note.required[0])
 	var last=int(note.required[1])
-	var start=head_rect(first,float(note.due),now)
-	var finish=head_rect(last,float(note.end),now)
+	var start=input_head_rect(first,float(note.due),now)
+	var finish=input_head_rect(last,float(note.end),now)
 	var active=str(note.status)=="rolling"
 	var color=SKIN.MISS if str(note.status)=="miss" else SKIN.ROLL
 	if not active and start.has_area() and finish.has_area():
@@ -205,7 +212,8 @@ func _draw_feedback(now: float,scale_value: float,reduced: bool) -> void:
 			"combo":notice=reward.notice.get_slice(" · ",0)
 			"guard":notice="保护"
 			"linger":notice="余韵 +%d%%"%roundi(reward.bonus(now)*100.)
-			"break":notice="断连"
+			"break":
+				if not game.rhythm.uses_mercury_cues():notice="断连"
 	var rect=Rect2(4,size.y-19.,size.x-8.,17.)
 	if not notice.is_empty():
 		var color=SKIN.HOLD if reward.notice_kind=="perfect" else SKIN.CHORD

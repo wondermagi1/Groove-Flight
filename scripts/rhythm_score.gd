@@ -9,17 +9,25 @@ const BALANCE=preload("res://scripts/run_balance.gd")
 var window: int=0
 var base_ratio: float=1.
 var reward_bonus: float=0.
+var _minimum_ammo: float=0.
+var _maximum_drop: float=1.
+var _settlement_floor: float=0.
 var ratio: float:
-	get:return clampf(BALANCE.accuracy_ammo(base_ratio)*(1.+reward_bonus),0.,1.2)
+	get:return clampf(_base_ammo()*(1.+reward_bonus),0.,1.2)
 	# Compatibility setter assigns ACTUAL ammo, while base_ratio stores accuracy.
-	set(value):base_ratio=sqrt(clampf(value/(1.+reward_bonus),0.,1.))
+	set(value):
+		_settlement_floor=0.
+		base_ratio=sqrt(clampf(value/(1.+reward_bonus),0.,1.))
 var previous: Dictionary={}
 var ledger: Dictionary={}
 var remainders: Dictionary={}
 func _init() -> void:reset()
-func reset() -> void:
+func reset(minimum_ammo: float=0.,maximum_drop: float=1.) -> void:
 	window=0;base_ratio=1.;reward_bonus=0.;ledger.clear();remainders.clear()
+	_minimum_ammo=minimum_ammo;_maximum_drop=maximum_drop;_settlement_floor=0.
 	previous={"earned":0,"possible":0,"notes":0,"ratio":1.,"carried":true}
+func _base_ammo() -> float:
+	return maxf(_settlement_floor,BALANCE.accuracy_ammo(base_ratio))
 func record(track: int,judgement_end: float,points: int) -> void:
 	if track<0 or track>=TRACKS:return
 	var index=maxi(window,floori(maxf(0.,judgement_end)/SECONDS))
@@ -33,7 +41,9 @@ func advance(now: float) -> void:
 	while window<target:
 		var row=total()
 		row.carried=int(row.possible)==0
-		if not row.carried:base_ratio=clampf(float(row.earned)/float(row.possible),0.,1.)
+		if not row.carried:
+			_settlement_floor=maxf(_minimum_ammo,_base_ammo()-_maximum_drop)
+			base_ratio=clampf(float(row.earned)/float(row.possible),0.,1.)
 		row.accuracy=base_ratio;row.ratio=ratio;previous=row
 		ledger.erase(window);window+=1
 func current(track: int) -> Dictionary:

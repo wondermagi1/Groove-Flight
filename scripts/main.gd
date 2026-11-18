@@ -1289,6 +1289,7 @@ func spawn_enemy(kind: String,position: Vector2=Vector2.INF) -> Dictionary:
 		position=safe_spawn_position(spawn_origin(outward),outward)
 	var hp=BALANCE.base_hp(kind,wave)
 	hp=float(planet_rules.boss_hp) if kind=="boss" else hp*float(planet_rules.hp_scale)
+	if kind=="boss" and expedition.enabled and active_planet=="mercury":hp*=BALANCE.MERCURY_FLAGSHIP_HP_SCALE
 	var enemy={"uid":next_enemy,"kind":kind,"at":position,"hp":hp,"max_hp":hp,"radius":{"mote":11.,"armor":18.,"shooter":15.,"dart":9.,"splitter":17.,"sentinel":19.,"lance":20.,"mirror":18.,"elite":42.,"boss":82.}[kind],"speed":{"mote":142.,"armor":85.,"shooter":100.,"dart":238.,"splitter":124.,"sentinel":85.,"lance":76.,"mirror":126.,"elite":96.,"boss":0.}[kind],"flash":0.,"phase":1,"angle":0.,"born":music.timeline}
 	if kind=="boss":
 		enemy.radius=float(PLANETS.planet(active_planet).boss_radius); enemy.machine_style=int(PLANETS.planet(active_planet).index)

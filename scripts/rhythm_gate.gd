@@ -9,6 +9,13 @@ const PERFECT=.042
 const LOOKAHEAD=2.9
 const CHORD_SPREAD=.125
 const ROLL_MIN_GAP=.095
+const MERCURY_WINDOW=.240
+const MERCURY_PERFECT=.065
+const MERCURY_EXCELLENT=.145
+const MERCURY_ROLL_MIN_GAP=.055
+const MERCURY_PREVIEW_BONUS=.65
+const MERCURY_AMMO_FLOOR=.50
+const MERCURY_AMMO_MAX_DROP=.30
 const LANES=3
 const REWARDS=preload("res://scripts/rhythm_rewards.gd")
 var score=SCORE.new()
@@ -45,8 +52,11 @@ var result_track: int=-1
 func reset(now: float=0.,new_run: bool=false) -> void:
 	notes.clear();salvos.clear();song_cursor=-1.;down.clear();cutoff=now-.00001 if new_run else now+.00001
 	last_serial=maxi(-1,floori(now/STEP)-1)
-	if new_run:rewards.reset();grade_counts={"perfect":0,"excellent":0,"general":0,"miss":0};combo=0;best_combo=0;hits=0;misses=0;wrong=0;perfects=0;judge_serial=0;judged_lanes.clear();score.reset()
-	if new_run:set_stage(0)
+	if new_run:
+		rewards.reset();grade_counts={"perfect":0,"excellent":0,"general":0,"miss":0};combo=0;best_combo=0;hits=0;misses=0;wrong=0;perfects=0;judge_serial=0;judged_lanes.clear()
+		if uses_mercury_cues():score.reset(MERCURY_AMMO_FLOOR,MERCURY_AMMO_MAX_DROP)
+		else:score.reset()
+		set_stage(0)
 	retime_salvos=false
 	last_result="三键合计 · 下一段弹量";result_at=-10.;result_track=-1
 	last_delta=0.;last_success=false;last_grade="";last_points=0
@@ -92,12 +102,14 @@ func forecast(loadout,now: float,song_time: float=-1.) -> void:
 				notes.append({"id":id,"track":track,"required":[track],"due":charged,"end":charged,"hold":0.,"kind":"tap","events":[event],"status":"pending","delta":0.,"pressed":{},"emitted":false,"scored":false})
 	if music_chart:
 		var song_now=(now-offset)*rate
-		if song_cursor<0.:song_cursor=maxf(0.,song_now-WINDOW*rate)
+		if song_cursor<0.:song_cursor=maxf(0.,song_now-hit_window()*rate)
 		while true:
 			var cue=CHART.next_cue(song_cursor,chart_id);var due=float(cue.song_due)/rate+offset
 			if due>now+lookahead():break
 			song_cursor=float(cue.song_due)+.0001
 			if due<cutoff:continue
+			# Keep the original cue for weapon scheduling and skip this input.
+			if uses_mercury_cues() and stage>=1 and int(cue.beat)%4==3:continue
 			var lane=int(cue.lane);var hold=float(cue.hold)/rate
 			var kind=_cue_kind(cue)
 			var required=[lane]
@@ -116,6 +128,8 @@ func uses_mercury_cues() -> bool:
 	return music_chart and chart_id=="mercury"
 func _cue_kind(cue: Dictionary) -> String:
 	var technique=str(cue.get("technique",""))
+	# Leave more room to steer in a bar with closely spaced cross-lane rolls.
+	if uses_mercury_cues() and technique=="roll" and int(cue.beat)%4==2:return "tap"
 	if (stage>=1 and technique=="chord") or (stage>=2 and technique=="roll"):return technique
 	return "hold" if float(cue.hold)>0. else "tap"
 func _cue_duration(cue: Dictionary,kind: String) -> float:
@@ -164,8 +178,13 @@ func set_stage(value: int) -> void:
 	if stage!=next:retime_salvos=true
 	stage=next
 	song_rate=1.+.045*stage
-func lookahead() -> float:return float(rewards.profile().get("lookahead",LOOKAHEAD))/song_rate
-func tail_window(note: Dictionary) -> float:return float(rewards.profile().get("tail_window",WINDOW)) if float(note.hold)>0. else WINDOW
+func lookahead() -> float:
+	var bonus=MERCURY_PREVIEW_BONUS if uses_mercury_cues() else 0.
+	return (float(rewards.profile().get("lookahead",LOOKAHEAD))+bonus)/song_rate
+func hit_window() -> float:return MERCURY_WINDOW if uses_mercury_cues() else WINDOW
+func tail_window(note: Dictionary) -> float:
+	var hold_bonus=float(rewards.profile().get("tail_window",WINDOW))-WINDOW if float(note.hold)>0. else 0.
+	return hit_window()+hold_bonus
 func sync_reward(now: float) -> void:score.reward_bonus=rewards.bonus(now)
 func held(lane: int) -> bool:
 	return lane in down.values()
@@ -194,8 +213,11 @@ func _emit_feedback(note: Dictionary,grade: String,now: float,previous_notice: i
 	})
 func _grade(note: Dictionary) -> String:
 	var error=absf(float(note.delta))
-	var perfect_window=float(rewards.profile().get("hold_perfect",PERFECT)) if float(note.hold)>0. else PERFECT
-	var excellent_window=float(rewards.profile().get("hold_excellent",EXCELLENT)) if float(note.hold)>0. else EXCELLENT
+	var perfect_window=MERCURY_PERFECT if uses_mercury_cues() else PERFECT
+	var excellent_window=MERCURY_EXCELLENT if uses_mercury_cues() else EXCELLENT
+	if float(note.hold)>0.:
+		perfect_window+=float(rewards.profile().get("hold_perfect",PERFECT))-PERFECT
+		excellent_window+=float(rewards.profile().get("hold_excellent",EXCELLENT))-EXCELLENT
 	return "perfect" if error<=perfect_window+.000001 else ("excellent" if error<=excellent_window+.000001 else "general")
 func _record_score(note: Dictionary,points: int) -> void:
 	if bool(note.get("scored",false)):return
@@ -205,6 +227,7 @@ func _record_score(note: Dictionary,points: int) -> void:
 	score.record(int(note.track),float(note.end)+tail_window(note),points)
 func advance(now: float) -> Array[Dictionary]:
 	var ready: Array[Dictionary]=[]
+	var window=hit_window()
 	for note in notes:
 		if str(note.status)=="holding" and now+.000001>=float(note.end):
 			if held(int(note.track)):note.status="armed"
@@ -222,8 +245,8 @@ func advance(now: float) -> Array[Dictionary]:
 			last_success=true;last_delta=float(note.delta)
 			result_at=now;result_track=int(note.track)
 			_emit_feedback(note,last_grade,now,previous_notice)
-		elif str(note.status)=="pending" and now>float(note.due)+WINDOW+.000001:_fail(note,"漏按",now)
-		elif str(note.status)=="rolling" and now>float(note.end)+WINDOW+.000001:_fail(note,"连打未完成",now)
+		elif str(note.status)=="pending" and now>float(note.due)+window+.000001:_fail(note,"漏按",now)
+		elif str(note.status)=="rolling" and now>float(note.end)+window+.000001:_fail(note,"连打未完成",now)
 	sync_reward(now);score.advance(now)
 	for note in (salvos if music_chart else notes):
 		if bool(note.get("emitted",false)) or now+.000001<float(note.end):continue
@@ -249,19 +272,23 @@ func press(lane: int,now: float,source: String="") -> bool:
 		if down.has(source):return false
 		down[source]=lane
 	var target: Dictionary={};var distance=INF
+	var window=hit_window()
 	for note in notes:
 		if not accepts_lane(note,lane):continue
 		var delta=absf(now-input_due(note))
-		if delta<=WINDOW+.000001 and delta<distance:target=note;distance=delta
+		if delta<=window+.000001 and delta<distance:target=note;distance=delta
 	if not target.is_empty():
 		var delta=now-input_due(target)
 		var kind=str(target.kind)
 		if kind=="chord" and not target.pressed.is_empty():
 			var first=int(target.pressed.keys()[0])
-			if (not source.is_empty() and not held(first)) or now-float(target.pressed[first])>CHORD_SPREAD+.000001:
+			var spread=MERCURY_WINDOW if uses_mercury_cues() else CHORD_SPREAD
+			if (not source.is_empty() and not held(first)) or now-float(target.pressed[first])>spread+.000001:
 				_fail(target,"双押间隔过长",now);return false
-		if str(target.status)=="rolling" and now-float(target.pressed[int(target.required[0])])<ROLL_MIN_GAP:
-			_fail(target,"连打第二键太早",now);return false
+		if str(target.status)=="rolling":
+			var gap=MERCURY_ROLL_MIN_GAP if uses_mercury_cues() else ROLL_MIN_GAP
+			if now-float(target.pressed[int(target.required[0])])<gap:
+				_fail(target,"连打第二键太早",now);return false
 		last_grade="";last_points=0
 		target.pressed[lane]=now
 		if absf(delta)>absf(float(target.delta)):target.delta=delta
@@ -279,12 +306,12 @@ func press(lane: int,now: float,source: String="") -> bool:
 		return true
 	for note in notes:
 		if lane not in note.required:continue
-		if str(note.status)=="holding" and now<=float(note.end)+WINDOW:
+		if str(note.status)=="holding" and now<=float(note.end)+window:
 			var distance_to_hold=absf(now-float(note.due))
 			if distance_to_hold<distance:target=note;distance=distance_to_hold
 		if str(note.status)!="pending":continue
 		var delta=absf(now-float(note.due))
-		if delta<=WINDOW+.000001 and delta<distance:target=note;distance=delta
+		if delta<=window+.000001 and delta<distance:target=note;distance=delta
 	wrong+=1;combo=0
 	if not target.is_empty():_fail(target,"重复击键",now)
 	else:last_grade="";last_result="空击 · 此键无琴块";result_at=now;result_track=lane;rewards.judge("wrong",0,now);sync_reward(now)

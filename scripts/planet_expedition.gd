@@ -3,7 +3,7 @@ extends RefCounted
 const DOCK_RADIUS=185.
 const BOSS_APPROACH=580.
 const ROUTES={
-	"mercury":{"size":Vector2(15200,14800),"points":[Vector2(0,-440),Vector2(-1670,-1790),Vector2(1490,-3510)],"pressure":31,"spacing":3.2},
+	"mercury":{"size":Vector2(15200,14800),"points":[Vector2(0,-440),Vector2(-1670,-1790),Vector2(1490,-3510)],"pressure":31,"spacing":3.65},
 	"venus":{"size":Vector2(14800,15000),"points":[Vector2(-420,-690),Vector2(820,-1800),Vector2(80,-3270)],"pressure":34,"spacing":3.1},
 	"earth":{"size":Vector2(15200,13800),"points":[Vector2(0,-520),Vector2(-1000,-1370),Vector2(870,-2300)],"pressure":37,"spacing":2.8},
 	"mars":{"size":Vector2(15800,14400),"points":[Vector2(0,-660),Vector2(1160,-1610),Vector2(-1180,-2860)],"pressure":42,"spacing":2.7},
@@ -69,7 +69,11 @@ func advance_incursion(game) -> void:
 	for plan in game.spawn_telegraphs:reserved+=int(plan.count)
 	nearby+=reserved
 	var cap=int(route.pressure)+stage*19+roundi(pressure*13.)+(14 if game.difficulty>0 else 0)
-	var amount=mini(maxi(0,cap-nearby),16+stage*6)
+	var batch=16+stage*6
+	if game.active_planet=="mercury":
+		cap=roundi(cap*game.BALANCE.MERCURY_SWARM_SCALE)
+		batch=roundi(batch*game.BALANCE.MERCURY_SWARM_SCALE)
+	var amount=mini(maxi(0,cap-nearby),batch)
 	amount=mini(amount,game.MAX_ENEMIES-64-game.enemies.size()-reserved)
 	if amount>=5:
 		game.spawn_wave_group(amount,str(game.wave_profile().formation))

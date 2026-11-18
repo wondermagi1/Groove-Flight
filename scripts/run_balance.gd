@@ -13,6 +13,8 @@ const BEACON_SECONDS=60.
 const BEACON_GUARD_RADIUS=640.
 const MERCURY_SUPPLY=[110,145,180]
 const MERCURY_KILL_LOOT_BONUS=.35
+const MERCURY_SWARM_SCALE=.82
+const MERCURY_FLAGSHIP_HP_SCALE=.85
 
 static func expedition_supply(planet_index: int,sector: int) -> int:
 	if planet_index==0:return MERCURY_SUPPLY[clampi(sector-1,0,2)]
