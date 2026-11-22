@@ -11,6 +11,7 @@ const QUALITY_NAMES=["普通","稀有","珍贵"]
 const QUALITY_COLORS=[Color("a7a7a7"),Color("59d96f"),Color("ef4ddd")]
 const DEFAULT_RECORDED_WEAPON_IDS=["recorded_crude","recorded_ballistic"]
 const RECORDED_WEAPONS_ENABLED=false
+const EXPEDITION_NEW_ITEMS=["m_bank_vanes","d_salvage_guard","m_prism_return","m_chain_inductor"]
 const VISUALS=preload("res://scripts/weapon_visuals.gd")
 const GROWTH=preload("res://scripts/projectile_growth.gd")
 const ENERGY=preload("res://scripts/energy_arsenal.gd")
@@ -85,10 +86,11 @@ static func is_item_available(id: String) -> bool:
 	if row.is_empty(): return false
 	if str(row.category)=="weapon": return is_weapon_audio_ready(id)
 	if str(row.category)!="mod": return true
-	var available: Array=[]
+	var available: Dictionary={}
 	for weapon_id in ACTIVE_WEAPON_IDS:
-		var family=str(item(weapon_id).get("family",""))
-		if family not in available: available.append(family)
+		var weapon=item(weapon_id)
+		for key in ["family","attr","visual_class"]:
+			available[str(weapon.get(key,""))]=true
 	for rule in row.get("rules",[]):
 		if str(rule.get("target",""))=="" or str(rule.get("target","")) in available: return true
 	return false
@@ -130,7 +132,10 @@ static func _support(id: String,name: String,category: String,rarity: int,cost: 
 
 static func _build() -> void:
 	_build_weapons(); _build_mods(); _build_rhythm(); _build_defense(); _build_cores(); _upgrade_trajectories()
-	assert(_records.size()==260,"Archived catalogue plus twelve added weapons and Westwind")
+	for id in EXPEDITION_NEW_ITEMS:
+		_lookup[id].unique=true
+		_lookup[id].refinable=false
+	assert(_records.size()==264,"Arsenal catalogue size")
 
 static func _build_weapons() -> void:
 	# id, name, family, damage, count, speed, life, spread(rad), pierce,
@@ -315,6 +320,9 @@ static func weapon_description(data: Dictionary) -> String:
 static func _build_mods() -> void:
 	_support("westwind","西风","mod",1,23,1,"support",[_rule("trajectory","westwind",1.)],Color("9edfc8"),"自由实体弹在射程后段快速弯向右侧，进入短促高速冲刺；尚未持有时，第3、4波商店保证出现。")
 	_lookup.westwind.unique=true; _lookup.westwind.refinable=false
+	_support("m_bank_vanes","折翼导流片","mod",1,21,1,"ballistic",[_rule("trajectory","bank_curve",1.,"row","feather_projectile")],Color("f2b57f"),"同轨羽弹在中段交替向两侧弯飞。适合扫过敌群的两翼。")
+	_support("m_prism_return","回折透镜","mod",2,28,1,"energy",[_rule("weapon","refractions",2.,"row","laser_beam"),_rule("weapon","damage_percent",-.10,"row","laser_beam")],Color("8cf2ff"),"用一部分直射伤害换取更长的折射链。")
+	_support("m_chain_inductor","磁感接力线圈","mod",2,28,1,"energy",[_rule("weapon","chain_count",2.,"row","electric_arc"),_rule("weapon","damage_percent",-.09,"row","electric_arc")],Color("c9b5ff"),"牺牲少量每跳伤害，把闪电送到更多敌机。")
 	# Six mechanically different parts for each family. Target specificity matters:
 	# installing one never becomes a universal damage/rarity reskin.
 	var names=[
@@ -442,6 +450,7 @@ static func _build_rhythm() -> void:
 	]
 	for s in specs: _support(s[0],s[1],"rhythm",s[2],s[3],s[4],s[5],s[6],Color("b5a6fa"))
 static func _build_defense() -> void:
+	_support("d_salvage_guard","余电回收器","defense",1,20,1,"support",[_rule("event","salvage_guard",1.)],Color("95edbb"))
 	var specs=[
 		["d_ablative","剥蚀装甲片",0,12,1,"support",[_rule("stat","max_health",3),_rule("stat","armor",.65)]],
 		["d_ceramic","陶瓷防弹衣",1,17,1,"support",[_rule("stat","armor",1),_rule("stat","move_percent",-.03)]],
@@ -455,7 +464,7 @@ static func _build_defense() -> void:
 		["d_crystal_skin","结晶修复层",1,20,1,"energy",[_rule("stat","armor",.5),_rule("stat","regen",.04)]],
 		["d_medkit","随舰急救盒",0,13,1,"support",[_rule("stat","max_health",2),_rule("event","heal_bar",.12)]],
 		["d_regenerator","纳米再生仓",1,18,1,"support",[_rule("stat","regen",.105)]],
-		["d_salvage_pump","星屑输血泵",1,19,1,"support",[_rule("event","heal_pickup",.014),_rule("stat","magnet",.34)]],
+		["d_salvage_pump","星屑输血泵",1,19,1,"support",[_rule("event","heal_pickup",.010),_rule("stat","magnet",.26)]],
 		["d_hunter_patch","猎获修补器",1,20,1,"support",[_rule("event","heal_kill",.02),_rule("weapon","damage_percent",-.08)]],
 		["d_rest_cradle","休整摇篮",1,20,1,"support",[_rule("event","heal_bar",.30),_rule("stat","armor",-.15)]],
 		["d_rescue_screen","救援屏障",1,21,1,"energy",[_rule("event","shield_dash",1),_rule("event","heal_bar",.06)]],
@@ -477,7 +486,7 @@ static func _build_defense() -> void:
 		["d_windrunner","逐风翼膜",1,20,1,"support",[_rule("stat","move_percent",.18),_rule("stat","max_health",-1)]],
 		["d_safe_hands","稳运手套",1,19,1,"support",[_rule("stat","armor",.5),_rule("stat","luck",3)]],
 		["d_wind_screen","风障回收翼",2,24,2,"support",[_rule("event","shield_dash",1),_rule("stat","magnet",.35)]],
-		["d_medical_converter","医疗换能器",2,24,1,"support",[_rule("event","heal_pickup",.027)]],
+		["d_medical_converter","医疗换能器",2,23,1,"support",[_rule("event","heal_pickup",.021)]],
 		["d_aegis_plate","宙盾护板",2,27,2,"energy",[_rule("event","shield_dash",3),_rule("stat","support",-6)]],
 		["d_rampart","磐城舱甲",2,28,2,"power",[_rule("stat","max_health",4),_rule("stat","armor",.7),_rule("stat","move_percent",-.08)]],
 		["d_coral_repair","珊瑚修复丛",2,25,2,"support",[_rule("stat","regen",.14),_rule("stat","power",-5)]],
@@ -512,6 +521,8 @@ static func _number(value: float) -> String:
 	return out.left(-1) if out.ends_with(".") else out
 static func describe_rule(rule: Dictionary) -> String:
 	if str(rule.get("key",""))=="westwind": return "买到即为完整极速右转效果；不可升级或叠加"
+	if str(rule.get("key",""))=="bank_curve": return "同轨羽弹随各自质量交替偏转，保留实际飞行轨迹"
+	if str(rule.get("key",""))=="salvage_guard": return "拾取8枚金币生成1层护盾，持续3秒，冷却8秒"
 	if str(rule.get("key",""))=="kaleidoscope": return "同轨实体弹以旋转花瓣曲线甩出；充能、声音和弹数各自保留"
 	if str(rule.get("type",""))=="trajectory":
 		var labels={"count_per_attribute":"每点归属属性增加弹数 向下取整","chain_per_attribute":"每点归属属性增加传导次数 向下取整","split_count":"命中四向衍生 深度最多2 单发26%伤害","accel_forward":"前向加速度","accel_side":"侧向加速度","offset_forward":"出生点前移","offset_side":"出生点侧移","turn_after":"延时转向秒数","turn_deg":"转向角度","conduct":"能量标记3秒 电弧引爆倍率"}
@@ -522,7 +533,7 @@ static func describe_rule(rule: Dictionary) -> String:
 	var target=""
 	if rule.has("target"):
 		var index=FAMILIES.find(rule.target)
-		target=FAMILY_NAMES[index] if index>=0 else {"ballistic":"弹道武器","energy":"能量武器","power":"动力武器","support":"支援武器"}.get(rule.target,rule.target)
+		target=FAMILY_NAMES[index] if index>=0 else {"ballistic":"弹道武器","energy":"能量武器","power":"动力武器","support":"支援武器","laser_beam":"激光","electric_arc":"电链","feather_projectile":"羽弹"}.get(rule.target,rule.target)
 	var key: String=rule.key; var value=float(rule.value)
 	var names={"ballistic":"弹道","energy":"能量","power":"动力","support":"支援","extra_projectiles":"额外弹丸","bullet_multiplier":"弹丸伤害倍率","crit_chance":"暴击率","crit_damage":"暴击伤害","max_health":"生命上限","regen":"每秒恢复生命","armor":"装甲","move_percent":"移动速度","magnet":"拾取范围","luck":"幸运","damage_percent":"伤害","count":"发射数量","pierce":"穿透次数","speed_percent":"弹速","range_percent":"有效时长/射程","explosion":"爆炸半径","spread_percent":"散射角","chain_count":"连锁次数","homing":"追踪强度","bounces":"反弹次数","charge_reduce":"充能减免","repeat":"同拍复奏","rotate":"发射旋角","streak":"同类连奏增伤","chord":"异类和弦强度","heal_bar":"每小节恢复生命","shield_dash":"冲刺护盾层数","heal_pickup":"每颗星屑恢复生命","explode_kill":"击杀爆破伤害","missiles_dash":"冲刺发射导弹","heal_kill":"每次击杀恢复生命"}
 	var percent=key in ["bullet_multiplier","crit_chance","crit_damage","move_percent","magnet","damage_percent","speed_percent","range_percent","spread_percent","streak","chord"]
@@ -531,7 +542,7 @@ static func describe_rule(rule: Dictionary) -> String:
 	if key=="charge_reduce": amount+="小节（向下取1/2/4/8档，至少1）"
 	if key=="repeat": amount+="次（同拍）"
 	if key=="explosion": amount+="像素"
-	return str(scope)+"·"+str(condition)+str(target)+str(names.get(key,key))+amount
+	return str(scope)+"·"+str(condition)+str(target)+("折射次数" if key=="refractions" else str(names.get(key,key)))+amount
 
 static func _upgrade_trajectories() -> void:
 	# Original IDs, prices and ownership stay compatible.

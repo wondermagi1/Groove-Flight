@@ -1,0 +1,24 @@
+{
+  "version": "0.71.0-weapon-materials",
+  "date": "2026-11-22",
+  "remote_backup": "650db2a7f27a59a147c612e7665226271f963e37",
+  "weapon_classes": {
+    "feather_projectile": 15,
+    "missile_shell": 1,
+    "energy_orb": 1,
+    "orbital_guard": 1,
+    "laser_beam": 3,
+    "electric_arc": 3
+  },
+  "checks": [
+    {"script": "tests/v71_equipment_review.gd", "assertions": 172, "failed": 0},
+    {"script": "tests/v65_expedition_review.gd", "renderer": "gl_compatibility", "assertions": 269, "failed": 0},
+    {"script": "tests/v67_mercury_combat.gd", "assertions": 48, "failed": 0},
+    {"script": "tests/v69_rhythm_review.gd", "assertions": 112, "failed": 0}
+  ],
+  "material_preview": {
+    "renderers": ["forward_plus", "gl_compatibility"],
+    "rendered_per_capture": {"physical_samples": 20, "energy_segments": 6},
+    "representative_classes": 6
+  }
+}

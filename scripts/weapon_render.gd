@@ -69,7 +69,7 @@ class TrailLayer:
 		if length<.1: return
 		var width=4.2+(2.2 if style in [2,6] else 0.)+(1.2 if style in [3,4,7] else 0.)
 		if profile_width>0.: width=profile_width
-		var pose=Transform2D(axis.angle(),(from+to)*.5).scaled_local(Vector2(length,width))
+		var pose=Transform2D(axis.angle(),(from+to)*.5).scaled_local(Vector2(length+minf(width*.42,1.3),width))
 		multimesh.set_instance_transform_2d(active_count,pose)
 		multimesh.set_instance_color(active_count,color)
 		active_count+=1
@@ -119,7 +119,7 @@ func update_projectiles(bullets: Array,bounds: Rect2,reduced: bool=false) -> voi
 		var tail=minf(590.,float(row.get("tail",TRAILS[style]))*speed_scale*(.58 if dense else 1.))
 		# Curved weapons retain a sampled path, so ribbons follow the arc rather
 		# than pointing through the inside of a spiral or orbit.
-		if bullet.has("trail_points") and not reduced:
+		if not reduced and bullet.has("trail_points"):
 			var points: Array=bullet.trail_points
 			var stride=3 if trail_dense else 1
 			for n in range(1,points.size(),stride):
@@ -128,7 +128,7 @@ func update_projectiles(bullets: Array,bounds: Rect2,reduced: bool=false) -> voi
 				var alpha=float(row.get("trail_alpha",.8))*progress*progress*(.7 if dense else 1.)*life_scale
 				ribbons.add(style,points[n-1],points[end],Color(bullet.color,alpha),float(row.get("width",3.))*maxf(.12,life_scale)*(.16+.84*progress))
 			if not points.is_empty(): ribbons.add(style,points[-1],bullet.at,Color(bullet.color,float(row.get("trail_alpha",.8))*life_scale),float(row.get("width",3.))*maxf(.12,life_scale))
-		else:
+		elif not reduced:
 			tail=minf(tail,velocity.length()*age) if DATA.NEW_INSTRUMENTS.has(str(bullet.kind)) else tail
 			ribbons.add(style,bullet.at-direction*tail,bullet.at,Color(bullet.color,.62 if dense else .9),float(row.get("width",0.)))
 		var size_value: Vector2=Vector2(row.get("size",SIZES[style]*float(row.scale)))*life_scale

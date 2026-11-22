@@ -13,6 +13,8 @@ static func wind_weight(b: Dictionary) -> float:
 
 static func setup(b: Dictionary,motion: Dictionary,index: int,count: int,origin: Vector2,time: float,track: int) -> void:
 	b.westwind=1. if float(motion.get("westwind",0.))>0. else 0.
+	if float(motion.get("bank_curve",0.))>0.:
+		b.bank_curve=minf(1.,float(motion.bank_curve))*(1. if index%2==0 else -1.)
 	if float(motion.get("kaleidoscope",0.))<=0.: return
 	# All row members share the same rotor phase; each keeps its own UID,
 	# particle count, damage, root sound and charge deadline.
@@ -35,7 +37,7 @@ static func setup(b: Dictionary,motion: Dictionary,index: int,count: int,origin:
 
 static func step(b: Dictionary,delta: float) -> Vector2:
 	if bool(b.get("retiring",false)): return Vector2.ZERO
-	if not b.has("kaleido_center") and wind_weight(b)<=0.: return Vector2.ZERO
+	if not b.has("kaleido_center") and not b.has("bank_curve") and wind_weight(b)<=0.: return Vector2.ZERO
 	var before=Vector2(b.v); var force=Vector2.ZERO
 	var mass=maxf(.5,float(b.get("flight_mass",1.)))
 	if wind_weight(b)>0.:
@@ -61,7 +63,14 @@ static func step(b: Dictionary,delta: float) -> Vector2:
 		var tangent=radial.orthogonal()*float(b.kaleido_spin)
 		var desired=(radial*lerpf(.48,1.,release)+tangent*lerpf(.92,.04,release)).normalized()*speed
 		force+=(desired-before)*lerpf(5.2,.9,release)
-	b.v=(before+force/mass*delta).limit_length(minf(3000.,maxf(500.,float(b.get("original_speed",700.))*2.8)))
+	var velocity=before
+	if b.has("kaleido_center"):
+		velocity=(before+force/mass*delta).limit_length(minf(3000.,maxf(500.,float(b.get("original_speed",700.))*2.8)))
+	if b.has("bank_curve"):
+		var progress=float(b.get("travelled",0.))/maxf(1.,float(b.get("range_limit",1.)))
+		var bank=smooth(.26,.46,progress)*(1.-smooth(.64,.84,progress))
+		velocity=velocity.rotated(float(b.bank_curve)*bank*2.15*delta/sqrt(mass))
+	b.v=velocity
 	# Actual swept displacement uses the same trapezoidal force correction as
 	# the existing independent flight kernel, including wind/rotor acceleration.
 	return -(Vector2(b.v)-before)*.5*delta

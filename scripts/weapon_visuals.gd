@@ -4,8 +4,7 @@ const FIELDS=preload("res://scripts/projectile_fields.gd")
 const PALETTE=[Color("ffe98a"),Color("8effb5"),Color("57eaff"),Color("b99aff"),Color("ff8bd7"),Color("ffba79")]
 const STANDARD_IDS=["pulse","scatter","rail","pulse_needle","rail_horizon","recorded_heavy","gilded_helix","weave_cross","stern_fan","scatter_prism","beam_split","dawn_fan","tidal_weave","firefly_rain","kaleidoscope"]
 const MOVING_IDS=STANDARD_IDS+["missile","nova","crown_orbit"]
-# The selected gold-helix baseline, including its existing glow shader. Only
-# tint, emission geometry and motion distinguish the active solid projectiles.
+# Preserve the chosen gold-helix material across all feather projectiles.
 const STANDARD={"style":1,"size":Vector2(48,16),"tail":165.,"width":3.2,"variant":.92,"trail_alpha":.36}
 const RANGE_FADE_SECONDS=1.5
 const RANGE_FADE_DRAG=2.6
@@ -24,7 +23,7 @@ const PROFILES={
 	"recorded_heavy":{"size":Vector2(114,17),"tail":340.,"width":5.,"color":Color("ffcda1")},
 	"gilded_helix":{"style":1,"size":Vector2(48,16),"tail":165.,"width":3.2,"variant":.92,"color":Color("fff09a")},
 	"weave_cross":{"style":1,"size":Vector2(42,16),"tail":145.,"width":3.,"variant":.92,"color":Color("b2ffb4")},
-	"crown_orbit":{"style":1,"size":Vector2(46,18),"tail":120.,"width":2.4,"trail_alpha":.32,"variant":.92,"color":Color("9fffe2")},
+	"crown_orbit":{"style":7,"size":Vector2(47,39),"tail":120.,"width":2.8,"trail_alpha":.36,"variant":.92,"color":Color("9fffe2")},
 	"stern_fan":{"color":Color("ff9ecb")},
 	"dawn_fan":{"color":Color("ffe4a0")},
 	"tidal_weave":{"color":Color("7ee9f2")},
@@ -156,18 +155,24 @@ static func setup(bullet: Dictionary,kind: String,index: int,count: int,player: 
 		bullet.color=PALETTE[floori(float(index)/2.)%PALETTE.size()]
 	if kind in MOVING_IDS: bullet.trail_points=[Vector2(bullet.at)]; bullet.trail_clock=0.
 
+static func record_path(bullet: Dictionary,previous: Vector2,delta: float) -> void:
+	if not bullet.has("trail_points") or delta<=0.:return
+	var interval=.036
+	var remaining=float(bullet.trail_clock)
+	var next_sample=interval-remaining
+	while next_sample<=delta:
+		bullet.trail_points.append(previous.lerp(Vector2(bullet.at),next_sample/delta))
+		if bullet.trail_points.size()>8:bullet.trail_points.pop_front()
+		next_sample+=interval
+	bullet.trail_clock=fposmod(remaining+delta,interval)
+	bullet.visual_velocity=(Vector2(bullet.at)-previous)/delta
+
 static func travel_offset(bullet: Dictionary,delta: float) -> Vector2:
-	if bullet.has("trail_points"):
-		bullet.trail_clock=float(bullet.trail_clock)+delta
-		if bullet.trail_clock>=.035:
-			bullet.trail_clock=0.; bullet.trail_points.append(Vector2(bullet.at))
-			if bullet.trail_points.size()>8: bullet.trail_points.pop_front()
 	if bullet.has("curve_rate"): bullet.v=Vector2(bullet.v).rotated(float(bullet.curve_rate)*delta)
 	var correction=_flight_step(bullet,delta)
 	correction+=FIELDS.step(bullet,delta)
 	if bullet.has("weave_side"):
 		var phase=float(bullet.weave_phase); var age=float(bullet.age)
 		var side: Vector2=bullet.weave_side
-		bullet.visual_velocity=Vector2(bullet.v)+side*cos(age*3.8+phase)*float(bullet.weave_amplitude)*3.8
 		return side*(sin(age*3.8+phase)-sin((age-delta)*3.8+phase))*float(bullet.weave_amplitude)+correction
 	return correction

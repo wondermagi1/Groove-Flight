@@ -19,19 +19,29 @@ void fragment(){
   else if(style==0 && variant>.25){d=min(capsule(p,vec2(-.5,.18),vec2(.5,.18),.13),capsule(p,vec2(-.5,-.18),vec2(.5,-.18),.13));}
   if(style==2 && variant>.25) trim+=exp(-abs(p.x+.35)*35.)*.7;
  }else if(style==1){
-  d=abs(p.x)*.62+abs(p.y)-.64;
-  if(variant>.75) d=max(abs(p.x)-.98,abs(p.y)-.64*pow(max(0.,1.-p.x*p.x),.66));
-  core=exp(-length(p-vec2(.22,0))*7.); trim=step(.0,p.x)*exp(-abs(p.y)*12.);
+  float spine=.085*(p.x*p.x-.36);
+  float span=.62*pow(max(0.,1.-p.x*p.x),.72)*(.93+.07*p.x);
+  d=max(abs(p.x)-.98,abs(p.y-spine)-span);
+  float section=(p.y-spine)/max(.09,span);
+  float lit_face=exp(-abs(section+.24)*3.6);
+  core=exp(-abs(section)*5.8)*smoothstep(-.85,.24,p.x);
+  trim=lit_face*(.45+.25*smoothstep(-.25,.80,p.x));
  }else if(style==3){
   float hull=max(abs(p.y)-.27,max(-.66-p.x,p.x+abs(p.y)*.8-.76));
   float fins=max(abs(p.x+.46)-.16,abs(p.y)-.62);
   d=min(hull,fins); surface=1.;
   core=exp(-length((p-vec2(.45,0))*vec2(2.,1.))*7.);
-  trim=exp(-abs(p.x+.21)*35.)*step(abs(p.y),.3)+step(.42,abs(p.y))*.45;
+  float panel=exp(-abs(p.x+.24+p.y*.32)*35.)+exp(-abs(p.x-.34)*42.);
+  float nozzle=exp(-abs(p.x+.60)*43.)*exp(-abs(p.y)*5.);
+  trim=panel*.46*step(abs(p.y),.27)+step(.42,abs(p.y))*.32+nozzle*.86;
   if(variant>.25) trim+=pow(max(0.,cos(p.x*23.)),12.)*.4*step(abs(p.y),.25);
  }else if(style==4){
-  float r=length(p); d=r-(.58+.065*cos(atan(p.y,p.x)*4.+seed*4.));
-  core=exp(-r*6.); trim=exp(-abs(r-.46)*50.)*.7+exp(-abs(p.y)*32.)*.4;
+  float r=length(p);
+  float a=atan(p.y,p.x);
+  d=r-(.62+.023*cos(a*4.+seed*4.));
+  float shell=.46+.039*sin(a*3.-age*8.+seed*6.);
+  core=exp(-length(p-vec2(.13,-.12))*4.8);
+  trim=exp(-abs(r-shell)*29.)*.62+exp(-abs(r-.59)*38.)*.27;
  }else if(style==6){
   d=abs(p.y)*.8+abs(p.x)*.24-.22;
   core=exp(-abs(p.y)*25.); trim=exp(-abs(abs(p.y)-.13)*50.)*.45;
@@ -39,7 +49,11 @@ void fragment(){
   d=max(length(p)-.81,-(length(p-vec2(.38,-.12))-.69));
   if(variant>.75) d=min(d,max(abs(p.x)*.7+abs(p.y)*.5-.20,-p.x));
   surface=1.;
-  core=exp(-abs(length(p)-.75)*48.); trim=exp(-abs(length(p)-.59)*45.)*.6;
+  float r=length(p);
+  float a=atan(p.y,p.x);
+  float inlays=pow(max(0.,cos(a*9.+seed*6.)),8.);
+  core=exp(-abs(r-.72)*30.)*(.48+.52*inlays);
+  trim=exp(-abs(r-.57)*42.)*.72+inlays*exp(-abs(r-.67)*30.)*.35;
  }else if(style==8 || style==9){
   float h=hexagon(p,.68); d=h;
   if(variant>.25) d=max(d,-(length(p)-.22)); surface=1.;
@@ -60,14 +74,14 @@ void fragment(){
   trim=exp(-abs(abs(p.y)-.4)*35.)*step(p.x,.0)*.7;
  }
  float aa=max(fwidth(d),.012); float mask=1.-smoothstep(-aa,aa,d);
- float bevel=1.-smoothstep(-.11,-.015,d);
+ float bevel=smoothstep(-.15,-.04,d)*(1.-smoothstep(.0,aa,d));
  float specular=pow(max(0.,dot(normalize(p+vec2(.001)),normalize(vec2(-.56,.83)))),10.)*smoothstep(-.08,.18,d);
- vec3 energy=mix(tint.rgb*.68,vec3(1.),clamp(core*.8+trim*.5,0.,.9));
- vec3 metal=mix(vec3(.06,.10,.17),vec3(.48,.64,.78),clamp(.58-p.y*.6,0.,1.));
+ vec3 energy=mix(tint.rgb*.55,vec3(1.,.97,.9),clamp(core*.73+trim*.52,0.,.88));
+ vec3 metal=mix(vec3(.055,.082,.13),vec3(.67,.78,.88),clamp(.54-p.y*.64,0.,1.));
  metal=mix(metal,tint.rgb,clamp(trim+core,.0,.85));
  metal+=vec3(.55,.72,.82)*specular*.42;
  vec3 color=mix(energy,metal,surface);
- color+=tint.rgb*bevel*.55+vec3(core*.46);
+ color+=tint.rgb*bevel*.27+vec3(core*.25);
  float fade=min(1.,detail.z*12.);
  COLOR=vec4(color,mask*tint.a*fade);
 }

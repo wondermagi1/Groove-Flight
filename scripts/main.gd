@@ -125,6 +125,8 @@ var facing: Vector2=Vector2.UP
 var health: float=10.
 var shield_points: float=0.
 var shield_until: float=-1.
+var salvage_charge: int=0
+var salvage_ready_at: float=-1.
 var player_guard_until: float=-1.
 var player_guard_started: float=-10.
 var shield_renderer
@@ -501,6 +503,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	pilot_amp_until=-1; pilot_heal_progress=0; pending_splits.clear(); boss_down=false; spawn_log.clear(); total_spawned=0
 	flight_trail.clear(); flight_trail_clock=0.
 	shield_points=0; shield_until=-1; player_guard_until=-1; player_guard_started=-10.; shield_renderer.flash_at=-10.; pending_dash_missiles=0; proc_queue.clear(); shop_offers.clear(); shop_reroll_cost=8
+	salvage_charge=0; salvage_ready_at=-1.
 	wave=0; kills=0; score=0; dust=0; picked=0; next_enemy=1; actual_steps=0; selected_uid=-1; drop_fraction=0.;mercury_drop_remainder=0.
 	kill_combo=0; kill_combo_until=0.
 	player=Vector2.ZERO; facing=Vector2.UP; movement_facing=facing; camera.enabled=true; camera.position=player; camera.reset_smoothing()
@@ -775,6 +778,7 @@ func open_settings() -> void: show_settings()
 func can_edit() -> bool: return state=="editor" or state=="reward"
 func refresh_loadout_stats() -> void:
 	stats_snapshot=loadout.stats(); event_snapshot=loadout.events()
+	if float(event_snapshot.get("salvage_guard",0.))<=0.: salvage_charge=0
 	health=minf(health,float(stats_snapshot.max_health))
 func panel_visible(key: String,mode: String="editor") -> bool:
 	return bool(settings.get(("combat_" if mode=="combat" else "")+key,true))
@@ -1591,8 +1595,9 @@ func update_bullets(frame_delta: float) -> void:
 			bullet.fade_age+=delta; bullet.life=VISUALS.RANGE_FADE_SECONDS-float(bullet.fade_age)
 			if bullet.life<=0.: bullets.remove_at(i); continue
 			bullet.age+=delta; VISUALS.travel_offset(bullet,delta)
+			var fade_from: Vector2=bullet.at
 			bullet.v*=exp(-delta*VISUALS.RANGE_FADE_DRAG); bullet.at+=bullet.v*delta
-			bullet.visual_velocity=bullet.v
+			VISUALS.record_path(bullet,fade_from,delta)
 			# This is visual retirement past the weapon's actual range, with no
 			# extra damage, homing acquisition, splits, or explosion procs.
 			continue
@@ -1628,6 +1633,7 @@ func update_bullets(frame_delta: float) -> void:
 				bullet.travelled+=minf(distance,remaining)
 				if float(bullet.age)>minf(30.,float(bullet.total_life)*4.): range_ended=true
 		bullet.at=proposed
+		if standard:VISUALS.record_path(bullet,previous,delta)
 		var low=Vector2i(floor(minf(previous.x,bullet.at.x)/GRID),floor(minf(previous.y,bullet.at.y)/GRID))
 		var high=Vector2i(floor(maxf(previous.x,bullet.at.x)/GRID),floor(maxf(previous.y,bullet.at.y)/GRID))
 		var dead=false
@@ -1758,6 +1764,21 @@ func collect_pickup(item: Dictionary,with_sound: bool=true) -> void:
 	if item.get("heal",false): health=minf(health+1,loadout.max_health)
 	health=minf(float(stats_snapshot.get("max_health",10)),health+float(event_snapshot.get("heal_pickup",0))*int(item.get("heal_units",amount)))
 	if with_sound: sound("pickup",-15,1.+(picked%3)*.025)
+	if state=="combat" and amount>0 and float(event_snapshot.get("salvage_guard",0.))>0.:
+		charge_salvage_guard(amount)
+func charge_salvage_guard(amount: int) -> void:
+	const COST=8
+	salvage_charge=mini(COST,salvage_charge+amount)
+	var now: float=music.timeline
+	if salvage_charge<COST or now<salvage_ready_at: return
+	salvage_charge=0
+	salvage_ready_at=now+8.
+	if now>=shield_until: shield_points=0.
+	shield_points=maxf(shield_points,1.)
+	shield_until=maxf(shield_until,now+3.)
+	shield_renderer.impact(now)
+	fx.shield(player,Color("95edbb"),96.)
+	sound("shield",-16)
 func _grant_player_guard(duration: float) -> void:
 	var was_active=music.timeline<player_guard_until
 	player_guard_until=maxf(player_guard_until,music.timeline+maxf(.1,duration))
@@ -1781,7 +1802,12 @@ func hurt_player(amount: float) -> void:
 	if health<=0: sound("hit",-6); finish_run(false)
 func featured_shop_item() -> String:
 	var tier=expedition_shop_tier if expedition.enabled else wave
-	return "westwind" if loadout.doctrine_id in ["","ballistic"] and tier in [3,4] and not loadout.modules.any(func(module): return str(module.kind)=="westwind") else ""
+	var unowned=func(id):return not loadout.modules.any(func(module):return str(module.kind)==id)
+	if loadout.doctrine_id in ["","ballistic"] and tier in [3,4] and unowned.call("westwind"): return "westwind"
+	if expedition.enabled and tier in [1,2]:
+		var eligible: Array=C.EXPEDITION_NEW_ITEMS.filter(func(id):return unowned.call(id) and int(C.item(id).rarity)==tier)
+		if not eligible.is_empty():return str(eligible[rng.randi_range(0,eligible.size()-1)])
+	return ""
 
 func close_expedition_sector(completed: int) -> void:
 	wave_supply=BALANCE.expedition_supply(int(PLANETS.planet(active_planet).index),completed)

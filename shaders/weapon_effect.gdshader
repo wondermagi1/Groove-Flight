@@ -11,14 +11,22 @@ void fragment(){
  float fade=pow(max(0.,1.-t),1.3),core=0.,glow=0.;
  if(mode<=1){
   float y=p.y;
-  if(mode==1) y-= (noise(UV.x*22.)-.5)*.65*sin(UV.x*3.14159265);
+  float anchors=sin(UV.x*3.14159265);
+  if(mode==1) y-= (noise(UV.x*22.)-.5)*.65*anchors;
   float ends=smoothstep(0.,.018,UV.x)*(1.-smoothstep(.982,1.,UV.x));
   core=exp(-abs(y)*42.)*ends;
   float sheath=exp(-abs(y)*11.)*ends;
-  float filament=exp(-abs(abs(y)-.22)*48.)*ends;
-  if(mode==1) sheath+=exp(-abs(y+.20*sin(UV.x*23.))*28.)*.22*ends;
-  else sheath*=.85+.15*sin(UV.x*70.-t*28.+detail.w*6.2831853);
-  glow=exp(-abs(y)*4.8)*ends*.25+sheath*.65+filament*.19;
+  float filament=0.;
+  if(mode==1){
+   float braid=(noise(UV.x*37.+61.)-.53)*.54*anchors;
+   filament=exp(-abs(y+braid)*31.)*.32*anchors*(1.-t);
+   filament+=exp(-abs(y-braid*.66)*43.)*.20*anchors*(1.-t);
+  }else{
+   float flow=.89+.11*sin(UV.x*82.-t*36.+detail.w*6.2831853);
+   sheath*=flow;
+   filament=exp(-abs(abs(y)-.19)*42.)*.21*ends*flow;
+  }
+  glow=exp(-abs(y)*4.8)*ends*.24+sheath*.60+filament;
  }else{
   float r=length(p),a=atan(p.y,p.x);
   if(mode==2){

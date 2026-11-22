@@ -33,19 +33,19 @@ const FAMILY_CADENCE={
 	"nova":"backbeat","chain":"swell","rail":"accent","boomerang":"alternating",
 	"orbit":"steady","mine":"accent","flame":"swell","drone":"steady"
 }
-const WEAPON_KEYS=["damage_percent","count","pierce","speed_percent","range_percent","explosion","spread_percent","chain_count","homing","bounces"]
-const TRAJECTORY_KEYS=["split_count","accel_forward","accel_side","offset_forward","offset_side","turn_after","turn_deg","conduct","count_per_attribute","chain_per_attribute","westwind","kaleidoscope"]
+const WEAPON_KEYS=["damage_percent","count","pierce","speed_percent","range_percent","explosion","spread_percent","chain_count","homing","bounces","refractions"]
+const TRAJECTORY_KEYS=["split_count","accel_forward","accel_side","offset_forward","offset_side","turn_after","turn_deg","conduct","count_per_attribute","chain_per_attribute","westwind","kaleidoscope","bank_curve"]
 const BEAT_KEYS=["charge_reduce","repeat","rotate","streak","chord"]
-const EVENT_KEYS=["heal_bar","shield_dash","heal_pickup","explode_kill","missiles_dash","heal_kill"]
+const EVENT_KEYS=["heal_bar","shield_dash","heal_pickup","explode_kill","missiles_dash","heal_kill","salvage_guard"]
 const WAVE_BOONS=[
 	{"id":"boon_hull","name":"船体加固","key":"max_health","value":2.,"detail":"生命上限 +2，并立即恢复2生命","tag":"生存","color":Color("8ed7bf")},
-	{"id":"boon_armor","name":"复合装甲","key":"armor","value":.55,"detail":"装甲 +0.55，提高全部承伤减免","tag":"生存","color":Color("9dc9d7")},
-	{"id":"boon_thruster","name":"矢量推进","key":"move_percent","value":.035,"detail":"移动速度 +3.5%","tag":"机动","color":Color("83cafa")},
-	{"id":"boon_caliber","name":"口径校准","key":"bullet_multiplier","value":.065,"detail":"全部武器单发伤害 +6.5%","tag":"火力","color":Color("e7c88d")},
-	{"id":"boon_crit","name":"精密瞄具","key":"crit_chance","value":.0225,"detail":"暴击率 +2.25%","tag":"火力","color":Color("ff9ab2")},
-	{"id":"boon_regen","name":"纳米修复","key":"regen","value":.021,"detail":"每秒再生 +0.021 生命","tag":"生存","color":Color("91edbe")},
-	{"id":"boon_magnet","name":"回收磁场","key":"magnet","value":.20,"detail":"拾取范围 +20%","tag":"经济","color":Color("b7d88e")},
-	{"id":"boon_luck","name":"航路直觉","key":"luck","value":1.5,"detail":"幸运 +1.5，改善补给品质","tag":"经济","color":Color("f2cd8a")},
+	{"id":"boon_armor","name":"复合装甲","key":"armor","value":.60,"detail":"装甲 +0.60，提高承伤减免","tag":"生存","color":Color("9dc9d7")},
+	{"id":"boon_thruster","name":"矢量推进","key":"move_percent","value":.045,"detail":"移动速度 +4.5%","tag":"机动","color":Color("83cafa")},
+	{"id":"boon_caliber","name":"口径校准","key":"bullet_multiplier","value":.055,"detail":"单发伤害倍率 +5.5 个百分点","tag":"火力","color":Color("e7c88d")},
+	{"id":"boon_crit","name":"精密瞄具","key":"crit_chance","value":.03,"detail":"暴击率 +3 个百分点","tag":"火力","color":Color("ff9ab2")},
+	{"id":"boon_regen","name":"纳米修复","key":"regen","value":.032,"detail":"每秒再生 +0.032 生命","tag":"生存","color":Color("91edbe")},
+	{"id":"boon_magnet","name":"回收磁场","key":"magnet","value":.16,"detail":"拾取范围倍率 +16 个百分点","tag":"经济","color":Color("b7d88e")},
+	{"id":"boon_luck","name":"航路直觉","key":"luck","value":2.5,"detail":"幸运 +2.5，改善补给品质","tag":"经济","color":Color("f2cd8a")},
 	{"id":"boon_ballistic","name":"实弹标定","key":"ballistic","value":5.,"detail":"实弹属性 +5","tag":"主属性","color":Color("63e7df"),"weight":3.},
 	{"id":"boon_ballistic_3","name":"实弹校准 +3","key":"ballistic","value":3.,"detail":"实弹属性 +3","tag":"主属性","color":Color("63e7df"),"doctrine":"ballistic","weight":3.},
 	{"id":"boon_ballistic_7","name":"实弹扩容 +7","key":"ballistic","value":7.,"detail":"实弹属性 +7","tag":"主属性","color":Color("63e7df"),"doctrine":"ballistic","weight":3.},
@@ -273,7 +273,7 @@ func _applies(source: Dictionary,uid: int,serial: int) -> bool:
 	var at=equipped_head(uid)
 	if at<0: return false
 	var module=find(uid); var row=_row(str(module.kind))
-	if not target.is_empty() and target!=str(row.get("family","")) and target!=str(row.get("attr","")): return false
+	if not target.is_empty() and target not in [str(row.get("family","")),str(row.get("attr","")),str(row.get("visual_class",""))]: return false
 	if scope=="all": return true
 	if floori(float(source.slot)/STEPS)!=floori(float(at)/STEPS): return false
 	if scope=="row": return true
@@ -395,7 +395,7 @@ func _weapon_event(uid: int,serial: int,sources: Array) -> Dictionary:
 	var cadence_data=cadence_profile_for(row)
 	var cadence=int(cadence_data.get("beats",_cadence_beats(row)))
 	var cadence_step=0
-	return {"uid":uid,"kind":str(row.id),"voice":str(row.get("voice",row.id)),"pitch":pitch,"family":str(row.family),"name":str(row.name),"category":"weapon","attr":attribute,"level":int(module.level),"quality":int(growth.quality),"growth":growth,"width":int(row.width),"slot":at,"damage":clampf(damage,.1,100000.),"count":clampi(int(row.get("count",1))+extra,1,count_limit),"extra":extra,"pierce":clampi(int(row.get("pierce",0))+roundi(weapon.pierce),0,40),"speed":clampf(float(row.get("speed",700))*maxf(.1,1.+weapon.speed_percent),0.,3000.),"life":clampf(float(row.get("life",2))*maxf(.1,1.+weapon.range_percent),.1,30.),"spread":clampf(float(row.get("spread",0))*maxf(0.,1.+weapon.spread_percent),0.,TAU),"explosion":clampf(float(row.get("explosion",0))+weapon.explosion,0.,800.),"homing":clampf(float(row.get("homing",0))+weapon.homing,0.,20.),"bounces":clampi(int(row.get("bounces",0))+roundi(weapon.bounces),0,24),"refractions":ENERGY_GROWTH.refractions(row,attributes),"chain_count":ENERGY_GROWTH.conductions(row,attributes,float(weapon.chain_count),float(trajectory.chain_per_attribute)),"chord":chord,"chord_power":clampf(beat.chord if chord else 0.,0.,5.),"repeat":clampi(roundi(beat.repeat),0,3),"repeat_index":0,"angle":deg_to_rad(fposmod(beat.rotate,360.)),"charge":charge,"charge_base":int(row.get("charge",1)),"eligible":posmod(bar+1,charge)==0,"cadence_beats":cadence,"cadence_step":cadence_step,"cadence_scale":1.,"cadence_label":str(cadence_data.label),"cadence_profile":cadence_data,"cadence_light":false,"recorded_audio":bool(row.get("recorded_audio",false)),"recorded_source":str(row.get("recorded_source","")),"crit_chance":attributes.crit_chance,"crit_damage":attributes.crit_damage,"stats":attributes,"events":_events_for(uid,serial,sources),"equipped":true,"trajectory":trajectory,"calculation":{"base_damage":float(row.damage),"ship_multiplier":damage_scale,"level_multiplier":level_multiplier,"attribute_multiplier":attribute_multiplier,"damage_multiplier":damage_multiplier,"mod_multiplier":mod_multiplier,"volume_multiplier":volume_multiplier,"attribute_count":attribute_count,"quality_count":int(growth.quality_count),"level_count":int(growth.level_count),"growth":growth,"base_count":int(row.get("count",1)),"extra_count":extra,"count_cap":count_limit}}
+	return {"uid":uid,"kind":str(row.id),"voice":str(row.get("voice",row.id)),"pitch":pitch,"family":str(row.family),"name":str(row.name),"category":"weapon","attr":attribute,"level":int(module.level),"quality":int(growth.quality),"growth":growth,"width":int(row.width),"slot":at,"damage":clampf(damage,.1,100000.),"count":clampi(int(row.get("count",1))+extra,1,count_limit),"extra":extra,"pierce":clampi(int(row.get("pierce",0))+roundi(weapon.pierce),0,40),"speed":clampf(float(row.get("speed",700))*maxf(.1,1.+weapon.speed_percent),0.,3000.),"life":clampf(float(row.get("life",2))*maxf(.1,1.+weapon.range_percent),.1,30.),"spread":clampf(float(row.get("spread",0))*maxf(0.,1.+weapon.spread_percent),0.,TAU),"explosion":clampf(float(row.get("explosion",0))+weapon.explosion,0.,800.),"homing":clampf(float(row.get("homing",0))+weapon.homing,0.,20.),"bounces":clampi(int(row.get("bounces",0))+roundi(weapon.bounces),0,24),"refractions":ENERGY_GROWTH.refractions(row,attributes,float(weapon.refractions)),"chain_count":ENERGY_GROWTH.conductions(row,attributes,float(weapon.chain_count),float(trajectory.chain_per_attribute)),"chord":chord,"chord_power":clampf(beat.chord if chord else 0.,0.,5.),"repeat":clampi(roundi(beat.repeat),0,3),"repeat_index":0,"angle":deg_to_rad(fposmod(beat.rotate,360.)),"charge":charge,"charge_base":int(row.get("charge",1)),"eligible":posmod(bar+1,charge)==0,"cadence_beats":cadence,"cadence_step":cadence_step,"cadence_scale":1.,"cadence_label":str(cadence_data.label),"cadence_profile":cadence_data,"cadence_light":false,"recorded_audio":bool(row.get("recorded_audio",false)),"recorded_source":str(row.get("recorded_source","")),"crit_chance":attributes.crit_chance,"crit_damage":attributes.crit_damage,"stats":attributes,"events":_events_for(uid,serial,sources),"equipped":true,"trajectory":trajectory,"calculation":{"base_damage":float(row.damage),"ship_multiplier":damage_scale,"level_multiplier":level_multiplier,"attribute_multiplier":attribute_multiplier,"damage_multiplier":damage_multiplier,"mod_multiplier":mod_multiplier,"volume_multiplier":volume_multiplier,"attribute_count":attribute_count,"quality_count":int(growth.quality_count),"level_count":int(growth.level_count),"growth":growth,"base_count":int(row.get("count",1)),"extra_count":extra,"count_cap":count_limit}}
 
 func item_stats(uid: int,serial: int=0) -> Dictionary:
 	var module=find(uid)
@@ -509,7 +509,7 @@ func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[],weapon_co
 		for candidate in range(pool.size()):
 			if (str(pool[candidate].category)=="weapon")!=wants_weapon: continue
 			candidates.append(candidate)
-			if wave==1 and BALANCE.INNER_SUPPLY.has(expedition_planet) and result.size() in [0,weapon_count]:
+			if wave==1 and (expedition_planet==0 or BALANCE.INNER_SUPPLY.has(expedition_planet)) and result.size() in [0,weapon_count]:
 				var row: Dictionary=pool[candidate]
 				var budget=roundi(BALANCE.expedition_supply(expedition_planet,1)*.42)
 				if (wants_weapon or row.category=="defense") and BALANCE.expedition_price(row,wave,expedition_planet)<=budget:
@@ -520,7 +520,8 @@ func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[],weapon_co
 					if str(rule.type)=="trajectory" or (str(rule.type)=="beat" and str(rule.key) in ["repeat","charge_reduce","chord"]): spatial=true
 				if spatial: preferred.append(candidate)
 			elif survival_bag and str(pool[candidate].category)=="defense": preferred.append(candidate)
-		if not wants_weapon and result.size()==weapon_count and not featured_item.is_empty():
+		var featured_slot=weapon_count+(1 if featured_item in C.EXPEDITION_NEW_ITEMS and item_count>1 else 0)
+		if not wants_weapon and result.size()==featured_slot and not featured_item.is_empty():
 			for candidate in candidates:
 				if str(pool[candidate].id)==featured_item: preferred=[candidate]; break
 		if not preferred.is_empty(): candidates=preferred
@@ -570,7 +571,11 @@ func wave_boon_choices(rng: RandomNumberGenerator,expedition: bool=false) -> Arr
 		var offense=pool.filter(func(boon):return boon.key in ["bullet_multiplier","crit_chance"] or (boon.key in used and not boon.has("operation")))
 		var survival=pool.filter(func(boon):return boon.key in ["max_health","armor","regen"])
 		var utility=pool.filter(func(boon):return boon.key in ["move_percent","magnet","luck"])
-		for group in [offense,survival,utility]:selected.append(_draw_wave_boon(group,rng))
+		for group in [offense,survival,utility]:
+			var fresh: Array=group.filter(func(boon):return not boons.has(str(boon.id)))
+			var available: Array=group.filter(func(boon):return int(boons.get(str(boon.id),0))<2)
+			var entry=_draw_wave_boon(fresh if not fresh.is_empty() else available,rng)
+			if not entry.is_empty():selected.append(entry)
 	elif doctrine_id=="ballistic":
 		var primary=pool.filter(func(boon):return str(boon.key)=="ballistic")
 		var general=pool.filter(func(boon):return str(boon.key)!="ballistic")
@@ -585,16 +590,18 @@ func wave_boon_choices(rng: RandomNumberGenerator,expedition: bool=false) -> Arr
 	for entry in selected:
 		var boon: Dictionary=entry.duplicate(true)
 		boon.type="boon"
+		boon.expedition=expedition
 		boon.title=str(boon.name)
 		result.append(boon)
 	return result
 
-func add_boon(id: String) -> bool:
+func add_boon(id: String,expedition: bool=false) -> bool:
 	var found: Dictionary={}
 	for boon in WAVE_BOONS:
 		if str(boon.id)==id: found=boon; break
 	if found.is_empty(): return false
 	if not DOCTRINES.boon_allowed(found,doctrine_id): return false
+	if expedition and int(boons.get(id,0))>=2: return false
 	if str(found.get("operation","add"))=="multiply_once":
 		var key=str(found.key);var before=float(stats().get(key,0.))
 		var after=clampf(before*float(found.value),-90.,1000.)
@@ -612,7 +619,7 @@ func boon_summary() -> Array[String]:
 func take(reward: Dictionary) -> bool:
 	match str(reward.get("type","")):
 		"module": return add_module(str(reward.get("kind","")))>=0
-		"boon": return add_boon(str(reward.get("id","")))
+		"boon": return add_boon(str(reward.get("id","")),bool(reward.get("expedition",false)))
 		"upgrade":
 			var module=find(int(reward.get("uid",-1)))
 			if module.is_empty() or int(module.level)>=4: return false
