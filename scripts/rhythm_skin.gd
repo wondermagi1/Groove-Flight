@@ -9,6 +9,7 @@ const HOLD=Color("edca84")
 const CHORD=Color("c9b6ed")
 const ROLL=Color("ffae82")
 const MISS=Color("e78999")
+const RECOVERY=Color("a1efbb")
 const GRADES={"perfect":HOLD,"excellent":TAP,"general":CHORD,"miss":MISS}
 const IMPACT_LIFE=.32
 const MAX_IMPACTS=12
@@ -83,11 +84,14 @@ static func timing_rail(canvas: CanvasItem,center: Vector2,lane: float,accent: f
 static func impact(canvas: CanvasItem,center: Vector2,lane: float,age: float,event: Dictionary,reduced: bool) -> void:
 	var grade=str(event.grade)
 	var gesture=str(event.gesture)
-	if gesture=="early_contact":
+	var centered=bool(event.get("centered",false))
+	if gesture=="early_contact" and not centered:
 		var response=clampf(1.-age/.11,0.,1.)
 		var width=lane*.31
-		canvas.draw_line(center+Vector2(-width,2),center+Vector2(width,2),Color(TAP,response*.84),2.,true)
+		var tint: Color=GRADES.get(str(event.get("cue_grade","")),TAP)
+		canvas.draw_line(center+Vector2(-width,2),center+Vector2(width,2),Color(tint,response*.84),2.,true)
 		return
+	if gesture=="early_contact":grade=str(event.get("cue_grade",""))
 	var perfect=grade=="perfect"
 	var tail=gesture=="hold_tail"
 	var t=clampf(age/IMPACT_LIFE,0.,1.)
@@ -105,6 +109,10 @@ static func impact(canvas: CanvasItem,center: Vector2,lane: float,age: float,eve
 			canvas.draw_line(at-Vector2(-3,3),at+Vector2(-3,3),Color(MISS,alpha),1.8,true)
 		return
 	diamond(canvas,center,3.6,Color(color.lerp(WHITE,.55),alpha))
+	if centered:
+		var aperture=lane*.23
+		var strength=1.-smoothstep(.0,.16,age)
+		canvas.draw_line(center-Vector2(aperture,0),center+Vector2(aperture,0),Color(WHITE,strength),3. if reduced else 4.,true)
 	if reduced:return
 	var height=(55. if perfect else 29.)*(1.+t*.30)
 	gradient(canvas,Rect2(center.x-spread,center.y-height,spread*2.,height),Color(color,0.),Color(color,alpha*.19))
@@ -125,3 +133,16 @@ static func impact(canvas: CanvasItem,center: Vector2,lane: float,age: float,eve
 		var spark=center+Vector2(offset*spread*2.3,-(6.+t*(21.+float(i%3)*9.)))
 		canvas.draw_line(spark+Vector2(0,4.),spark,Color(color,alpha*.58),1.,true)
 		diamond(canvas,spark,.8+1.8*alpha,Color(color.lerp(WHITE,.41),alpha))
+
+static func volley_glint(canvas: CanvasItem,at: Vector2,heading: float,age: float,powered: bool,reduced: bool) -> void:
+	const LIFE=.22
+	if age<0. or age>=LIFE:return
+	var progress=age/LIFE
+	var fade=(1.-progress)*(1.-progress)
+	var radius=lerpf(27.,51. if powered and not reduced else 40.,progress)
+	var color=HOLD if powered else TAP
+	for flank in [-1.,1.]:
+		var axis=heading+flank*PI*.63
+		canvas.draw_arc(at,radius,axis-.40,axis+.40,12,Color(color,fade*.82),2. if reduced else 2.5,true)
+		if powered and not reduced:
+			canvas.draw_arc(at,radius+4.,axis-.21,axis+.21,8,Color(WHITE,fade*.48),1.,true)

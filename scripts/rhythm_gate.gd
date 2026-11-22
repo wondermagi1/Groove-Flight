@@ -6,6 +6,7 @@ const STEP=preload("res://scripts/arsenal_loadout.gd").SEQUENCE_STEP_SECONDS
 const WINDOW=.250
 const EXCELLENT=.200
 const PERFECT=.150
+const CENTER_MS=45
 const LOOKAHEAD=2.9
 const CHORD_SPREAD=EXCELLENT*2.
 const ROLL_MIN_GAP=.095
@@ -107,10 +108,11 @@ func forecast(loadout,now: float,song_time: float=-1.) -> void:
 			if due<cutoff:continue
 			# Keep the original cue for weapon scheduling and skip this input.
 			if uses_mercury_cues() and stage>=1 and int(cue.beat)%4==3:continue
-			var lane=int(cue.lane);var hold=float(cue.hold)/rate
+			var lane=int(cue.lane)
 			var kind=_cue_kind(cue)
 			var required=[lane]
 			var duration=_cue_duration(cue,kind)
+			var hold=duration/rate if kind=="hold" else 0.
 			if kind in ["chord","roll"]:
 				var destination=lane+1 if lane<2 else 1
 				if lane==1 and int(cue.measure)%2==1:destination=0
@@ -132,7 +134,7 @@ func _cue_kind(cue: Dictionary) -> String:
 func _cue_duration(cue: Dictionary,kind: String) -> float:
 	if kind=="roll":return float(cue.roll)
 	return float(cue.hold) if kind=="hold" else 0.
-func _mercury_fire_cue(song_from: float) -> Dictionary:
+func _next_completion(song_from: float) -> Dictionary:
 	# A charge can catch the end of an ongoing hold or roll. Pick the first
 	# playable completion, including a tap that falls before another note's tail.
 	var lookback=float(CHART.data(chart_id).max_gesture_duration)
@@ -157,7 +159,7 @@ func _mercury_fire_cue(song_from: float) -> Dictionary:
 	return selected
 func _queue_song_event(event: Dictionary,track: int,offset: float,rate: float,earliest: float) -> void:
 	var song_from=maxf(0.,(earliest-offset)*rate)
-	var choice=_mercury_fire_cue(song_from) if uses_mercury_cues() else {}
+	var choice=_next_completion(song_from)
 	var cue: Dictionary=choice.get("cue",{})
 	if cue.is_empty():cue=CHART.next_cue(song_from,chart_id)
 	var id="%d:%s"%[track,str(cue.id)]
@@ -166,8 +168,8 @@ func _queue_song_event(event: Dictionary,track: int,offset: float,rate: float,ea
 			if not bool(salvo.emitted):salvo.events.append(event)
 			return
 	var due=float(cue.song_due)/rate+offset
-	var duration=float(choice.get("duration",cue.hold))
-	var kind=str(choice.get("kind","hold" if duration>0. else "tap"))
+	var kind=str(choice.get("kind",_cue_kind(cue)))
+	var duration=float(choice.get("duration",_cue_duration(cue,kind)))
 	salvos.append({"id":id,"track":track,"due":due,"song_due":float(cue.song_due),"song_duration":duration,"end":due+duration/rate,"hold":duration/rate if kind=="hold" else 0.,"kind":kind,"events":[event],"status":"pending","emitted":false})
 func configure_pilot(id: String) -> void:rewards.pilot_id=id
 func set_stage(value: int) -> void:
@@ -201,11 +203,13 @@ func _emit_feedback(note: Dictionary,grade: String,now: float,previous_notice: i
 	var gesture=str(note.kind)
 	if gesture=="hold":gesture="hold_tail"
 	if gesture=="roll":gesture="roll_tail"
+	var offset_ms=roundi(float(note.delta)*1000.)
 	feedback.emit({
 		"at":now, "lanes":note.required.duplicate(), "grade":grade,
 		"gesture":gesture,
 		"milestone":notice_kind,
-		"offset_ms":roundi(float(note.delta)*1000.),
+		"offset_ms":offset_ms,
+		"centered":grade=="perfect" and abs(offset_ms)<=CENTER_MS,
 		"accent":bool(note.get("accent",false)), "contact_played":bool(note.get("contact_played",false)),
 	})
 func _grade(note: Dictionary) -> String:
@@ -252,7 +256,7 @@ func advance(now: float) -> Array[Dictionary]:
 			var event: Dictionary=source.duplicate(true)
 			event.charged_deadline=event.deadline;event.deadline=note.end;event.rhythm_authorized=true;event.rhythm_scored_auto=true
 			event.rhythm_track=int(note.track);event.performed_at=now;event.rhythm_kind=note.kind;ready.append(event)
-	if uses_mercury_cues():ready.sort_custom(func(a,b):return float(a.deadline)<float(b.deadline) or (float(a.deadline)==float(b.deadline) and int(a.serial)<int(b.serial)))
+	if music_chart:ready.sort_custom(func(a,b):return float(a.deadline)<float(b.deadline) or (float(a.deadline)==float(b.deadline) and int(a.serial)<int(b.serial)))
 	return ready
 func accepts_lane(note: Dictionary,lane: int) -> bool:
 	var status=str(note.status)
@@ -300,7 +304,9 @@ func press(lane: int,now: float,source: String="") -> bool:
 			feedback.emit({"at":now,"lanes":[lane],"grade":"","gesture":"chord_head","milestone":""})
 		elif str(target.status)=="armed" and now+.000001<float(target.end):
 			target.contact_played=true
-			feedback.emit({"at":now,"lanes":target.required.duplicate(),"grade":"","gesture":"early_contact","milestone":"","cue_grade":_grade(target),"offset_ms":roundi(float(target.delta)*1000.),"contact_kind":kind,"accent":bool(target.get("accent",false))})
+			var grade=_grade(target)
+			var offset_ms=roundi(float(target.delta)*1000.)
+			feedback.emit({"at":now,"lanes":target.required.duplicate(),"grade":"","gesture":"early_contact","milestone":"","cue_grade":grade,"offset_ms":offset_ms,"centered":grade=="perfect" and abs(offset_ms)<=CENTER_MS,"contact_kind":kind,"accent":bool(target.get("accent",false))})
 		return true
 	for note in notes:
 		if lane not in note.required:continue

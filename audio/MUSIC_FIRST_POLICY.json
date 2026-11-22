@@ -1,5 +1,5 @@
 {
-  "version": "0.70.0-inner-expeditions",
+  "version": "0.72.0-rhythm-impact",
   "date": "2026-11-22",
   "lead": "eight licensed Kevin MacLeod expedition songs via PLANET_MUSIC.json",
   "weapon_voices": "removed from combat, shop preview and codex; legacy sources archived only",
@@ -34,7 +34,7 @@
     }
   ],
   "ammo": "square(sum(all3keys earned)/sum(all3keys possible)) sets next6second base ammo; multiply current earnedPerfect bonus,max120percent;opening100percent;zero/recovery and fraction carry retained",
-  "mercury_volley": "the first playable musical completion at or after charge; taps and chords use the landing, holds and ordered rolls use the tail; existing on-screen gestures keep their shape through rate changes",
+  "campaign_volley": "the first musical completion at or after charge on every planet; taps and chords use the landing, holds and ordered rolls use the tail; existing on-screen gestures keep their shape through rate changes",
   "mercury_difficulty": "3.55 s base preview before rate adjustment; after beacon one skip beat four input in each bar, with some rolls simplified; six-second base ammo has a 50% floor and can fall at most 30 percentage points per scored window",
   "tail_grace_ms": 250,
   "feedback": "independent kill, pickup, shield, impact, UI, alert and rhythm buses; CC0 contact clicks mixed with original electronic accents for accepted gestures",
@@ -45,6 +45,8 @@
     "duration_ms": [35, 146],
     "click_provenance": "audio/authorized/feedback/RHYTHM_CLICKS_SOURCE.json",
     "early_contact": "immediate strike and displayed provisional grade, followed by one scored judgement without replaying the ordinary contact",
+    "centered_contact": "a Perfect within 45 ms adds a white strike accent and emphasizes existing rhythm samples by up to 1.2 dB before voice headroom and bus limiting; no new judgement grade",
+    "volley_visual": "actual nonzero volleys pulse beside the ship and on the ammo readout; no weapon voice is played",
     "voices": ["perfect", "excellent", "general", "miss", "hold_head", "hold_tail", "combo", "perfect_reward", "accent_hit", "chord", "roll_head", "roll_tail"]
   },
   "perfect_rewards": {

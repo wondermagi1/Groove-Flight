@@ -41,10 +41,14 @@ func advance(now: float) -> void:
 	while window<target:
 		var row=total()
 		row.carried=int(row.possible)==0
+		var before=_base_ammo()
 		if not row.carried:
-			_settlement_floor=maxf(_minimum_ammo,_base_ammo()-_maximum_drop)
+			_settlement_floor=maxf(_minimum_ammo,before-_maximum_drop)
 			base_ratio=clampf(float(row.earned)/float(row.possible),0.,1.)
-		row.accuracy=base_ratio;row.ratio=ratio;previous=row
+		row.accuracy=base_ratio;row.ratio=ratio
+		row.settled_at=(window+1)*SECONDS
+		row.base_delta=_base_ammo()-before
+		previous=row
 		ledger.erase(window);window+=1
 func current(track: int) -> Dictionary:
 	return ledger[window][track] if ledger.has(window) else {"earned":0,"possible":0,"notes":0}

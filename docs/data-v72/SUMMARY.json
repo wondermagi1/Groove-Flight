@@ -1,0 +1,22 @@
+{
+  "version": "0.72.0-rhythm-impact",
+  "date": "2026-11-22",
+  "remote_backup": "af3b3763f6a7a7ebc32f274174ea7ec4168623bf",
+  "checks": [
+    {"suite": "v72_rhythm_impact_review", "assertions": 119, "failures": 0, "renderers": ["forward_plus", "gl_compatibility"]},
+    {"suite": "v71_equipment_review", "assertions": 172, "failures": 0},
+    {"suite": "v69_rhythm_review", "assertions": 112, "failures": 0},
+    {"suite": "v67_mercury_combat", "assertions": 48, "failures": 0},
+    {"suite": "v66_rhythm_review", "assertions": 68, "failures": 0},
+    {"suite": "v65_expedition_review", "assertions": 259, "failures": 0},
+    {"suite": "v63_feedback_review", "assertions": 71, "failures": 0}
+  ],
+  "coverage": {
+    "planets_checked_for_hold_and_roll_finishes": 8,
+    "input_center_ms": 45,
+    "first_combo_cue": 5,
+    "settlement_seconds": 6,
+    "zero_ammo_visual_suppression": true,
+    "ordinary_early_cue_replayed_on_judgement": false
+  }
+}

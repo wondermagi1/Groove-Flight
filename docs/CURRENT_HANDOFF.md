@@ -1,6 +1,8 @@
 # Groove Flight 当前接手说明
 
-当前 V71 / 2026-11-22，第 11 周，`codex/weapon-materials-and-mods`。备份 `650db2a`。24 武器共六类材质升级，实体尾迹采样实际位移，补给强化数值重新分配，四件新道具分批进入前两站。水星首站也保证提供可负担的武器和防御件。[V71](V71_WEAPON_MATERIALS_AND_MODS.md)
+当前 V72 / 2026-11-22，第 11 周，`codex/rhythm-impact-feedback`。备份 `af3b376`。八星齐射对齐手势收尾，精准击键强化、机身开火光弧、5 连击提示、Perfect 进度和六秒弹量变化接入现有战斗界面。[V72](V72_RHYTHM_IMPACT.md)
+
+历史 V71 / 2026-11-22，第 11 周，`codex/weapon-materials-and-mods`。备份 `650db2a`。24 武器共六类材质升级，实体尾迹采样实际位移，补给强化数值重新分配，四件新道具分批进入前两站。水星首站也保证提供可负担的武器和防御件。[V71](V71_WEAPON_MATERIALS_AND_MODS.md)
 
 历史 V70 / 2026-11-22，第 11 周，`codex/week11-inner-planet-expeditions`。备份 `f773b5d`。金星护送、地球通讯阵列防务、火星盾发生器拆除接上逐段补给站。调整该三关出兵和补给价格，校准三件武器与四件道具，按长按、双押、连打重编对应曲目。[V70](V70_INNER_EXPEDITIONS.md)
 

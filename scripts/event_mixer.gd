@@ -95,6 +95,8 @@ func rhythm_feedback(event: Dictionary) -> void:
 	var output=AudioServer.get_bus_index(AUDIO.RHYTHM)
 	if stream==null or AudioServer.is_bus_mute(output):return
 	var volume=float(RHYTHM_DB[cue])
+	if bool(event.get("centered",false)) and cue in ["perfect","accent_hit","roll_tail","hold_tail","chord"]:
+		volume+=1.2
 	play(stream,"rhythm",volume-(3. if low_dynamic else 0.))
 func _emit_drum(amount: int,combo: int,tail: bool=false) -> void:
 	var pattern=["kill_low_strong","kill_low_soft","kill_low_round","kill_low_soft"]
@@ -126,7 +128,8 @@ func play(stream: AudioStream,group: String,volume: float,pitch: float=1.) -> vo
 	if chosen.playing: counters.stolen+=1
 	last_player=chosen
 	chosen.stream=stream; chosen.pitch_scale=pitch
-	chosen.volume_db=minf(-3.,volume+linear_to_db(maxf(.0001,gain))-(3. if low_dynamic and group=="kill" else 0.)); chosen.play(); counters.played+=1
+	var headroom=-1. if group=="rhythm" else -3.
+	chosen.volume_db=minf(headroom,volume+linear_to_db(maxf(.0001,gain))-(3. if low_dynamic and group=="kill" else 0.)); chosen.play(); counters.played+=1
 func _process(delta: float) -> void:
 	if not feedback_active: return
 	clock+=delta; elapsed+=delta

@@ -137,7 +137,7 @@ func run() -> void:
 		check(gate.advance(tail/rate-.001).is_empty(),"No early release before the "+kind+" tail")
 		var fired=gate.advance(tail/rate)
 		check(fired.size()==1 and is_equal_approx(float(fired[0].deadline),tail/rate) and gate.advance(tail/rate).is_empty(),"The accelerated "+kind+" tail releases once")
-		var loop_choice=gate._mercury_fire_cue(float(chart.duration)+float(cue.t)+.05)
+		var loop_choice=gate._next_completion(float(chart.duration)+float(cue.t)+.05)
 		check(str(loop_choice.cue.id).begins_with("1:") and is_equal_approx(float(loop_choice.cue.song_due)+float(loop_choice.duration),float(chart.duration)+tail),"The "+kind+" tail survives the chart wrap")
 
 	start("mercury")

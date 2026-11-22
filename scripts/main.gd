@@ -1,6 +1,7 @@
 extends Node2D
 ## A standalone rhythm shooter. This project never loads a Foldbound save or scene.
 const C=preload("res://scripts/arsenal_catalog.gd")
+const RHYTHM_SKIN=preload("res://scripts/rhythm_skin.gd")
 const LOADOUT=preload("res://scripts/arsenal_loadout.gd")
 const FLEET=preload("res://scripts/fleet_catalog.gd")
 const TALENTS=preload("res://scripts/flight_talents.gd")
@@ -1975,6 +1976,8 @@ func _draw() -> void:
 	weapon_renderer.hazards.update_hazards(enemy_bullets,visible_rect)
 	_draw_flight_trail()
 	var opacity=.45 if invulnerable>0 and invulnerable<=.8 and int(invulnerable*20)%2==0 else 1.
+	if state=="combat" and rhythm_required():
+		RHYTHM_SKIN.volley_glint(self,player,facing.angle(),music.timeline-rhythm.last_volley_at,rhythm.score.ratio>1.,bool(settings.reduced_fx))
 	ART.draw_ship(self,player,16.,facing.angle(),selected_ship,pulse,opacity)
 	shield_renderer.update_state(player,music.timeline,player_guard_until-music.timeline,player_guard_started,shield_points>0 and music.timeline<shield_until,bool(settings.reduced_fx))
 	for i in range(loadout.slots.size()):
@@ -2103,7 +2106,7 @@ func dispatch_trigger(trigger: Dictionary) -> void:
 		var full=full_salvo_count(trigger)
 		var scaled=rhythm.score.projectile_count(int(trigger.uid),track,full,C.GROWTH.count_limit(C.item(str(trigger.kind))))
 		if scaled<=0:return
-		if rhythm.uses_mercury_cues():rhythm.last_volley_at=float(trigger.get("performed_at",music.timeline))
+		rhythm.last_volley_at=float(trigger.get("performed_at",music.timeline))
 		trigger=trigger.duplicate(true);trigger.count=scaled;trigger.rhythm_count_scaled=true
 		trigger.rhythm_full_count=full;trigger.rhythm_ratio=rhythm.score.ratio
 	fire_log.append({"step":posmod(int(trigger.serial),8),"track":trigger.get("track",0),"uid":trigger.uid,"serial":trigger.serial,"deadline":trigger.deadline,"actual":music.timeline,"kind":trigger.kind,"voice":trigger.voice,"pitch":trigger.get("pitch",0),"cadence_step":trigger.get("cadence_step",0),"cadence_scale":trigger.get("cadence_scale",1.),"pilot":trigger.get("pilot",""),"repeat_index":trigger.get("repeat_index",0),"event_id":trigger.event_id})

@@ -25,7 +25,7 @@ func bonus(now: float) -> float:
 func next_threshold() -> int:
 	return int(thresholds()[tier]) if tier<4 else 0
 func judge(grade: String,combo: int,now: float) -> void:
-	if combo in [10,25,50,100] or (combo>100 and combo%100==0):announce("%d COMBO · 连击"%combo,"combo",now)
+	if combo in [5,10,25,50,100] or (combo>100 and combo%100==0):announce("%d COMBO · 连击"%combo,"combo",now)
 	if grade=="perfect":
 		perfect_chain+=1;best_perfect_chain=maxi(best_perfect_chain,perfect_chain)
 		var new_tier=0
