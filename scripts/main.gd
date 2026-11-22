@@ -1229,16 +1229,20 @@ func spawn_for_step(serial: int) -> void:
 	if config.elite and not elite_spawned and elapsed>float(config.seconds)*.40 and enemies.size()<MAX_ENEMIES:
 		elite_spawned=true; spawn_enemy("elite")
 
-func spawn_wave_group(amount: int,style: String,boss_support: bool=false) -> void:
+func spawn_wave_group(amount: int,style: String,boss_support: bool=false,landing: float=-1.,beacon_crest: bool=false) -> void:
 	var reserved=0
 	for plan in spawn_telegraphs: reserved+=int(plan.count)
 	amount=mini(amount,MAX_ENEMIES-enemies.size()-reserved)
 	if amount<=0: return
 	# One model per arrival. The grid is a birth arrangement, never an AI group.
 	var kind=("dart" if rng.randf()<.25 else "mote") if boss_support else ("mote" if wave<=1 else PLANETS.kind(active_planet,wave-1,rng.randi_range(0,19),difficulty))
-	var plan=ARRIVAL.choose(self,amount,kind,style)
+	var plan=ARRIVAL.choose(self,amount,kind,style,beacon_crest)
 	if plan.is_empty(): return
-	plan.kind=kind; plan.count=amount; plan.born=music.timeline; plan.deadline=music.timeline+ARRIVAL.WARNING_SECONDS
+	plan.kind=kind; plan.count=amount; plan.born=music.timeline
+	plan.deadline=maxf(landing,music.timeline+ARRIVAL.WARNING_SECONDS)
+	if landing>=0.:
+		plan.beacon_beat=true
+		plan.beacon_crest=beacon_crest
 	plan.wave=wave; plan.wave_budget=not free_music_run and not boss_support
 	spawn_telegraphs.append(plan)
 
@@ -1254,10 +1258,12 @@ func update_spawn_telegraphs() -> void:
 			# A live pursuer may enter a warning during its lead-in. Re-warn a
 			# clear location or wait; never materialize a matrix on occupied hulls.
 			spawn_telegraphs.remove_at(i)
-			var replacement=ARRIVAL.choose(self,int(plan.count),str(plan.kind),str(plan.get("shape","battalion_grid")))
+			var replacement=ARRIVAL.choose(self,int(plan.count),str(plan.kind),str(plan.get("shape","battalion_grid")),bool(plan.get("beacon_crest",false)))
 			if replacement.is_empty(): continue
 			for key in replacement: plan[key]=replacement[key]
 			plan.born=music.timeline; plan.deadline=music.timeline+ARRIVAL.WARNING_SECONDS
+			if bool(plan.get("beacon_beat",false)):
+				plan.deadline=expedition.next_beacon_warning(music.timeline,rhythm_song_time(music.timeline),rhythm.song_rate)
 			spawn_telegraphs.append(plan); continue
 		var members: Array=[]
 		for point in plan.points:
@@ -1270,7 +1276,11 @@ func update_spawn_telegraphs() -> void:
 			if bool(plan.wave_budget): spawned+=1
 		SWARM.MANEUVER.assign_batch(members,plan.center,player,visible_world(),music.timeline,str(plan.get("shape","battalion_grid")),plan.deployment)
 		spawn_telegraphs.remove_at(i)
-		sound("spawn",-21.)
+		if not members.is_empty() and bool(plan.get("beacon_crest",false)):
+			expedition.beacon_crest_at=music.timeline
+			fx.ring(mission.beacon,Color("f8cd86"),245.,.45)
+			sound("spawn",-15.)
+		else:sound("spawn",-21.)
 
 func spawn_origin(outward: Vector2) -> Vector2:
 	var rect=visible_world(); var half=rect.size*.5

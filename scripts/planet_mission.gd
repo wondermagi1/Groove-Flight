@@ -280,6 +280,7 @@ func _step_beacon(game,dt: float) -> void:
 			if guard_elapsed>=BALANCE.BEACON_SECONDS-.000001:
 				guard_phase=2
 				game.fx.ring(beacon,Color("f8d492"),235.,.6)
+				if done==0:game.expedition.seal_first_beacon(game)
 				game.sound("reward",-8.)
 		2:
 			if _inside(game,beacon,sample_radius()):
@@ -346,6 +347,13 @@ func draw_world(game) -> void:
 		BEACON_ART.draw(game,beacon,now,clampf(fill,0.,1.),_inside(game,beacon,sample_radius()),done+1,bool(game.settings.reduced_fx),sample_radius())
 		if is_beacon_defense():
 			game.draw_arc(beacon,BALANCE.BEACON_GUARD_RADIUS,0.,TAU,88,Color(BEACON_ART.LIGHT,.20),1.5,true)
+			if done==0:
+				var crest_age=now-float(game.expedition.beacon_crest_at)
+				if crest_age>=0. and crest_age<1.1:
+					var alpha=(1.-crest_age/1.1)*.72
+					for quadrant in range(4):
+						var angle=float(quadrant)*PI*.5+PI*.12
+						game.draw_arc(beacon,BALANCE.BEACON_GUARD_RADIUS-7.,angle,angle+PI*.25,18,Color("f8cd86",alpha),2.,true)
 		elif expedition and guard_phase==2:
 			game.draw_arc(beacon,sample_radius()+18.,0.,TAU,48,Color("ffde9b",.7),3.,true)
 		var distance=game.player.distance_to(beacon)

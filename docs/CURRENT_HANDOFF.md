@@ -1,6 +1,8 @@
 # Groove Flight 当前接手说明
 
-当前 V72 / 2026-11-22，第 11 周，`codex/rhythm-impact-feedback`。备份 `af3b376`。八星齐射对齐手势收尾，精准击键强化、机身开火光弧、5 连击提示、Perfect 进度和六秒弹量变化接入现有战斗界面。[V72](V72_RHYTHM_IMPACT.md)
+当前 V73 / 2026-11-22，第 11 周，`codex/mercury-beat-defense`。备份 `d58bbda`。水星第一座信标的增援按《Go Cart》重拍入场，轻量接战、低音段强拍增援和防守收束接入原有 60 秒目标。[V73](V73_MERCURY_BEAT_DEFENSE.md)
+
+历史 V72 / 2026-11-22，第 11 周，`codex/rhythm-impact-feedback`。备份 `af3b376`。八星齐射对齐手势收尾，精准击键强化、机身开火光弧、5 连击提示、Perfect 进度和六秒弹量变化接入现有战斗界面。[V72](V72_RHYTHM_IMPACT.md)
 
 历史 V71 / 2026-11-22，第 11 周，`codex/weapon-materials-and-mods`。备份 `650db2a`。24 武器共六类材质升级，实体尾迹采样实际位移，补给强化数值重新分配，四件新道具分批进入前两站。水星首站也保证提供可负担的武器和防御件。[V71](V71_WEAPON_MATERIALS_AND_MODS.md)
 

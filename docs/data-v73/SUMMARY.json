@@ -1,0 +1,28 @@
+{
+  "version": "0.73.0-mercury-beat-defense",
+  "date": "2026-11-22",
+  "remote_backup": "d58bbdad24a8028b69ba44d5f483361b1954bde9",
+  "scope": "First Mercury beacon only",
+  "music": {
+    "title": "Go Cart",
+    "preferred_accent_seconds": 58.9547,
+    "preferred_accent_measure": 28
+  },
+  "defense": {
+    "seconds_in_radius": 60,
+    "warning_min_seconds": 0.8,
+    "standard_max_batch_by_phase": [9, 13, 18],
+    "fixed_supply": 110
+  },
+  "checks": [
+    {"suite": "v73_mercury_beat_defense", "assertions": 55, "failures": 0, "renderers": ["forward_plus", "gl_compatibility"]},
+    {"suite": "v72_rhythm_impact_review", "assertions": 117, "failures": 0},
+    {"suite": "v67_mercury_combat", "assertions": 48, "failures": 0},
+    {"suite": "v65_expedition_review", "assertions": 269, "failures": 0, "renderer": "gl_compatibility"}
+  ],
+  "controlled_guard_run": {
+    "step_seconds": 0.025,
+    "groups": 16,
+    "crest_observed_seconds": 58.975
+  }
+}

@@ -105,7 +105,7 @@ static func layout(center: Vector2,count: int,kind: String,style: String="battal
 	var size=Vector2(columns,rows)*spacing+Vector2.ONE*16.
 	return {"points":points,"rect":Rect2(center-size*.5,size),"columns":columns,"rows":rows,"spacing":spacing,"shape":style}
 
-static func choose(game,count: int,kind: String,style: String="battalion_grid") -> Dictionary:
+static func choose(game,count: int,kind: String,style: String="battalion_grid",beacon_crest: bool=false) -> Dictionary:
 	var shape=layout(Vector2.ZERO,count,kind,style)
 	var half: Vector2=shape.rect.size*.5
 	var view: Rect2=game.visible_world().grow(-45.)
@@ -115,19 +115,27 @@ static func choose(game,count: int,kind: String,style: String="battalion_grid") 
 	# Large matrices can straddle a screen edge while retaining the red cue.
 	# This leaves room for the player-side clearance instead of centring on them.
 	view.position.y-=180.; view.size.y+=180.
+	var crest_view=view
+	if beacon_crest:
+		var top=game.visible_world().position.y+146./game.camera.zoom.y
+		crest_view.size.y=maxf(0.,view.end.y-top)
+		crest_view.position.y=top
 	if count>=300: view=view.grow(900.)
 	var first_lane=game.rng.randi_range(0,2)
 	for attempt in range(60):
 		var lane=(first_lane+attempt)%3
 		var axis=Vector2.from_angle(float(TOP_LANES[lane])+game.rng.randf_range(-.09,.09))
-		var search_view=view.grow(1400.) if attempt>=30 else view
+		var prefer_visible=beacon_crest and attempt<18
+		var search_view=crest_view if prefer_visible else view
+		if attempt>=30:search_view=view.grow(1400.)
 		var reach=3200. if attempt>=30 else (2200. if count>=300 else 1500.)
 		if axis.x>.001: reach=minf(reach,(search_view.end.x-game.player.x-half.x)/axis.x)
 		elif axis.x<-.001: reach=minf(reach,(search_view.position.x-game.player.x+half.x)/axis.x)
 		if axis.y>.001: reach=minf(reach,(search_view.end.y-game.player.y-half.y)/axis.y)
 		elif axis.y<-.001: reach=minf(reach,(search_view.position.y-game.player.y+half.y)/axis.y)
 		if reach<400.: continue
-		var center: Vector2=game.player+axis*reach*game.rng.randf_range(.94 if count>=300 else .78,.995 if count>=300 else .94)
+		var distance_scale=game.rng.randf_range(.92,.99) if prefer_visible else game.rng.randf_range(.94 if count>=300 else .78,.995 if count>=300 else .94)
+		var center: Vector2=game.player+axis*reach*distance_scale
 		var area=layout(center,count,kind,style)
 		var world: Rect2=game.field().grow(-20.)
 		if not world.encloses(area.rect): continue
@@ -148,9 +156,11 @@ static func choose(game,count: int,kind: String,style: String="battalion_grid") 
 
 static func draw_warning(canvas: CanvasItem,plan: Dictionary,time: float,visible: Rect2=Rect2()) -> void:
 	var rect: Rect2=plan.rect
-	var progress=clampf((time-float(plan.born))/WARNING_SECONDS,0.,1.)
+	var duration=maxf(WARNING_SECONDS,float(plan.deadline)-float(plan.born))
+	var progress=clampf((time-float(plan.born))/duration,0.,1.)
 	var pulse=.58+.22*sin(progress*TAU*2.)
 	var red=Color("ff4968")
+	if bool(plan.get("beacon_crest",false)):red=red.lerp(Color("ffb56d"),.26)
 	if visible.size.length_squared()>1. and visible.intersection(rect).get_area()<rect.get_area()*.08:
 		var safe=Rect2(visible.position+Vector2(visible.size.x*.035,visible.size.y*.14),visible.size-Vector2(visible.size.x*.07,visible.size.y*.31))
 		var axis=(Vector2(plan.center)-safe.get_center()).normalized()

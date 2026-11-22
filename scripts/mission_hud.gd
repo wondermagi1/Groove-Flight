@@ -36,7 +36,10 @@ func _draw() -> void:
 			var gap=game.player.distance_to(m.beacon)
 			match m.guard_phase:
 				0:hint="圈内接通 %d%%"%clampi(roundi(m.capture/.8*100.),0,100) if gap<=m.sample_radius() else "沿箭头接近信标 · %dm"%roundi(gap)
-				1:hint="在防区内拦截敌机" if gap<=game.BALANCE.BEACON_GUARD_RADIUS else "返回防区以继续计时"
+				1:
+					if gap>game.BALANCE.BEACON_GUARD_RADIUS:hint="返回防区以继续计时"
+					elif m.done==0:hint=game.expedition.beacon_phase_hint(game)
+					else:hint="在防区内拦截敌机"
 				2:hint="进入内环领取星屑和强化"
 		if m.complete():
 			caption="旗舰交战" if game.wave==game.wave_count() else "目标完成 · 前往旗舰坐标"

@@ -31,3 +31,11 @@ static func next_cue(song_time: float,planet: String="mercury") -> Dictionary:
 	# Song timing, holds and deterministic lane arrangement never depend on equipment.
 	cue.id="%d:%d"%[cycle,low];cue.song_due=cycle*duration+float(cue.t)
 	return cue
+
+static func next_accent(song_time: float,planet: String) -> Dictionary:
+	var cue=next_cue(song_time,planet)
+	var count: int=data(planet).events.size()
+	for step in range(count):
+		if bool(cue.accent):return cue
+		cue=next_cue(float(cue.song_due)+.0001,planet)
+	return next_cue(song_time,planet)
