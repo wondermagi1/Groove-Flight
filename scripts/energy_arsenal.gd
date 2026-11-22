@@ -83,7 +83,10 @@ func fire(game,trigger: Dictionary,context: Dictionary,origin: Vector2,direction
 			var ray: Dictionary=geometry[index]
 			_push({"due":now+float(ray.delay),"cast":cast,"index":index,"type":"ray","a":ray.a,"axis":ray.axis})
 	else:
-		var roots=game.enemies.filter(func(enemy):return float(enemy.hp)>0. and origin.distance_squared_to(enemy.at)<=reach*reach)
+		if game.active_planet=="mars":
+			for enemy in game.enemies:
+				if game.mission.shielded(enemy):cast.taken[int(enemy.uid)]=true
+		var roots=game.enemies.filter(func(enemy):return float(enemy.hp)>0. and not cast.taken.has(int(enemy.uid)) and origin.distance_squared_to(enemy.at)<=reach*reach)
 		roots.sort_custom(func(a,b):return origin.distance_squared_to(a.at)<origin.distance_squared_to(b.at))
 		cast.hop=float(profile.get("hop",reach*.55))*(clampf(reach/float(profile.reach),.2,2.) if profile.has("reach") else 1.)
 		for index in range(mini(count,roots.size())): _edge(cast,roots[index],-1,1,-1,now)

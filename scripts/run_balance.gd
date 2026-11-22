@@ -15,9 +15,17 @@ const MERCURY_SUPPLY=[110,145,180]
 const MERCURY_KILL_LOOT_BONUS=.35
 const MERCURY_SWARM_SCALE=.82
 const MERCURY_FLAGSHIP_HP_SCALE=.85
+const INNER_SUPPLY={1:[125,150,180],2:[135,165,195],3:[145,175,215]}
+const EARTH_RELAY_RADIUS=690.
+const EARTH_INTERCEPTS=[10,15,21]
+const VENUS_ESCORT_RADIUS=335.
+const VENUS_ESCORT_SPEED=114.
+const MARS_NODE_HP=[210.,310.,420.]
+const MARS_CORE_HP=[550.,780.,1100.]
 
 static func expedition_supply(planet_index: int,sector: int) -> int:
 	if planet_index==0:return MERCURY_SUPPLY[clampi(sector-1,0,2)]
+	if INNER_SUPPLY.has(planet_index):return INNER_SUPPLY[planet_index][clampi(sector-1,0,2)]
 	return 65+sector*25+planet_index*13
 
 static func expedition_loot(sector: int,guarding: bool) -> float:
@@ -26,11 +34,14 @@ static func expedition_loot(sector: int,guarding: bool) -> float:
 static func expedition_price(row: Dictionary,wave: int,planet_index: int) -> int:
 	var category=str(row.category)
 	var scale=2.42+.17*planet_index+.04*maxi(0,wave-1)
+	if INNER_SUPPLY.has(planet_index):
+		scale=(1.93 if category=="weapon" else 1.84)+.10*(planet_index-1)+.12*maxi(0,wave-1)
 	if category=="defense":scale*=.84
 	if category=="core":scale*=1.09
 	return maxi(1,roundi(float(row.cost)*scale))
 
 static func expedition_reroll(planet_index: int) -> int:
+	if INNER_SUPPLY.has(planet_index):return 14+planet_index*2
 	return 15+3*planet_index
 
 static func accuracy_ammo(accuracy: float) -> float:

@@ -2,11 +2,12 @@ extends RefCounted
 ## Campaign sectors advance on objectives. Supply docks are optional and single-use.
 const DOCK_RADIUS=185.
 const BOSS_APPROACH=580.
+const MODELS=preload("res://scripts/expedition_models.gd")
 const ROUTES={
 	"mercury":{"size":Vector2(15200,14800),"points":[Vector2(0,-440),Vector2(-1670,-1790),Vector2(1490,-3510)],"pressure":31,"spacing":3.65},
-	"venus":{"size":Vector2(14800,15000),"points":[Vector2(-420,-690),Vector2(820,-1800),Vector2(80,-3270)],"pressure":34,"spacing":3.1},
-	"earth":{"size":Vector2(15200,13800),"points":[Vector2(0,-520),Vector2(-1000,-1370),Vector2(870,-2300)],"pressure":37,"spacing":2.8},
-	"mars":{"size":Vector2(15800,14400),"points":[Vector2(0,-660),Vector2(1160,-1610),Vector2(-1180,-2860)],"pressure":42,"spacing":2.7},
+	"venus":{"size":Vector2(14800,15000),"points":[Vector2(-480,-1120),Vector2(980,-2860),Vector2(-1280,-4840)],"pressure":28,"spacing":3.85},
+	"earth":{"size":Vector2(15200,13800),"points":[Vector2(0,-740),Vector2(-1540,-2260),Vector2(1510,-3900)],"pressure":33,"spacing":3.45},
+	"mars":{"size":Vector2(15800,14400),"points":[Vector2(0,-900),Vector2(-1690,-2510),Vector2(1510,-4450)],"pressure":36,"spacing":3.25},
 	"jupiter":{"size":Vector2(17600,15200),"points":[Vector2(-360,-780),Vector2(-1560,-1850),Vector2(1330,-3100)],"pressure":46,"spacing":2.6},
 	"saturn":{"size":Vector2(17800,15400),"points":[Vector2(300,-680),Vector2(1330,-1520),Vector2(-330,-2530),Vector2(-1510,-3680)],"pressure":44,"spacing":2.8},
 	"uranus":{"size":Vector2(16200,16600),"points":[Vector2(-240,-690),Vector2(-1040,-1840),Vector2(1180,-3080)],"pressure":48,"spacing":2.7},
@@ -48,7 +49,7 @@ func dock_at(at: Vector2) -> int:
 
 func clear_sector(game,at: Vector2) -> void:
 	var completed=int(game.mission.done)
-	var site=at if game.active_planet=="mercury" else (at+Vector2(145.*mirror,145.)).clamp(bounds().position+Vector2.ONE*300.,bounds().end-Vector2.ONE*300.)
+	var site=at if game.active_planet in ["mercury","venus","earth"] else (at+Vector2(145.*mirror,145.)).clamp(bounds().position+Vector2.ONE*300.,bounds().end-Vector2.ONE*300.)
 	docks.append({"at":site,"used":false,"sector":completed,"supply":0})
 	game.close_expedition_sector(completed)
 	if game.mission.complete():
@@ -68,8 +69,9 @@ func advance_incursion(game) -> void:
 	var reserved=0
 	for plan in game.spawn_telegraphs:reserved+=int(plan.count)
 	nearby+=reserved
-	var cap=int(route.pressure)+stage*19+roundi(pressure*13.)+(14 if game.difficulty>0 else 0)
-	var batch=16+stage*6
+	var inner_route=game.active_planet in ["venus","earth","mars"]
+	var cap=int(route.pressure)+stage*(12 if inner_route else 19)+roundi(pressure*13.)+(14 if game.difficulty>0 else 0)
+	var batch=(12+stage*4) if inner_route else (16+stage*6)
 	if game.active_planet=="mercury":
 		cap=roundi(cap*game.BALANCE.MERCURY_SWARM_SCALE)
 		batch=roundi(batch*game.BALANCE.MERCURY_SWARM_SCALE)
@@ -93,5 +95,8 @@ func draw_world(game) -> void:
 		var close=game.player.distance_to(at)<=DOCK_RADIUS
 		var color=Color("f5d393")
 		game.draw_arc(at,DOCK_RADIUS,0.,TAU,48,Color(color,.52 if close else .24),1.5,true)
+		if game.active_planet in ["venus","earth","mars"]:
+			MODELS.depot(game,at,close,int(depot.sector),game.binding_name("interact"))
+			continue
 		game.draw_colored_polygon(game.polygon(at,6,27.,PI/6.),Color("342839"))
 		game.draw_colored_polygon(game.polygon(at,4,11.,0.),color)

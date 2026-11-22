@@ -1,12 +1,13 @@
 {
-  "version": "0.69.0-expedition-rhythm",
-  "date": "2026-11-18",
+  "version": "0.70.0-inner-expeditions",
+  "date": "2026-11-22",
   "lead": "eight licensed Kevin MacLeod expedition songs via PLANET_MUSIC.json",
   "weapon_voices": "removed from combat, shop preview and codex; legacy sources archived only",
   "composer": "retired from game entry points",
   "instrumental_pcm": "silent gameplay clock; no weapons/support/backing/groove",
   "chart": "per-planet lane phrases with rests and strong-onset alignment, opening half-time taps, holds, chords after sector one, and cross-lane rolls after sector two; preview divided by the live song rate",
   "song_rate": "1.00 plus 0.045 per finished objective, up to 1.18; OGG playback and score mapping advance together",
+  "inner_planet_phrasing": "Venus uses longer sustains, Earth emphasizes doubled downbeats, Mars uses short accents and more ordered rolls",
   "judgements": [
     {
       "id": "perfect",

@@ -509,7 +509,12 @@ func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[],weapon_co
 		for candidate in range(pool.size()):
 			if (str(pool[candidate].category)=="weapon")!=wants_weapon: continue
 			candidates.append(candidate)
-			if mechanism_bag:
+			if wave==1 and BALANCE.INNER_SUPPLY.has(expedition_planet) and result.size() in [0,weapon_count]:
+				var row: Dictionary=pool[candidate]
+				var budget=roundi(BALANCE.expedition_supply(expedition_planet,1)*.42)
+				if (wants_weapon or row.category=="defense") and BALANCE.expedition_price(row,wave,expedition_planet)<=budget:
+					preferred.append(candidate)
+			elif mechanism_bag:
 				var spatial=false
 				for rule in pool[candidate].get("rules",[]):
 					if str(rule.type)=="trajectory" or (str(rule.type)=="beat" and str(rule.key) in ["repeat","charge_reduce","chord"]): spatial=true

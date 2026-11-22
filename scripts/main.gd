@@ -1379,6 +1379,7 @@ func nearest(at: Vector2,exclude: Array=[]) -> Dictionary:
 	var selected: Dictionary={}; var distance=INF
 	for enemy in enemies:
 		if enemy.hp<=0 or exclude.has(enemy.uid): continue
+		if mission.shielded(enemy):continue
 		var d=at.distance_squared_to(enemy.at)
 		if d<distance: distance=d; selected=enemy
 	return selected
@@ -1652,6 +1653,7 @@ func update_bullets(frame_delta: float) -> void:
 			bullet.retiring=true; bullet.fade_age=0.; bullet.life=VISUALS.RANGE_FADE_SECONDS
 func hurt_enemy(enemy: Dictionary,damage: float,kind: String,context: Dictionary={},allow_procs: bool=true,visual_color: Color=Color.TRANSPARENT) -> void:
 	if damage<=0 or enemy.hp<=0 or state!="combat": return
+	if mission.shielded(enemy):return
 	if enemy.kind=="boss" and not bool(context.get("structural",false)) and enemy.has("core_until") and music.timeline<float(enemy.core_until): damage*=1.5
 	var actual=minf(enemy.hp,damage); enemy.hp-=damage; enemy.flash=.09
 	receipt.hit(kind,context,actual,damage,enemy.hp<=0.)

@@ -48,11 +48,29 @@ func solve_sector() -> void:
 				check(game.pickups.is_empty(),"Returning to the beacon recovers nearby earned currency")
 		"escort":
 			var prior=int(mission.done)
+			if game.active_planet=="venus":
+				var first: Vector2=mission.beacon
+				var goal: Vector2=mission.escort_goal(game)
+				var halfway: Vector2=mission.escort_point(game,goal,.5)
+				check(halfway.distance_to(first.lerp(goal,.5))>120.,"Convoy takes a bent flight path")
+				game.player=first+Vector2(410,0);ticks(.3)
+				check(mission.beacon==first and not mission.escort_moving,"Convoy waits for escort outside its range")
+				mission.beacon_hp=90.
 			for i in range(760):
 				if mission.done!=prior:break
 				game.player=mission.beacon;ticks(.05)
+			if game.active_planet=="venus":
+				check(mission.done>prior and is_equal_approx(float(mission.beacon_hp),145.),"Convoy repairs hull after reaching the waypoint")
 		"defend":
 			game.player=mission.beacon
+			var stray=game.spawn_enemy("mote",mission.beacon+Vector2(0,-180.))
+			game.hurt_enemy(stray,float(stray.hp)+1.,"pulse")
+			check(mission.defended==0,"Earth interceptions require activation")
+			ticks(.75)
+			check(mission.relay_active,"Approach activates the communications array")
+			stray=game.spawn_enemy("mote",mission.beacon+Vector2(0,-790.))
+			game.hurt_enemy(stray,float(stray.hp)+1.,"pulse")
+			check(mission.defended==0,"Distant kills do not count as interceptions")
 			for i in range(mission.defense_quota()):
 				var enemy=game.spawn_enemy("mote",mission.beacon+Vector2(0,-140.))
 				game.hurt_enemy(enemy,float(enemy.hp)+1.,"pulse")
@@ -63,6 +81,16 @@ func solve_sector() -> void:
 			check(not enemy.is_empty(),"Mission target appears after its warning / "+game.active_planet)
 			if enemy.is_empty():return
 			check((enemy.speed>0.)==(mission.role()=="hunt"),"Moving quarry and static outpost are distinct")
+			if game.active_planet=="mars":
+				check(mission.siege_nodes_left()==2 and game.mission.shielded(enemy),"Both shield generators protect the core")
+				var health=float(enemy.hp)
+				game.hurt_enemy(enemy,health+1.,"rail")
+				check(is_equal_approx(float(enemy.hp),health),"Shield prevents actual weapon damage")
+				var nodes=mission.siege_nodes.duplicate()
+				game.hurt_enemy(nodes[0],float(nodes[0].hp)+1.,"pulse")
+				check(mission.siege_nodes_left()==1 and mission.shielded(enemy),"The second generator still powers the shield")
+				game.hurt_enemy(nodes[1],float(nodes[1].hp)+1.,"pulse")
+				check(not mission.shielded(enemy),"Destroying both generators exposes the core")
 			game.hurt_enemy(enemy,float(enemy.hp)+1.,"pulse");ticks(.05)
 		"gates":
 			var axis=mission.gate_axis(game)
@@ -107,12 +135,15 @@ func run() -> void:
 			positions.append(route.point(index))
 		check(positions.all(func(pos):return world.has_point(pos)) and positions[0].distance_to(positions[1])>900.,"Separated in-world objectives / "+id)
 		if DisplayServer.get_name()!="headless":
+			if id=="mars":ticks(1.25)
 			game.simulation_only=false
-			game.player=m.beacon+Vector2(140,0)
+			game.player=m.beacon+(Vector2(185,85) if id=="mars" else Vector2(140,0))
+			if id=="earth":m.relay_active=true;m.defended=4
 			game.camera.position=game.player;game.camera.reset_smoothing();game.camera.force_update_scroll()
 			game.background.set_shader_parameter("world_position",game.player)
 			game.ui.root_control.show();game.ui.refresh()
 			await capture(id)
+			if id=="earth":m.relay_active=false;m.defended=0
 			if id=="mercury":
 				m.guard_phase=1;m.guard_elapsed=17.
 				game.ui.update_hud()
@@ -130,6 +161,7 @@ func run() -> void:
 			solve_sector()
 			check(m.done==index+1 and game.state=="combat" and route.docks.size()==index+1 and game.dust>prior_supply,"Objective opens next sector and pays once / "+id+" "+str(index+1))
 			check(game.by_id.has(survivor.uid) and survivor.hp>0.,"Live fleet persists across sector advancement / "+id)
+			if route.docks.size()<=index:break
 			if id=="mercury" and index==0:
 				var next_sector=int(game.wave)
 				var at=float(game.music.timeline)
@@ -149,6 +181,25 @@ func run() -> void:
 				check(cheapest*2<game.dust,"Base first-beacon supply covers more than one entry-level weapon")
 				check(game.choose_boon(0) and game.continue_wave() and not game.open_expedition_dock(),"Dock grants one choice and supports one visit")
 				check(game.state=="combat" and game.wave==next_sector and m.done==1 and is_equal_approx(game.music.timeline,at) and game.by_id.has(survivor.uid),"Returning from supply preserves stage, enemies and transport time")
+			if id in ["venus","earth","mars"]:
+				var depot=route.docks[index]
+				check(int(depot.supply)==game.BALANCE.expedition_supply(int(row.index),index+1),"Planet supply matches the displayed stage reward")
+				game.player=depot.at
+				var at=float(game.music.timeline)
+				var press=InputEventKey.new();press.physical_keycode=KEY_F;press.pressed=true
+				game._unhandled_input(press)
+				check(game.state=="reward" and game.shop_offers.size()==6,"Physical F opens the local six-slot shop")
+				var ids=game.shop_offers.map(func(offer):return offer.id)
+				var weapons=ids.filter(func(item):return game.C.item(item).category=="weapon")
+				check(weapons.size()==3 and _distinct(ids),"Offers contain three weapons and three distinct items")
+				if index==0:
+					var first=game.shop_offers[0]
+					check(int(first.price)<=roundi(int(depot.supply)*.42) and game.C.item(game.shop_offers[3].id).category=="defense","First shop offers accessible weapon and defensive gear")
+					var before=int(game.dust)
+					check(game.buy_offer(0) and game.dust==before-int(first.price),"First weapon can be bought at the indicated price")
+					var locked=game.shop_offers[4].duplicate()
+					check(game.toggle_offer_lock(4) and game.shop_reroll() and game.shop_offers[4].id==locked.id and game.shop_offers[4].price==locked.price,"Reroll keeps a locked offer in place")
+				check(game.choose_boon(0) and game.continue_wave() and not game.open_expedition_dock() and is_equal_approx(game.music.timeline,at),"Dock resumes the route once without rewinding")
 		check(m.complete() and route.boss_site!=Vector2.INF and game.wave<game.wave_count(),"Completion exposes a distant flagship waypoint / "+id)
 		check(is_equal_approx(float(game.rhythm.song_rate),1.+.045*int(m.done)) and is_equal_approx(game.planet_music.pitch_scale,float(game.rhythm.song_rate)),"Chart speed and native song playback progress together / "+id)
 		if id=="mercury":
@@ -167,6 +218,7 @@ func run() -> void:
 			check(game.boss_down and game.state=="victory","Objective and actual flagship destruction yield victory / "+id)
 		facts.routes[id]={"goals":m.spec().goal,"world":str(world.size),"music":track.title,"notes":chart.events.size()}
 	start("earth")
+	game.player=game.mission.beacon;ticks(.75)
 	game.mission.beacon_hp=.4
 	var attacker=game.spawn_enemy("mote",game.mission.beacon)
 	attacker.mission_target=game.mission.beacon
@@ -194,4 +246,10 @@ func run() -> void:
 	var data={"renderer":renderer,"checks":checks,"failures":failures,"facts":facts,"captures":captures}
 	FileAccess.open("res://tests/results-v65-"+renderer+".json",FileAccess.WRITE).store_string(JSON.stringify(data,"\t"))
 	print("V65_EXPEDITION ",JSON.stringify(data))
+	game.standard_music.stop();game.planet_music.stop();game.mixer.reset_feedback()
 	current_scene=null;game.queue_free();await frames(5);quit(0 if failures.is_empty() else 1)
+
+func _distinct(ids: Array) -> bool:
+	for id in ids:
+		if ids.count(id)!=1:return false
+	return true

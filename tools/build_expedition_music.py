@@ -1,4 +1,5 @@
 """Import the licensed expedition soundtrack and create its three-key charts."""
+import argparse
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from urllib.parse import quote
@@ -31,11 +32,17 @@ ARRANGEMENTS = {
     "mercury": (16, (None, None), (0, 1, 2, 1, 0, 2, 0, 1)),
     "venus": (16, (None, 3), (1, 0, 1, 2, 1, 2, 1, 0)),
     "earth": (16, (3, 2), (0, 1, 2, 0, 2, 1, 0, 2)),
-    "mars": (16, (3, 3), (2, 0, 2, 1, 0, 1, 2, 1)),
+    "mars": (16, (None, 3), (2, 0, 2, 1, 0, 1, 2, 1)),
     "jupiter": (16, (2, 3), (0, 2, 1, 2, 1, 0, 1, 2)),
     "saturn": (16, (2, 3), (2, 1, 0, 1, 2, 0, 2, 1)),
     "uranus": (16, (3, 2), (1, 0, 2, 1, 2, 1, 0, 2)),
     "neptune": (24, (3, 2), (0, 2, 0, 1, 2, 1, 2, 0)),
+}
+GESTURES = {
+    # Hold slots in a sixteen-beat phrase, max hold, chord slots, roll slots.
+    "venus": ({1, 5, 9, 13}, .59, {4}, {10, 11}),
+    "earth": ({1, 9}, .48, {4, 12}, {5, 13}),
+    "mars": ({1}, .38, {4}, {2, 5, 6, 9, 10, 13, 14}),
 }
 
 
@@ -113,7 +120,11 @@ def make_chart(path, row):
     beat_period = 60. / float(offsets[best])
     phase = float(np.angle(phasors[best]) / (2. * np.pi) % 1.) * beat_period
     events = []
-    opening, rests, motif = ARRANGEMENTS[row["planet"]]
+    planet = row["planet"]
+    opening, rests, motif = ARRANGEMENTS[planet]
+    hold_slots, hold_limit, chord_slots, roll_slots = GESTURES.get(
+        planet, ({1, 9}, .53, {4}, {5, 6, 9, 10, 12, 13})
+    )
     limit = float(row["duration"]) - .31
     grid = np.arange(phase, limit, beat_period)
     for beat, point in enumerate(grid):
@@ -136,20 +147,20 @@ def make_chart(path, row):
         window = audio[max(0, round((t - .04) * rate)):round((t + .10) * rate)]
         if not len(window) or np.max(np.abs(window)) < .009:
             continue
-        hold = min(.53, beat_period * .79) if beat % 8 == 1 and point + .85 < limit else 0.
+        hold = min(hold_limit, beat_period * (.92 if planet == "venus" else .79)) if beat % 16 in hold_slots and point + .85 < limit else 0.
         events.append({
             "t": round(t, 4), "kind": "hold" if hold else "tap", "hold": round(hold, 3),
-            "beat": beat, "measure": beat // 4, "phrase": beat // 8, "accent": beat % 4 == 0,
+            "beat": beat, "measure": beat // 4, "phrase": beat // 8, "accent": beat % 4 == 0 or (planet == "mars" and beat % 8 == 6),
             "origin": "nearby_audio_onset" if anchored else "fitted_beat",
         })
-    minimum_roll_space = beat_period * .94 if row["planet"] == "mercury" else .58
+    minimum_roll_space = beat_period * .94 if planet in {"mercury", "mars"} else .58
     for index in range(1, len(events) - 1):
         event, prior, following = events[index], events[index - 1], events[index + 1]
         if event["kind"] != "tap" or event["beat"] < opening or event["t"] - prior["t"] - prior["hold"] < .34:
             continue
-        if event["beat"] % 16 == 4:
+        if event["beat"] % 16 in chord_slots:
             event["technique"] = "chord"
-        elif event["beat"] % 16 in {5, 6, 9, 10, 12, 13} and following["t"] - event["t"] >= minimum_roll_space:
+        elif event["beat"] % 16 in roll_slots and following["t"] - event["t"] >= minimum_roll_space:
             subdivision = event["t"] + beat_period * .5
             nearest = int(np.argmin(abs(times - subdivision)))
             if abs(float(times[nearest]) - subdivision) < .038:
@@ -173,6 +184,21 @@ def save(path, data, indent=2):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--charts", nargs="+", choices=tuple(ARRANGEMENTS), help="Regenerate only these charts from installed audio")
+    args = parser.parse_args()
+    if args.charts:
+        manifest = json.loads((ROOT / "audio/PLANET_MUSIC.json").read_text(encoding="utf-8"))
+        for row in manifest["tracks"]:
+            if row["planet"] not in args.charts:
+                continue
+            target = ROOT / row["runtime"].removeprefix("res://")
+            if digest(target) != row["sha256"]:
+                raise ValueError(f"Track checksum mismatch: {target}")
+            chart = make_chart(target, row)
+            save(ROOT / row["chart"].removeprefix("res://"), chart, indent=None)
+            print(row["planet"], len(chart["events"]), flush=True)
+        return
     for folder in ("work/expedition-music", "audio/authorized/incompetech", "audio/charts/expeditions"):
         (ROOT / folder).mkdir(parents=True, exist_ok=True)
     with ThreadPoolExecutor(max_workers=4) as pool:

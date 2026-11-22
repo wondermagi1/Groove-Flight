@@ -138,7 +138,7 @@ static func _build_weapons() -> void:
 	var specs=[
 		["pulse","脉冲机炮","pulse",10.,3,900.,1.6,.075,0,0.,0.,0,1,1,0,14,"square",.11,.35,0,-3.],
 		["scatter","星砂霰弹","scatter",7.,5,690.,.95,.72,0,0.,0.,0,1,1,0,14,"noise",.15,.10,1,5.],
-		["beam","棱镜光束","beam",12.,1,1800.,.28,.12,12,0.,0.,0,1,2,1,20,"sine",.32,2.8,1,0.],
+		["beam","棱镜光束","beam",13.5,1,1800.,.28,.12,12,0.,0.,0,1,2,1,19,"sine",.32,2.8,1,0.],
 		["missile","彗星导弹","missile",31.,1,410.,3.5,.10,0,110.,3.2,0,2,2,1,22,"saw",.26,1.6,-1,-5.],
 		["nova","新星环炮","nova",11.,10,560.,1.6,TAU,0,0.,0.,0,4,2,1,22,"triangle",.23,.6,0,7.],
 		["chain","跃迁电弧","chain",19.,1,1300.,.32,0.,0,0.,0.,3,2,2,1,22,"sine",.18,4.0,1,3.],
@@ -149,7 +149,7 @@ static func _build_weapons() -> void:
 		["flame","灼羽喷流","flame",4.,6,345.,.85,.68,2,0.,0.,0,1,1,0,15,"noise",.25,.3,-1,11.],
 		["drone","蜂群侦击机","drone",10.,2,310.,4.0,.45,0,0.,2.3,0,2,2,1,25,"square",.16,.75,1,9.],
 		["pulse_ribbon","白矢连射器","pulse",5.5,6,1040.,1.9,.13,1,0.,0.,0,1,2,1,24,"square",.075,.55,1,-11.],
-		["pulse_needle","星针狙击器","pulse",27.,1,1500.,2.5,.01,4,0.,0.,0,1,2,1,24,"triangle",.12,1.9,2,1.],
+		["pulse_needle","星针狙击器","pulse",30.,1,1500.,2.5,.01,4,0.,0.,0,1,2,1,22,"triangle",.12,1.9,2,1.],
 		["scatter_prism","七彩折光匣","scatter",77./12.,12,800.,1.4,.24,1,0.,0.,0,4,2,2,32,"noise",.19,1.5,2,-4.],
 		["scatter_heavy","碎陨重霰炮","scatter",22.,4,490.,1.05,.48,2,35.,0.,0,2,2,2,31,"square",.24,.9,-2,6.],
 		["beam_split","双生棱镜","beam",18.,2,1700.,.35,.26,10,0.,0.,0,2,2,2,32,"sine",.39,3.4,0,-13.],
@@ -181,7 +181,7 @@ static func _build_weapons() -> void:
 		["kaleidoscope","万花筒","pulse",5.7,96,780.,2.95,TAU,2,0.,0.,0,4,3,2,48,"triangle",.2,.5,0,0.],
 		["arc_bough","鸣雷枝杈","chain",11.,2,1600.,.7,0.,0,0.,0.,3,1,2,1,25,"sine",.2,.5,0,0.],
 		["chain_loop","风暴回路","chain",24.,4,1600.,1.,0.,0,0.,0.,4,4,3,2,43,"sine",.2,.5,0,0.],
-		["laser_fan","曦光束阵","beam",5.5,3,1900.,.8,.95,2,0.,0.,0,1,2,1,25,"sine",.2,.5,0,0.],
+		["laser_fan","曦光束阵","beam",6.2,3,1900.,.8,.95,2,0.,0.,0,1,2,1,23,"sine",.2,.5,0,0.],
 		["laser_crown","穹光轮舞","beam",13.,12,2000.,1.2,TAU,5,0.,0.,0,6,3,2,48,"sine",.2,.5,0,0.]
 	]
 	var recorded_voices={"recorded_crude":"rec_crude","recorded_ballistic":"rec_ballistic"}
@@ -443,7 +443,7 @@ static func _build_rhythm() -> void:
 	for s in specs: _support(s[0],s[1],"rhythm",s[2],s[3],s[4],s[5],s[6],Color("b5a6fa"))
 static func _build_defense() -> void:
 	var specs=[
-		["d_ablative","剥蚀装甲片",0,12,1,"support",[_rule("stat","max_health",3),_rule("stat","armor",.5)]],
+		["d_ablative","剥蚀装甲片",0,12,1,"support",[_rule("stat","max_health",3),_rule("stat","armor",.65)]],
 		["d_ceramic","陶瓷防弹衣",1,17,1,"support",[_rule("stat","armor",1),_rule("stat","move_percent",-.03)]],
 		["d_mesh","蜂巢缓冲网",0,12,1,"ballistic",[_rule("stat","max_health",1),_rule("stat","crit_damage",.10)]],
 		["d_dash_screen","冲刺遮断幕",1,18,1,"energy",[_rule("event","shield_dash",1),_rule("stat","armor",.25)]],
@@ -454,10 +454,10 @@ static func _build_defense() -> void:
 		["d_reactive_skin","反应护甲",1,20,1,"power",[_rule("stat","armor",.4),_rule("event","explode_kill",2)]],
 		["d_crystal_skin","结晶修复层",1,20,1,"energy",[_rule("stat","armor",.5),_rule("stat","regen",.04)]],
 		["d_medkit","随舰急救盒",0,13,1,"support",[_rule("stat","max_health",2),_rule("event","heal_bar",.12)]],
-		["d_regenerator","纳米再生仓",1,19,1,"support",[_rule("stat","regen",.085)]],
-		["d_salvage_pump","星屑输血泵",1,20,1,"support",[_rule("event","heal_pickup",.014),_rule("stat","magnet",.28)]],
+		["d_regenerator","纳米再生仓",1,18,1,"support",[_rule("stat","regen",.105)]],
+		["d_salvage_pump","星屑输血泵",1,19,1,"support",[_rule("event","heal_pickup",.014),_rule("stat","magnet",.34)]],
 		["d_hunter_patch","猎获修补器",1,20,1,"support",[_rule("event","heal_kill",.02),_rule("weapon","damage_percent",-.08)]],
-		["d_rest_cradle","休整摇篮",1,20,1,"support",[_rule("event","heal_bar",.25),_rule("stat","armor",-.3)]],
+		["d_rest_cradle","休整摇篮",1,20,1,"support",[_rule("event","heal_bar",.30),_rule("stat","armor",-.15)]],
 		["d_rescue_screen","救援屏障",1,21,1,"energy",[_rule("event","shield_dash",1),_rule("event","heal_bar",.06)]],
 		["d_life_battery","生命蓄电池",0,15,1,"power",[_rule("stat","max_health",1)]],
 		["d_blood_relay","血色中继",2,24,2,"power",[_rule("event","heal_kill",.03),_rule("stat","max_health",-2)]],

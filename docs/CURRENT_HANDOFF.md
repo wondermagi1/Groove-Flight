@@ -1,6 +1,8 @@
 # Groove Flight 当前接手说明
 
-当前 V69 / 2026-11-18，`codex/eight-planet-rhythm-audio`，修改前远程备份 `e59eed5`。四首新曲、八星谱面、标准判定 ±150／200／250 毫秒和 Kenney CC0 Click。水星 50% 基础弹量下限继续生效。[V69](V69_EXPEDITION_RHYTHM.md)
+当前 V70 / 2026-11-22，第 11 周，`codex/week11-inner-planet-expeditions`。备份 `f773b5d`。金星护送、地球通讯阵列防务、火星盾发生器拆除接上逐段补给站。调整该三关出兵和补给价格，校准三件武器与四件道具，按长按、双押、连打重编对应曲目。[V70](V70_INNER_EXPEDITIONS.md)
+
+历史 V69 / 2026-11-18，`codex/eight-planet-rhythm-audio`，修改前远程备份 `e59eed5`。四首新曲、八星谱面、标准判定 ±150／200／250 毫秒和 Kenney CC0 Click。水星 50% 基础弹量下限继续生效。[V69](V69_EXPEDITION_RHYTHM.md)
 
 历史 V68 / 2026-11-18，水星弹量最低 50%，六秒结算每次最多降低 30 个百分点。后续航段琴块更稀疏，敌机批次和旗舰耐久降低。[V68](V68_MERCURY_DIFFICULTY.md)
 
