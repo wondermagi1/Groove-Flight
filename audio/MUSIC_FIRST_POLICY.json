@@ -1,5 +1,5 @@
 {
-  "version": "0.75.0-phrase-charts",
+  "version": "0.76.0-sustain-scoring",
   "date": "2026-11-23",
   "lead": "eight licensed Kevin MacLeod expedition songs via PLANET_MUSIC.json",
   "weapon_voices": "removed from combat, shop preview and codex; legacy sources archived only",
@@ -34,7 +34,8 @@
     }
   ],
   "ammo": "square(sum(all3keys earned)/sum(all3keys possible)) sets next6second base ammo; multiply current earnedPerfect bonus,max120percent;opening100percent;zero/recovery and fraction carry retained",
-  "campaign_volley": "the first musical completion at or after charge on every planet; taps and chords use the landing, holds and ordered rolls use the tail; existing on-screen gestures keep their shape through rate changes",
+  "campaign_volley": "first musical completion after charge. Short holds and ordered rolls use the tail. Multi-second ties retain a firing anchor at every original cue head inside the phrase. Each due salvo takes the base ammo of its scheduled six-second window and the active combo reward.",
+  "sustain": "123 multi-second phrases replace separate gestures in eight charts. Head and release are graded independently, internal held marks award 100, interruption preserves earned points. Each mark contributes a maximum of 100 to its own window. Only the completed gesture adds one combo.",
   "mercury_difficulty": "3.80 s base preview on standard and 3.55 s on hard before rate adjustment; standard omits unaccented fourth-beat opening taps while retaining holds and accent cues; after beacon one skip beat four input in each bar, with some rolls simplified; six-second base ammo has a 50% floor and can fall at most 30 percentage points per scored window",
   "standard_input": "taps in chart rests preserve combo without awarding score; an extra input on an existing hold does not end it; an early roll tail can be retried after release before the original deadline",
   "tail_grace_ms": 250,

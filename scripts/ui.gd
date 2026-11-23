@@ -249,6 +249,18 @@ func settings_screen() -> void:
 	var offset=HSlider.new();offset.name="RhythmOffset";offset.min_value=-150.;offset.max_value=150.;offset.step=5.;offset.value=float(game.settings.get("rhythm_offset_ms",0.))
 	offset.value_changed.connect(func(value):offset_label.text="琴块时间偏移  %+.0f ms"%value;game.set_rhythm_offset(value));content.add_child(offset)
 	content.add_child(label("正值延后 · 负值提前",15,UI.MUTED))
+	var scoring_help=label("长音头按准得 100／80／40 分。按住经过每颗菱形得 100 分，保持到尾环得 100 分。提前松手会保留已得分，整条完成计一次连击。\n\n三轨每 6 秒合计一次。准确率 80% 对应下段基础弹量 64%。首段满弹量，水星基础弹量保底 50%。Perfect 连击奖励另计，最高 120%。",16)
+	scoring_help.name="RhythmScoringHelp"
+	scoring_help.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	scoring_help.hide()
+	var rules=Button.new()
+	rules.text="长按计分与弹量"
+	rules.toggle_mode=true
+	rules.custom_minimum_size.y=36
+	style_button(rules,UI.MUTED)
+	rules.toggled.connect(scoring_help.set_visible)
+	content.add_child(rules)
+	content.add_child(scoring_help)
 	content.add_child(label("画面与操作",22,UI.GOLD))
 	var motion_label=label("背景节奏强度",19); content.add_child(motion_label)
 	var motion=HSlider.new(); motion.min_value=0.; motion.max_value=1.; motion.step=.05; motion.value=float(game.settings.background_motion)

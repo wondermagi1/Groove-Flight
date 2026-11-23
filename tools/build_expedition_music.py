@@ -139,6 +139,45 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def tie_sustains(events, planet, period, audio, rate):
+    # Number of pulses in a legato phrase. Faster pieces leave more space
+    # between ties so their characteristic short figures still come through.
+    pulses, spacing = {
+        "mercury": (5, 24), "venus": (6, 24), "earth": (5, 28), "mars": (4, 32),
+        "jupiter": (6, 32), "saturn": (5, 24), "uranus": (6, 28), "neptune": (6, 32),
+    }[planet]
+    next_beat = 32
+    for i, head in enumerate(events):
+        if head["beat"] < next_beat or head["kind"] != "hold":
+            continue
+        target = min(3.9, max(2., period * pulses))
+        candidates = []
+        for j in range(i + 2, min(i + 12, len(events) - 1)):
+            end = events[j]
+            duration = end["t"] - head["t"]
+            if duration > 4.:
+                break
+            if duration < 1.8 or events[j + 1]["t"] - end["t"] < .32:
+                continue
+            if planet == "mercury" and end["beat"] % 4 == 3:
+                continue
+            candidates.append((abs(duration - target), j))
+        if not candidates:
+            continue
+        last = min(candidates)[1]
+        start, finish = head["t"], events[last]["t"]
+        chunks = np.array_split(audio[round(start * rate):round(finish * rate)], 8)
+        levels = [np.sqrt(np.mean(part**2)) for part in chunks]
+        if min(levels) < max(.009, np.median(levels) * .30):
+            continue
+        parts = events[i + 1:last + 1]
+        head["sustain_steps"] = [0.] + [round(note["t"] - start, 4) for note in parts
+                                         if planet != "mercury" or note["beat"] % 4 != 3]
+        for note in parts:
+            note["sustain_part"] = True
+        next_beat = head["beat"] + spacing
+
+
 def import_track(track):
     planet, key, title, isrc, bpm, mood = track
     source = ROOT / "work/expedition-music" / f"{key}.mp3"
@@ -257,14 +296,15 @@ def make_chart(path, row):
             event["technique"] = "roll"
             event["roll"] = round(np.clip(subdivision - event["t"], .22, .38), 4)
     arrange_phrases(events, planet, audio, rate, grid, beat_period, times, weights)
+    tie_sustains(events, planet, beat_period, audio, rate)
     assert events and all(b["t"] - a["t"] > .28 for a, b in zip(events, events[1:]))
     return {
-        "schema": 4, "planet": row["planet"], "id": row["id"], "title": row["title"],
+        "schema": 5, "planet": row["planet"], "id": row["id"], "title": row["title"],
         "artist": row["artist"], "source": row["runtime"], "source_sha256": row["sha256"],
         "duration": row["duration"], "estimated_bpm": round(60. / beat_period, 3),
         "meter": "4-pulse game arrangement", "keys": ["J", "K", "L"],
         "finger_pattern": motif,
-        "method": "Song-specific theme, answer, refrain and cadence over onset-aligned cues. Four-bar relative RMS selects refrain and spaced offbeat pickups. Authored keys include gesture partners.",
+        "method": "Song-specific theme, answer, refrain and cadence over onset-aligned cues. Four-bar relative RMS selects refrain and spaced offbeat pickups. Authored keys include gesture partners. Connected phrases store sustain scoring offsets and retain source firing cues.",
         "events": events,
     }
 

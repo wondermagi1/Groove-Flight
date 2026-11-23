@@ -2119,11 +2119,12 @@ func dispatch_trigger(trigger: Dictionary) -> void:
 	if rhythm_required() and bool(trigger.get("rhythm_scored_auto",false)):
 		var track=clampi(int(trigger.rhythm_track),0,2)
 		var full=full_salvo_count(trigger)
-		var scaled=rhythm.score.projectile_count(int(trigger.uid),track,full,C.GROWTH.count_limit(C.item(str(trigger.kind))))
+		var ratio=float(trigger.get("rhythm_ratio",rhythm.score.ratio))
+		var scaled=rhythm.score.projectile_count(int(trigger.uid),track,full,C.GROWTH.count_limit(C.item(str(trigger.kind))),ratio)
 		if scaled<=0:return
 		rhythm.last_volley_at=float(trigger.get("performed_at",music.timeline))
 		trigger=trigger.duplicate(true);trigger.count=scaled;trigger.rhythm_count_scaled=true
-		trigger.rhythm_full_count=full;trigger.rhythm_ratio=rhythm.score.ratio
+		trigger.rhythm_full_count=full;trigger.rhythm_ratio=ratio
 	fire_log.append({"step":posmod(int(trigger.serial),8),"track":trigger.get("track",0),"uid":trigger.uid,"serial":trigger.serial,"deadline":trigger.deadline,"actual":music.timeline,"kind":trigger.kind,"voice":trigger.voice,"pitch":trigger.get("pitch",0),"cadence_step":trigger.get("cadence_step",0),"cadence_scale":trigger.get("cadence_scale",1.),"pilot":trigger.get("pilot",""),"repeat_index":trigger.get("repeat_index",0),"event_id":trigger.event_id})
 	fire_log.back().count=int(trigger.get("count",0));fire_log.back().full_count=int(trigger.get("rhythm_full_count",trigger.get("count",0)))
 	fire_log.back().rhythm_ratio=float(trigger.get("rhythm_ratio",1.))

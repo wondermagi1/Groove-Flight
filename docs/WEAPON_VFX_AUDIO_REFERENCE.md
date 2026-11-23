@@ -1,6 +1,8 @@
 # 武器特效与音频对应表（持续维护）
 
-最后更新 2026-11-23。核对版本 `0.75.0-phrase-charts`。八首歌曲使用乐句指法、切分和长音收尾。武器蓄满后仍接最早的谱面落点或尾端，因本次重编而移动的弱拍和长音也参与齐射。连打第二键按谱面指定。六秒总分继续决定下一段弹量。[V75](V75_PHRASE_CHARTS.md) · [验证](data-v75/SUMMARY.json) · [击键素材试听](audio-v69/rhythm-clicks.wav)
+最后更新 2026-11-23。核对版本 `0.76.0-sustain-scoring`。八星多秒长按的原谱拍点仍可接充满的武器。24 件武器共享三键分段成绩，每次齐射使用其音乐落点所属六秒段的基础弹量。长按体节点只记成绩，武器继续独立充能。[V76 规则与验证](V76_SUSTAINS_AND_AMMO.md) · [验证记录](data-v76/SUMMARY.json) · [击键素材试听](audio-v69/rhythm-clicks.wav)
+
+V75 乐句指法、切分起音与按曲收尾。连打第二键按谱面指定。[V75](V75_PHRASE_CHARTS.md) · [验证](data-v75/SUMMARY.json)
 
 V74 标准航线空拍误触与连打早按可保留连击，水星首段留出弱拍空隙。[V74](V74_MERCURY_PLAYABILITY.md) · [验证](data-v74/SUMMARY.json)
 

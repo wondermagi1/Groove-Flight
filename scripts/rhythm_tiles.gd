@@ -23,11 +23,18 @@ static func dock_rect(view: Vector2) -> Rect2:
 	return Rect2(view-dimensions-Vector2(18,18),dimensions)
 func key_y() -> float:return size.y-KEY_HEIGHT-20.
 func lane_width() -> float:return size.x/3.
-func key_rect(lane: int) -> Rect2:return Rect2(lane*lane_width()+4.,key_y(),lane_width()-8.,KEY_HEIGHT)
+func lane_gap() -> float:return clampf(roundf(lane_width()*.18),14.,18.)
+func lane_rect(lane: int) -> Rect2:
+	var gap=lane_gap()
+	return Rect2(lane*lane_width()+gap*.5,TOP,lane_width()-gap,judge_y-TOP)
+func key_rect(lane: int) -> Rect2:
+	var rail=lane_rect(lane)
+	return Rect2(rail.position.x,key_y(),rail.size.x,KEY_HEIGHT)
 func clip_rect() -> Rect2:return Rect2(4,TOP,size.x-8.,key_y()-TOP)
 func note_y(due: float,now: float) -> float:return judge_y-(due-now)/game.rhythm.lookahead()*(judge_y-TOP)
 func head_rect(lane: int,due: float,now: float) -> Rect2:
-	return Rect2(lane*lane_width()+8.,note_y(due,now)-HEAD_HEIGHT*.5,lane_width()-16.,HEAD_HEIGHT).intersection(clip_rect())
+	var rail=lane_rect(lane)
+	return Rect2(rail.position.x+3.,note_y(due,now)-HEAD_HEIGHT*.5,rail.size.x-6.,HEAD_HEIGHT).intersection(clip_rect())
 func input_head_rect(lane: int,due: float,now: float) -> Rect2:
 	if now>due and now<=due+game.rhythm.hit_window():
 		due=now
@@ -80,6 +87,8 @@ func _gui_input(event: InputEvent) -> void:
 func click_at(point: Vector2,source: String="mouse") -> void:
 	if point.x<0. or point.x>=size.x or point.y<TOP:return
 	var lane=clampi(int(point.x/lane_width()),0,2)
+	var rail=lane_rect(lane)
+	if point.x<rail.position.x or point.x>=rail.end.x:return
 	if key_rect(lane).has_point(point):game.rhythm_press(lane,source);return
 	if not clip_rect().has_point(point):return
 	var now=game.standard_music.input_time()
@@ -112,18 +121,17 @@ func _draw() -> void:
 		if str(note.status) in ["holding","armed"] and float(note.hold)>0.:
 			hold_progress[int(note.track)]=clampf((now-due)/float(note.hold),0.,1.)
 	for track in range(3):
-		var x=track*lane
 		var pressed=game.rhythm.held(track)
 		var progress=float(hold_progress[track])
 		var rect=key_rect(track)
-		SKIN.lane_glass(self,Rect2(x+3.,TOP,lane-6.,judge_y-TOP),ink,emphasis)
+		SKIN.lane_glass(self,lane_rect(track),ink,emphasis)
 		if progress>=0.:
-			SKIN.gradient(self,Rect2(x+6.,judge_y-49.,lane-12.,49.),Color(SKIN.HOLD,0.),Color(SKIN.HOLD,.11+progress*.10))
+			SKIN.gradient(self,Rect2(rect.position.x+2.,judge_y-49.,rect.size.x-4.,49.),Color(SKIN.HOLD,0.),Color(SKIN.HOLD,.11+progress*.10))
 		SKIN.receptor(self,rect,pressed,progress,ink)
 		var key=game.binding_name(ACTIONS[track]);var key_size=roundi(15.*scale_value)
 		while key_size>9 and font.get_string_size(key,HORIZONTAL_ALIGNMENT_LEFT,-1,key_size).x>rect.size.x-10.:key_size-=1
 		_center_text(key,Vector2(rect.position.x,key_y()+21.),rect.size.x,key_size,SKIN.HOLD if progress>=0. else SKIN.WHITE)
-		SKIN.timing_rail(self,Vector2((track+.5)*lane,judge_y),lane,emphasis)
+		SKIN.timing_rail(self,Vector2((track+.5)*lane,judge_y),rect.size.x+6.,emphasis)
 	for note in game.rhythm.notes:
 		var beat=int(note.get("beat",-1))
 		if beat<0 or beat%4!=0:continue
@@ -196,6 +204,7 @@ func _draw_perfect_tiers(now: float,reduced: bool) -> void:
 func _draw_note(note: Dictionary,now: float,clip: Rect2,reduced: bool) -> void:
 	var delta=float(note.due)-now;var tail=float(note.end)-now;var status=str(note.status)
 	if delta>game.rhythm.lookahead() or tail<-maxf(.20,game.rhythm.hit_window()) or status=="fired":return
+	if note.has("interrupted_at") and now-float(note.interrupted_at)>.18:return
 	if str(note.kind)=="roll":
 		_draw_roll(note,now,clip,reduced)
 		return
@@ -212,7 +221,19 @@ func _draw_note(note: Dictionary,now: float,clip: Rect2,reduced: bool) -> void:
 		draw_line(a+Vector2(0.,2.),b+Vector2(0.,2.),Color(SKIN.CHORD,.42),1.)
 	for track in note.required:
 		var center=(float(track)+.5)*lane_width();var head=visual_head_rect(note,int(track),now)
-		if float(note.hold)>0.:SKIN.ribbon(self,center,tail_y,minf(y,judge_y) if held else y,clip,color,held,now,reduced)
+		if note.has("sustain_steps"):
+			var ink: Color=SKIN.TRACK_INKS.get(game.rhythm.chart_id,SKIN.TAP)
+			SKIN.sustain_ribbon(self,center,tail_y,minf(y,judge_y),clip,held,ink,reduced)
+			for index in range(1,note.sustain_steps.size()-1):
+				var mark_y=note_y(game.rhythm.sustain_mark_time(note,index),now)
+				if mark_y<TOP+4. or mark_y>judge_y-4.:continue
+				SKIN.diamond(self,Vector2(center,mark_y),3.8,SKIN.INK)
+				SKIN.diamond(self,Vector2(center,mark_y),2.1,SKIN.HOLD)
+			var age=now-float(note.get("last_mark_at",-10.))
+			if held and age>=0. and age<.18:
+				var span=12. if reduced else lerpf(12.,24.,age/.18)
+				draw_line(Vector2(center-span,judge_y-8.),Vector2(center+span,judge_y-8.),Color(SKIN.HOLD,1.-age/.18),2.)
+		elif float(note.hold)>0.:SKIN.ribbon(self,center,tail_y,minf(y,judge_y) if held else y,clip,color,held,now,reduced)
 		SKIN.head(self,head,color,clip,reduced,held,bool(note.get("accent",false)))
 		if simultaneous.size()>1 and head.size.y>=10.:SKIN.diamond(self,head.get_center(),2.5,SKIN.WHITE)
 		if bool(note.get("offbeat",false)) and head.size.y>=10.:

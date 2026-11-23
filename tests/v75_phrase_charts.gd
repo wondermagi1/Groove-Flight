@@ -17,6 +17,7 @@ func rehearse(planet: String,stage: int) -> void:
 	var all_accepted=true
 	for index in range(chart.events.size()+4):
 		var cue: Dictionary=chart.events[index%chart.events.size()]
+		if cue.get("sustain_part",false):continue
 		var cycle=int(index/chart.events.size())
 		var song_time=float(cue.t)+cycle*float(chart.duration)
 		var now=song_time/gate.song_rate

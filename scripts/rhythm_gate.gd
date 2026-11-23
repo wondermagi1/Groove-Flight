@@ -15,6 +15,7 @@ const MERCURY_PREVIEW_BONUS=.65
 const MERCURY_AMMO_FLOOR=.50
 const MERCURY_AMMO_MAX_DROP=.30
 const LANES=3
+const POINTS={"perfect":SCORE.PERFECT_POINTS,"excellent":SCORE.EXCELLENT_POINTS,"general":SCORE.GENERAL_POINTS}
 const REWARDS=preload("res://scripts/rhythm_rewards.gd")
 var score=SCORE.new()
 var rewards=REWARDS.new()
@@ -74,7 +75,7 @@ func forecast(loadout,now: float,song_time: float=-1.) -> void:
 					_queue_song_event(event,int(salvo.track),offset,rate,maxf(now,float(event.deadline)))
 			retime_salvos=false
 		for note in notes+salvos:
-			if note.has("song_due") and str(note.status) in ["pending","holding","armed","rolling"]:
+			if note.has("song_due") and (str(note.status) in ["pending","holding","armed","rolling"] or (note.has("sustain_steps") and note.status=="miss")):
 				note.due=float(note.song_due)/rate+offset
 				var duration=float(note.get("song_duration",note.hold))/rate
 				note.end=float(note.due)+duration
@@ -107,6 +108,7 @@ func forecast(loadout,now: float,song_time: float=-1.) -> void:
 			if due>now+lookahead():break
 			song_cursor=float(cue.song_due)+.0001
 			if due<cutoff:continue
+			if cue.get("sustain_part",false):continue
 			# Keep the original cue for weapon scheduling and skip this input.
 			if uses_mercury_cues() and stage>=1 and int(cue.beat)%4==3:continue
 			var lane=int(cue.lane)
@@ -120,18 +122,25 @@ func forecast(loadout,now: float,song_time: float=-1.) -> void:
 				var destination=lane+1 if lane<2 else 1
 				if lane==1 and int(cue.measure)%2==1:destination=0
 				required.append(int(cue.get("partner",destination)))
-			notes.append({
+			var note={
 				"id":"song:"+str(cue.id),"track":lane,"required":required,
 				"due":due,"song_due":float(cue.song_due),"song_duration":duration,
 				"end":due+duration/rate,"hold":hold,"kind":kind,"events":[],
 				"status":"pending","delta":0.,"pressed":{},"emitted":true,"scored":false,
 				"accent":bool(cue.get("accent",false)),"beat":int(cue.beat),
 				"offbeat":cue.get("origin","")=="offbeat_audio_onset"
-			})
+			}
+			if cue.has("sustain_steps"):
+				note.sustain_steps=cue.sustain_steps
+				note.next_mark=0
+			notes.append(note)
 		salvos=salvos.filter(func(n):return now-float(n.end)<2.)
 	for note in notes:
-		if now-float(note.end)>=2. and str(note.status) in ["pending","holding","armed","rolling"]:_fail(note,"超时",now)
-	notes=notes.filter(func(n):return now-float(n.end)<2.)
+		if now-float(note.end)>=2.:
+			if note.has("sustain_steps") and note.status in ["holding","armed"]:continue
+			if str(note.status) in ["pending","holding","armed","rolling"]:_fail(note,"超时",now)
+			_settle_sustain(note,now)
+	notes=notes.filter(func(n):return now-float(n.end)<2. or (n.has("sustain_steps") and n.status in ["holding","armed"]))
 	notes.sort_custom(func(a,b):return float(a.due)<float(b.due))
 func uses_mercury_cues() -> bool:
 	return music_chart and chart_id=="mercury"
@@ -142,6 +151,7 @@ func _cue_kind(cue: Dictionary) -> String:
 	if (stage>=1 and technique=="chord") or (stage>=2 and technique=="roll"):return technique
 	return "hold" if float(cue.hold)>0. else "tap"
 func _cue_duration(cue: Dictionary,kind: String) -> float:
+	if cue.has("sustain_steps"):return float(cue.sustain_steps.back())
 	if kind=="roll":return float(cue.roll)
 	return float(cue.hold) if kind=="hold" else 0.
 func _next_completion(song_from: float) -> Dictionary:
@@ -155,12 +165,18 @@ func _next_completion(song_from: float) -> Dictionary:
 		var kind=_cue_kind(cue)
 		var duration=_cue_duration(cue,kind)
 		var note_id="song:"+str(cue.id)
-		for note in notes:
-			if str(note.id)!=note_id:continue
-			# A gesture already on screen keeps its shape when a sector changes.
-			kind=str(note.kind)
-			duration=float(note.song_duration)
-			break
+		var tied=cue.has("sustain_steps") or cue.get("sustain_part",false)
+		if tied:
+			# The held phrase still has a musical firing point at each source cue.
+			kind="tap"
+			duration=0.
+		else:
+			for note in notes:
+				if str(note.id)!=note_id:continue
+				# A gesture already on screen keeps its shape when a sector changes.
+				kind=str(note.kind)
+				duration=float(note.song_duration)
+				break
 		var ending=float(cue.song_due)+duration
 		if ending+.000001>=song_from and ending<best:
 			best=ending
@@ -202,11 +218,14 @@ func resync_loadout(now: float) -> void:
 	# Equipment changes invalidate only future weapon entitlements, never the song.
 	salvos.clear();cutoff=now+.00001;last_serial=maxi(-1,floori(now/STEP)-1)
 func _fail(note: Dictionary,label: String,now: float) -> void:
+	_settle_sustain(note,now)
+	if note.has("sustain_steps"):note.interrupted_at=now
 	note.status="miss";misses+=1;grade_counts.miss+=1;last_grade="miss";last_points=0;combo=0;last_result="MISS · "+label+" · 0";result_at=now;result_track=int(note.track)
 	judge_serial+=1;judged_lanes=note.required.duplicate()
 	last_success=false;last_delta=0.
 	var previous_notice=rewards.notice_serial
 	_record_score(note,0);rewards.judge("miss",0,now);sync_reward(now)
+	_settle_sustain(note,now)
 	_emit_feedback(note,"miss",now,previous_notice)
 
 func _emit_feedback(note: Dictionary,grade: String,now: float,previous_notice: int) -> void:
@@ -223,8 +242,8 @@ func _emit_feedback(note: Dictionary,grade: String,now: float,previous_notice: i
 		"centered":grade=="perfect" and abs(offset_ms)<=CENTER_MS,
 		"accent":bool(note.get("accent",false)), "contact_played":bool(note.get("contact_played",false)),
 	})
-func _grade(note: Dictionary) -> String:
-	var error=absf(float(note.delta))
+func _grade(note: Dictionary,absolute_error: float=-1.) -> String:
+	var error=absf(float(note.delta)) if absolute_error<0. else absolute_error
 	var perfect_window=PERFECT
 	var excellent_window=EXCELLENT
 	if float(note.hold)>0.:
@@ -232,11 +251,36 @@ func _grade(note: Dictionary) -> String:
 		excellent_window+=float(rewards.profile().get("hold_excellent",EXCELLENT))-EXCELLENT
 	return "perfect" if error<=perfect_window+.000001 else ("excellent" if error<=excellent_window+.000001 else "general")
 func _record_score(note: Dictionary,points: int) -> void:
-	if bool(note.get("scored",false)):return
+	if note.has("sustain_steps") or bool(note.get("scored",false)):return
 	note.scored=true
 	# Assign boundary notes by the END of their valid judgement, preserving the
 	# full late/tail grace without changing an already active fire ratio.
 	score.record(int(note.track),float(note.end)+tail_window(note),points)
+
+static func sustain_mark_time(note: Dictionary,index: int) -> float:
+	return lerpf(float(note.due),float(note.end),float(note.sustain_steps[index])/float(note.sustain_steps.back()))
+
+func _settle_sustain(note: Dictionary,now: float) -> void:
+	if not note.has("sustain_steps") or note.status=="pending":return
+	var marks: Array=note.sustain_steps
+	while int(note.next_mark)<marks.size():
+		var i=int(note.next_mark)
+		var at=sustain_mark_time(note,i)
+		if now+.000001<at:return
+		var points=0
+		var deadline=at
+		if i==0:
+			points=int(note.get("head_points",0))
+			deadline+=hit_window()
+		elif i==marks.size()-1:
+			if note.status not in ["miss","fired"]:return
+			if note.status=="fired":points=POINTS[_grade(note,float(note.get("release_error",0.)))]
+			deadline+=tail_window(note)
+		elif note.status!="miss" and at<=float(note.get("released_at",INF))+.000001:
+			points=SCORE.PERFECT_POINTS
+			note.last_mark_at=at
+		score.record(int(note.track),deadline,points)
+		note.next_mark=i+1
 func advance(now: float) -> Array[Dictionary]:
 	var ready: Array[Dictionary]=[]
 	var window=hit_window()
@@ -247,7 +291,7 @@ func advance(now: float) -> Array[Dictionary]:
 		if str(note.status)=="armed" and now+.000001>=float(note.end):
 			note.status="fired";hits+=1;combo+=1;best_combo=maxi(best_combo,combo)
 			last_grade=_grade(note)
-			last_points={"perfect":SCORE.PERFECT_POINTS,"excellent":SCORE.EXCELLENT_POINTS,"general":SCORE.GENERAL_POINTS}[last_grade]
+			last_points=POINTS[last_grade]
 			last_result={"perfect":"PERFECT 完美","excellent":"EXCELLENT 优秀","general":"GOOD 一般"}[last_grade]+" +"+str(last_points)
 			grade_counts[last_grade]+=1
 			if last_grade=="perfect":perfects+=1
@@ -259,7 +303,8 @@ func advance(now: float) -> Array[Dictionary]:
 			_emit_feedback(note,last_grade,now,previous_notice)
 		elif str(note.status)=="pending" and now>float(note.due)+window+.000001:_fail(note,"漏按",now)
 		elif str(note.status)=="rolling" and now>float(note.end)+window+.000001:_fail(note,"连打未完成",now)
-	sync_reward(now);score.advance(now)
+		_settle_sustain(note,now)
+	sync_reward(now)
 	for note in (salvos if music_chart else notes):
 		if bool(note.get("emitted",false)) or now+.000001<float(note.end):continue
 		note.emitted=true
@@ -268,6 +313,12 @@ func advance(now: float) -> Array[Dictionary]:
 			event.charged_deadline=event.deadline;event.deadline=note.end;event.rhythm_authorized=true;event.rhythm_scored_auto=true
 			event.rhythm_track=int(note.track);event.performed_at=now;event.rhythm_kind=note.kind;ready.append(event)
 	if music_chart:ready.sort_custom(func(a,b):return float(a.deadline)<float(b.deadline) or (float(a.deadline)==float(b.deadline) and int(a.serial)<int(b.serial)))
+	# A frame can dispatch salvos on both sides of a six-second boundary.
+	# Stamp the quantity at the scheduled landing before moving to the next one.
+	for event in ready:
+		score.advance(float(event.deadline))
+		event.rhythm_ratio=score.ratio
+	score.advance(now)
 	return ready
 func accepts_lane(note: Dictionary,lane: int) -> bool:
 	var status=str(note.status)
@@ -316,6 +367,7 @@ func press(lane: int,now: float,source: String="") -> bool:
 		last_result="持续按住到尾端" if str(target.status)=="holding" else "已击键"
 		result_at=now;result_track=lane
 		if str(target.status)=="holding":
+			if target.has("sustain_steps"):target.head_points=POINTS[_grade(target)]
 			feedback.emit({"at":now,"lanes":target.required.duplicate(),"grade":"","gesture":"hold_head","milestone":""})
 		elif str(target.status)=="rolling":
 			feedback.emit({"at":now,"lanes":[lane],"grade":"","gesture":"roll_head","milestone":""})
@@ -354,5 +406,8 @@ func release(lane: int,now: float,source: String="",allow_success: bool=true) ->
 			if not allow_success or now<float(note.end)-tail_window(note)-.000001:_fail(note,"长按中断",now)
 			else:
 				note.status="armed"
-				if absf(now-float(note.end))>absf(float(note.delta)):note.delta=now-float(note.end)
+				var delta=minf(0.,now-float(note.end))
+				note.released_at=now
+				note.release_error=absf(delta)
+				if absf(delta)>absf(float(note.delta)):note.delta=delta
 		elif str(note.status)=="pending" and note.pressed.has(lane):_fail(note,"双键未同时按住",now)

@@ -65,20 +65,35 @@ static func ribbon(canvas: CanvasItem,center: float,tail_y: float,head_y: float,
 		diamond(canvas,Vector2(center,tail_y),3.,color.lerp(WHITE,.55))
 
 static func lane_glass(canvas: CanvasItem,rect: Rect2,ink: Color,emphasis: float) -> void:
-	var mid=rect.get_center().x
-	var bottom=rect.end.y
-	var top=rect.position.y
-	var half=rect.size.x*.5
-	var rim=PackedVector2Array([Vector2(mid-half+5.,top),Vector2(mid+half-5.,top),
-		Vector2(mid+half,bottom-9.),Vector2(mid+half-5.,bottom),Vector2(mid-half+5.,bottom),Vector2(mid-half,bottom-9.)])
+	var rim=cut(rect,4.)
 	var far=Color(ink,.055)
 	var near=Color(ink,.14+emphasis*.026)
-	canvas.draw_polygon(rim,PackedColorArray([far,far,near,near,near,near]))
-	# Narrow etched edges leave the center clear for the ivory note faces.
+	canvas.draw_polygon(rim,PackedColorArray([far,far,far,near,near,near,near,far]))
 	for side in [-1.,1.]:
-		var end=Vector2(mid+side*(half-1.),bottom-9.)
-		canvas.draw_line(Vector2(mid+side*(half-5.),top),end,Color(ink,.24),1.,true)
-		canvas.draw_line(end,end+Vector2(-side*4.,7.),Color(ink,.54),1.2,true)
+		var x=rect.get_center().x+side*rect.size.x*.5
+		canvas.draw_line(Vector2(x,rect.position.y+4.),Vector2(x,rect.end.y-4.),Color(ink,.36),1.)
+		canvas.draw_line(Vector2(x,rect.end.y-4.),Vector2(x-side*4.,rect.end.y),Color(ink,.68),1.,true)
+
+static func sustain_ribbon(canvas: CanvasItem,center: float,tail_y: float,head_y: float,clip: Rect2,held: bool,ink: Color,reduced: bool) -> void:
+	var width=25. if held else 21.
+	var body=Rect2(center-width*.5,tail_y,width,maxf(0.,head_y-tail_y)).intersection(clip)
+	if not body.has_area():return
+	var edge=ink.lerp(HOLD,.55)
+	gradient(canvas,body,Color(edge,.14),Color(HOLD,.43 if held else .25))
+	for side in [-1.,1.]:
+		var x=center+side*(width*.5-1.)
+		canvas.draw_line(Vector2(x,body.position.y),Vector2(x,body.end.y),Color(edge,.90),1.4,true)
+	var spine=Rect2(center-2.,body.position.y,4.,body.size.y)
+	gradient(canvas,spine,Color(WHITE,.13),Color(WHITE,.82 if held else .40))
+	if tail_y>=clip.position.y+7. and tail_y<=clip.end.y-7.:
+		var at=Vector2(center,tail_y)
+		canvas.draw_circle(at,6.,INK)
+		canvas.draw_arc(at,6.,.12*PI,.88*PI,12,HOLD,1.8,true)
+		canvas.draw_arc(at,6.,1.12*PI,1.88*PI,12,HOLD,1.8,true)
+		diamond(canvas,at,2.,WHITE)
+	if held and not reduced:
+		var foot=Rect2(center-width*.7,body.end.y-16.,width*1.4,16.).intersection(clip)
+		gradient(canvas,foot,Color(HOLD,0.),Color(HOLD,.28))
 
 static func bar_notch(canvas: CanvasItem,width: float,y: float,ink: Color,phrase_start: bool) -> void:
 	var span=13. if phrase_start else 7.

@@ -59,10 +59,11 @@ func total() -> Dictionary:
 		result.earned+=int(row.earned);result.possible+=int(row.possible);result.notes+=int(row.notes)
 	return result
 func remaining(now: float) -> float:return maxf(0.,(window+1)*SECONDS-now)
-func projectile_count(uid: int,track: int,full_count: int,count_cap: int=256) -> int:
+func projectile_count(uid: int,track: int,full_count: int,count_cap: int=256,scheduled_ratio: float=-1.) -> int:
 	if full_count<=0 or track<0 or track>=TRACKS:return 0
 	var key="%d:%d"%[uid,track]
-	var expected=full_count*ratio+float(remainders.get(key,0.))
+	var multiplier=ratio if scheduled_ratio<0. else clampf(scheduled_ratio,0.,1.2)
+	var expected=full_count*multiplier+float(remainders.get(key,0.))
 	var result=clampi(floori(expected+.0000001),0,maxi(0,count_cap))
 	remainders[key]=maxf(0.,expected-floorf(expected+.0000001))
 	return result

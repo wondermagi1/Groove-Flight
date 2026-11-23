@@ -1,0 +1,21 @@
+{
+  "version": "0.76.0-sustain-scoring",
+  "date": "2026-11-23",
+  "backup": "86cab620bc1f2c2f58c575fb16e4ae868218cfb0",
+  "source_cues": 3055,
+  "tied_phrases": 123,
+  "source_events_absorbed_after_phrase_heads": 545,
+  "sustain_source_seconds": [1.875, 3.8662],
+  "mercury_standard_first_minute": {"gestures_before": 83, "gestures_after": 70, "preview_seconds": 3.8},
+  "sustain_count_by_planet": {"mercury":15,"venus":25,"earth":10,"mars":12,"jupiter":24,"saturn":10,"uranus":14,"neptune":13},
+  "lane_gutter_px": {"1280x720":14,"1920x1080":16},
+  "checks": {
+    "sustain_and_ammo_each_renderer": 84,
+    "arsenal": "24 active weapons, 25 salvos at 0.64 scheduled ratio plus zero entitlement for each weapon, verified using production shot receipts",
+    "chart_rehearsal": "Eight entire charts in sectors 0, 1 and 4 plus four source cues across the loop; all expected gestures achieved Perfect",
+    "renderer": ["forward_plus","gl_compatibility"],
+    "regressions": {"v74_mercury_playability":20,"v73_mercury_beat_defense":53,"v72_rhythm_impact_graphical":119,"v69_rhythm_review":112,"v67_mercury_combat":48,"v66_rhythm_review":68,"v65_expedition_review":259,"v63_feedback_review":71},
+    "failures": 0,
+    "diagnostic": "One headless V72 run reported an ObjectDB warning at engine teardown. The graphical V72 run and both V76 renderers exited without that warning."
+  }
+}
