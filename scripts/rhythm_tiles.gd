@@ -93,6 +93,7 @@ func _draw() -> void:
 	var now=game.standard_music.input_time();var lane=lane_width();var clip=clip_rect()
 	var scale_value=clampf(float(game.settings.text_scale),.85,1.2)
 	var reduced=bool(game.settings.reduced_fx)
+	var ink: Color=SKIN.TRACK_INKS.get(game.rhythm.chart_id,SKIN.TAP)
 	draw_style_box(frame_style,Rect2(Vector2.ZERO,size))
 	SKIN.gradient(self,Rect2(1,1,size.x-2,TOP-1),Color(SKIN.WHITE,.05),Color.TRANSPARENT)
 	# Fine frame accents stay inside the compact panel, away from the battlefield.
@@ -115,15 +116,19 @@ func _draw() -> void:
 		var pressed=game.rhythm.held(track)
 		var progress=float(hold_progress[track])
 		var rect=key_rect(track)
-		SKIN.gradient(self,Rect2(x+5.,TOP,lane-10.,key_y()-TOP),Color(SKIN.TAP,.015),Color(SKIN.TAP,.055+emphasis*.016))
-		if track>0:draw_line(Vector2(x,TOP+4.),Vector2(x,key_y()-4.),Color(SKIN.EDGE,.5),1.)
+		SKIN.lane_glass(self,Rect2(x+3.,TOP,lane-6.,judge_y-TOP),ink,emphasis)
 		if progress>=0.:
 			SKIN.gradient(self,Rect2(x+6.,judge_y-49.,lane-12.,49.),Color(SKIN.HOLD,0.),Color(SKIN.HOLD,.11+progress*.10))
-		SKIN.receptor(self,rect,pressed,progress)
+		SKIN.receptor(self,rect,pressed,progress,ink)
 		var key=game.binding_name(ACTIONS[track]);var key_size=roundi(15.*scale_value)
 		while key_size>9 and font.get_string_size(key,HORIZONTAL_ALIGNMENT_LEFT,-1,key_size).x>rect.size.x-10.:key_size-=1
 		_center_text(key,Vector2(rect.position.x,key_y()+21.),rect.size.x,key_size,SKIN.HOLD if progress>=0. else SKIN.WHITE)
 		SKIN.timing_rail(self,Vector2((track+.5)*lane,judge_y),lane,emphasis)
+	for note in game.rhythm.notes:
+		var beat=int(note.get("beat",-1))
+		if beat<0 or beat%4!=0:continue
+		var y=note_y(float(note.due),now)
+		if y>TOP+4. and y<judge_y-6.:SKIN.bar_notch(self,size.x,y,ink,beat%8==0)
 	for note in game.rhythm.notes:_draw_note(note,now,clip,reduced)
 	_draw_volley_ticks(now)
 	for fx in hit_effects:
@@ -203,12 +208,17 @@ func _draw_note(note: Dictionary,now: float,clip: Rect2,reduced: bool) -> void:
 	if simultaneous.size()>1 and int(note.required[0])==int(simultaneous[0]) and status=="pending" and y>=TOP+6. and y<judge_y:
 		var a=Vector2((float(simultaneous[0])+.5)*lane_width(),y)
 		var b=Vector2((float(simultaneous[-1])+.5)*lane_width(),y)
-		draw_line(a,b,Color(SKIN.CHORD,.55),1.)
+		draw_line(a-Vector2(0.,2.),b-Vector2(0.,2.),Color(SKIN.CHORD,.66),1.)
+		draw_line(a+Vector2(0.,2.),b+Vector2(0.,2.),Color(SKIN.CHORD,.42),1.)
 	for track in note.required:
 		var center=(float(track)+.5)*lane_width();var head=visual_head_rect(note,int(track),now)
 		if float(note.hold)>0.:SKIN.ribbon(self,center,tail_y,minf(y,judge_y) if held else y,clip,color,held,now,reduced)
 		SKIN.head(self,head,color,clip,reduced,held,bool(note.get("accent",false)))
 		if simultaneous.size()>1 and head.size.y>=10.:SKIN.diamond(self,head.get_center(),2.5,SKIN.WHITE)
+		if bool(note.get("offbeat",false)) and head.size.y>=10.:
+			var center_mark=head.get_center()
+			for shift in [-2.5,2.5]:
+				draw_line(center_mark+Vector2(shift-1.5,2.),center_mark+Vector2(shift+1.5,-2.),color.darkened(.55),1.3,true)
 func _draw_roll(note: Dictionary,now: float,clip: Rect2,reduced: bool) -> void:
 	var first=int(note.required[0])
 	var last=int(note.required[1])
@@ -219,10 +229,16 @@ func _draw_roll(note: Dictionary,now: float,clip: Rect2,reduced: bool) -> void:
 	if not active and start.has_area() and finish.has_area():
 		var a=start.get_center()
 		var b=finish.get_center()
-		draw_line(a,b,Color(color,.76),2.,true)
-		SKIN.diamond(self,a.lerp(b,.5),3.5,color)
+		SKIN.roll_link(self,a,b,color)
 	if not active:SKIN.head(self,start,color,clip,reduced,false,true)
 	SKIN.head(self,finish,color,clip,reduced,active,false)
+	var direction=signf(float(last-first))
+	if not active and start.size.y>=10.:
+		var marker=start.get_center()+Vector2(direction*(start.size.x*.5-9.),0.)
+		draw_polyline(PackedVector2Array([marker+Vector2(-direction*2.5,-2.8),marker+Vector2(direction,0.),marker+Vector2(-direction*2.5,2.8)]),color.darkened(.65),1.5,true)
+	if finish.size.y>=10.:
+		var center=finish.get_center()
+		draw_circle(center,2.5,color.darkened(.6),false,1.3,true)
 func _draw_feedback(now: float,scale_value: float,reduced: bool) -> void:
 	var reward=game.rhythm.rewards
 	var age=now-float(recent_grade.get("at",-10.))

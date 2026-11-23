@@ -10,11 +10,14 @@ static func data(planet: String="mercury") -> Dictionary:
 		var motif: Array=chart.get("finger_pattern",[0,1,2,1,0,2,0,1])
 		chart.max_gesture_duration=0.
 		for index in range(chart.events.size()):
-			var event: Dictionary=chart.events[index];var lane=int(motif[index%motif.size()])
-			for attempt in range(3):
-				var candidate=(lane+attempt)%3
-				if float(event.t)>=float(available[candidate]):lane=candidate;break
-			event.lane=lane;available[lane]=float(event.t)+float(event.hold)+.16
+			var event: Dictionary=chart.events[index]
+			if not event.has("lane"):
+				var lane=int(motif[index%motif.size()])
+				for attempt in range(3):
+					var candidate=(lane+attempt)%3
+					if float(event.t)>=float(available[candidate]):lane=candidate;break
+				event.lane=lane
+			available[int(event.lane)]=float(event.t)+float(event.hold)+.16
 			chart.max_gesture_duration=maxf(float(chart.max_gesture_duration),maxf(float(event.hold),float(event.get("roll",0.))))
 		_data[id]=chart
 	return _data[id]

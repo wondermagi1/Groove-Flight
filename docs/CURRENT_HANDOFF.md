@@ -1,6 +1,8 @@
 # Groove Flight 当前接手说明
 
-当前 V74 / 2026-11-23，`codex/mercury-playability-polish`。备份 `664d4c2`。标准航线加空拍容错与连打重试，水星首段留出更多走位时间，首座信标减压，回收圈与补给交互范围对齐。机体模型、喷焰、目标灯色与信标状态反馈升级。[V74](V74_MERCURY_PLAYABILITY.md)
+当前 V75 / 2026-11-23，`codex/phrase-charts-and-lane-art`。备份 `9a2562c`。八星三键谱按乐句写入落键与第二键，曲中切分和长音尾端参考实录音轨。谱道加入行星配色、小节刻度与连打方向标记。[V75](V75_PHRASE_CHARTS.md)
+
+历史 V74 / 2026-11-23，`codex/mercury-playability-polish`。备份 `664d4c2`。标准航线加空拍容错与连打重试，水星首段留出更多走位时间，首座信标减压，回收圈与补给交互范围对齐。机体模型、喷焰、目标灯色与信标状态反馈升级。[V74](V74_MERCURY_PLAYABILITY.md)
 
 历史 V73 / 2026-11-22，第 11 周，`codex/mercury-beat-defense`。备份 `d58bbda`。水星第一座信标的增援按《Go Cart》重拍入场，轻量接战、低音段强拍增援和防守收束接入原有 60 秒目标。[V73](V73_MERCURY_BEAT_DEFENSE.md)
 

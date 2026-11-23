@@ -1,0 +1,32 @@
+{
+  "version": "0.75.0-phrase-charts",
+  "date": "2026-11-23",
+  "backup": "9a2562c61bf2e8acea7808b69ce4e462e0f74a7a",
+  "reference": "V74 expedition charts",
+  "songs": 8,
+  "chart_events": 3055,
+  "weak_taps_moved_to_recorded_offbeats": 50,
+  "hold_releases_adjusted": 496,
+  "same_key_clearance_source_seconds_at_least": 0.30,
+  "mercury_standard_first_minute": {"screen_notes": 83, "accents": 29, "lookahead_seconds": 3.8},
+  "rehearsal": {
+    "sectors_completed": [0, 1, 4],
+    "coverage": "Full song plus first four events of its next loop on each planet",
+    "successful_gestures_per_renderer": 8973,
+    "misses": 0,
+    "renderers": ["forward_plus", "gl_compatibility"],
+    "capture": "mars-board.png",
+    "capture_settings": "1280x720 viewport, actual 224x330 Mars piano dock, 24.0228 source seconds"
+  },
+  "passed_checks": {
+    "v75_phrase_charts_per_graphical_renderer": 52,
+    "v74_mercury_playability_headless": 20,
+    "v73_mercury_beat_defense": 53,
+    "v72_rhythm_impact_review_forward_plus": 119,
+    "v69_rhythm_review": 112,
+    "v67_mercury_combat": 48,
+    "v66_rhythm_review": 68,
+    "v65_expedition_review_headless": 259,
+    "v63_feedback_review": 71
+  }
+}

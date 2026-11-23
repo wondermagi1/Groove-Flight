@@ -13,6 +13,10 @@ const RECOVERY=Color("a1efbb")
 const GRADES={"perfect":HOLD,"excellent":TAP,"general":CHORD,"miss":MISS}
 const IMPACT_LIFE=.32
 const MAX_IMPACTS=12
+const TRACK_INKS={
+	"mercury":Color("72c4ff"),"venus":Color("ffc38c"),"earth":Color("69dfca"),"mars":Color("ff856e"),
+	"jupiter":Color("e5a965"),"saturn":Color("f4d993"),"uranus":Color("8be7ec"),"neptune":Color("aa9cf7")
+}
 
 static func cut(rect: Rect2,corner: float=3.) -> PackedVector2Array:
 	var a=rect.position;var b=rect.end;var c=minf(corner,minf(rect.size.x,rect.size.y)*.5)
@@ -60,14 +64,54 @@ static func ribbon(canvas: CanvasItem,center: float,tail_y: float,head_y: float,
 		canvas.draw_colored_polygon(cut(cap,2.),color.darkened(.35))
 		diamond(canvas,Vector2(center,tail_y),3.,color.lerp(WHITE,.55))
 
-static func receptor(canvas: CanvasItem,rect: Rect2,pressed: bool,hold_progress: float) -> void:
+static func lane_glass(canvas: CanvasItem,rect: Rect2,ink: Color,emphasis: float) -> void:
+	var mid=rect.get_center().x
+	var bottom=rect.end.y
+	var top=rect.position.y
+	var half=rect.size.x*.5
+	var rim=PackedVector2Array([Vector2(mid-half+5.,top),Vector2(mid+half-5.,top),
+		Vector2(mid+half,bottom-9.),Vector2(mid+half-5.,bottom),Vector2(mid-half+5.,bottom),Vector2(mid-half,bottom-9.)])
+	var far=Color(ink,.055)
+	var near=Color(ink,.14+emphasis*.026)
+	canvas.draw_polygon(rim,PackedColorArray([far,far,near,near,near,near]))
+	# Narrow etched edges leave the center clear for the ivory note faces.
+	for side in [-1.,1.]:
+		var end=Vector2(mid+side*(half-1.),bottom-9.)
+		canvas.draw_line(Vector2(mid+side*(half-5.),top),end,Color(ink,.24),1.,true)
+		canvas.draw_line(end,end+Vector2(-side*4.,7.),Color(ink,.54),1.2,true)
+
+static func bar_notch(canvas: CanvasItem,width: float,y: float,ink: Color,phrase_start: bool) -> void:
+	var span=13. if phrase_start else 7.
+	for side in [-1.,1.]:
+		var at=Vector2(4. if side<0. else width-4.,y)
+		var tip=at+Vector2(-side*span,0.)
+		canvas.draw_line(at,tip,Color(ink,.66 if phrase_start else .38),1.)
+		if phrase_start:canvas.draw_line(tip,tip+Vector2(side*3.,-3.),Color(ink,.62),1.,true)
+
+static func roll_link(canvas: CanvasItem,a: Vector2,b: Vector2,color: Color) -> void:
+	var span=b.x-a.x
+	var c1=a+Vector2(span*.44,0.)
+	var c2=b-Vector2(span*.44,0.)
+	var points=PackedVector2Array()
+	for i in range(13):points.append(a.bezier_interpolate(c1,c2,b,i/12.))
+	canvas.draw_polyline(points,Color(color,.25),4.,true)
+	canvas.draw_polyline(points,Color(color,.83),1.3,true)
+	var direction=(points[7]-points[5]).normalized()
+	var normal=direction.orthogonal()
+	var tip=points[6]+direction*3.5
+	canvas.draw_colored_polygon(PackedVector2Array([tip,tip-direction*7.+normal*3.,tip-direction*7.-normal*3.]),color)
+
+static func receptor(canvas: CanvasItem,rect: Rect2,pressed: bool,hold_progress: float,ink: Color) -> void:
 	var sustaining=hold_progress>=0.
-	var color=HOLD if sustaining else TAP
+	var color=HOLD if sustaining else ink
 	canvas.draw_colored_polygon(cut(rect,4.),Color("191f32") if pressed or sustaining else Color("10141c"))
 	gradient(canvas,rect.grow(-2.),Color(color,.21 if pressed or sustaining else .06),Color(INK,.3))
 	outline(canvas,rect,Color(color,.85) if pressed or sustaining else Color(EDGE,.65),4.)
 	var cap=rect.position+Vector2(10,3)
-	canvas.draw_line(cap,cap+Vector2(rect.size.x-20.,0),Color(color,.85 if pressed or sustaining else .27),1.)
+	canvas.draw_line(cap,cap+Vector2(rect.size.x-20.,0),Color(color,.92 if pressed or sustaining else .49),1.)
+	for side in [-1.,1.]:
+		var lug=Vector2(rect.get_center().x+side*(rect.size.x*.5-7.),rect.get_center().y)
+		canvas.draw_polyline(PackedVector2Array([lug+Vector2(0.,-4.),lug+Vector2(-side*2.,0.),lug+Vector2(0.,4.)]),Color(color,.47),1.,true)
 	var a=Vector2(rect.position.x+7,rect.end.y-4);var b=Vector2(rect.end.x-7,rect.end.y-4)
 	canvas.draw_line(a,b,Color(color,.21),2.)
 	if sustaining:canvas.draw_line(a,a.lerp(b,hold_progress),color,2.)

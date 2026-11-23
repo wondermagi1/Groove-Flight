@@ -119,8 +119,15 @@ func forecast(loadout,now: float,song_time: float=-1.) -> void:
 			if kind in ["chord","roll"]:
 				var destination=lane+1 if lane<2 else 1
 				if lane==1 and int(cue.measure)%2==1:destination=0
-				required.append(destination)
-			notes.append({"id":"song:"+str(cue.id),"track":lane,"required":required,"due":due,"song_due":float(cue.song_due),"song_duration":duration,"end":due+duration/rate,"hold":hold,"kind":kind,"events":[],"status":"pending","delta":0.,"pressed":{},"emitted":true,"scored":false,"accent":bool(cue.get("accent",false))})
+				required.append(int(cue.get("partner",destination)))
+			notes.append({
+				"id":"song:"+str(cue.id),"track":lane,"required":required,
+				"due":due,"song_due":float(cue.song_due),"song_duration":duration,
+				"end":due+duration/rate,"hold":hold,"kind":kind,"events":[],
+				"status":"pending","delta":0.,"pressed":{},"emitted":true,"scored":false,
+				"accent":bool(cue.get("accent",false)),"beat":int(cue.beat),
+				"offbeat":cue.get("origin","")=="offbeat_audio_onset"
+			})
 		salvos=salvos.filter(func(n):return now-float(n.end)<2.)
 	for note in notes:
 		if now-float(note.end)>=2. and str(note.status) in ["pending","holding","armed","rolling"]:_fail(note,"超时",now)
