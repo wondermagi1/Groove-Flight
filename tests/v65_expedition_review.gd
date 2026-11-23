@@ -229,9 +229,9 @@ func run() -> void:
 	check(game.expedition.docks.is_empty() and game.expedition.boss_site==Vector2.INF and game.mission.done==0,"Restart resets expedition state")
 	check(is_equal_approx(game.planet_music.pitch_scale,1.) and is_equal_approx(game.rhythm.song_rate,1.),"New run restores original tempo")
 	game.rhythm.configure_pilot("")
-	check(is_equal_approx(game.rhythm.lookahead(),3.55) and is_equal_approx(game.rhythm.hit_window(),.250) and GATE.PERFECT==.150 and GATE.EXCELLENT==.200 and GATE.WINDOW==.25,"Mercury uses the expanded timing window and introductory fall speed")
+	check(is_equal_approx(game.rhythm.lookahead(),3.80) and is_equal_approx(game.rhythm.hit_window(),.250) and GATE.PERFECT==.150 and GATE.EXCELLENT==.200 and GATE.WINDOW==.25,"Mercury standard gives more preview without changing the grades")
 	game.rhythm.configure_pilot("echo")
-	check(is_equal_approx(game.rhythm.lookahead(),4.10),"Echo keeps an additional preview advantage")
+	check(is_equal_approx(game.rhythm.lookahead(),4.35),"Echo stacks with the Mercury standard preview")
 	game.simulation_only=false
 	game.return_title()
 	game.open_solar_map()

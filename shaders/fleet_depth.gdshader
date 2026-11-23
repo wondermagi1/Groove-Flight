@@ -21,7 +21,11 @@ void vertex(){
    // their colour;there is no synchronized fleet-wide brightness animation.
    shade=UV.y>6.?.99:(.93+.075*dot(normalize(p+vec2(.001)),normalize(vec2(-.6,-.8))));
   }
-  lit_color=vec4(COLOR.rgb*shade,COLOR.a);
+  vec3 surface=COLOR.rgb;
+  if(UV.y>7.5){
+   surface=mix(surface,vec3(1.,.72,.29),INSTANCE_CUSTOM.y*.82);
+  }
+  lit_color=vec4(surface*shade,COLOR.a);
  }
  VERTEX=inverse_rotation*p;
 }

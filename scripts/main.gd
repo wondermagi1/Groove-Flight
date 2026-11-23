@@ -110,6 +110,7 @@ var pilot_amp_until: float=-1.
 var pilot_heal_progress: int=0
 var movement_facing: Vector2=Vector2.UP
 var flight_trail: Array=[]; var flight_trail_clock: float=0.
+var engine_thrust: float=0.
 var pending_splits: Array[Dictionary]=[]
 var boss_down: bool=false
 var spawn_log: Array=[]
@@ -466,6 +467,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 		selected_planet=planet_id
 	active_planet=selected_planet if is_planet_unlocked(selected_planet) else "mercury"
 	difficulty=clampi(int(settings.get("difficulty",0)),0,1)
+	rhythm.forgiving_input=difficulty==0
 	planet_rules=PLANETS.combat(active_planet,difficulty); wave_rows=PLANETS.route(active_planet,difficulty)
 	background.set_shader_parameter("planet_style",int(planet_rules.planet_style))
 	background.set_shader_parameter("planet_color",planet_rules.accent)
@@ -503,6 +505,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	health=loadout.max_health; invulnerable=1.; dash_left=0; dash_cooldown=0
 	pilot_amp_until=-1; pilot_heal_progress=0; pending_splits.clear(); boss_down=false; spawn_log.clear(); total_spawned=0
 	flight_trail.clear(); flight_trail_clock=0.
+	engine_thrust=0.
 	shield_points=0; shield_until=-1; player_guard_until=-1; player_guard_started=-10.; shield_renderer.flash_at=-10.; pending_dash_missiles=0; proc_queue.clear(); shop_offers.clear(); shop_reroll_cost=8
 	salvage_charge=0; salvage_ready_at=-1.
 	wave=0; kills=0; score=0; dust=0; picked=0; next_enemy=1; actual_steps=0; selected_uid=-1; drop_fraction=0.;mercury_drop_remainder=0.
@@ -1057,6 +1060,8 @@ func _physics_process(delta: float) -> void:
 		fx.burst(player,Color("d5f9ff"),2,30)
 	else: player+=input*move_speed*(1.+float(stats_snapshot.get("move_percent",0)))*delta
 	player=player.clamp(field().position+Vector2.ONE*18,field().end-Vector2.ONE*18)
+	var movement=clampf(Vector2(player).distance_to(previous_player)/maxf(1.,move_speed*delta),0.,1.)
+	engine_thrust=move_toward(engine_thrust,movement,delta*8.)
 	flight_trail_clock=maxf(0.,flight_trail_clock-delta)
 	if player.distance_squared_to(previous_player)>1. and flight_trail_clock<=0.:
 		record_flight_trail(player)
@@ -1988,7 +1993,7 @@ func _draw() -> void:
 	var opacity=.45 if invulnerable>0 and invulnerable<=.8 and int(invulnerable*20)%2==0 else 1.
 	if state=="combat" and rhythm_required():
 		RHYTHM_SKIN.volley_glint(self,player,facing.angle(),music.timeline-rhythm.last_volley_at,rhythm.score.ratio>1.,bool(settings.reduced_fx))
-	ART.draw_ship(self,player,16.,facing.angle(),selected_ship,pulse,opacity)
+	ART.draw_ship(self,player,16.,facing.angle(),selected_ship,pulse,opacity,engine_thrust)
 	shield_renderer.update_state(player,music.timeline,player_guard_until-music.timeline,player_guard_started,shield_points>0 and music.timeline<shield_until,bool(settings.reduced_fx))
 	for i in range(loadout.slots.size()):
 		if not loadout.is_head(i): continue

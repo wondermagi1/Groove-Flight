@@ -144,7 +144,7 @@ func beacon_phase_hint(game) -> String:
 	if crest_age>=0. and crest_age<2.3:return "强拍攻势 · 拦截增援"
 	if game.spawn_telegraphs.any(func(plan):return bool(plan.get("beacon_crest",false))):return "强拍增援即将入场"
 	if float(game.mission.guard_elapsed)>=57.:return "攻势收束 · 守住最后一拍"
-	if float(game.mission.guard_elapsed)<12.:return "接战 · 在防区内拦截"
+	if float(game.mission.guard_elapsed)<12.:return "接战 · 拦截琥珀灯敌机"
 	return "沿重拍拦截增援"
 
 func draw_world(game) -> void:

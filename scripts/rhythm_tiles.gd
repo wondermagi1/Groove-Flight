@@ -15,6 +15,7 @@ var judge_y=0.
 var frame_style: StyleBoxFlat
 var hit_effects: Array[Dictionary]=[]
 var recent_grade: Dictionary={}
+var retry_at: float=-INF
 static func compact_size(view: Vector2) -> Vector2:
 	return Vector2(roundf(clampf(view.x*.135,224.,280.)),roundf(clampf(view.y*.44,330.,540.)))
 static func dock_rect(view: Vector2) -> Rect2:
@@ -55,6 +56,7 @@ func _ready() -> void:
 	game.rhythm.feedback.connect(_receive_feedback)
 func _receive_feedback(event: Dictionary) -> void:
 	if game.state!="combat":return
+	retry_at=float(event.at) if event.gesture=="roll_wait" else -INF
 	if not bool(event.get("contact_played",false)) or event.milestone in ["perfect","combo"]:
 		hit_effects.append(event)
 		if hit_effects.size()>SKIN.MAX_IMPACTS:hit_effects.pop_front()
@@ -237,6 +239,9 @@ func _draw_feedback(now: float,scale_value: float,reduced: bool) -> void:
 			"break":
 				if not game.rhythm.uses_mercury_cues():notice="断连"
 	var rect=Rect2(4,size.y-19.,size.x-8.,17.)
+	if now>=retry_at and now-retry_at<.38:
+		_center_text("等尾键落下再按",Vector2(8.,size.y-5.),size.x-16.,roundi(12.*scale_value),SKIN.ROLL)
+		return
 	if not notice.is_empty():
 		var color=SKIN.HOLD if reward.notice_kind=="perfect" else SKIN.CHORD
 		var accent=Color(color,.28 if reduced else .35+.30*exp(-notice_age*6.))

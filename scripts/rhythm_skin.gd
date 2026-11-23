@@ -84,6 +84,11 @@ static func timing_rail(canvas: CanvasItem,center: Vector2,lane: float,accent: f
 static func impact(canvas: CanvasItem,center: Vector2,lane: float,age: float,event: Dictionary,reduced: bool) -> void:
 	var grade=str(event.grade)
 	var gesture=str(event.gesture)
+	if gesture=="roll_wait":
+		var fade=1.-smoothstep(0.,.26,age)
+		var width=lane*.28
+		canvas.draw_line(center+Vector2(-width,4.),center+Vector2(width,4.),Color(ROLL,fade*.75),2.,true)
+		return
 	var centered=bool(event.get("centered",false))
 	if gesture=="early_contact" and not centered:
 		var response=clampf(1.-age/.11,0.,1.)

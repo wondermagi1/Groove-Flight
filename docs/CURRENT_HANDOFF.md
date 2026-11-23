@@ -1,6 +1,8 @@
 # Groove Flight 当前接手说明
 
-当前 V73 / 2026-11-22，第 11 周，`codex/mercury-beat-defense`。备份 `d58bbda`。水星第一座信标的增援按《Go Cart》重拍入场，轻量接战、低音段强拍增援和防守收束接入原有 60 秒目标。[V73](V73_MERCURY_BEAT_DEFENSE.md)
+当前 V74 / 2026-11-23，`codex/mercury-playability-polish`。备份 `664d4c2`。标准航线加空拍容错与连打重试，水星首段留出更多走位时间，首座信标减压，回收圈与补给交互范围对齐。机体模型、喷焰、目标灯色与信标状态反馈升级。[V74](V74_MERCURY_PLAYABILITY.md)
+
+历史 V73 / 2026-11-22，第 11 周，`codex/mercury-beat-defense`。备份 `d58bbda`。水星第一座信标的增援按《Go Cart》重拍入场，轻量接战、低音段强拍增援和防守收束接入原有 60 秒目标。[V73](V73_MERCURY_BEAT_DEFENSE.md)
 
 历史 V72 / 2026-11-22，第 11 周，`codex/rhythm-impact-feedback`。备份 `af3b376`。八星齐射对齐手势收尾，精准击键强化、机身开火光弧、5 连击提示、Perfect 进度和六秒弹量变化接入现有战斗界面。[V72](V72_RHYTHM_IMPACT.md)
 

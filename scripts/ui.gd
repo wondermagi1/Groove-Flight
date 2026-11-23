@@ -188,9 +188,9 @@ func update_hud() -> void:
 		wave_label.text="%s · 远征"%PLANETS.planet(game.active_planet).name
 		var total=int(game.mission.spec().goal)
 		timer_label.text="BOSS" if game.wave==game.wave_count() else "%d/%d"%[mini(game.mission.done+1,total),total]
-		if game.mission.is_beacon_defense():
+		if game.active_planet=="mercury" and game.mission.guard_phase>0:
 			wave_label.text="水星 · 信标 %d/%d"%[game.mission.done+1,total]
-			timer_label.text="%02d"%ceili(game.BALANCE.BEACON_SECONDS-game.mission.guard_elapsed)
+			timer_label.text="回收" if game.mission.guard_phase==2 else "%02d"%ceili(game.BALANCE.BEACON_SECONDS-game.mission.guard_elapsed)
 	if not game.free_music_run and game.boss_down and game.mission.enabled and not game.mission.complete():timer_label.text="撤离"
 	health_label.text="无敌练习 · 不计战绩" if game.free_music_run else "生命  %.1f / %d"%[game.health,game.loadout.max_health]
 	score_label.text="✦ %d   /   击破 %d"%[game.dust,game.kills]

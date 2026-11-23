@@ -184,7 +184,7 @@ static func _ship_finish(canvas: CanvasItem,ship_id: String,accent: Color,pulse:
 		canvas.draw_circle(Vector2(-.90,side*.59),.018,Color(HULL,opacity))
 	canvas.draw_arc(Vector2(-.02,-.035),.52,-PI*.85,-PI*.1,16,Color("fffce8",opacity*.8),.023,true)
 
-static func draw_ship(canvas: CanvasItem,at: Vector2,radius: float,angle: float,ship_id: String,pulse: float=0.,opacity: float=1.) -> void:
+static func draw_ship(canvas: CanvasItem,at: Vector2,radius: float,angle: float,ship_id: String,pulse: float=0.,opacity: float=1.,thrust: float=0.) -> void:
 	var data=F.ship(ship_id); var accent: Color=data.color
 	var silhouette=[[1.77,0],[.73,-.72],[-.18,-.9],[-.75,-1.25],[-1.45,-1.13],[-1.18,-.42],[-1.42,0],[-1.18,.42],[-1.45,1.13],[-.75,1.25],[-.18,.9],[.73,.72]]
 	match ship_id:
@@ -197,6 +197,7 @@ static func draw_ship(canvas: CanvasItem,at: Vector2,radius: float,angle: float,
 	canvas.draw_set_transform(at+Vector2(.025,.22)*radius,angle,Vector2.ONE*radius)
 	_poly(canvas,silhouette,Color(SHADE.darkened(.30),opacity))
 	canvas.draw_set_transform(at,angle,Vector2.ONE*radius)
+	var engine_pulse=pulse+thrust*.95
 	# Dark extrusion is offset consistently so the silhouette reads as plated metal.
 	match ship_id:
 		"swift":
@@ -205,7 +206,7 @@ static func draw_ship(canvas: CanvasItem,at: Vector2,radius: float,angle: float,
 				_plated(canvas,[[-1.85,side*1.42],[.25,side*.55],[.55,side*.31],[-1.12,side*.30]],Color(SIDE,opacity))
 				_plated(canvas,[[-1.68,side*1.26],[.18,side*.55],[-.40,side*.54],[-1.28,side*.66]],Color(HULL,opacity))
 				canvas.draw_line(Vector2(-1.65,side*1.23),Vector2(-.30,side*.66),Color(accent,opacity),.10,true)
-				_engine(canvas,Vector2(-.95,side*.43),Color(accent,opacity),pulse,.75)
+				_engine(canvas,Vector2(-.95,side*.43),Color(accent,opacity),engine_pulse,.75)
 			_plated(canvas,[[1.97,0],[.25,-.36],[-1.22,-.25],[-1.22,.25],[.25,.36]],Color(HULL,opacity))
 			_plated(canvas,[[1.9,0],[.2,.18],[-1.16,.18],[-1.16,.3],[.25,.36]],Color(SIDE,opacity))
 		"bastion":
@@ -217,9 +218,9 @@ static func draw_ship(canvas: CanvasItem,at: Vector2,radius: float,angle: float,
 				canvas.draw_rect(Rect2(Vector2(.38,side*.83-.10),Vector2(1.30,.20)),Color(SHADE,opacity))
 				canvas.draw_rect(Rect2(Vector2(.49,side*.83-.065),Vector2(1.25,.13)),Color(HULL,opacity))
 				canvas.draw_line(Vector2(1.74,side*.83-.10),Vector2(1.74,side*.83+.10),Color(accent,opacity),.10,true)
-				_engine(canvas,Vector2(-1.18,side*.93),Color(accent,opacity),pulse,.45)
+				_engine(canvas,Vector2(-1.18,side*.93),Color(accent,opacity),engine_pulse,.45)
 			_plated(canvas,[[1.18,-.57],[1.44,0],[1.18,.57],[-.98,.69],[-1.28,.33],[-1.28,-.33],[-.98,-.69]],Color(HULL,opacity))
-			_engine(canvas,Vector2(-1.20,0),Color(accent,opacity),pulse,.55)
+			_engine(canvas,Vector2(-1.20,0),Color(accent,opacity),engine_pulse,.55)
 		"sabre":
 			# Two long blade rails and a narrow fuselage create a sword-like
 			# interceptor silhouette that stays distinct at gameplay scale.
@@ -229,7 +230,7 @@ static func draw_ship(canvas: CanvasItem,at: Vector2,radius: float,angle: float,
 				_plated(canvas,[[1.90,side*.10],[.45,side*.49],[-1.18,side*.86],[-1.02,side*.42],[.16,side*.26]],Color(HULL,opacity))
 				canvas.draw_line(Vector2(1.72,side*.12),Vector2(-1.02,side*.69),Color(accent,opacity*.92),.075,true)
 				canvas.draw_line(Vector2(1.67,side*.09),Vector2(-.86,side*.60),Color(Color.WHITE,opacity*.55),.024,true)
-				_engine(canvas,Vector2(-1.38,side*.43),Color(accent,opacity),pulse,.70)
+				_engine(canvas,Vector2(-1.38,side*.43),Color(accent,opacity),engine_pulse,.70)
 			_plated(canvas,[[2.30,0],[.78,-.18],[-1.02,0],[.78,.18]],Color(HULL,opacity))
 			_plated(canvas,[[1.58,0],[.48,.18],[-.95,.20],[-.45,0]],Color(SIDE,opacity))
 		"manta":
@@ -240,8 +241,8 @@ static func draw_ship(canvas: CanvasItem,at: Vector2,radius: float,angle: float,
 				_plated(canvas,[[1.60,side*.13],[.50,side*.52],[-.48,side*1.08],[-1.19,side*1.01],[-.95,side*.55],[-.21,side*.40]],Color(HULL,opacity))
 				_plated(canvas,[[.24,side*.45],[-.50,side*1.08],[-1.19,side*1.01],[-.83,side*.55]],Color(SHADE,opacity*.74))
 				canvas.draw_line(Vector2(1.34,side*.15),Vector2(-.94,side*.88),Color(accent,opacity*.88),.075,true)
-				_engine(canvas,Vector2(-1.18,side*.90),Color(accent,opacity),pulse,.66)
-				_engine(canvas,Vector2(-1.02,side*.37),Color(accent,opacity),pulse,.44)
+				_engine(canvas,Vector2(-1.18,side*.90),Color(accent,opacity),engine_pulse,.66)
+				_engine(canvas,Vector2(-1.02,side*.37),Color(accent,opacity),engine_pulse,.44)
 			_plated(canvas,[[2.23,0],[.88,-.26],[-.72,-.42],[-1.33,0],[-.72,.42],[.88,.26]],Color(HULL,opacity))
 			_plated(canvas,[[2.23,0],[.88,.26],[-.72,.42],[-1.33,0],[-.65,.18],[.80,.16]],Color(SIDE,opacity))
 			for side in [-1.,1.]:
@@ -252,7 +253,7 @@ static func draw_ship(canvas: CanvasItem,at: Vector2,radius: float,angle: float,
 				_plated(canvas,[[-1.31,side*1.01],[-.83,side*1.12],[.55,side*.54],[-.25,side*.33]],Color(SIDE,opacity))
 				_plated(canvas,[[-1.18,side*.91],[-.81,side*.98],[.35,side*.54],[-.29,side*.47]],Color(HULL,opacity))
 				canvas.draw_line(Vector2(-.94,side*.88),Vector2(-.19,side*.59),Color(accent,opacity),.10,true)
-				_engine(canvas,Vector2(-.87,side*.73),Color(accent,opacity),pulse,.48)
+				_engine(canvas,Vector2(-.87,side*.73),Color(accent,opacity),engine_pulse,.48)
 			_plated(canvas,[[1.68,0],[.65,-.47],[-.94,-.48],[-1.21,0],[-.94,.48],[.65,.47]],Color(HULL,opacity))
 			_plated(canvas,[[1.68,0],[.65,.47],[-.94,.48],[-1.21,0],[-.65,.20],[.60,.23]],Color(SIDE,opacity))
 	# Shared white hexagonal reactor is present on every spacecraft.
@@ -267,6 +268,9 @@ static func draw_ship(canvas: CanvasItem,at: Vector2,radius: float,angle: float,
 	canvas.draw_line(Vector2(-.70,-.54),Vector2(-.16,-.70),Color(Color.WHITE,opacity*.62),.025,true)
 	canvas.draw_circle(Vector2(-.31,-.37),.050,Color(Color.WHITE,opacity*.78))
 	canvas.draw_line(Vector2(-1.05,.42),Vector2(.84,.42),Color(Color("07111d"),opacity*.42),.045,true)
+	var perimeter=PackedVector2Array()
+	for point in silhouette:perimeter.append(Vector2(point[0],point[1]))
+	_edge(canvas,perimeter,Color(accent.lerp(HULL,.45),opacity*.58),.036)
 	_ship_finish(canvas,ship_id,accent,pulse,opacity)
 	canvas.draw_set_transform(Vector2.ZERO,0.,Vector2.ONE)
 

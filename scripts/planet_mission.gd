@@ -21,6 +21,7 @@ var capture: float=0.
 var resonance: int=0
 var guard_elapsed: float=0.
 var guard_phase: int=0
+var beacon_hit_at: float=-INF
 var beacon: Vector2=Vector2.ZERO
 var beacon_hp: float=180.
 var last_player: Vector2=Vector2.ZERO
@@ -66,6 +67,7 @@ func reset(game,active: bool) -> void:
 	enabled=active;expedition=game.expedition.enabled;planet=game.active_planet;done=0;capture=0.;resonance=0;beacon_hp=180.;defended=0;failed=false
 	objective=expedition_spec(planet) if expedition else SPECS.get(planet,SPECS.mercury)
 	guard_elapsed=0.;guard_phase=0
+	beacon_hit_at=-INF
 	escort_progress=0.;escort_moving=false;escort_heading=Vector2.UP;relay_active=false;siege_nodes.clear()
 	hostiles.clear();pending.clear();target_uid=-1;reward_waves.clear();focus_set=false;message="";last_target_beat=-1
 	start_anchor=game.player;beacon=game.player+Vector2(0,-390);last_player=game.player;last_time=0.;last_hits=0
@@ -133,6 +135,7 @@ func _advance(game) -> void:
 	var completed_role=role()
 	done+=1;capture=0.;resonance=0;focus_set=false;target_uid=-1;pending.clear()
 	guard_phase=0;guard_elapsed=0.;relay_active=false;siege_nodes.clear()
+	beacon_hit_at=-INF
 	if planet=="mercury" or (expedition and planet=="earth"):beacon_hp=180.
 	message="任务完成，击破旗舰后撤离" if complete() else "阶段完成 · 下一目标随航线开放"
 	if planet=="mercury":
@@ -283,30 +286,37 @@ func _step_beacon(game,dt: float) -> void:
 				if done==0:game.expedition.seal_first_beacon(game)
 				game.sound("reward",-8.)
 		2:
-			if _inside(game,beacon,sample_radius()):
+			if _inside(game,beacon,game.expedition.DOCK_RADIUS):
 				# Recovery removes only earned local drops. Keep their health
 				# effect and leave unrelated pickups elsewhere on the map.
 				_recover_loot(game,beacon,1280.)
-				game.health=minf(float(game.loadout.max_health),game.health+2.)
+				var repair=BALANCE.MERCURY_FIRST_BEACON_REPAIR if done==0 and game.difficulty==0 else 2.
+				game.health=minf(float(game.loadout.max_health),game.health+repair)
 				_advance(game)
 func _update_targets(game) -> void:
 	var beat=floori(game.music.timeline/.25)
 	if beat==last_target_beat:return
 	last_target_beat=beat
+	var objective_slots=3 if role()=="defend" or is_beacon_defense() else 2
+	if is_beacon_defense() and done==0 and game.difficulty==0 and guard_elapsed<12.:objective_slots=2
 	for e in game.enemies:
 		if not game.SWARM.is_ordinary(e):continue
 		if bool(e.get("mission_target_unit",false)) and not bool(e.get("mission_node",false)):
 			e.mission_target=game.player+Vector2.from_angle(game.music.timeline*.24+done*1.9)*700.
-		elif protected_objective() and int(e.uid)%5<(3 if role()=="defend" or is_beacon_defense() else 2):e.mission_target=beacon
+		elif protected_objective() and int(e.uid)%5<objective_slots:e.mission_target=beacon
 		else:e.erase("mission_target")
 func enemy_contact(game,e: Dictionary,previous: Vector2) -> void:
 	if not enabled or complete() or failed or not protected_objective() or not e.has("mission_target") or bool(e.get("mission_target_unit",false)):return
 	if game.music.timeline<float(e.get("armed_after",0.)):return
 	if Geometry2D.get_closest_point_to_segment(beacon,previous,e.at).distance_to(beacon)<=float(e.radius)+58.:
 		var damage=(2.6+.55*done)*(1.20 if game.difficulty>0 else 1.) if is_beacon_defense() else .8
+		if is_beacon_defense() and done==0 and game.difficulty==0:damage=BALANCE.MERCURY_FIRST_BEACON_HIT
 		if expedition and planet=="earth":damage=(2.2+.55*done)*(1.20 if game.difficulty>0 else 1.)
 		elif expedition and planet=="venus":damage=(1.5+.2*done)*(1.20 if game.difficulty>0 else 1.)
 		beacon_hp=maxf(0.,beacon_hp-damage);e.hp=0.;game.by_id.erase(int(e.uid))
+		if is_beacon_defense():
+			if game.music.timeline-beacon_hit_at>=.55:game.sound("metal",-18.,.88)
+			beacon_hit_at=game.music.timeline
 		game.fx.impact(beacon,Color("ee9c9c"),false)
 		if beacon_hp<=0.:
 			failed=true;game.last_damage_reason="任务目标被摧毁";game.receipt.death_reason=game.last_damage_reason;game.finish_run(false)
@@ -325,7 +335,7 @@ func caption(game) -> String:
 	if complete():return "任务完成 · 旗舰已击破，可撤离" if game.boss_down else "任务完成 · 击破旗舰后撤离"
 	if expedition and planet=="mercury":
 		if guard_phase==1:return "守护 %02d 秒 · 信标 %d%%"%[ceili(BALANCE.BEACON_SECONDS-guard_elapsed),roundi(beacon_hp/1.8)]
-		if guard_phase==2:return "防守完成 · 返回信标领奖"
+		if guard_phase==2:return "信标防守完成"
 		return "接通信标 %d/3"%(done+1)
 	if not available(game):return "阶段 %d/%d · 第%d波开放下个目标"%[done,int(spec().goal),unlock_wave()]
 	if expedition and planet=="venus":
@@ -344,9 +354,16 @@ func draw_world(game) -> void:
 	var color: Color=game.planet_rules.accent;var now=float(game.music.timeline)
 	if planet=="mercury":
 		var fill=guard_elapsed/BALANCE.BEACON_SECONDS if expedition and guard_phase>0 else capture/.8
-		BEACON_ART.draw(game,beacon,now,clampf(fill,0.,1.),_inside(game,beacon,sample_radius()),done+1,bool(game.settings.reduced_fx),sample_radius())
+		var recovering=expedition and guard_phase==2
+		var ring_radius: float=game.expedition.DOCK_RADIUS if recovering else sample_radius()
+		var shield_flash=1.-smoothstep(0.,.36,now-beacon_hit_at)
+		var damagedness=clampf(1.-beacon_hp/180.,0.,1.)
+		BEACON_ART.draw(game,beacon,now,clampf(fill,0.,1.),_inside(game,beacon,ring_radius),done+1,bool(game.settings.reduced_fx),ring_radius,recovering,damagedness,shield_flash)
 		if is_beacon_defense():
-			game.draw_arc(beacon,BALANCE.BEACON_GUARD_RADIUS,0.,TAU,88,Color(BEACON_ART.LIGHT,.20),1.5,true)
+			var gap: float=Vector2(game.player).distance_to(beacon)
+			var boundary=clampf((gap-BALANCE.BEACON_GUARD_RADIUS+115.)/115.,0.,1.)
+			var field_color=BEACON_ART.LIGHT.lerp(BEACON_ART.GOLD,boundary)
+			game.draw_arc(beacon,BALANCE.BEACON_GUARD_RADIUS,0.,TAU,88,Color(field_color,.20+boundary*.25),1.5,true)
 			if done==0:
 				var crest_age=now-float(game.expedition.beacon_crest_at)
 				if crest_age>=0. and crest_age<1.1:
@@ -355,7 +372,7 @@ func draw_world(game) -> void:
 						var angle=float(quadrant)*PI*.5+PI*.12
 						game.draw_arc(beacon,BALANCE.BEACON_GUARD_RADIUS-7.,angle,angle+PI*.25,18,Color("f8cd86",alpha),2.,true)
 		elif expedition and guard_phase==2:
-			game.draw_arc(beacon,sample_radius()+18.,0.,TAU,48,Color("ffde9b",.7),3.,true)
+			game.draw_arc(beacon,ring_radius+10.,0.,TAU,48,Color(BEACON_ART.GOLD,.55),2.,true)
 		var distance=game.player.distance_to(beacon)
 		if distance>sample_radius()+90.:
 			var axis=(beacon-game.player).normalized();var side=axis.orthogonal()

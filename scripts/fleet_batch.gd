@@ -39,7 +39,8 @@ static func add_plate(vertices: PackedVector3Array,colors: PackedColorArray,uvs:
 	for index in triangles:
 		var point=polygon[index]
 		var lit=color if emitter or base else color.lightened(clampf(-point.y*.055,0.,.10)).darkened(clampf(point.y*.05,0.,.10))
-		vertices.append(Vector3(point.x,point.y,0)); colors.append(lit); uvs.append(Vector2(height,7. if emitter else 5.))
+		var surface=8. if color==ENEMY_LIGHT else (7. if emitter else 5.)
+		vertices.append(Vector3(point.x,point.y,0)); colors.append(lit); uvs.append(Vector2(height,surface))
 
 static func strip(v: PackedVector3Array,c: PackedColorArray,u: PackedVector2Array,a: Vector2,b: Vector2,width: float,color: Color) -> void:
 	var normal=(b-a).orthogonal().normalized()*width*.5
@@ -86,7 +87,10 @@ static func make_mesh(kind: String) -> ArrayMesh:
 			var wing=1.2 if kind=="mote" else .75
 			add_plate(vertices,colors,uvs,[[1.45,0],[-.7,-wing],[-1.,-.65],[-.6,0],[-1.,.65],[-.7,wing]],ink)
 			add_plate(vertices,colors,uvs,[[1.32,0],[-.58,-wing*.84],[-.78,-.5],[-.45,0],[-.78,.5],[-.58,wing*.84]],plate)
-			add_plate(vertices,colors,uvs,[[1.32,0],[-.58,wing*.84],[-.78,.5],[-.45,0]],dark)
+			add_plate(vertices,colors,uvs,[[1.32,0],[-.58,wing*.84],[-.78,.5],[-.45,0]],Color("6b557e"))
+			for side in [-1.,1.]:
+				strip(vertices,colors,uvs,Vector2(-.59,side*wing*.83),Vector2(.62,side*wing*.34),.068,plate)
+			add_plate(vertices,colors,uvs,[[1.29,0],[.52,-.17],[.37,0],[.52,.17]],Color("342740"))
 		"armor":
 			add_plate(vertices,colors,uvs,hex(Vector2.ZERO,1.1),ink)
 			add_plate(vertices,colors,uvs,[[.85,-.5],[1.,0],[.85,.5],[-.6,.8],[-.9,.4],[-.9,-.4],[-.6,-.8]],Color("9f81b8"))
@@ -141,7 +145,8 @@ func update_fleet(enemies: Array,bounds: Rect2) -> void:
 		if index>=CAPACITY: continue
 		var transform=Transform2D(float(enemy.angle),enemy.at).scaled_local(Vector2.ONE*float(enemy.radius))
 		mesh.set_instance_transform_2d(index,transform)
-		mesh.set_instance_custom_data(index,Color(float(enemy.angle),0.,0.,0.))
+		var objective_target=enemy.has("mission_target") and not bool(enemy.get("mission_target_unit",false))
+		mesh.set_instance_custom_data(index,Color(float(enemy.angle),1. if objective_target else 0.,0.,0.))
 		mesh.set_instance_color(index,Color.WHITE*(1.+clampf(float(enemy.flash)*12.,0,1.5)))
 		counts[kind]=index+1; active_count+=1
 	for kind in TYPES: fleets[kind].visible_instance_count=int(counts[kind])

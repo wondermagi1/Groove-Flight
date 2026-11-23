@@ -1,0 +1,24 @@
+{
+  "version": "0.74.0-mercury-playability",
+  "date": "2026-11-23",
+  "remote_backup": "664d4c225330e5abe8a6f61b05724864ba76e336",
+  "mercury_first_60_seconds": {
+    "standard": {"notes": 83, "accents": 29, "preview_seconds": 3.8},
+    "hard": {"notes": 107, "accents": 29, "preview_seconds": 3.55}
+  },
+  "first_beacon_standard": {
+    "opening_eligible_attackers_per_five": 2,
+    "contact_damage": 2.2,
+    "recovery_health": 3,
+    "fixed_supply": 110
+  },
+  "checks": [
+    {"suite": "v74_mercury_playability", "assertions": 33, "failures": 0, "renderers": ["forward_plus", "gl_compatibility"]},
+    {"suite": "v73_mercury_beat_defense", "assertions": 53, "failures": 0},
+    {"suite": "v72_rhythm_impact_review", "assertions": 117, "failures": 0},
+    {"suite": "v67_mercury_combat", "assertions": 48, "failures": 0},
+    {"suite": "v66_rhythm_review", "assertions": 68, "failures": 0},
+    {"suite": "v65_expedition_review", "assertions": 269, "failures": 0},
+    {"suite": "v63_feedback_review", "assertions": 71, "failures": 0}
+  ]
+}

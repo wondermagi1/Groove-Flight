@@ -228,6 +228,7 @@ func _refresh_selection() -> void:
 	difficulty_box.add_item("标准航线")
 	difficulty_box.add_item("棱镜灾变 · 高压")
 	difficulty_box.select(difficulty)
+	difficulty_box.tooltip_text="标准航线允许重试按早的连打尾键，空拍误触时保留连击。"
 	difficulty_box.item_selected.connect(func(index):game.settings.difficulty=index; game.save_settings(); _refresh_selection.call_deferred())
 	detail_content.add_child(difficulty_box)
 	if difficulty>0:

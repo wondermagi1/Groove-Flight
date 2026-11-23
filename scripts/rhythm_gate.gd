@@ -24,6 +24,7 @@ var last_grade: String=""
 var last_points: int=0
 var grade_counts={"perfect":0,"excellent":0,"general":0,"miss":0}
 var music_chart: bool=false
+var forgiving_input: bool=false
 var stage: int=0
 var song_rate: float=1.
 var retime_salvos: bool=false
@@ -110,6 +111,8 @@ func forecast(loadout,now: float,song_time: float=-1.) -> void:
 			if uses_mercury_cues() and stage>=1 and int(cue.beat)%4==3:continue
 			var lane=int(cue.lane)
 			var kind=_cue_kind(cue)
+			if uses_mercury_cues() and forgiving_input and stage==0 and kind=="tap" and not bool(cue.accent) and int(cue.beat)%4==3:
+				continue
 			var required=[lane]
 			var duration=_cue_duration(cue,kind)
 			var hold=duration/rate if kind=="hold" else 0.
@@ -179,6 +182,7 @@ func set_stage(value: int) -> void:
 	song_rate=1.+.045*stage
 func lookahead() -> float:
 	var bonus=MERCURY_PREVIEW_BONUS if uses_mercury_cues() else 0.
+	if uses_mercury_cues() and forgiving_input:bonus+=.25
 	return (float(rewards.profile().get("lookahead",LOOKAHEAD))+bonus)/song_rate
 func hit_window() -> float:return WINDOW
 func tail_window(note: Dictionary) -> float:
@@ -274,10 +278,22 @@ func press(lane: int,now: float,source: String="") -> bool:
 		down[source]=lane
 	var target: Dictionary={};var distance=INF
 	var window=hit_window()
+	var waiting_for_tail=false
 	for note in notes:
 		if not accepts_lane(note,lane):continue
-		var delta=absf(now-input_due(note))
+		var due=input_due(note)
+		var delta=absf(now-due)
 		if delta<=window+.000001 and delta<distance:target=note;distance=delta
+		elif forgiving_input and str(note.status)=="rolling" and now<due-window:waiting_for_tail=true
+	var premature_tail=target.is_empty() and waiting_for_tail
+	if not target.is_empty() and str(target.status)=="rolling":
+		var gap=MERCURY_ROLL_MIN_GAP if uses_mercury_cues() else ROLL_MIN_GAP
+		premature_tail=now-float(target.pressed[int(target.required[0])])<gap
+	if premature_tail:
+		if forgiving_input:
+			feedback.emit({"at":now,"lanes":[lane],"grade":"","gesture":"roll_wait","milestone":""})
+		else:_fail(target,"连打第二键太早",now)
+		return false
 	if not target.is_empty():
 		var delta=now-input_due(target)
 		var kind=str(target.kind)
@@ -285,10 +301,6 @@ func press(lane: int,now: float,source: String="") -> bool:
 			var first=int(target.pressed.keys()[0])
 			if (not source.is_empty() and not held(first)) or now-float(target.pressed[first])>CHORD_SPREAD+.000001:
 				_fail(target,"双押间隔过长",now);return false
-		if str(target.status)=="rolling":
-			var gap=MERCURY_ROLL_MIN_GAP if uses_mercury_cues() else ROLL_MIN_GAP
-			if now-float(target.pressed[int(target.required[0])])<gap:
-				_fail(target,"连打第二键太早",now);return false
 		last_grade="";last_points=0
 		target.pressed[lane]=now
 		if absf(delta)>absf(float(target.delta)):target.delta=delta
@@ -316,7 +328,14 @@ func press(lane: int,now: float,source: String="") -> bool:
 		if str(note.status)!="pending":continue
 		var delta=absf(now-float(note.due))
 		if delta<=window+.000001 and delta<distance:target=note;distance=delta
-	wrong+=1;combo=0
+	wrong+=1
+	if forgiving_input:
+		if not target.is_empty() and str(target.status)=="holding":return false
+		if target.is_empty():
+			var playable=notes.any(func(active):
+				return str(active.status) in ["pending","rolling"] and absf(now-input_due(active))<=window+.000001)
+			if not playable:return false
+	combo=0
 	if not target.is_empty():_fail(target,"重复击键",now)
 	else:last_grade="";last_result="空击 · 此键无琴块";result_at=now;result_track=lane;rewards.judge("wrong",0,now);sync_reward(now)
 	return false

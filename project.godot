@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Groove Flight"
-config/version="0.73.0-mercury-beat-defense"
+config/version="0.74.0-mercury-playability"
 run/main_scene="res://scenes/Main.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="BeatDriftPrototype"
