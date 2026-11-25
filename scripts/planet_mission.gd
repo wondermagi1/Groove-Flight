@@ -22,6 +22,9 @@ var resonance: int=0
 var guard_elapsed: float=0.
 var guard_phase: int=0
 var beacon_hit_at: float=-INF
+var hit_bearing: float=0.
+var intercept_at: float=-INF
+var intercept_from: Vector2
 var beacon: Vector2=Vector2.ZERO
 var beacon_hp: float=180.
 var last_player: Vector2=Vector2.ZERO
@@ -68,6 +71,7 @@ func reset(game,active: bool) -> void:
 	objective=expedition_spec(planet) if expedition else SPECS.get(planet,SPECS.mercury)
 	guard_elapsed=0.;guard_phase=0
 	beacon_hit_at=-INF
+	intercept_at=-INF
 	escort_progress=0.;escort_moving=false;escort_heading=Vector2.UP;relay_active=false;siege_nodes.clear()
 	hostiles.clear();pending.clear();target_uid=-1;reward_waves.clear();focus_set=false;message="";last_target_beat=-1
 	start_anchor=game.player;beacon=game.player+Vector2(0,-390);last_player=game.player;last_time=0.;last_hits=0
@@ -136,6 +140,7 @@ func _advance(game) -> void:
 	done+=1;capture=0.;resonance=0;focus_set=false;target_uid=-1;pending.clear()
 	guard_phase=0;guard_elapsed=0.;relay_active=false;siege_nodes.clear()
 	beacon_hit_at=-INF
+	intercept_at=-INF
 	if planet=="mercury" or (expedition and planet=="earth"):beacon_hp=180.
 	message="任务完成，击破旗舰后撤离" if complete() else "阶段完成 · 下一目标随航线开放"
 	if planet=="mercury":
@@ -144,6 +149,12 @@ func _advance(game) -> void:
 		for e in game.enemies:e.erase("mission_target")
 	game.fx.ring(at,game.planet_rules.accent,115.,.5)
 	if expedition:
+		if planet=="venus":
+			game.mixer.play(game.mixer.samples.convoy_latch,"alert",-10.)
+			game.fx.ring(at,MODELS.AMBER,155.,.42)
+		elif planet=="earth":
+			game.mixer.play(game.mixer.samples.relay_return,"alert",-11.,1.22)
+			game.fx.ring(at,MODELS.CYAN,165.,.42)
 		if completed_role in ["escort","defend"]:beacon_hp=minf(180.,beacon_hp+(55. if planet=="venus" else 24.))
 		if planet in ["venus","earth","mars"]:_recover_loot(game,at,850.)
 		game.expedition.clear_sector(game,at)
@@ -198,10 +209,38 @@ func defense_quota() -> int:
 	return [12,19,28][mini(done,2)]
 
 func enemy_defeated(game,enemy: Dictionary) -> void:
-	if not enabled or not expedition or role()!="defend" or complete() or failed:return
-	if planet=="earth" and not relay_active:return
-	if not game.SWARM.is_ordinary(enemy) or beacon.distance_to(enemy.at)>BALANCE.EARTH_RELAY_RADIUS:return
-	defended+=1
+	if not enabled or not expedition or complete() or failed:return
+	if planet not in ["venus","earth"] or not game.SWARM.is_ordinary(enemy):return
+	if planet=="earth":
+		if not relay_active or beacon.distance_to(enemy.at)>BALANCE.EARTH_RELAY_RADIUS:return
+		defended+=1
+	elif not enemy.has("mission_target") or beacon.distance_to(enemy.at)>BALANCE.VENUS_ESCORT_RADIUS:return
+	var now=float(game.music.timeline)
+	if now-intercept_at<.22:return
+	intercept_at=now
+	intercept_from=enemy.at
+	if planet=="earth":
+		if defended<defense_quota():game.mixer.play(game.mixer.samples.relay_return,"hit",-17.)
+	else:
+		game.mixer.play(game.mixer.samples.convoy_latch,"hit",-17.,1.12)
+
+func siege_impact(game,enemy: Dictionary,blocked: bool,source: Vector2) -> void:
+	var now=float(game.music.timeline)
+	var at: Vector2=enemy.at
+	if blocked:
+		if now-float(enemy.get("field_hit_at",-INF))<.15:return
+		enemy.field_hit_at=now
+		enemy.field_bearing=at.direction_to(source).angle()
+		if game.visible_world().grow(64.).has_point(at):game.mixer.play(game.mixer.samples.armor,"hit",-15.,1.48)
+	elif float(enemy.hp)<=0.:
+		var core=bool(enemy.get("siege_core",false))
+		var opens=not core and siege_nodes_left()==0
+		game.fx.blast(at,MODELS.RED if core else Color("cbb9ff"),150. if core else 64.)
+		if opens:
+			game.fx.ring(beacon,Color("dfc9ff"),145.,.42)
+			game.fx.burst(beacon,MODELS.RED,12,220.)
+		if game.visible_world().grow(165.).has_point(at) or opens:
+			game.mixer.play(game.mixer.samples.field_break,"hit",-9. if core or opens else -14.,.84 if core else (1. if opens else 1.28))
 func step(game) -> void:
 	if not enabled or game.state!="combat" or complete() or failed:return
 	var now=float(game.music.timeline);var dt=clampf(now-last_time,0.,.1);last_time=now
@@ -317,6 +356,12 @@ func enemy_contact(game,e: Dictionary,previous: Vector2) -> void:
 		if is_beacon_defense():
 			if game.music.timeline-beacon_hit_at>=.55:game.sound("metal",-18.,.88)
 			beacon_hit_at=game.music.timeline
+		elif expedition and planet in ["venus","earth"]:
+			if game.music.timeline-beacon_hit_at>=.25:
+				game.mixer.play(game.mixer.samples.armor,"hit",-13.,.86)
+			beacon_hit_at=game.music.timeline
+			var bearing=beacon.direction_to(previous)
+			hit_bearing=bearing.angle()
 		game.fx.impact(beacon,Color("ee9c9c"),false)
 		if beacon_hp<=0.:
 			failed=true;game.last_damage_reason="任务目标被摧毁";game.receipt.death_reason=game.last_damage_reason;game.finish_run(false)
@@ -384,6 +429,8 @@ func draw_world(game) -> void:
 		var rect=Rect2(Vector2(pending.at)-Vector2.ONE*75.,Vector2.ONE*150.)
 		game.draw_rect(rect,Color("f18a94",.08));game.draw_rect(rect,Color("f18a94",.8),false,2.)
 		game.draw_arc(pending.at,66.,0.,TAU,40,Color("f18a94",.7),2.,true);return
+	if expedition and planet in ["venus","earth"]:
+		MODELS.guard_feedback(game,beacon,intercept_from,now-intercept_at,now-beacon_hit_at,hit_bearing,planet,game.fx.reduced)
 	if role() in ["destroy","hunt"]:
 		for e in hostiles:
 			if e.hp<=0.:continue
@@ -394,7 +441,12 @@ func draw_world(game) -> void:
 						if node.hp>0.:
 							game.draw_line(e.at,node.at,Color("b49dff",.22),9.,true)
 							game.draw_dashed_line(e.at,node.at,Color("dec9ff",.8),2.,9.,true)
-				MODELS.siege(game,e.at,float(e.hp)/float(e.max_hp),core,shielded(e))
+				var blocked=shielded(e)
+				MODELS.siege(game,e.at,float(e.hp)/float(e.max_hp),core,blocked,now,float(e.get("flash",0.))/.09,game.fx.reduced)
+				var field_age=now-float(e.get("field_hit_at",-INF))
+				if blocked and field_age>=0. and field_age<.24:
+					var direction=float(e.field_bearing)
+					game.draw_arc(e.at,75.,direction-.54,direction+.54,18,Color("f5e5ff",1.-field_age/.24),4.,true)
 			elif bool(e.get("mission_node",false)):_draw_station(game,e.at,52.,Color("dd8c83"),float(e.hp)/float(e.max_hp),false)
 			else:
 				game.draw_arc(e.at,44.,now*.7,now*.7+TAU*.8,32,Color(color,.85),2.,true)
@@ -405,7 +457,7 @@ func draw_world(game) -> void:
 			if expedition and planet=="earth":
 				game.draw_arc(beacon,BALANCE.EARTH_RELAY_RADIUS if relay_active else 185.,0.,TAU,80,Color(color,.27),1.5,true)
 				var charge=float(defended)/defense_quota() if relay_active else capture/.65
-				MODELS.relay(game,beacon,now,relay_active,beacon_hp/180.,charge)
+				MODELS.relay(game,beacon,now,relay_active,beacon_hp/180.,charge,defense_quota(),game.fx.reduced)
 			else:_draw_station(game,beacon,44.,color,beacon_hp/180.,true)
 		"escort":
 			if expedition and planet=="venus":
@@ -415,7 +467,7 @@ func draw_world(game) -> void:
 				game.draw_polyline(points,Color(MODELS.AMBER,.38),2.,true)
 				game.draw_arc(beacon,BALANCE.VENUS_ESCORT_RADIUS,0.,TAU,64,Color(MODELS.AMBER,.28),1.5,true)
 				game.draw_arc(goal,58.,0.,TAU,40,Color(MODELS.AMBER,.72),2.,true)
-				MODELS.convoy(game,beacon,escort_heading,escort_moving,beacon_hp/180.)
+				MODELS.convoy(game,beacon,escort_heading,escort_moving,beacon_hp/180.,now,1.-smoothstep(0.,.35,now-intercept_at),game.fx.reduced)
 				return
 			var goal=escort_goal(game);game.draw_dashed_line(beacon,goal,Color(color,.28),2.,22.,true)
 			game.draw_arc(beacon,290.,0.,TAU,64,Color(color,.20),1.,true)

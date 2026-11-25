@@ -143,7 +143,7 @@ func _draw() -> void:
 	for fx in hit_effects:
 		var age=now-float(fx.at)
 		if age<0. or age>=SKIN.IMPACT_LIFE:continue
-		for track in fx.lanes:SKIN.impact(self,Vector2((float(track)+.5)*lane,judge_y),lane,age,fx,reduced)
+		for track in fx.lanes:SKIN.impact(self,Vector2((float(track)+.5)*lane,judge_y),lane,age,fx,reduced,game.rhythm.chart_id)
 	_draw_feedback(now,scale_value,reduced)
 func _center_text(value: String,at: Vector2,width: float,font_size: int,color: Color) -> void:
 	var text_width=font.get_string_size(value,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x

@@ -117,7 +117,7 @@ func _ray(game,job: Dictionary,now: float,grid: Dictionary) -> void:
 		if bounce>0: stats.refractions+=1
 		for index in range(allowed):
 			var enemy: Dictionary=contacts[index]; visited[int(enemy.uid)]=true
-			game.hurt_enemy(enemy,float(cast.damage)*pow(.86,bounce),str(cast.kind),cast.context,true,cast.color)
+			game.hurt_enemy(enemy,float(cast.damage)*pow(.86,bounce),str(cast.kind),cast.context,true,cast.color,a)
 		if allowed==0 or bounce>=int(cast.refractions): break
 		remaining-=a.distance_to(end)
 		var next=_candidate(grid,end,visited,minf(remaining,maxf(240.,float(cast.reach)*.45)))
@@ -148,7 +148,7 @@ func step(game,now: float) -> void:
 		if a.distance_to(b)>distance: cast.taken.erase(uid); stats.cancelled+=1; continue
 		cast.outcomes[int(job.token)]={"at":b,"uid":uid}; cast.visited[uid]=true
 		_packet(a,b,cast,int(job.index),true,now); stats.edges+=1
-		game.hurt_enemy(enemy,float(cast.damage),str(cast.kind),cast.context,true,cast.color)
+		game.hurt_enemy(enemy,float(cast.damage),str(cast.kind),cast.context,true,cast.color,a)
 		var depth=int(job.depth); var killed=float(enemy.hp)<=0.
 		if depth>=int(cast.hops): _close(cast,job,b,now); continue
 		var branches=3 if killed else (2 if str(cast.kind)=="arc_bough" else 1)

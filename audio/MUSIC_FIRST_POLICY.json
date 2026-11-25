@@ -1,5 +1,5 @@
 {
-  "version": "0.77.0-planet-supply",
+  "version": "0.78.0-inner-planet-impact",
   "date": "2026-11-25",
   "lead": "eight licensed Kevin MacLeod expedition songs via PLANET_MUSIC.json",
   "weapon_voices": "removed from combat, shop preview and codex; legacy sources archived only",
@@ -46,6 +46,13 @@
     "source": "scripts/rhythm_sfx.gd",
     "bus": "GrooveFlight_rhythm",
     "default_gain": 0.48,
+    "planet_materials": {
+      "scope": ["perfect", "excellent", "accent_hit", "chord", "hold_tail", "roll_tail"],
+      "venus": "brushed alloy with a warm metallic ring",
+      "earth": "short radio ping with a 14 ms reflection",
+      "mars": "falling piston and brief ceramic crack",
+      "timing": "one strike per eligible input, same onset and duration as its shared cue; mission feedback uses hit or alert separately"
+    },
     "duration_ms": [35, 146],
     "click_provenance": "audio/authorized/feedback/RHYTHM_CLICKS_SOURCE.json",
     "early_contact": "immediate strike and displayed provisional grade, followed by one scored judgement without replaying the ordinary contact",

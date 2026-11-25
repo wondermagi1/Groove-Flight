@@ -1,0 +1,67 @@
+{
+  "version": "0.78.0-inner-planet-impact",
+  "date": "2026-11-25",
+  "backup": "cb9c17f48167fb3863ba8c0d76d63b6a06a7edee",
+  "engine": "Godot 4.7.2",
+  "renderers": {
+    "render": "Forward+ / Vulkan",
+    "gl": "Compatibility / OpenGL",
+    "native": "headless"
+  },
+  "checks": {
+    "native": {
+      "suite": "V78_IMPACT",
+      "checks": 40,
+      "failures": []
+    },
+    "render": {
+      "suite": "V78_IMPACT",
+      "checks": 44,
+      "failures": []
+    },
+    "gl": {
+      "suite": "V78_IMPACT",
+      "checks": 44,
+      "failures": []
+    },
+    "v65-final": {
+      "suite": "V65_EXPEDITION",
+      "checks": 327,
+      "failures": []
+    },
+    "v72-final": {
+      "suite": "V72_IMPACT",
+      "checks": 117,
+      "failures": []
+    },
+    "v72-exit": {
+      "suite": "V72_IMPACT",
+      "checks": 117,
+      "failures": []
+    },
+    "v76": {
+      "suite": "V76_SUSTAIN",
+      "checks": 20,
+      "failures": []
+    },
+    "v77-final": {
+      "suite": "V77_CAMPAIGN",
+      "checks": 158,
+      "failures": []
+    }
+  },
+  "perfect_pcm_16bit_mono_22050_sha256": {
+    "earth": "70b96ce8eafc7806e9926ecefe2ee753070e6cef5115dcc65f7f716967417379",
+    "mars": "ac9e0e4a17a7bc9bf9601b4f368b9238e595b2056ee8237a238acbe28b7c57f4",
+    "venus": "8c3f5beae5d81dbaad9a8dbd032d9f76ccd066e0f689021393eaf5d542e96f7b"
+  },
+  "evidence": {
+    "screenshot": "inner-impact.jpg",
+    "six_second_dry_audition": "inner-feedback.wav"
+  },
+  "notes": [
+    "Screens are cropped real mission state captures, inspector camera zoom 1.35, same centered Perfect event injected for HUD illustration.",
+    "Preview WAV uses the actual runtime cue bank, ordered Venus, Earth, Mars with matched per-cue gain. It is not a recorded playthrough.",
+    "V72 emitted an exit-only ObjectDB warning in the concurrent 120 fps headless run. Its isolated verbose 60 fps rerun passed with clean shutdown."
+  ]
+}

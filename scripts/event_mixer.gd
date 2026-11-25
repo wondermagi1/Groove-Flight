@@ -7,6 +7,7 @@ const RHYTHM_DB={"perfect":-1.5,"excellent":-2.8,"general":-4.5,"miss":-12.,"hol
 const RATE=22050
 var groups={"hit":[],"kill":[],"ui":[],"alert":[],"pickup":[],"shield":[],"rhythm":[]}
 var samples: Dictionary={}
+var rhythm_bank: Dictionary
 var counters={"played":0,"aggregated":0,"limited":0,"stolen":0,"kill_hits":0}
 var pending: Dictionary={}
 var pending_combo: Dictionary={}
@@ -24,7 +25,7 @@ var feedback_log: Array=[]
 var feedback_active: bool=true
 func _ready() -> void:
 	AUDIO.ensure_buses()
-	RHYTHM_SFX.bank()
+	rhythm_bank=RHYTHM_SFX.bank()
 	for group in groups:
 		var bus_name="GrooveFlight_"+str(group)
 		if AudioServer.get_bus_index(bus_name)<0:
@@ -32,6 +33,8 @@ func _ready() -> void:
 		for i in range(6 if group=="kill" else 4):
 			var p=AudioStreamPlayer.new(); p.bus=bus_name; add_child(p); groups[group].append(p)
 	for kind in ["kill","armor","elite","boss","impact","kill_kick","kill_snare","kill_hat"]: samples[kind]=_transient(kind)
+	for kind in ["convoy_latch","relay_return","field_break"]:
+		samples[kind]=_objective_sound(kind)
 	for id in ["kill_low_strong","kill_low_soft","kill_low_round"]:
 		var path=ProjectSettings.globalize_path("res://audio/authorized/feedback/"+id+".wav")
 		var wav=AudioStreamWAV.load_from_file(path)
@@ -60,6 +63,34 @@ func reset_feedback() -> void:
 	clock=0.; elapsed=0.; next_kill_at=-1.; drum_index=0; feedback_log.clear()
 	for player in groups.kill: player.stop(); player.stream_paused=false
 	for player in groups.rhythm:player.stop()
+
+func _objective_sound(kind: String) -> AudioStreamWAV:
+	var duration=.27 if kind=="field_break" else .16
+	var frames=roundi(duration*RATE)
+	var bytes=PackedByteArray()
+	bytes.resize(frames*2)
+	var rng=RandomNumberGenerator.new()
+	rng.seed=78
+	for i in range(frames):
+		var t=float(i)/RATE
+		var v: float
+		match kind:
+			"convoy_latch":
+				var follow=maxf(0.,t-.044)
+				v=sin(TAU*319.*t)*exp(-t/.025)+.58*sin(TAU*713.*follow)*exp(-follow/.021)
+			"relay_return":
+				var reply=maxf(0.,t-.032)
+				v=.75*sin(TAU*590.*t)*exp(-t/.020)+.68*sin(TAU*885.*reply)*exp(-reply/.034)
+			_:
+				v=sin(TAU*(70.*t+5.*(1.-exp(-t/.023))))*exp(-t/.074)
+				v+=.64*rng.randf_range(-1.,1.)*exp(-t/.027)
+		var edge=smoothstep(0.,.001,t)*smoothstep(0.,.010,duration-t)
+		bytes.encode_s16(i*2,roundi(tanh(v)*.84*edge*32767.))
+	var clip=AudioStreamWAV.new()
+	clip.mix_rate=RATE
+	clip.format=AudioStreamWAV.FORMAT_16_BITS
+	clip.data=bytes
+	return clip
 func set_combat_state(state: String) -> void:
 	feedback_active=state=="combat"
 	if not feedback_active:
@@ -91,7 +122,7 @@ func rhythm_feedback(event: Dictionary) -> void:
 		elif cue!="miss" and gesture in ["roll","roll_tail"]:cue="roll_tail"
 		elif cue=="perfect" and gesture=="hold_tail":cue="hold_tail"
 		elif cue=="perfect" and bool(event.get("accent",false)):cue="accent_hit"
-	var stream: AudioStreamWAV=RHYTHM_SFX.bank().get(cue)
+	var stream: AudioStreamWAV=rhythm_bank.get(cue)
 	var output=AudioServer.get_bus_index(AUDIO.RHYTHM)
 	if stream==null or AudioServer.is_bus_mute(output):return
 	var volume=float(RHYTHM_DB[cue])

@@ -140,7 +140,7 @@ static func timing_rail(canvas: CanvasItem,center: Vector2,lane: float,accent: f
 		canvas.draw_line(edge+Vector2(-side*4.,-4.),edge,Color(TAP,.49+accent*.51),1.2,true)
 	diamond(canvas,center,2.3+accent*1.1,WHITE)
 
-static func impact(canvas: CanvasItem,center: Vector2,lane: float,age: float,event: Dictionary,reduced: bool) -> void:
+static func impact(canvas: CanvasItem,center: Vector2,lane: float,age: float,event: Dictionary,reduced: bool,planet: String="") -> void:
 	var grade=str(event.grade)
 	var gesture=str(event.gesture)
 	if gesture=="roll_wait":
@@ -149,7 +149,7 @@ static func impact(canvas: CanvasItem,center: Vector2,lane: float,age: float,eve
 		canvas.draw_line(center+Vector2(-width,4.),center+Vector2(width,4.),Color(ROLL,fade*.75),2.,true)
 		return
 	var centered=bool(event.get("centered",false))
-	if gesture=="early_contact" and not centered:
+	if gesture=="early_contact" and not centered and (planet not in ["venus","earth","mars"] or event.get("cue_grade","")=="general"):
 		var response=clampf(1.-age/.11,0.,1.)
 		var width=lane*.31
 		var tint: Color=GRADES.get(str(event.get("cue_grade","")),TAP)
@@ -178,6 +178,9 @@ static func impact(canvas: CanvasItem,center: Vector2,lane: float,age: float,eve
 		var strength=1.-smoothstep(.0,.16,age)
 		canvas.draw_line(center-Vector2(aperture,0),center+Vector2(aperture,0),Color(WHITE,strength),3. if reduced else 4.,true)
 	if reduced:return
+	if grade in ["perfect","excellent"] and planet in ["venus","earth","mars"]:
+		_planet_strike(canvas,center,lane,planet,t,alpha,perfect)
+		return
 	var height=(55. if perfect else 29.)*(1.+t*.30)
 	gradient(canvas,Rect2(center.x-spread,center.y-height,spread*2.,height),Color(color,0.),Color(color,alpha*.19))
 	var lift=7.+sqrt(t)*(24. if perfect or tail else 12.)
@@ -197,6 +200,30 @@ static func impact(canvas: CanvasItem,center: Vector2,lane: float,age: float,eve
 		var spark=center+Vector2(offset*spread*2.3,-(6.+t*(21.+float(i%3)*9.)))
 		canvas.draw_line(spark+Vector2(0,4.),spark,Color(color,alpha*.58),1.,true)
 		diamond(canvas,spark,.8+1.8*alpha,Color(color.lerp(WHITE,.41),alpha))
+
+static func _planet_strike(canvas: CanvasItem,center: Vector2,lane: float,planet: String,t: float,alpha: float,perfect: bool) -> void:
+	var ink: Color=TRACK_INKS[planet]
+	var radius=lane*(.12+.29*sqrt(t))*(1. if perfect else .78)
+	var light=Color(ink.lerp(WHITE,.20),alpha*.88)
+	match planet:
+		"venus":
+			for side in [-1.,1.]:
+				var tip=center+Vector2(side*radius,-radius*.74)
+				var heel=center+Vector2(side*radius*.22,-3.)
+				canvas.draw_colored_polygon(PackedVector2Array([heel,tip,tip+Vector2(-side*radius*.38,2.)]),light)
+				canvas.draw_line(heel+Vector2(0,-4),tip+Vector2(-side*3.,-5.),Color(WHITE,alpha*.68),1.2,true)
+		"earth":
+			for ring in [radius,radius*.65]:
+				canvas.draw_arc(center,ring,PI*1.03,PI*1.97,22,light,1.8,true)
+			var sweep=Vector2.from_angle(lerpf(PI*1.12,PI*1.88,t))
+			canvas.draw_line(center,center+sweep*radius,Color(WHITE,alpha),1.4,true)
+		"mars":
+			for i in range(5 if perfect else 3):
+				var ray=Vector2.from_angle(PI*1.5+sin(float(i)*2.4)*1.08)
+				var tip=center+ray*radius*(1.22 if i%2==0 else .85)
+				var inner=tip-ray*(9.-t*5.)
+				canvas.draw_colored_polygon(PackedVector2Array([tip,inner+ray.orthogonal()*2.4,inner-ray.orthogonal()*1.5]),light)
+	diamond(canvas,center,4.*(1.-t)+1.,Color(WHITE,alpha))
 
 static func volley_glint(canvas: CanvasItem,at: Vector2,heading: float,age: float,powered: bool,reduced: bool) -> void:
 	const LIFE=.22

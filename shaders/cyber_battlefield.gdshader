@@ -87,6 +87,27 @@ void fragment(){
    if(planet_style==6)terrain+=stroke(n.x*.30+n.y+.33,.015,.055)*.45;
   }
   plate+=accent*terrain*(.10+light*.18);
+  // Keep the map quiet around the player. These details follow the curved surface.
+  if(planet_style==1){
+   float latitude=n.y+.18*abs(n.x+.20)+.044*sin(n.x*8.+n.y*3.);
+   float clouds=.5+.5*cos(latitude*18.);
+   plate+=mix(vec3(.18,.042,.065),vec3(.37,.21,.055),clouds)*(.18+.30*light);
+   if(quality_level>0)plate+=vec3(.29,.16,.07)*stroke(sin(latitude*31.+n.x),.09,.15)*.27;
+  }else if(planet_style==2){
+   float land=sin(n.x*8.+sin(n.y*9.)*1.2)+cos(n.y*10.+sin(n.x*11.)*.6);
+   plate+=mix(vec3(.025,.085,.23),vec3(.08,.24,.18),smoothstep(.05,.66,land))*(.32+.26*light);
+   if(quality_level>0){
+    float harbor=stroke(land-.38,.16,.22)*smoothstep(.57,.90,value);
+    plate+=vec3(.59,.43,.21)*harbor*(.18+.28*(1.-light));
+   }
+  }else if(planet_style==3){
+   float canyon=n.y+.15+.13*sin(n.x*6.6)+.031*sin(n.x*19.);
+   float tributary=canyon+.27*(n.x+.16)+.023*sin(n.x*14.);
+   plate+=vec3(.26,.063,.035)*(.27+.33*light);
+   plate*=1.-.42*stroke(canyon,.026,.025);
+   plate+=vec3(.72,.22,.075)*stroke(canyon+.043,.008,.014)*.40;
+   if(quality_level>0)plate+=vec3(.54,.15,.08)*stroke(tributary,.006,.014)*smoothstep(-.10,.42,n.x)*.31;
+  }
   vec2 seam=min(local,1.-local);vec2 width=max(fwidth(tiles),vec2(.002));
   float road=1.-smoothstep(.018,.018+width.x,seam.x);
   road=max(road,1.-smoothstep(.018,.018+width.y,seam.y));

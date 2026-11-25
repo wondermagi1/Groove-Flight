@@ -1,6 +1,8 @@
 # Groove Flight 当前接手说明
 
-当前 V77 / 2026-11-25，`codex/planet-rhythm-and-supply`。修改前的远程备份 `6059326`。八星弹量保底 50%，八首背景曲按全曲响度调平，长按新增节点轻拍。补给站沿任务航线设置，标题右上方直接显示可加点的舰装天赋树。[V77 说明与试听](V77_PLANET_SUPPLY_AND_TALENTS.md)
+当前 V78 / 2026-11-25，`codex/inner-planet-impact`，修改前远程备份 `cb9c17f`。金星护送、地球防守和火星破盾分别新增目标模型、现场受击反馈、琴键触击音色和行星地表细节。[三关实机对照与试听](V78_INNER_PLANET_IMPACT.md)
+
+历史 V77 / 2026-11-25，`codex/planet-rhythm-and-supply`。修改前的远程备份 `6059326`。八星弹量保底 50%，八首背景曲按全曲响度调平，长按新增节点轻拍。补给站沿任务航线设置，标题右上方直接显示可加点的舰装天赋树。[V77 说明与试听](V77_PLANET_SUPPLY_AND_TALENTS.md)
 
 历史 V76 / 2026-11-23，`codex/long-holds-and-ammo`。备份 `86cab62`。八星加入 123 条多秒长按，分头、体、尾记分。核对齐射弹量的六秒边界与小数累计，三条竖直谱轨加宽间距。[V76](V76_SUSTAINS_AND_AMMO.md)
 

@@ -25,6 +25,7 @@ const CONTACTS={
 	"sustain_tick":["soft",.48],
 }
 static var _bank: Dictionary={}
+static var _planet_banks: Dictionary={}
 
 static func bank() -> Dictionary:
 	if _bank.is_empty():
@@ -40,6 +41,38 @@ static func bank() -> Dictionary:
 			var contact: Array=CONTACTS.get(id,["",0.])
 			_bank[id]=_synth(id,VOICES[id],clicks.get(contact[0],PackedByteArray()),float(contact[1]))
 	return _bank
+
+static func for_planet(planet: String) -> Dictionary:
+	var common=bank()
+	if planet not in ["venus","earth","mars"]:return common
+	if _planet_banks.has(planet):return _planet_banks[planet]
+	var palette=common.duplicate()
+	for cue in ["perfect","excellent","accent_hit","chord","hold_tail","roll_tail"]:
+		var base: AudioStreamWAV=common[cue]
+		var bytes=base.data.duplicate()
+		var frames=bytes.size()/2
+		var weight=.64 if cue=="excellent" else 1.
+		for i in range(frames):
+			var t=float(i)/RATE
+			var shell: float
+			match planet:
+				"venus": # Brushed alloy, two damped inharmonic modes.
+					shell=(sin(TAU*1560.*t)+.55*sin(TAU*2437.*t))*exp(-t/.022)
+				"earth": # Narrow radio ping with a quiet answering reflection.
+					var echo=maxf(0.,t-.014)
+					shell=sin(TAU*790.*t)*exp(-t/.012)+.67*sin(TAU*1320.*echo)*exp(-echo/.014)
+				_: # Low falling piston with a short ceramic crack on contact.
+					shell=1.22*sin(TAU*(89.*t+2.1*(1.-exp(-t/.008))))*exp(-t/.022)+.55*sin(TAU*1660.*t)*exp(-t/.006)
+			var edge=smoothstep(0.,.0008,t)*smoothstep(0.,.005,float(frames-1-i)/RATE)
+			var sample=float(bytes.decode_s16(i*2))/32768.*.92+shell*.19*edge*weight
+			bytes.encode_s16(i*2,roundi(clampf(sample,-.9,.9)*32767.))
+		var stream=AudioStreamWAV.new()
+		stream.mix_rate=RATE
+		stream.format=AudioStreamWAV.FORMAT_16_BITS
+		stream.data=bytes
+		palette[cue]=stream
+	_planet_banks[planet]=palette
+	return palette
 
 static func _synth(id: String,spec: Array,click: PackedByteArray=PackedByteArray(),click_gain: float=0.) -> AudioStreamWAV:
 	var duration: float=spec[0]

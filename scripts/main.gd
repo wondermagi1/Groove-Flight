@@ -480,6 +480,7 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	expedition.reset(active_planet,run_seed,not free_music_run and not is_preview)
 	weapon_beat_state.clear()
 	mixer.reset_feedback()
+	mixer.rhythm_bank=mixer.RHYTHM_SFX.for_planet(active_planet)
 	active_doctrine=""
 	standard_music.manual_weapons=rhythm_required()
 	rhythm.music_chart=rhythm_required()
@@ -1116,7 +1117,7 @@ func _process(delta: float) -> void:
 			var proc=proc_queue.pop_front(); proc_budget+=1
 			fx.ring(proc.at,proc.color,proc.radius,.27)
 			for target in enemies:
-				if target.hp>0 and target.at.distance_to(proc.at)<float(proc.radius): hurt_enemy(target,float(proc.damage),str(proc.kind),proc.context,false)
+				if target.hp>0 and target.at.distance_to(proc.at)<float(proc.radius): hurt_enemy(target,float(proc.damage),str(proc.kind),proc.context,false,Color.TRANSPARENT,proc.at)
 		for i in range(enemies.size()-1,-1,-1):
 			if enemies[i].hp<=0: by_id.erase(enemies[i].uid); enemies.remove_at(i)
 		# Resolve births after all damage loops; a splitter cannot mutate a spatial
@@ -1467,7 +1468,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 				var enemy=roots[branch%roots.size()] if bounce==0 and not roots.is_empty() else nearest(start,hit)
 				if enemy.is_empty() or start.distance_to(enemy.at)>(reach if bounce==0 else reach*.55): break
 				var optical=EMISSION.optical_profile(branch+bounce*17,int(context.get("uid",0)),int(context.get("serial",0)),EMISSION.beam_width(count))
-				fx.beam(start,enemy.at,EMISSION.volley_color(color,branch,int(trigger.get("quality",0))),optical.width,true,optical.duration,optical); hit.append(enemy.uid); hurt_enemy(enemy,damage,kind,context)
+				fx.beam(start,enemy.at,EMISSION.volley_color(color,branch,int(trigger.get("quality",0))),optical.width,true,optical.duration,optical); hit.append(enemy.uid); hurt_enemy(enemy,damage,kind,context,true,Color.TRANSPARENT,start)
 				if float(trigger.get("explosion",0))>0: explosion(enemy.at,float(trigger.explosion),damage*.5,color,kind,context,enemy.uid)
 				start=enemy.at
 	elif family=="beam" and kind not in VISUALS.MOVING_IDS:
@@ -1483,7 +1484,7 @@ func fire_weapon(trigger: Dictionary) -> void:
 			# target, not whichever dictionary happened to be inserted first.
 			var contacts=_ray_contacts(start,end,width*.5)
 			for j in range(mini(contacts.size(),pierce+1)):
-				var enemy=contacts[j]; hurt_enemy(enemy,damage,kind,context)
+				var enemy=contacts[j]; hurt_enemy(enemy,damage,kind,context,true,Color.TRANSPARENT,start)
 				if float(trigger.get("explosion",0))>0: explosion(enemy.at,float(trigger.explosion),damage*.5,color,kind,context,enemy.uid)
 	else:
 		for i in range(count):
@@ -1578,7 +1579,7 @@ func _stop_recorded_player_uid(uid: int) -> void:
 func explosion(at: Vector2,radius: float,damage: float,color: Color,kind: String,context: Dictionary={},exclude_uid: int=-1) -> void:
 	fx.blast(at,color,radius); sound("explosion",-20)
 	for other in enemies:
-		if other.hp>0 and int(other.uid)!=exclude_uid and other.at.distance_to(at)<radius: hurt_enemy(other,damage,kind,context)
+		if other.hp>0 and int(other.uid)!=exclude_uid and other.at.distance_to(at)<radius: hurt_enemy(other,damage,kind,context,true,Color.TRANSPARENT,at)
 func shot(at: Vector2,direction: Vector2,speed: float,damage: float,color: Color,kind: String,life: float,pierce: int) -> Dictionary:
 	receipt.count("projectile_requested")
 	var bullet={"at":at,"v":direction*speed,"original_speed":speed,"damage":damage,"color":color,"kind":kind,"life":life,"total_life":life,"age":0.,"pierce":pierce,"hit":{},"radius":5.,"target":-1,"explosion":0.,"range_tracked":kind in VISUALS.MOVING_IDS,"travelled":0.,"range_limit":EMISSION.weapon_reach(speed,life),"retiring":false,"fade_age":0.}
@@ -1656,7 +1657,7 @@ func update_bullets(frame_delta: float) -> void:
 					if enemy.hp<=0 or bullet.hit.has(enemy.uid): continue
 					if Geometry2D.get_closest_point_to_segment(enemy.at,previous,bullet.at).distance_to(enemy.at)>float(enemy.radius)+float(bullet.radius): continue
 					split_projectile(bullet,enemy)
-					bullet.hit[enemy.uid]=true; hurt_enemy(enemy,bullet.damage,bullet.kind,bullet.get("context",{}),true,bullet.color)
+					bullet.hit[enemy.uid]=true; hurt_enemy(enemy,bullet.damage,bullet.kind,bullet.get("context",{}),true,bullet.color,previous)
 					if bullet.explosion>0:
 						explosion(bullet.at,bullet.explosion,bullet.damage*.7,bullet.color,bullet.kind,bullet.get("context",{}),enemy.uid)
 					if int(bullet.get("bounces",0))>0:
@@ -1669,11 +1670,15 @@ func update_bullets(frame_delta: float) -> void:
 		if dead: bullets.remove_at(i)
 		elif range_ended:
 			bullet.retiring=true; bullet.fade_age=0.; bullet.life=VISUALS.RANGE_FADE_SECONDS
-func hurt_enemy(enemy: Dictionary,damage: float,kind: String,context: Dictionary={},allow_procs: bool=true,visual_color: Color=Color.TRANSPARENT) -> void:
+func hurt_enemy(enemy: Dictionary,damage: float,kind: String,context: Dictionary={},allow_procs: bool=true,visual_color: Color=Color.TRANSPARENT,source_point: Vector2=Vector2.INF) -> void:
 	if damage<=0 or enemy.hp<=0 or state!="combat": return
-	if mission.shielded(enemy):return
+	if mission.shielded(enemy):
+		mission.siege_impact(self,enemy,true,player if source_point==Vector2.INF else source_point)
+		return
 	if enemy.kind=="boss" and not bool(context.get("structural",false)) and enemy.has("core_until") and music.timeline<float(enemy.core_until): damage*=1.5
 	var actual=minf(enemy.hp,damage); enemy.hp-=damage; enemy.flash=.09
+	if enemy.hp<=0. and mission.expedition and mission.planet=="mars" and bool(enemy.get("mission_node",false)):
+		mission.siege_impact(self,enemy,false,player)
 	receipt.hit(kind,context,actual,damage,enemy.hp<=0.)
 	var motion: Dictionary=context.get("trajectory",{})
 	if float(motion.get("conduct",0.))>0.:
