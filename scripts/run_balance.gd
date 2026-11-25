@@ -25,6 +25,12 @@ const VENUS_ESCORT_SPEED=114.
 const MARS_NODE_HP=[210.,310.,420.]
 const MARS_CORE_HP=[550.,780.,1100.]
 
+## A fresh Venus escort opens at baseline. Later planets start half a tier
+## apart; completed objectives increase ordinary reinforcement pressure.
+static func reinforcement_rank(planet_index: int,completed: int) -> float:
+	if planet_index<=0:return 0.
+	return minf(5.5,(planet_index-1)*.5+completed)
+
 static func expedition_supply(planet_index: int,sector: int) -> int:
 	if planet_index==0:return MERCURY_SUPPLY[clampi(sector-1,0,2)]
 	if INNER_SUPPLY.has(planet_index):return INNER_SUPPLY[planet_index][clampi(sector-1,0,2)]

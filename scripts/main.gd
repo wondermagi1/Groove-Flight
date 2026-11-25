@@ -1129,7 +1129,7 @@ func _process(delta: float) -> void:
 				while int(birth.count)>0 and enemies.size()<MAX_ENEMIES:
 					var point=ARRIVAL.birth_position(birth_grid,birth.at,"mote")
 					if point==Vector2.INF: break
-					var child=spawn_enemy("mote",point); child.warned_entry=true
+					var child=spawn_enemy("mote",point,true); child.warned_entry=true
 					if not birth.maneuver.is_empty(): child.maneuver=birth.maneuver.duplicate(true)
 					ARRIVAL.reserve_birth(birth_grid,child); birth.count=int(birth.count)-1
 				if int(birth.count)>0: pending_splits.append(birth)
@@ -1269,7 +1269,7 @@ func update_spawn_telegraphs() -> void:
 			spawn_telegraphs.append(plan); continue
 		var members: Array=[]
 		for point in plan.points:
-			var enemy=spawn_enemy(str(plan.kind),point)
+			var enemy=spawn_enemy(str(plan.kind),point,bool(plan.wave_budget))
 			if enemy.is_empty(): break
 			enemy.warned_entry=true; enemy.spawn_grid={"center":plan.center,"columns":plan.columns,"rows":plan.rows,"kind":plan.kind,"style":str(plan.get("shape","battalion_grid"))}
 			enemy.individual_speed_scale=.9+float(posmod(int(enemy.uid)*37,17))*.0125
@@ -1299,13 +1299,16 @@ func safe_spawn_position(point: Vector2,outward: Vector2) -> Vector2:
 		candidate=spawn_origin(outward.rotated(float(i+1)*TAU/12.)).clamp(bounds.position,bounds.end)
 		if not safe.has_point(candidate): return candidate
 	return bounds.position if bounds.position.distance_squared_to(player)>bounds.end.distance_squared_to(player) else bounds.end
-func spawn_enemy(kind: String,position: Vector2=Vector2.INF) -> Dictionary:
+func spawn_enemy(kind: String,position: Vector2=Vector2.INF,regular_reinforcement: bool=false) -> Dictionary:
 	if enemies.size()>=MAX_ENEMIES: receipt.count("spawn_deferred"); return {}
 	if position==Vector2.INF:
 		var outward=movement_facing.rotated(rng.randf_range(-1.,1.)) if rng.randf()<.72 else Vector2.from_angle(rng.randf()*TAU)
 		position=safe_spawn_position(spawn_origin(outward),outward)
 	var hp=BALANCE.base_hp(kind,wave)
 	hp=float(planet_rules.boss_hp) if kind=="boss" else hp*float(planet_rules.hp_scale)
+	if regular_reinforcement and expedition.enabled and wave<wave_count():
+		var rank=BALANCE.reinforcement_rank(int(planet_rules.planet_style),mini(mission.done,expedition.route.points.size()-1))
+		hp*=1.+.08*rank
 	if kind=="boss" and expedition.enabled and active_planet=="mercury":hp*=BALANCE.MERCURY_FLAGSHIP_HP_SCALE
 	var enemy={"uid":next_enemy,"kind":kind,"at":position,"hp":hp,"max_hp":hp,"radius":{"mote":11.,"armor":18.,"shooter":15.,"dart":9.,"splitter":17.,"sentinel":19.,"lance":20.,"mirror":18.,"elite":42.,"boss":82.}[kind],"speed":{"mote":142.,"armor":85.,"shooter":100.,"dart":238.,"splitter":124.,"sentinel":85.,"lance":76.,"mirror":126.,"elite":96.,"boss":0.}[kind],"flash":0.,"phase":1,"angle":0.,"born":music.timeline}
 	if kind=="boss":

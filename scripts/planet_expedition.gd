@@ -10,7 +10,7 @@ const MERCURY_LOW_SECTION=58.50
 const CREST_ARM_LEAD=1.49
 const ROUTES={
 	"mercury":{"size":Vector2(15200,14800),"points":[Vector2(0,-440),Vector2(-1670,-1790),Vector2(1490,-3510)],"pressure":31,"spacing":3.65},
-	"venus":{"size":Vector2(14800,15000),"points":[Vector2(-480,-1120),Vector2(980,-2860),Vector2(-1280,-4840)],"pressure":28,"spacing":3.85},
+	"venus":{"size":Vector2(14800,15000),"points":[Vector2(-2660,-2440),Vector2(2320,-3250),Vector2(-3670,-4580)],"pressure":28,"spacing":3.85},
 	"earth":{"size":Vector2(15200,13800),"points":[Vector2(0,-740),Vector2(-1540,-2260),Vector2(1510,-3900)],"pressure":33,"spacing":3.45},
 	"mars":{"size":Vector2(15800,14400),"points":[Vector2(0,-900),Vector2(-1690,-2510),Vector2(1510,-4450)],"pressure":36,"spacing":3.25},
 	"jupiter":{"size":Vector2(17600,15200),"points":[Vector2(-360,-780),Vector2(-1560,-1850),Vector2(1330,-3100)],"pressure":46,"spacing":2.6},
@@ -130,6 +130,9 @@ func advance_incursion(game) -> void:
 	var inner_route=game.active_planet in ["venus","earth","mars"]
 	var cap=int(route.pressure)+stage*(12 if inner_route else 19)+roundi(pressure*13.)+(14 if game.difficulty>0 else 0)
 	var batch=(12+stage*4) if inner_route else (16+stage*6)
+	var rank=BALANCE.reinforcement_rank(int(game.planet_rules.planet_style),mini(stage,route.points.size()-1))
+	cap+=roundi(rank*7.)
+	batch+=roundi(rank*3.)
 	if game.active_planet=="mercury":
 		cap=roundi(cap*game.BALANCE.MERCURY_SWARM_SCALE)
 		batch=roundi(batch*game.BALANCE.MERCURY_SWARM_SCALE)

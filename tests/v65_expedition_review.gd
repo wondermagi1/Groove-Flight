@@ -56,7 +56,8 @@ func solve_sector() -> void:
 				game.player=first+Vector2(410,0);ticks(.3)
 				check(mission.beacon==first and not mission.escort_moving,"Convoy waits for escort outside its range")
 				mission.beacon_hp=90.
-			for i in range(760):
+			# Venus now has three longer legs. Keep a bounded real movement loop.
+			for i in range(1300 if game.active_planet=="venus" else 760):
 				if mission.done!=prior:break
 				game.player=mission.beacon;ticks(.05)
 			if game.active_planet=="venus":
