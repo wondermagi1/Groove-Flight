@@ -15,12 +15,14 @@ const VOICES={
 	"chord":[.090,980.,.33,.58,.74],
 	"roll_head":[.042,1430.,.23,.39,.36],
 	"roll_tail":[.073,1320.,.32,.47,.58],
+	"sustain_tick":[.048,780.,.12,.23,.22],
 }
 const CONTACTS={
 	"perfect":["accent",.98], "excellent":["tap",.92], "general":["tap",.70],
 	"hold_head":["tap",.68], "hold_tail":["soft",.84], "combo":["accent",.89],
 	"perfect_reward":["accent",1.08], "accent_hit":["accent",1.05], "chord":["accent",1.05],
 	"roll_head":["tap",.72], "roll_tail":["soft",.88],
+	"sustain_tick":["soft",.48],
 }
 static var _bank: Dictionary={}
 
@@ -59,6 +61,15 @@ static func _synth(id: String,spec: Array,click: PackedByteArray=PackedByteArray
 		voice+=sin(phase)*.39*exp(-t/.009)
 		voice+=sin(phase*2.14)*brightness*exp(-t/.0046)
 		voice+=(noise-body_noise)*contact*exp(-t/.0036)
+		# A dry midrange strike stays audible on small speakers over bass-heavy songs.
+		if id!="miss":
+			var shell_phase=TAU*(frequency*.52*t+2.4*(1.-exp(-t/.005)))
+			voice+=sin(shell_phase)*(.19+impact*.30)*exp(-t/.017)
+		if id in ["perfect","accent_hit","chord"]:
+			var rim_phase=TAU*2350.*t
+			voice+=sin(rim_phase)*.28*exp(-t/.008)
+		if id=="hold_tail" or id=="roll_tail":
+			voice+=sin(TAU*(620.*t+6200.*t*t))*.31*exp(-t/.027)
 		if id in ["accent_hit","chord"]:
 			var snap=maxf(0.,t-.0022)
 			voice+=(noise-body_noise)*.49*smoothstep(0.,.001,snap)*exp(-snap/.012)

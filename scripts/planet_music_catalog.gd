@@ -12,3 +12,7 @@ static func credits() -> String:
 	for id in ["mercury","venus","earth","mars","jupiter","saturn","uranus","neptune"]:
 		var row=track(id);lines.append("%s — %s"%[row.title,row.artist])
 	return "\n".join(lines)
+
+static func playback_gain_db(planet: String) -> float:
+	var row=track(planet)
+	return minf(-22.-float(row.integrated_lufs),-3.-float(row.true_peak_dbtp))

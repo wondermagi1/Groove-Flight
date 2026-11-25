@@ -1,6 +1,8 @@
 # Groove Flight 当前接手说明
 
-当前 V76 / 2026-11-23，`codex/long-holds-and-ammo`。备份 `86cab62`。八星加入 123 条多秒长按，分头、体、尾记分。核对齐射弹量的六秒边界与小数累计，三条竖直谱轨加宽间距。[V76](V76_SUSTAINS_AND_AMMO.md)
+当前 V77 / 2026-11-25，`codex/planet-rhythm-and-supply`。修改前的远程备份 `6059326`。八星弹量保底 50%，八首背景曲按全曲响度调平，长按新增节点轻拍。补给站沿任务航线设置，标题右上方直接显示可加点的舰装天赋树。[V77 说明与试听](V77_PLANET_SUPPLY_AND_TALENTS.md)
+
+历史 V76 / 2026-11-23，`codex/long-holds-and-ammo`。备份 `86cab62`。八星加入 123 条多秒长按，分头、体、尾记分。核对齐射弹量的六秒边界与小数累计，三条竖直谱轨加宽间距。[V76](V76_SUSTAINS_AND_AMMO.md)
 
 历史 V75 / 2026-11-23，`codex/phrase-charts-and-lane-art`。备份 `9a2562c`。八星三键谱按乐句写入落键与第二键，曲中切分和长音尾端参考实录音轨。谱道加入行星配色、小节刻度与连打方向标记。[V75](V75_PHRASE_CHARTS.md)
 

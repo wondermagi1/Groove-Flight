@@ -45,8 +45,13 @@ func _draw() -> void:
 			caption="旗舰交战" if game.wave==game.wave_count() else "目标完成 · 前往旗舰坐标"
 			hint="击破旗舰后撤离"
 			if game.wave<game.wave_count():objective=game.expedition.boss_site
-		if game.expedition.dock_at(game.player)>=0:
-			hint=game.binding_name("interact")+" · 进入补给站"
+		var depot: Dictionary=game.expedition.nearest_open_dock(game.player)
+		if not depot.is_empty():
+			var distance: float=game.player.distance_to(depot.at)
+			if distance<=game.expedition.DOCK_RADIUS:
+				hint=game.binding_name("interact")+" · 补给站 · 购买与强化"
+			elif not game.visible_world().grow(-55.).has_point(depot.at):
+				_draw_supply_bearing(depot.at,distance)
 		draw_string(font,rect.position+Vector2(10,44),_fit(hint,roundi(12.*scale_value),width-20.),HORIZONTAL_ALIGNMENT_LEFT,width-20.,roundi(12.*scale_value),UI.MUTED)
 	elif m.planet=="mercury":
 		color=Color("abedff");line_y=56.
@@ -68,3 +73,17 @@ func _draw() -> void:
 		if m.planet=="mercury" or game.expedition.enabled:
 			var distance="%dm"%roundi(game.player.distance_to(objective));var w=font.get_string_size(distance,HORIZONTAL_ALIGNMENT_LEFT,-1,12).x
 			draw_string(font,edge+Vector2(-w*.5,38),distance,HORIZONTAL_ALIGNMENT_LEFT,-1,12,UI.TEXT)
+
+func _draw_supply_bearing(site: Vector2,distance: float) -> void:
+	var transform: Transform2D=game.get_global_transform_with_canvas()
+	var origin: Vector2=transform*game.player
+	var direction=origin.direction_to(transform*site)
+	var pin=origin+direction*78.
+	draw_circle(pin,10.,Color(UI.INK,.82))
+	draw_arc(pin,10.,0.,TAU,24,UI.GOLD,1.5,true)
+	draw_line(pin-Vector2(5,0),pin+Vector2(5,0),UI.GOLD,2.)
+	draw_line(pin-Vector2(0,5),pin+Vector2(0,5),UI.GOLD,2.)
+	var label="补给 %dm"%roundi(distance)
+	var start=pin+Vector2(-font.get_string_size(label,HORIZONTAL_ALIGNMENT_LEFT,-1,12).x*.5,24.)
+	draw_string_outline(font,start,label,HORIZONTAL_ALIGNMENT_LEFT,-1,12,3,UI.INK)
+	draw_string(font,start,label,HORIZONTAL_ALIGNMENT_LEFT,-1,12,UI.GOLD)

@@ -6,7 +6,13 @@ const ROWS: Array[Dictionary]=[
 	{"id":"drive","name":"矢量推进","detail":"移速 +30／冲刺冷却 -0.1秒","requires":"armor","stats":{"speed":30.,"dash_cooldown":-.1}},
 	{"id":"firepower","name":"火控校准","detail":"武器伤害 +5%（加到舰体倍率）","requires":"","stats":{"damage_scale":.05}},
 	{"id":"magazine","name":"扩展弹舱","detail":"额外弹丸 +2","requires":"firepower","stats":{"extra_projectiles":2.}},
-	{"id":"precision","name":"精密瞄具","detail":"暴击率 +2%","requires":"magazine","stats":{"crit_chance":.02}}
+	{"id":"precision","name":"精密瞄具","detail":"暴击率 +2%","requires":"magazine","stats":{"crit_chance":.02}},
+	{"id":"repair","name":"巡航修复","detail":"每秒回复 0.08 生命","requires":"hull","stats":{"regen":.08}},
+	{"id":"penetrator","name":"弱点解析","detail":"暴击伤害 150% → 170%（基础舰体）","requires":"firepower","stats":{"crit_damage":.20}}
+]
+const BRANCHES=[
+	["舰体工程","hull","armor","repair","drive"],
+	["武器工程","firepower","magazine","penetrator","precision"],
 ]
 static func points(records: Dictionary) -> int:
 	var clears=0
@@ -24,7 +30,7 @@ static func apply(craft: Dictionary,selection: Array,capacity: int) -> Dictionar
 	for row in ROWS:
 		if str(row.id) not in valid:continue
 		for key in row.stats:
-			var baseline=.05 if str(key)=="crit_chance" else 0.
+			var baseline=float({"crit_chance":.05,"crit_damage":1.5}.get(key,0.))
 			result[key]=float(result.get(key,baseline))+float(row.stats[key])
 	result.health=roundi(float(result.health));result.dash_cooldown=maxf(.35,float(result.dash_cooldown))
 	return result

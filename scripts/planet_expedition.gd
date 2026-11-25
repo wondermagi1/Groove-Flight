@@ -54,13 +54,54 @@ func dock_at(at: Vector2) -> int:
 			distance=gap
 	return best
 
+func nearest_open_dock(at: Vector2) -> Dictionary:
+	var nearest: Dictionary={}
+	var best=INF
+	for depot in docks:
+		if depot.used:continue
+		var distance=at.distance_squared_to(depot.at)
+		if distance<best:
+			nearest=depot
+			best=distance
+	return nearest
+
+func _flagship_site(player: Vector2) -> Vector2:
+	var interior=bounds().grow(-530.)
+	var heading=Vector2(420.*mirror,-1060.)
+	for turn in [0.,PI*.5,-PI*.5,PI]:
+		var candidate=(player+heading.rotated(turn)).clamp(interior.position,interior.end)
+		if player.distance_to(candidate)>=1000.:return candidate
+	return interior.get_center()
+
+func _supply_site(game,at: Vector2,completed: int) -> Vector2:
+	# These installations already have a physical berth at the completed objective.
+	if game.active_planet in ["mercury","venus","earth"]:return at
+	var next: Vector2=boss_site if game.mission.complete() else point(completed)
+	var player: Vector2=game.player
+	var forward=player.direction_to(next)
+	if forward==Vector2.ZERO:forward=Vector2.UP
+	var interior=bounds().grow(-DOCK_RADIUS-65.)
+	var best=player
+	var best_score=-INF
+	# Pick a berth on the pilot's outgoing route even for a distant ranged kill.
+	for turn in [0.,.65*mirror,-.65*mirror,1.30*mirror,-1.30*mirror,PI]:
+		var candidate=(player+forward.rotated(turn)*245.).clamp(interior.position,interior.end)
+		var clearance=DOCK_RADIUS
+		for enemy in game.enemies:
+			if float(enemy.hp)>0.:
+				clearance=minf(clearance,candidate.distance_to(enemy.at)-float(enemy.radius))
+		var score=clearance-absf(turn)*8.
+		if score>best_score:
+			best=candidate
+			best_score=score
+	return best
+
 func clear_sector(game,at: Vector2) -> void:
 	var completed=int(game.mission.done)
-	var site=at if game.active_planet in ["mercury","venus","earth"] else (at+Vector2(145.*mirror,145.)).clamp(bounds().position+Vector2.ONE*300.,bounds().end-Vector2.ONE*300.)
+	if game.mission.complete():boss_site=_flagship_site(game.player)
+	var site=_supply_site(game,at,completed)
 	docks.append({"at":site,"used":false,"sector":completed,"supply":0})
 	game.close_expedition_sector(completed)
-	if game.mission.complete():
-		boss_site=(game.player+Vector2(420.*mirror,-1060.)).clamp(bounds().position+Vector2.ONE*530.,bounds().end-Vector2.ONE*530.)
 
 func advance_incursion(game) -> void:
 	var now=float(game.music.timeline)
@@ -160,8 +201,4 @@ func draw_world(game) -> void:
 		var close=game.player.distance_to(at)<=DOCK_RADIUS
 		var color=Color("f5d393")
 		game.draw_arc(at,DOCK_RADIUS,0.,TAU,48,Color(color,.52 if close else .24),1.5,true)
-		if game.active_planet in ["venus","earth","mars"]:
-			MODELS.depot(game,at,close,int(depot.sector),game.binding_name("interact"))
-			continue
-		game.draw_colored_polygon(game.polygon(at,6,27.,PI/6.),Color("342839"))
-		game.draw_colored_polygon(game.polygon(at,4,11.,0.),color)
+		MODELS.depot(game,at,close,int(depot.sector),game.binding_name("interact"))

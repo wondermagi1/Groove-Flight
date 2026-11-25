@@ -280,13 +280,13 @@ func visible_world() -> Rect2:
 func talent_points() -> int:return TALENTS.points(planet_records)
 func flight_craft() -> Dictionary:return TALENTS.apply(FLEET.ship(selected_ship),talent_selection,talent_points())
 func choose_talent(id: String) -> bool:
-	if state!="hangar" or id in talent_selection:return false
+	if state not in ["title","hangar"] or id in talent_selection or talent_selection.size()>=talent_points():return false
 	var proposal=talent_selection.duplicate();proposal.append(id)
 	var valid=TALENTS.clean(proposal,talent_points())
 	if id not in valid:return false
 	talent_selection=valid;save_settings();return true
 func reset_talents() -> void:
-	if state!="hangar":return
+	if state not in ["title","hangar"]:return
 	talent_selection.clear();save_settings()
 func wave_count() -> int: return wave_rows.size()
 func wave_profile() -> Dictionary: return wave_rows[clampi(wave-1,0,wave_rows.size()-1)]
@@ -356,7 +356,9 @@ func apply_audio(update_levels: bool=true) -> void:
 		standard_music.bus=AUDIO.WEAPONS; standard_music.volume_db=-2.
 		standard_music.backing_gain=0.; standard_music.weapon_gain=1.; standard_music.groove_gain=0.
 	if is_instance_valid(menu_music): menu_music.bus=AUDIO.MUSIC; menu_music.volume_db=-6.
-	if is_instance_valid(planet_music): planet_music.bus=AUDIO.MUSIC; planet_music.volume_db=-10.+music_duck_db
+	if is_instance_valid(planet_music):
+		planet_music.bus=AUDIO.MUSIC
+		planet_music.volume_db=PLANET_MUSIC.playback_gain_db(active_planet)
 	for voice in voices: voice.bus=AUDIO.WEAPONS
 	for recorded_player in recorded_weapon_players.values():
 		if is_instance_valid(recorded_player): recorded_player.bus=AUDIO.WEAPONS; recorded_player.volume_db=-10.
@@ -391,11 +393,6 @@ func set_music_ducking(value: bool) -> void:
 func request_music_space(seconds: float=.24) -> void:
 	if is_preview or free_music_run or state!="combat": return
 	music_focus_until=maxf(music_focus_until,music.timeline+seconds)
-func update_background_mix(_delta: float) -> void:
-	# The song is the lead, not a bed ducked by weapon salvos.
-	music_duck_db=0.
-	if is_instance_valid(planet_music):planet_music.volume_db=-10.
-
 func apply_background_quality() -> void:
 	settings.background_quality=clampi(int(settings.get("background_quality",2)),0,2)
 	settings.background_exposure=clampf(float(settings.get("background_exposure",.9)),.35,1.25)
@@ -1087,7 +1084,6 @@ func _process(delta: float) -> void:
 	var shopping=state=="reward" or (state=="editor" and editor_return=="reward") or (state=="weapon_codex" and (weapon_codex_return_state=="reward" or (weapon_codex_return_state=="editor" and editor_return=="reward")))
 	if shopping and not is_preview: run_shop_seconds+=delta
 	_sync_screen_music()
-	update_background_mix(delta)
 	background.set_shader_parameter("travel",music.timeline*.15 if state in ["combat","editor","reward","paused"] else float(Time.get_ticks_msec())*.00015)
 	background.set_shader_parameter("music_pulse",music.pulse()*float(settings.background_motion) if state=="combat" else 0.)
 	if results_tail>0. and Time.get_ticks_msec()*.001>results_tail:

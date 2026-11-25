@@ -116,6 +116,12 @@ func title_screen() -> void:
 	footer.position=Vector2(view.x*.10,view.y-62); root_control.add_child(footer)
 	var selected=label(FLEET.ship(game.selected_ship).name+"  /  "+FLEET.pilot(game.selected_pilot).name,15,Color("7fa5b9"))
 	selected.position=Vector2(view.x*.60,view.y*.80); selected.size=Vector2(view.x*.27,30); selected.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER; root_control.add_child(selected)
+	var tree=preload("res://scripts/talent_tree.gd").new()
+	tree.game=game
+	tree.size.x=minf(view.x*.48,760.)
+	tree.position=Vector2(view.x*.74-tree.size.x*.5,view.y*.045)
+	root_control.add_child(tree)
+	title_flight.talent_panel=tree
 func hub_screen() -> void:
 	var view=get_viewport().get_visible_rect().size
 	var compact=view.x<1500
@@ -249,7 +255,7 @@ func settings_screen() -> void:
 	var offset=HSlider.new();offset.name="RhythmOffset";offset.min_value=-150.;offset.max_value=150.;offset.step=5.;offset.value=float(game.settings.get("rhythm_offset_ms",0.))
 	offset.value_changed.connect(func(value):offset_label.text="琴块时间偏移  %+.0f ms"%value;game.set_rhythm_offset(value));content.add_child(offset)
 	content.add_child(label("正值延后 · 负值提前",15,UI.MUTED))
-	var scoring_help=label("长音头按准得 100／80／40 分。按住经过每颗菱形得 100 分，保持到尾环得 100 分。提前松手会保留已得分，整条完成计一次连击。\n\n三轨每 6 秒合计一次。准确率 80% 对应下段基础弹量 64%。首段满弹量，水星基础弹量保底 50%。Perfect 连击奖励另计，最高 120%。",16)
+	var scoring_help=label("长音头按准得 100／80／40 分。按住经过每颗菱形得 100 分，保持到尾环得 100 分。提前松手会保留已得分，整条完成计一次连击。\n\n八颗星球都按三轨每 6 秒的合计成绩决定下段弹量。首段 100%，每段最多下降 30 个百分点，最低 50%。例如当前 70%，这段准确率 80%，下段为 64%。Perfect 连击奖励另计，最高 120%。",16)
 	scoring_help.name="RhythmScoringHelp"
 	scoring_help.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	scoring_help.hide()

@@ -87,7 +87,7 @@ static func depot(canvas: CanvasItem,at: Vector2,close: bool,sector: int,interac
 	canvas.draw_rect(Rect2(at-Vector2(15,13),Vector2(30,26)),DARK)
 	canvas.draw_line(at-Vector2(9,0),at+Vector2(9,0),AMBER,3.,true)
 	canvas.draw_line(at-Vector2(0,9),at+Vector2(0,9),AMBER,3.,true)
-	var font=UI.font()
+	var font=UI.role_font()
 	var title=interact+"  补给站" if close else "补给 %02d"%sector
 	var width=font.get_string_size(title,HORIZONTAL_ALIGNMENT_LEFT,-1,18).x
 	canvas.draw_string_outline(font,at+Vector2(-width*.5,-58.),title,HORIZONTAL_ALIGNMENT_LEFT,-1,18,5,SHADOW)

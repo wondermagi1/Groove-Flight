@@ -39,6 +39,6 @@ func run() -> void:
 	for id in CUES.VOICES:
 		var plain=CUES._synth(id,CUES.VOICES[id])
 		check((bank[id].data!=plain.data)==(id!="miss"),"Licensed click actually mixed into successful cue / "+id)
-	check(bank.size()==12,"Complete bank loads all cues")
+	check(bank.size()==13,"Complete bank includes the sustained-note checkpoint")
 	print("V69_RHYTHM ",JSON.stringify({"checks":checks,"failures":failures,"facts":facts}))
 	quit(0 if failures.is_empty() else 1)

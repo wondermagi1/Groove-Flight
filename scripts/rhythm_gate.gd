@@ -10,10 +10,10 @@ const CENTER_MS=45
 const LOOKAHEAD=2.9
 const CHORD_SPREAD=EXCELLENT*2.
 const ROLL_MIN_GAP=.095
-const MERCURY_ROLL_MIN_GAP=.055
-const MERCURY_PREVIEW_BONUS=.65
-const MERCURY_AMMO_FLOOR=.50
-const MERCURY_AMMO_MAX_DROP=.30
+const CAMPAIGN_ROLL_MIN_GAP=.055
+const CAMPAIGN_PREVIEW_BONUS=.65
+const CAMPAIGN_AMMO_FLOOR=.50
+const CAMPAIGN_AMMO_MAX_DROP=.30
 const LANES=3
 const POINTS={"perfect":SCORE.PERFECT_POINTS,"excellent":SCORE.EXCELLENT_POINTS,"general":SCORE.GENERAL_POINTS}
 const REWARDS=preload("res://scripts/rhythm_rewards.gd")
@@ -54,7 +54,7 @@ func reset(now: float=0.,new_run: bool=false) -> void:
 	last_serial=maxi(-1,floori(now/STEP)-1)
 	if new_run:
 		rewards.reset();grade_counts={"perfect":0,"excellent":0,"general":0,"miss":0};combo=0;best_combo=0;hits=0;misses=0;wrong=0;perfects=0;judge_serial=0;judged_lanes.clear()
-		if uses_mercury_cues():score.reset(MERCURY_AMMO_FLOOR,MERCURY_AMMO_MAX_DROP)
+		if music_chart:score.reset(CAMPAIGN_AMMO_FLOOR,CAMPAIGN_AMMO_MAX_DROP)
 		else:score.reset()
 		set_stage(0)
 	retime_salvos=false
@@ -204,8 +204,8 @@ func set_stage(value: int) -> void:
 	stage=next
 	song_rate=1.+.045*stage
 func lookahead() -> float:
-	var bonus=MERCURY_PREVIEW_BONUS if uses_mercury_cues() else 0.
-	if uses_mercury_cues() and forgiving_input:bonus+=.25
+	var bonus=CAMPAIGN_PREVIEW_BONUS if music_chart else 0.
+	if music_chart and forgiving_input:bonus+=.25
 	return (float(rewards.profile().get("lookahead",LOOKAHEAD))+bonus)/song_rate
 func hit_window() -> float:return WINDOW
 func tail_window(note: Dictionary) -> float:
@@ -279,6 +279,8 @@ func _settle_sustain(note: Dictionary,now: float) -> void:
 		elif note.status!="miss" and at<=float(note.get("released_at",INF))+.000001:
 			points=SCORE.PERFECT_POINTS
 			note.last_mark_at=at
+			if note.status=="holding" and now-at<.065:
+				feedback.emit({"at":now,"lanes":[int(note.track)],"grade":"","gesture":"sustain_tick","milestone":""})
 		score.record(int(note.track),deadline,points)
 		note.next_mark=i+1
 func advance(now: float) -> Array[Dictionary]:
@@ -345,7 +347,7 @@ func press(lane: int,now: float,source: String="") -> bool:
 		elif forgiving_input and str(note.status)=="rolling" and now<due-window:waiting_for_tail=true
 	var premature_tail=target.is_empty() and waiting_for_tail
 	if not target.is_empty() and str(target.status)=="rolling":
-		var gap=MERCURY_ROLL_MIN_GAP if uses_mercury_cues() else ROLL_MIN_GAP
+		var gap=CAMPAIGN_ROLL_MIN_GAP if music_chart else ROLL_MIN_GAP
 		premature_tail=now-float(target.pressed[int(target.required[0])])<gap
 	if premature_tail:
 		if forgiving_input:

@@ -181,7 +181,7 @@ func run() -> void:
 				check(cheapest*2<game.dust,"Base first-beacon supply covers more than one entry-level weapon")
 				check(game.choose_boon(0) and game.continue_wave() and not game.open_expedition_dock(),"Dock grants one choice and supports one visit")
 				check(game.state=="combat" and game.wave==next_sector and m.done==1 and is_equal_approx(game.music.timeline,at) and game.by_id.has(survivor.uid),"Returning from supply preserves stage, enemies and transport time")
-			if id in ["venus","earth","mars"]:
+			if id!="mercury":
 				var depot=route.docks[index]
 				check(int(depot.supply)==game.BALANCE.expedition_supply(int(row.index),index+1),"Planet supply matches the displayed stage reward")
 				game.player=depot.at
@@ -247,7 +247,11 @@ func run() -> void:
 	FileAccess.open("res://tests/results-v65-"+renderer+".json",FileAccess.WRITE).store_string(JSON.stringify(data,"\t"))
 	print("V65_EXPEDITION ",JSON.stringify(data))
 	game.standard_music.stop();game.planet_music.stop();game.mixer.reset_feedback()
-	current_scene=null;game.queue_free();await frames(5);quit(0 if failures.is_empty() else 1)
+	for player in game.find_children("*","AudioStreamPlayer",true,false):player.stop()
+	current_scene=null;game.queue_free()
+	# Let the audio thread retire voices queued by the accelerated eight-route run.
+	await create_timer(.5).timeout
+	quit(0 if failures.is_empty() else 1)
 
 func _distinct(ids: Array) -> bool:
 	for id in ids:

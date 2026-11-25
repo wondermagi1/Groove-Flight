@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "revision": "v69",
+  "revision": "v77",
   "tracks": [
     {
       "planet": "mercury",
@@ -20,7 +20,9 @@
       "duration": 212.924082,
       "published_bpm": 115.0,
       "chart": "res://audio/charts/expeditions/mercury.json",
-      "conversion": "Full source transcoded to stereo Ogg Vorbis; original playback speed and pitch."
+      "conversion": "Full source transcoded to stereo Ogg Vorbis; original playback speed and pitch.",
+      "integrated_lufs": -8.3,
+      "true_peak_dbtp": 1.5
     },
     {
       "planet": "venus",
@@ -40,7 +42,9 @@
       "duration": 411.141224,
       "published_bpm": 94.0,
       "chart": "res://audio/charts/expeditions/venus.json",
-      "conversion": "Full source transcoded to stereo Ogg Vorbis; original playback speed and pitch."
+      "conversion": "Full source transcoded to stereo Ogg Vorbis; original playback speed and pitch.",
+      "integrated_lufs": -21.1,
+      "true_peak_dbtp": -3.4
     },
     {
       "planet": "earth",
@@ -60,7 +64,9 @@
       "duration": 180.062041,
       "published_bpm": 120.0,
       "chart": "res://audio/charts/expeditions/earth.json",
-      "conversion": "Full source transcoded to stereo Ogg Vorbis; original playback speed and pitch."
+      "conversion": "Full source transcoded to stereo Ogg Vorbis; original playback speed and pitch.",
+      "integrated_lufs": -14.0,
+      "true_peak_dbtp": 0.5
     },
     {
       "planet": "mars",
@@ -80,7 +86,9 @@
       "duration": 214.909388,
       "published_bpm": 124.0,
       "chart": "res://audio/charts/expeditions/mars.json",
-      "conversion": "Full source transcoded to stereo Ogg Vorbis; original playback speed and pitch."
+      "conversion": "Full source transcoded to stereo Ogg Vorbis; original playback speed and pitch.",
+      "integrated_lufs": -16.5,
+      "true_peak_dbtp": 2.5
     },
     {
       "planet": "jupiter",
@@ -100,7 +108,9 @@
       "duration": 365.688163,
       "published_bpm": 128.0,
       "chart": "res://audio/charts/expeditions/jupiter.json",
-      "conversion": "Full source transcoded to stereo Ogg Vorbis; original playback speed and pitch."
+      "conversion": "Full source transcoded to stereo Ogg Vorbis; original playback speed and pitch.",
+      "integrated_lufs": -12.4,
+      "true_peak_dbtp": 0.6
     },
     {
       "planet": "saturn",
@@ -120,7 +130,9 @@
       "duration": 129.906939,
       "published_bpm": 122.0,
       "chart": "res://audio/charts/expeditions/saturn.json",
-      "conversion": "Full source transcoded to stereo Ogg Vorbis; original playback speed and pitch."
+      "conversion": "Full source transcoded to stereo Ogg Vorbis; original playback speed and pitch.",
+      "integrated_lufs": -12.3,
+      "true_peak_dbtp": 1.2
     },
     {
       "planet": "uranus",
@@ -140,7 +152,9 @@
       "duration": 228.440816,
       "published_bpm": 124.0,
       "chart": "res://audio/charts/expeditions/uranus.json",
-      "conversion": "Full source transcoded to stereo Ogg Vorbis; original playback speed and pitch."
+      "conversion": "Full source transcoded to stereo Ogg Vorbis; original playback speed and pitch.",
+      "integrated_lufs": -19.2,
+      "true_peak_dbtp": -3.2
     },
     {
       "planet": "neptune",
@@ -160,7 +174,9 @@
       "duration": 187.141224,
       "published_bpm": 160.0,
       "chart": "res://audio/charts/expeditions/neptune.json",
-      "conversion": "Full source transcoded to stereo Ogg Vorbis; original playback speed and pitch."
+      "conversion": "Full source transcoded to stereo Ogg Vorbis; original playback speed and pitch.",
+      "integrated_lufs": -9.1,
+      "true_peak_dbtp": 1.1
     }
   ]
 }

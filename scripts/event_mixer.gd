@@ -2,7 +2,7 @@ extends Node
 const AUDIO=preload("res://scripts/audio_controls.gd")
 const SEQUENCE=preload("res://scripts/arsenal_loadout.gd")
 const RHYTHM_SFX=preload("res://scripts/rhythm_sfx.gd")
-const RHYTHM_DB={"perfect":-1.5,"excellent":-2.8,"general":-4.5,"miss":-12.,"hold_head":-5.,"hold_tail":-2.5,"combo":-1.8,"perfect_reward":-1.,"accent_hit":-1.5,"chord":-1.5,"roll_head":-3.5,"roll_tail":-2.}
+const RHYTHM_DB={"perfect":-1.5,"excellent":-2.8,"general":-4.5,"miss":-12.,"hold_head":-4.,"hold_tail":-2.5,"combo":-1.8,"perfect_reward":-1.,"accent_hit":-1.5,"chord":-1.5,"roll_head":-3.5,"roll_tail":-2.,"sustain_tick":-10.}
 ## Recorded low-drum kill feedback; bounded rolls and reserved shield/pickup voices.
 const RATE=22050
 var groups={"hit":[],"kill":[],"ui":[],"alert":[],"pickup":[],"shield":[],"rhythm":[]}
@@ -79,7 +79,7 @@ func rhythm_feedback(event: Dictionary) -> void:
 		cue="perfect_reward" if event.milestone=="perfect" else "combo"
 	elif bool(event.get("contact_played",false)):
 		return
-	elif gesture in ["hold_head","roll_head"]:
+	elif gesture in ["hold_head","roll_head","sustain_tick"]:
 		cue=gesture
 	elif gesture=="chord_head":
 		cue="hold_head"

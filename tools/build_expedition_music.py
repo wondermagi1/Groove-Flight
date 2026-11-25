@@ -6,6 +6,7 @@ from urllib.parse import quote
 from urllib.request import Request, urlopen
 import hashlib
 import json
+import re
 import subprocess
 
 import numpy as np
@@ -178,6 +179,19 @@ def tie_sustains(events, planet, period, audio, rate):
         next_beat = head["beat"] + spacing
 
 
+def measure_loudness(path):
+    report = subprocess.run(
+        ["ffmpeg", "-nostats", "-hide_banner", "-i", str(path), "-af",
+         "ebur128=peak=true", "-f", "null", "-"],
+        capture_output=True, check=True,
+    ).stderr.decode(errors="replace").rsplit("Summary:", 1)[-1]
+    loudness = re.search(r"I:\s*([-\d.]+) LUFS", report)
+    peak = re.search(r"Peak:\s*([-\d.]+) dBFS", report)
+    if not loudness or not peak:
+        raise ValueError(f"Incomplete loudness measurement for {path}")
+    return {"integrated_lufs": float(loudness[1]), "true_peak_dbtp": float(peak[1])}
+
+
 def import_track(track):
     planet, key, title, isrc, bpm, mood = track
     source = ROOT / "work/expedition-music" / f"{key}.mp3"
@@ -219,6 +233,7 @@ def import_track(track):
         "chart": f"res://audio/charts/expeditions/{planet}.json",
         "conversion": "Full source transcoded to stereo Ogg Vorbis; original playback speed and pitch.",
     }
+    row.update(measure_loudness(target))
     chart = make_chart(target, row)
     save(ROOT / row["chart"].removeprefix("res://"), chart, indent=None)
     print(planet, title, round(duration, 1), len(chart["events"]), round(chart["estimated_bpm"], 2), flush=True)
@@ -333,7 +348,7 @@ def main():
         (ROOT / folder).mkdir(parents=True, exist_ok=True)
     with ThreadPoolExecutor(max_workers=4) as pool:
         rows = list(pool.map(import_track, TRACKS))
-    save(ROOT / "audio/PLANET_MUSIC.json", {"schema": 1, "revision": "v69", "tracks": rows})
+    save(ROOT / "audio/PLANET_MUSIC.json", {"schema": 1, "revision": "v77", "tracks": rows})
     credits = ["# Expedition soundtrack", "", "Music by Kevin MacLeod (incompetech.com), CC BY 4.0.", "", "## Active tracks", ""]
     credits += [f"- {row['title']} ([official track page]({row['source_page']}))" for row in rows]
     credits += ["", "## Archived expedition tracks", ""]

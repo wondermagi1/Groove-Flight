@@ -1,6 +1,6 @@
 {
-  "version": "0.76.0-sustain-scoring",
-  "date": "2026-11-23",
+  "version": "0.77.0-planet-supply",
+  "date": "2026-11-25",
   "lead": "eight licensed Kevin MacLeod expedition songs via PLANET_MUSIC.json",
   "weapon_voices": "removed from combat, shop preview and codex; legacy sources archived only",
   "composer": "retired from game entry points",
@@ -33,13 +33,15 @@
       "points": 0
     }
   ],
-  "ammo": "square(sum(all3keys earned)/sum(all3keys possible)) sets next6second base ammo; multiply current earnedPerfect bonus,max120percent;opening100percent;zero/recovery and fraction carry retained",
+  "ammo": "square(sum(all3keys earned)/sum(all3keys possible)) sets next6second base ammo; multiply current earnedPerfect bonus,max120percent;opening100percent;all eight campaigns floor base ammo at 50 percent, max drop 30 percentage points per scored window, rests and fraction carry retained",
   "campaign_volley": "first musical completion after charge. Short holds and ordered rolls use the tail. Multi-second ties retain a firing anchor at every original cue head inside the phrase. Each due salvo takes the base ammo of its scheduled six-second window and the active combo reward.",
   "sustain": "123 multi-second phrases replace separate gestures in eight charts. Head and release are graded independently, internal held marks award 100, interruption preserves earned points. Each mark contributes a maximum of 100 to its own window. Only the completed gesture adds one combo.",
-  "mercury_difficulty": "3.80 s base preview on standard and 3.55 s on hard before rate adjustment; standard omits unaccented fourth-beat opening taps while retaining holds and accent cues; after beacon one skip beat four input in each bar, with some rolls simplified; six-second base ammo has a 50% floor and can fall at most 30 percentage points per scored window",
+  "campaign_preview": "All eight campaigns use 3.80 s standard or 3.55 s hard preview before rate and pilot adjustments; minimum roll-key separation 55 ms.",
+  "song_mix": "Set each OGG player to -22 integrated LUFS with at least 3 dB true peak headroom before the music and master faders.",
+  "mercury_difficulty": "standard omits unaccented fourth-beat opening taps while retaining holds and accent cues; after beacon one skip beat four input in each bar, with some rolls simplified; six-second base ammo has a 50% floor and can fall at most 30 percentage points per scored window",
   "standard_input": "taps in chart rests preserve combo without awarding score; an extra input on an existing hold does not end it; an early roll tail can be retried after release before the original deadline",
   "tail_grace_ms": 250,
-  "feedback": "independent kill, pickup, shield, impact, UI, alert and rhythm buses; CC0 contact clicks mixed with original electronic accents for accepted gestures",
+  "feedback": "independent kill, pickup, shield, impact, UI, alert and rhythm buses; CC0 contact clicks, short midrange rim attacks and rising release tones; quiet ticks only on earned, timely internal hold checkpoints",
   "rhythm_feedback": {
     "source": "scripts/rhythm_sfx.gd",
     "bus": "GrooveFlight_rhythm",
@@ -49,7 +51,7 @@
     "early_contact": "immediate strike and displayed provisional grade, followed by one scored judgement without replaying the ordinary contact",
     "centered_contact": "a Perfect within 45 ms adds a white strike accent and emphasizes existing rhythm samples by up to 1.2 dB before voice headroom and bus limiting; no new judgement grade",
     "volley_visual": "actual nonzero volleys pulse beside the ship and on the ammo readout; no weapon voice is played",
-    "voices": ["perfect", "excellent", "general", "miss", "hold_head", "hold_tail", "combo", "perfect_reward", "accent_hit", "chord", "roll_head", "roll_tail"]
+    "voices": ["perfect", "excellent", "general", "miss", "hold_head", "hold_tail", "combo", "perfect_reward", "accent_hit", "chord", "roll_head", "roll_tail", "sustain_tick"]
   },
   "perfect_rewards": {
     "thresholds": [

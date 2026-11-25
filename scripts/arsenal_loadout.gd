@@ -509,7 +509,7 @@ func make_shop(rng: RandomNumberGenerator,wave: int,excluded: Array=[],weapon_co
 		for candidate in range(pool.size()):
 			if (str(pool[candidate].category)=="weapon")!=wants_weapon: continue
 			candidates.append(candidate)
-			if wave==1 and (expedition_planet==0 or BALANCE.INNER_SUPPLY.has(expedition_planet)) and result.size() in [0,weapon_count]:
+			if wave==1 and expedition_planet>=0 and result.size() in [0,weapon_count]:
 				var row: Dictionary=pool[candidate]
 				var budget=roundi(BALANCE.expedition_supply(expedition_planet,1)*.42)
 				if (wants_weapon or row.category=="defense") and BALANCE.expedition_price(row,wave,expedition_planet)<=budget:

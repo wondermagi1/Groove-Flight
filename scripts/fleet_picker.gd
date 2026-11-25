@@ -17,7 +17,7 @@ var heading: Label
 var subtitle: Label
 var footer_hint: Label
 var talent_buttons: Dictionary={}
-var talent_caption: Label
+var talent_tree: PanelContainer
 
 class FleetCard extends Button:
 	var category: String = "ship"
@@ -137,12 +137,11 @@ func _ready() -> void:
 	pilot_description = _label("", 18, Color("8ea3bb"))
 	pilot_description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	pilot_info.add_child(pilot_description)
-	talent_caption=_label("",16,UI.GOLD);talent_caption.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;content.add_child(talent_caption)
-	var talent_grid=GridContainer.new();talent_grid.columns=3;talent_grid.add_theme_constant_override("h_separation",8);talent_grid.add_theme_constant_override("v_separation",8);content.add_child(talent_grid)
-	for talent in game.TALENTS.ROWS:
-		var button=Button.new();button.name="Talent_"+str(talent.id);button.custom_minimum_size=Vector2(0,46);button.size_flags_horizontal=Control.SIZE_EXPAND_FILL;button.add_theme_font_size_override("font_size",14);UI.button(button,UI.GOLD,6)
-		button.pressed.connect(_choose_talent.bind(str(talent.id)));talent_grid.add_child(button);talent_buttons[str(talent.id)]=button
-	var reset=Button.new();reset.name="ResetTalents";reset.text="免费重置天赋";reset.tooltip_text="清空所有舰装天赋，返还点数；下次出战生效";reset.custom_minimum_size=Vector2(170,46);UI.button(reset,UI.MUTED,6);reset.pressed.connect(func():game.reset_talents();_refresh_selection())
+	talent_tree=preload("res://scripts/talent_tree.gd").new()
+	talent_tree.game=game
+	content.add_child(talent_tree)
+	talent_buttons=talent_tree.buttons
+	talent_tree.changed.connect(_refresh_selection)
 	var space := Control.new()
 	space.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	content.add_child(space)
@@ -153,7 +152,6 @@ func _ready() -> void:
 	footer_hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	footer_hint.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	footer.add_child(footer_hint)
-	footer.add_child(reset)
 	confirm_button = Button.new()
 	confirm_button.text = "完成"
 	confirm_button.custom_minimum_size = Vector2(180, 48)
@@ -225,16 +223,6 @@ func _refresh_selection() -> void:
 	pilot_name.add_theme_color_override("font_color", pilot.color)
 	pilot_description.text={"echo":"预读 2.8s","volt":"Perfect 8 / 20 / 40 / 80","mender":"每6秒保护一次Perfect链","nova":"长按 45 / 85ms · 尾端180ms","rime":"断链余韵 +10% / 4s"}.get(pilot_id,"")
 	pilot_description.tooltip_text=str(pilot.detail)
-	var selected=game.TALENTS.clean(game.talent_selection,game.talent_points())
-	talent_caption.tooltip_text="初始2点，每颗星球首次通关+1，最多6点；免费重置，下次出战生效"
-	talent_caption.text="舰装  ·  剩余 %d / %d点"%[game.talent_points()-selected.size(),game.talent_points()]
-	for row in game.TALENTS.ROWS:
-		var button: Button=talent_buttons[str(row.id)];var learned=str(row.id) in selected
-		var prerequisite=str(row.requires).is_empty() or str(row.requires) in selected
-		button.text=("已装 · " if learned else ("需前置 · " if not prerequisite else "+ "))+str(row.name)+"\n"+str(row.detail)
-		button.disabled=learned or not prerequisite or selected.size()>=game.talent_points()
-		button.add_theme_color_override("font_disabled_color",UI.GOLD if learned else UI.MUTED)
-		button.tooltip_text="已装配，下次出战生效；可以免费重置" if learned else str(row.detail)+("；需先解锁："+str(row.requires) if not prerequisite else "；消耗1天赋点")
 
 func _select_ship(id: String) -> void:
 	if game == null:
@@ -255,6 +243,3 @@ func _select_pilot(id: String) -> void:
 func _confirm() -> void:
 	if game != null:
 		game.close_hangar()
-
-func _choose_talent(id: String) -> void:
-	if game.choose_talent(id):_refresh_selection()

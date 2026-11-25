@@ -63,6 +63,7 @@ func _ready() -> void:
 	game.rhythm.feedback.connect(_receive_feedback)
 func _receive_feedback(event: Dictionary) -> void:
 	if game.state!="combat":return
+	if event.gesture=="sustain_tick":return # The held ribbon already flashes at last_mark_at.
 	retry_at=float(event.at) if event.gesture=="roll_wait" else -INF
 	if not bool(event.get("contact_played",false)) or event.milestone in ["perfect","combo"]:
 		hit_effects.append(event)

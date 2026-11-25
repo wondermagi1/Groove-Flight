@@ -1,6 +1,8 @@
 # 武器特效与音频对应表（持续维护）
 
-最后更新 2026-11-23。核对版本 `0.76.0-sustain-scoring`。八星多秒长按的原谱拍点仍可接充满的武器。24 件武器共享三键分段成绩，每次齐射使用其音乐落点所属六秒段的基础弹量。长按体节点只记成绩，武器继续独立充能。[V76 规则与验证](V76_SUSTAINS_AND_AMMO.md) · [验证记录](data-v76/SUMMARY.json) · [击键素材试听](audio-v69/rhythm-clicks.wav)
+最后更新 2026-11-25。核对版本 `0.77.0-planet-supply`。24 件武器和冲刺导弹在八颗星球共享六秒基础弹量保底 50%、单段最多下降 30 个百分点的规则。武器充满后按本星球的音乐落点发射。长按体节点的轻拍由琴键触发。八首背景曲逐曲调平音量。[当前规则与验证](V77_PLANET_SUPPLY_AND_TALENTS.md) · [金星混音试听](data-v77/venus-rhythm-preview.ogg)
+
+V76 历史版本 `0.76.0-sustain-scoring`。八星多秒长按的原谱拍点仍可接充满的武器。24 件武器共享三键分段成绩，每次齐射使用其音乐落点所属六秒段的基础弹量。长按体节点只记成绩，武器继续独立充能。[V76 规则与验证](V76_SUSTAINS_AND_AMMO.md) · [验证记录](data-v76/SUMMARY.json) · [击键素材试听](audio-v69/rhythm-clicks.wav)
 
 V75 乐句指法、切分起音与按曲收尾。连打第二键按谱面指定。[V75](V75_PHRASE_CHARTS.md) · [验证](data-v75/SUMMARY.json)
 

@@ -1,0 +1,77 @@
+{
+  "version": "0.77.0-planet-supply",
+  "date": "2026-11-25",
+  "backup": "6059326174b02380fee915df5004ca43668b89c9",
+  "campaigns": 8,
+  "sectors": 26,
+  "checks": {
+    "supply-final": {
+      "suite": "V65_EXPEDITION",
+      "checks": 327,
+      "failures": []
+    },
+    "v77_campaign_review": {
+      "suite": "V77_CAMPAIGN",
+      "checks": 158,
+      "failures": []
+    },
+    "forward-title": {
+      "suite": "V77_CAMPAIGN",
+      "checks": 158,
+      "failures": []
+    },
+    "gl-dummy": {
+      "suite": "V77_CAMPAIGN",
+      "checks": 158,
+      "failures": []
+    },
+    "v76_sustain_review": {
+      "suite": "V76_SUSTAIN",
+      "checks": 20,
+      "failures": []
+    },
+    "v69_rhythm_review": {
+      "suite": "V69_RHYTHM",
+      "checks": 113,
+      "failures": []
+    },
+    "v67_mercury_combat": {
+      "suite": "V67_MERCURY",
+      "checks": 48,
+      "failures": []
+    },
+    "v72_rhythm_impact_review": {
+      "suite": "V72_IMPACT",
+      "checks": 117,
+      "failures": []
+    },
+    "v74_mercury_playability": {
+      "suite": "V74_PLAYABILITY",
+      "checks": 20,
+      "failures": []
+    },
+    "v71_equipment_review": {
+      "suite": "V71_EQUIPMENT",
+      "checks": 172,
+      "failures": []
+    },
+    "v66_rhythm_review": {
+      "suite": "V66_RHYTHM",
+      "checks": 68,
+      "failures": []
+    }
+  },
+  "title_resolutions": [
+    "1280x720",
+    "1920x1080"
+  ],
+  "title_capture": "title-talents.png",
+  "mix_preview": "venus-rhythm-preview.ogg",
+  "mix_preview_seconds": 8,
+  "mix_before_user_faders": {
+    "integrated_lufs": -22,
+    "max_true_peak_dbtp": -3,
+    "inputs": "audio/PLANET_MUSIC.json, full OGG measured with FFmpeg ebur128=peak=true"
+  },
+  "method": "Automated campaign and UI checks. Audio levels are measured; no subjective listening verdict."
+}
