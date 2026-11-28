@@ -16,8 +16,6 @@ var frame: PanelContainer
 var heading: Label
 var subtitle: Label
 var footer_hint: Label
-var talent_buttons: Dictionary={}
-var talent_tree: PanelContainer
 
 class FleetCard extends Button:
 	var category: String = "ship"
@@ -137,11 +135,12 @@ func _ready() -> void:
 	pilot_description = _label("", 18, Color("8ea3bb"))
 	pilot_description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	pilot_info.add_child(pilot_description)
-	talent_tree=preload("res://scripts/talent_tree.gd").new()
-	talent_tree.game=game
-	content.add_child(talent_tree)
-	talent_buttons=talent_tree.buttons
-	talent_tree.changed.connect(_refresh_selection)
+	var talents=Button.new()
+	talents.name="HangarTalents"
+	talents.text="舰装天赋   ·   %d 点可用"%(game.talent_points()-game.talent_selection.size())
+	UI.button(talents,UI.GOLD)
+	talents.pressed.connect(game.open_talents)
+	content.add_child(talents)
 	var space := Control.new()
 	space.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	content.add_child(space)

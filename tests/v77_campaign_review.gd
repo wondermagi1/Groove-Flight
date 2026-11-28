@@ -32,36 +32,76 @@ func check_tree() -> void:
 	game.ui.root_control.show()
 	game.return_title()
 	await frames(3)
-	var tree=game.ui.title_flight.talent_panel
-	check(is_instance_valid(tree) and tree.is_visible_in_tree(),"Talent graph is present directly on title")
-	if not is_instance_valid(tree):return
-	check(tree.buttons.size()==8 and tree.buttons.repair.disabled and tree.buttons.penetrator.disabled,"Eight real nodes with visible prerequisites")
-	tree.buttons.hull.pressed.emit()
-	tree.buttons.repair.pressed.emit()
-	check(game.talent_selection==["hull","repair"] and tree.caption.text.contains("0"),"Title can allocate points and update immediately")
-	check(not game.choose_talent("firepower") and game.talent_selection==["hull","repair"],"A full budget never evicts a learned node")
+	check(game.ui.title_flight.targets.has("talents"),"Title has a dedicated talent entry")
+	game.ui.title_flight._activate("talents")
+	await frames(3)
+	var tree=game.ui.talent_screen
+	check(game.state=="talents" and tree.tabs.size()==4,"Standalone workshop has four branches")
+	for branch in range(4):
+		tree.tabs[branch].pressed.emit()
+		check(tree.buttons.size()==4,"Four inspectable nodes per branch")
+		var deep_id=game.TALENTS.BRANCHES[branch][4]
+		tree.buttons[deep_id].pressed.emit()
+		check(tree.selected_id==deep_id and tree.learn.disabled and game.talent_selection.is_empty(),"Can inspect a locked node without spending")
+	tree.select_branch(0)
+	tree.learn.pressed.emit()
+	tree.select_node("repair")
+	tree.learn.pressed.emit()
+	check(game.talent_selection==["hull","repair"] and tree.caption.text.contains("可用 0 点"),"Points are shared by all branches")
+	tree.select_node("hull")
+	check(tree.refund.disabled and not game.refund_talent("hull"),"A prerequisite is protected while a dependent is learned")
+	tree.select_node("repair")
+	tree.refund.pressed.emit()
+	check(game.talent_selection==["hull"] and game.talent_points()==2,"Refund returns one usable point")
+	tree.select_branch(3)
+	tree.select_node("drydock")
 	for view in [Vector2i(1280,720),Vector2i(1920,1080)]:
 		root.size=view
 		root.content_scale_size=view
 		await frames(4)
-		tree=game.ui.title_flight.talent_panel
-		var panel: Rect2=tree.get_global_rect()
-		check(Rect2(Vector2.ZERO,Vector2(view)).encloses(panel) and not panel.intersects(game.ui.title_flight.targets.hangar.get_global_rect()),"Title graph fits beside main navigation / "+str(view))
+		check(tree==game.ui.talent_screen and tree.selected_id=="drydock","Resize preserves selected branch and node")
+		var frame=Rect2(Vector2.ZERO,Vector2(view))
 		for button in tree.buttons.values():
-			check(panel.encloses(button.get_global_rect()) and button.size.x>54.,"Readable visible talent control / "+str(button.name))
+			check(frame.encloses(button.get_global_rect()) and button.size.x>70.,"Graph node fits at "+str(view))
+		check(frame.encloses(tree.back.get_global_rect()) and frame.encloses(tree.learn.get_global_rect()),"Back and purchase remain visible")
 		if DisplayServer.get_name()!="headless":
 			await RenderingServer.frame_post_draw
-			root.get_texture().get_image().save_png("res://tests/v77-title-%d.png"%view.y)
+			root.get_texture().get_image().save_png("res://tests/v80-talents-%d.png"%view.y)
+	tree.reset.pressed.emit()
+	tree.back.pressed.emit()
+	check(game.state=="title","Return to menu")
 	game.open_hangar()
 	await frames(3)
-	tree=game.ui.root_control.find_child("TalentTree",true,false)
-	check(is_instance_valid(tree) and tree.buttons.repair.disabled and not tree.reset_button.disabled,"Hangar mirrors title allocation")
-	tree.reset_button.pressed.emit()
-	tree.buttons.firepower.pressed.emit()
-	tree.buttons.penetrator.pressed.emit()
+	game.ui.root_control.find_child("HangarTalents",true,false).pressed.emit()
+	await frames(3)
+	tree=game.ui.talent_screen
+	tree.select_branch(3)
+	tree.learn.pressed.emit()
+	tree.select_node("drydock")
+	tree.learn.pressed.emit()
+	tree.back.pressed.emit()
+	check(game.state=="hangar","Return to hangar when opened there")
+	start("venus")
+	check(is_equal_approx(game.stats_snapshot.magnet,1.12) and game.dock_repair==2.,"Recovery talents apply to the deployed hull")
+	game.health=game.loadout.max_health-3.
+	game.expedition.docks.append({"at":game.player,"used":false,"sector":1,"supply":125})
+	check(game.open_expedition_dock() and is_equal_approx(game.health,game.loadout.max_health-1.),"One real supply entry heals two HP")
+	game.choose_boon(0)
+	game.continue_wave()
+	check(not game.open_expedition_dock() and is_equal_approx(game.health,game.loadout.max_health-1.),"Used dock cannot repair twice")
+	check(not game.choose_talent("hull"),"Allocation locked during combat")
+	game.return_title()
+	game.reset_talents()
+	game.planet_records.mercury={"clears":1}
+	game.choose_talent("thruster")
+	game.choose_talent("capacitor")
+	game.choose_talent("phase_skin")
 	start("mars")
-	check(is_equal_approx(game.stats_snapshot.crit_damage,1.70) and is_equal_approx(game.loadout.damage_scale,1.05),"Weapon branch applies to an actual launch")
-	check(not game.choose_talent("hull"),"Allocation is locked in combat")
+	game._physics_process(1.05) # Let the one-second launch protection expire.
+	check(game.dash(Vector2.RIGHT) and is_equal_approx(game.invulnerable,.31),"Phase plating extends actual dash protection")
+	var records={}
+	for id in game.PLANETS.IDS:records[id]={"clears":3}
+	check(game.TALENTS.points(records)==10,"Different planet clears grant ten points at full progress")
 
 func run() -> void:
 	root.size=Vector2i(1280,720)
@@ -92,6 +132,7 @@ func run() -> void:
 	check(pulses==["hold_head","sustain_tick","hold_tail"],"Hold gives one timely checkpoint pulse, drops stale sound, and releases once")
 	await check_tree()
 	game.standard_music.stop();game.planet_music.stop();game.mixer.reset_feedback()
-	current_scene=null;game.queue_free();await frames(5)
+	for player in game.find_children("*","AudioStreamPlayer",true,false):player.stop()
+	current_scene=null;game.queue_free();await create_timer(.5).timeout
 	print("V77_CAMPAIGN ",JSON.stringify({"checks":checks,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)

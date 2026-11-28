@@ -7,7 +7,6 @@ var game
 var ship_at := Vector2.ZERO
 var ship_angle: float = -PI * 0.5
 var targets: Dictionary = {}
-var talent_panel: Control
 var shots: Array[Dictionary] = []
 var sparks: Array[Dictionary] = []
 var phase: float = 0.0
@@ -69,7 +68,7 @@ func _process(delta: float) -> void:
 	if not pending_id.is_empty() and targets.has(pending_id) and is_instance_valid(targets[pending_id]):
 		aim = (targets[pending_id].get_global_rect().get_center() - ship_at).angle()
 	ship_angle = lerp_angle(ship_angle, aim, 1.0 - exp(-dt * 13.0))
-	var hovering_entry := is_instance_valid(talent_panel) and talent_panel.get_global_rect().has_point(mouse)
+	var hovering_entry := false
 	for control in targets.values():
 		if is_instance_valid(control) and control.get_global_rect().has_point(mouse):
 			hovering_entry = true
@@ -143,6 +142,7 @@ func _activate(id: String) -> void:
 		"solar": game.open_solar_map()
 		"composer": game.open_composer()
 		"hangar": game.open_hangar()
+		"talents": game.open_talents()
 		"settings": game.show_settings()
 		"quit": get_tree().quit()
 

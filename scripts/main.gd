@@ -6,6 +6,9 @@ const LOADOUT=preload("res://scripts/arsenal_loadout.gd")
 const FLEET=preload("res://scripts/fleet_catalog.gd")
 const TALENTS=preload("res://scripts/flight_talents.gd")
 var talent_selection: Array[String]=[]
+var talent_return_state="title"
+var dash_guard_seconds=.23
+var dock_repair=0.
 const ART=preload("res://scripts/fleet_art.gd")
 const WEAPON_CODEX=preload("res://scripts/weapon_codex.gd")
 const MACHINE_ART=preload("res://scripts/planet_machine_art.gd")
@@ -280,13 +283,23 @@ func visible_world() -> Rect2:
 func talent_points() -> int:return TALENTS.points(planet_records)
 func flight_craft() -> Dictionary:return TALENTS.apply(FLEET.ship(selected_ship),talent_selection,talent_points())
 func choose_talent(id: String) -> bool:
-	if state not in ["title","hangar"] or id in talent_selection or talent_selection.size()>=talent_points():return false
+	if state not in ["title","hangar","talents"] or id in talent_selection or talent_selection.size()>=talent_points():return false
 	var proposal=talent_selection.duplicate();proposal.append(id)
 	var valid=TALENTS.clean(proposal,talent_points())
 	if id not in valid:return false
 	talent_selection=valid;save_settings();return true
+func can_refund_talent(id: String) -> bool:
+	if state!="talents" or id not in talent_selection:return false
+	for row in TALENTS.ROWS:
+		if row.requires==id and row.id in talent_selection:return false
+	return true
+func refund_talent(id: String) -> bool:
+	if not can_refund_talent(id):return false
+	talent_selection.erase(id)
+	save_settings()
+	return true
 func reset_talents() -> void:
-	if state not in ["title","hangar"]:return
+	if state not in ["title","hangar","talents"]:return
 	talent_selection.clear();save_settings()
 func wave_count() -> int: return wave_rows.size()
 func wave_profile() -> Dictionary: return wave_rows[clampi(wave-1,0,wave_rows.size()-1)]
@@ -489,6 +502,8 @@ func start_run(seed_value: int=0,planet_id: String="",use_composition: bool=fals
 	loadout.set_doctrine(active_doctrine)
 	loadout.reset(); loadout.attribute_grants["ballistic"]=10.; music_focus_until=-1.; music_duck_db=0.; enemies.clear(); by_id.clear(); spatial.clear(); bullets.clear(); enemy_bullets.clear(); pickups.clear(); warnings.clear()
 	var craft=flight_craft(); selected_ship=str(craft.id)
+	dash_guard_seconds=TALENTS.value(craft,"dash_guard_seconds")
+	dock_repair=TALENTS.value(craft,"dock_repair")
 	selected_pilot=str(FLEET.pilot(selected_pilot).id)
 	rhythm.configure_pilot(selected_pilot)
 	var planet_number=int(PLANETS.planet(active_planet).index)
@@ -772,6 +787,15 @@ func enter_hub() -> void:
 func open_hangar() -> void:
 	if not is_instance_valid(hub) or state not in ["hub","hangar"]: enter_hub()
 	state="hangar"; ui.refresh()
+func open_talents() -> void:
+	if state not in ["title","hangar"]:return
+	talent_return_state=state
+	state="talents"
+	ui.refresh()
+func close_talents() -> void:
+	if state!="talents":return
+	state=talent_return_state
+	ui.refresh()
 func close_hangar() -> void:
 	state="hub"
 	if is_instance_valid(hub): hub.activate()
@@ -1043,6 +1067,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif state=="editor": close_editor()
 		elif state=="settings": close_settings()
 		elif state=="hangar": close_hangar()
+		elif state=="talents": close_talents()
 		else: pause_game()
 	elif event is InputEventKey and event.pressed and event.physical_keycode==KEY_R and state in ["defeat","victory"]: open_doctrine_selection(active_planet)
 
@@ -1071,7 +1096,7 @@ func record_flight_trail(at: Vector2) -> void:
 func dash(direction: Vector2=Vector2.ZERO) -> bool:
 	if state!="combat" or dash_cooldown>0: return false
 	dash_dir=direction.normalized() if direction.length()>.1 else facing
-	dash_left=.17; dash_cooldown=dash_recharge; invulnerable=maxf(invulnerable,.23)
+	dash_left=.17; dash_cooldown=dash_recharge; invulnerable=maxf(invulnerable,dash_guard_seconds)
 	shield_points=minf(8.,maxf(shield_points,float(event_snapshot.get("shield_dash",0)))); shield_until=music.timeline+4.
 	pending_dash_missiles+=int(event_snapshot.get("missiles_dash",0))
 	fx.ring(player,Color("b8faff"),60,.22)
@@ -1144,7 +1169,7 @@ func _sync_screen_music() -> void:
 	if state=="settings": candidate=previous_state
 	if is_instance_valid(mixer): mixer.set_combat_state("settings" if state=="settings" else candidate)
 	if is_instance_valid(menu_music) and menu_music.stream!=null:
-		var wants=candidate in ["title","hub","hangar","solar","doctrine"] and not is_preview and not free_music_run
+		var wants=candidate in ["title","hub","hangar","solar","doctrine","talents"] and not is_preview and not free_music_run
 		if wants and not menu_music.has_stream_playback(): menu_music.play()
 		elif not wants and menu_music.has_stream_playback(): menu_music.stop()
 	for recorded_player in recorded_weapon_players.values():
@@ -1848,6 +1873,7 @@ func open_expedition_dock() -> bool:
 	if index<0:return false
 	var depot=expedition.docks[index]
 	depot.used=true
+	health=minf(float(loadout.max_health),health+dock_repair)
 	var planet_index=int(PLANETS.planet(active_planet).index)
 	wave_supply=int(depot.supply)
 	expedition_shop_tier=int(depot.sector)

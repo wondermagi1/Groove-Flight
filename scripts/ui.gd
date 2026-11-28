@@ -27,6 +27,7 @@ var title_flight: Node2D
 var arsenal: Control
 var solar: Control
 var piano_tiles: Control
+var talent_screen: Control
 var composer: Control
 func _ready() -> void:
 	layer=30
@@ -55,6 +56,7 @@ func refresh() -> void:
 	if game.state=="weapon_codex" and is_instance_valid(game.weapon_codex_overlay):
 		game.weapon_codex_overlay._layout()
 		return
+	if game.state=="talents" and is_instance_valid(talent_screen) and not talent_screen.is_queued_for_deletion():return
 	if game.test_mode and game.simulation_only: return
 	if not is_instance_valid(root_control): return
 	# Buttons can request a new screen from inside their own pressed signal.
@@ -65,6 +67,10 @@ func refresh() -> void:
 		"title": title_screen()
 		"hub": hub_screen()
 		"hangar": hangar_screen()
+		"talents":
+			talent_screen=preload("res://scripts/talent_tree.gd").new()
+			talent_screen.game=game
+			root_control.add_child(talent_screen)
 		"solar": solar_screen()
 		"composer","composer_loading": composer_screen()
 		"combat": hud()
@@ -93,9 +99,10 @@ func title_screen() -> void:
 		["hub","进入霓光港","01",Color("71e8dc")],
 		["solar","星球航图","02",Color("83cafa")],
 		["hangar","机库与驾驶员","03",Color("b1b9fa")],
-		["codex","武器图鉴","04",Color("8edfda")],
-		["settings","设置","05",Color("8fa9c1")],
-		["quit","退出","06",Color("71839a")]]
+		["talents","舰装天赋   ·   %d 点可用"%(game.talent_points()-game.talent_selection.size()),"04",UI.GOLD],
+		["codex","武器图鉴","05",Color("8edfda")],
+		["settings","设置","06",Color("8fa9c1")],
+		["quit","退出","07",Color("71839a")]]
 	for entry in entries:
 		var id: String=entry[0]
 		var row=Button.new(); row.name="TitleEntry"+id.capitalize(); row.text=entry[1]
@@ -116,12 +123,6 @@ func title_screen() -> void:
 	footer.position=Vector2(view.x*.10,view.y-62); root_control.add_child(footer)
 	var selected=label(FLEET.ship(game.selected_ship).name+"  /  "+FLEET.pilot(game.selected_pilot).name,15,Color("7fa5b9"))
 	selected.position=Vector2(view.x*.60,view.y*.80); selected.size=Vector2(view.x*.27,30); selected.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER; root_control.add_child(selected)
-	var tree=preload("res://scripts/talent_tree.gd").new()
-	tree.game=game
-	tree.size.x=minf(view.x*.48,760.)
-	tree.position=Vector2(view.x*.74-tree.size.x*.5,view.y*.045)
-	root_control.add_child(tree)
-	title_flight.talent_panel=tree
 func hub_screen() -> void:
 	var view=get_viewport().get_visible_rect().size
 	var compact=view.x<1500
